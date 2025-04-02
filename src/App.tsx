@@ -2,110 +2,111 @@ import "./App.css";
 import axios from "axios";
 import React from "react";
 import { useState, useEffect } from "react";
-
-type Player = {
-  id: number;
-  rank: number;
-  name: string;
-  ovr: number;
-  pac: number;
-  sho: number;
-  pas: number;
-  dri: number;
-  def: number;
-  phy: number;
-  acceleration: number;
-  sprintSpeed: number;
-  positioning: number;
-  finishing: number;
-  shotPower: number;
-  longShots: number;
-  volleys: number;
-  penalties: number;
-  vision: number;
-  crossing: number;
-  freeKickAccuracy: number;
-  shortPassing: number;
-  longPassing: number;
-  curve: number;
-  dribbling: number;
-  agility: number;
-  balance: number;
-  reactions: number;
-  ballControl: number;
-  composure: number;
-  interceptions: number;
-  headingAccuracy: number;
-  defAwareness: number;
-  standingTackle: number;
-  slidingTackle: number;
-  jumping: number;
-  stamina: number;
-  strength: number;
-  aggression: number;
-  pos: string;
-  weakFoot: number;
-  skillMoves: number;
-  preferredFoot: string;
-  height: string;
-  weight: string;
-  alternativePositions: string;
-  age: number;
-  nation: string;
-  league: string;
-  team: string;
-  playStyle: string;
-  url: string;
-  img: string;
-  gkDiving: number;
-  gkHandling: number;
-  gkKicking: number;
-  gkPositioning: number;
-  gkReflexes: number;
-};
+import { Player } from "./types/Player";
+import { PlayerPage } from "./types/PlayerPage";
 
 function App() {
-  const [reopdata, setReopdata] = useState<Player[]>([]);
+  //const [reopdata, setReopdata] = useState<Player[]>([]);
 
-  useEffect(() => {
-    axios
-      .get<Player[]>(`http://localhost:8080/api/players`)
-      .then((response) => setReopdata(response.data))
-      .catch((err) => console.error(err));
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [pageInfo, setPageInfo] = useState<Omit<PlayerPage, "content">>({
+    totalPages: 0,
+    totalElements: 0,
+    number: 0,
+    size: 5,
   });
+
+  // useEffect(() => {
+  //   axios
+  //     .get<Player[]>(`http://localhost:8080/api/playerpage`)
+  //     .then((response) => setReopdata(response.data))
+  //     .catch((err) => console.error(err));
+  // });
+  // useEffect(() => {
+  //   axios
+  //     .get<PlayerPage>("http://localhost:8080/api/playerpage?page=1&size=5")
+  //     .then((response) => {
+  //       setPlayers(response.data.content);
+  //       setPageInfo({
+  //         totalPages: response.data.totalPages,
+  //         totalElements: response.data.totalElements,
+  //         number: response.data.number,
+  //         size: response.data.size,
+  //       });
+  //     })
+  //     .catch((err) => console.error(err));
+  // }, []);
+  useEffect(() => {
+    fetchPage(0); // 초기 로딩 시 첫 페이지 가져오기
+  }, []);
+
+  const fetchPage = (page: number) => {
+    console.log("보내는 page 값:", page);
+
+    axios
+      .get<PlayerPage>(
+        `http://localhost:8080/api/playerpage?page=${page}&size=${pageInfo.size}`
+      )
+      .then((response) => {
+        console.log("서버 응답 page:", response.data.number);
+        console.log(
+          "응답 데이터:",
+          response.data.content.map((p) => p.name)
+        );
+        setPlayers(response.data.content);
+        setPageInfo({
+          totalPages: response.data.totalPages,
+          totalElements: response.data.totalElements,
+          number: response.data.number,
+          size: response.data.size,
+        });
+      })
+      .catch((err) => console.error(err));
+  };
+
   return (
     <>
-      {
-        <table>
-          <tbody>
-            {reopdata.map((repo) => (
-              <React.Fragment key={repo.id}>
-                {/* 1행: 이미지 + 이름 + PAC/SHO/PAS */}
-                <tr>
-                  <td rowSpan={2}>
-                    <img
-                      src={repo.img}
-                      alt={repo.name}
-                      style={{ width: "100px", height: "auto" }}
-                    />
-                  </td>
-                  <td className="player-name">{repo.name}</td>
-                  <td>{repo.pac}</td>
-                  <td>{repo.sho}</td>
-                  <td>{repo.pas}</td>
-                </tr>
-                {/* 2행: 포지션 + DRI/DEF/PHY */}
-                <tr>
-                  <td className="player-pos">{repo.pos}</td>
-                  <td>{repo.dri}</td>
-                  <td>{repo.def}</td>
-                  <td>{repo.phy}</td>
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      }
+      <table>
+        <tbody>
+          {players.map((repo) => (
+            <React.Fragment key={repo.id}>
+              {/* 1행: 이미지 + 이름 + PAC/SHO/PAS */}
+              <tr>
+                <td rowSpan={2}>
+                  <img
+                    src={repo.img}
+                    alt={repo.name}
+                    style={{ width: "100px", height: "auto" }}
+                  />
+                </td>
+                <td className="player-name">{repo.name}</td>
+                <td>{repo.pac}</td>
+                <td>{repo.sho}</td>
+                <td>{repo.pas}</td>
+              </tr>
+              {/* 2행: 포지션 + DRI/DEF/PHY */}
+              <tr>
+                <td className="player-pos">{repo.pos}</td>
+                <td>{repo.dri}</td>
+                <td>{repo.def}</td>
+                <td>{repo.phy}</td>
+              </tr>
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+      {/* ✅ 여기에 버튼 배치 */}
+      <div style={{ marginTop: "16px", textAlign: "center" }}>
+        {Array.from({ length: pageInfo.totalPages }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => fetchPage(index)}
+            style={{ margin: "0 4px", padding: "4px 8px" }}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </>
   );
 }
