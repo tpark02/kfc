@@ -1,13 +1,10 @@
 import "./App.css";
 import axios from "axios";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Player } from "./types/Player";
 import { PlayerPage } from "./types/PlayerPage";
 
 function App() {
-  //const [reopdata, setReopdata] = useState<Player[]>([]);
-
   const [players, setPlayers] = useState<Player[]>([]);
   const [pageInfo, setPageInfo] = useState<Omit<PlayerPage, "content">>({
     totalPages: 0,
@@ -15,44 +12,18 @@ function App() {
     number: 0,
     size: 5,
   });
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // useEffect(() => {
-  //   axios
-  //     .get<Player[]>(`http://localhost:8080/api/playerpage`)
-  //     .then((response) => setReopdata(response.data))
-  //     .catch((err) => console.error(err));
-  // });
-  // useEffect(() => {
-  //   axios
-  //     .get<PlayerPage>("http://localhost:8080/api/playerpage?page=1&size=5")
-  //     .then((response) => {
-  //       setPlayers(response.data.content);
-  //       setPageInfo({
-  //         totalPages: response.data.totalPages,
-  //         totalElements: response.data.totalElements,
-  //         number: response.data.number,
-  //         size: response.data.size,
-  //       });
-  //     })
-  //     .catch((err) => console.error(err));
-  // }, []);
   useEffect(() => {
-    fetchPage(0); // 초기 로딩 시 첫 페이지 가져오기
+    fetchPage(0, searchTerm); // 초기 첫 페이지
   }, []);
 
-  const fetchPage = (page: number) => {
-    console.log("보내는 page 값:", page);
-
+  const fetchPage = (page: number, search: string = "") => {
     axios
       .get<PlayerPage>(
-        `http://localhost:8080/api/playerpage?page=${page}&size=${pageInfo.size}`
+        `http://localhost:8080/api/player?page=${page}&size=${pageInfo.size}&search=${search}`
       )
       .then((response) => {
-        console.log("서버 응답 page:", response.data.number);
-        console.log(
-          "응답 데이터:",
-          response.data.content.map((p) => p.name)
-        );
         setPlayers(response.data.content);
         setPageInfo({
           totalPages: response.data.totalPages,
@@ -64,13 +35,34 @@ function App() {
       .catch((err) => console.error(err));
   };
 
+  const handleSearch = () => {
+    fetchPage(0, searchTerm); // 검색은 항상 0페이지부터
+  };
+
   return (
     <>
+      {/* 🔍 Search UI */}
+      <div style={{ textAlign: "center", margin: "16px 0" }}>
+        <input
+          type="text"
+          placeholder="이름으로 검색"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ padding: "6px", fontSize: "14px", width: "200px" }}
+        />
+        <button
+          onClick={handleSearch}
+          style={{ marginLeft: "8px", padding: "6px 12px" }}
+        >
+          검색
+        </button>
+      </div>
+
+      {/* 🧾 Player Table */}
       <table>
         <tbody>
           {players.map((repo) => (
             <React.Fragment key={repo.id}>
-              {/* 1행: 이미지 + 이름 + PAC/SHO/PAS */}
               <tr>
                 <td rowSpan={2}>
                   <img
@@ -84,7 +76,6 @@ function App() {
                 <td>{repo.sho}</td>
                 <td>{repo.pas}</td>
               </tr>
-              {/* 2행: 포지션 + DRI/DEF/PHY */}
               <tr>
                 <td className="player-pos">{repo.pos}</td>
                 <td>{repo.dri}</td>
@@ -95,13 +86,18 @@ function App() {
           ))}
         </tbody>
       </table>
-      {/* ✅ 여기에 버튼 배치 */}
+
+      {/* 📄 Pagination */}
       <div style={{ marginTop: "16px", textAlign: "center" }}>
         {Array.from({ length: pageInfo.totalPages }).map((_, index) => (
           <button
             key={index}
-            onClick={() => fetchPage(index)}
-            style={{ margin: "0 4px", padding: "4px 8px" }}
+            onClick={() => fetchPage(index, searchTerm)}
+            style={{
+              margin: "0 4px",
+              padding: "4px 8px",
+              fontWeight: index === pageInfo.number ? "bold" : "normal",
+            }}
           >
             {index + 1}
           </button>
