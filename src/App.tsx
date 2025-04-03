@@ -13,16 +13,51 @@ function App() {
     size: 5,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortType, setSortType] = useState<
+    "AGE_ASC" | "AGE_DESC" | "RANK_DESC" | "RANK_ASC" | "OVR_DESC" | "OVR_ASC"
+  >("AGE_DESC");
 
   useEffect(() => {
-    fetchPage(0, searchTerm); // 초기 첫 페이지
+    fetchPage(0, searchTerm, "AGE_DESC"); // 초기 첫 페이지
   }, []);
 
-  const fetchPage = (page: number, search: string = "") => {
+  // const fetchPage = (page: number, search: string = "") => {
+  //   axios
+  //     .get<PlayerPage>(
+  //       `http://localhost:8080/api/player?page=${page}&size=${pageInfo.size}&search=${search}`
+  //     )
+  //     .then((response) => {
+  //       setPlayers(response.data.content);
+  //       setPageInfo({
+  //         totalPages: response.data.totalPages,
+  //         totalElements: response.data.totalElements,
+  //         number: response.data.number,
+  //         size: response.data.size,
+  //       });
+  //     })
+  //     .catch((err) => console.error(err));
+  // };
+
+  const fetchPage = (
+    page: number,
+    search: string = "",
+    sort:
+      | "AGE_ASC"
+      | "AGE_DESC"
+      | "RANK_DESC"
+      | "RANK_ASC"
+      | "OVR_DESC"
+      | "OVR_ASC" = sortType
+  ) => {
     axios
-      .get<PlayerPage>(
-        `http://localhost:8080/api/player?page=${page}&size=${pageInfo.size}&search=${search}`
-      )
+      .get<PlayerPage>("http://localhost:8080/api/player", {
+        params: {
+          page,
+          size: pageInfo.size,
+          search,
+          sortType: sort,
+        },
+      })
       .then((response) => {
         setPlayers(response.data.content);
         setPageInfo({
@@ -42,24 +77,63 @@ function App() {
   return (
     <>
       {/* 🔍 Search UI */}
-      <div style={{ textAlign: "center", margin: "16px 0" }}>
-        <input
-          type="text"
-          placeholder="이름으로 검색"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: "6px", fontSize: "14px", width: "200px" }}
-        />
-        <button
-          onClick={handleSearch}
-          style={{ marginLeft: "8px", padding: "6px 12px" }}
-        >
-          검색
-        </button>
+      {/* 🔍 Search + Sort 영역 */}
+      {/* 🔍 Search + Sort 영역 */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between", // 🔥 좌우 끝 정렬
+          alignItems: "center",
+          width: "90%",
+          margin: "16px auto",
+        }}
+      >
+        {/* 왼쪽: 검색창 + 버튼 */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <input
+            type="text"
+            placeholder="이름으로 검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ padding: "6px", fontSize: "14px", width: "200px" }}
+          />
+          <button onClick={handleSearch} style={{ padding: "6px 12px" }}>
+            search
+          </button>
+        </div>
+
+        {/* 오른쪽: 정렬 드롭다운 */}
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          {/* <label htmlFor="sortType">정렬:</label> */}
+          <select
+            id="sortType"
+            value={sortType}
+            onChange={(e) => {
+              const newSort = e.target.value as
+                | "AGE_ASC"
+                | "AGE_DESC"
+                | "RANK_DESC"
+                | "RANK_ASC"
+                | "OVR_DESC"
+                | "OVR_ASC";
+              setSortType(newSort);
+              fetchPage(0, searchTerm, newSort);
+            }}
+            style={{ padding: "6px", fontSize: "14px" }}
+          >
+            <option value="AGE_DESC">age desc</option>
+            <option value="AGE_ASC">age asc</option>
+            <option value="RANK_DESC">rank desc</option>
+            <option value="RANK_ASC">rank asc</option>
+            <option value="OVR_DESC">ovr desc</option>
+            <option value="OVR_ASC">ovr asc</option>
+          </select>
+        </div>
       </div>
 
+      <br></br>
       {/* 🧾 Player Table */}
-      <table>
+      <table style={{ width: "90%", margin: "0 auto" }}>
         <tbody>
           {players.map((repo) => (
             <React.Fragment key={repo.id}>
@@ -71,13 +145,21 @@ function App() {
                     style={{ width: "100px", height: "auto" }}
                   />
                 </td>
-                <td className="player-name">{repo.name}</td>
+                <td className="player-name" rowSpan={2}>
+                  {repo.name}
+                </td>
+                <td className="player-pos" rowSpan={2}>
+                  {" "}
+                  {repo.pos}{" "}
+                </td>
+                <td>{repo.age}</td>
+                <td rowSpan={2}>{repo.ovr}</td>
                 <td>{repo.pac}</td>
                 <td>{repo.sho}</td>
                 <td>{repo.pas}</td>
               </tr>
               <tr>
-                <td className="player-pos">{repo.pos}</td>
+                <td>{repo.height}</td>
                 <td>{repo.dri}</td>
                 <td>{repo.def}</td>
                 <td>{repo.phy}</td>
