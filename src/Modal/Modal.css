@@ -1,0 +1,57 @@
+/* 기본 모달 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* 반투명 검정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: rgba(0, 0, 0, 1.0);
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  max-width: 500px;      /* ✅ 여기 추가 */
+  width: 90%;            /* ✅ 반응형 대응 */
+  max-height: 80vh;      /* ✅ 너무 커지지 않도록 */
+  overflow-y: auto;      /* ✅ 내용 넘칠 때 스크롤 */
+}
+  
+  .modal-close-btn {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-close-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* 겹치는 모달 (NationModal 같은 서브 모달용) */
+  .modal-backdrop.secondary {
+    /* background-color: black; */
+    z-index: 1100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content.small {
+    max-width: 400px;
+  }
+  .modal-content.medium {
+    max-width: 600px;
+  }
+  .modal-content.large {
+    max-width: 800px;
+  }

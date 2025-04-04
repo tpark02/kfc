@@ -3,14 +3,16 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Player } from "./types/Player";
 import { PlayerPage } from "./types/PlayerPage";
+import FilterModal from "./Modal/FilterModal";
 
 function App() {
+  const [isModalOpen, setModalOpen] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [pageInfo, setPageInfo] = useState<Omit<PlayerPage, "content">>({
     totalPages: 0,
     totalElements: 0,
     number: 0,
-    size: 5,
+    size: 100,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState<
@@ -71,13 +73,13 @@ function App() {
   };
 
   const handleSearch = () => {
-    fetchPage(0, searchTerm); // 검색은 항상 0페이지부터
+    console.log("sortType : " + sortType);
+    fetchPage(0, searchTerm, sortType); // 검색은 항상 0페이지부터
   };
 
   return (
     <>
       {/* 🔍 Search UI */}
-      {/* 🔍 Search + Sort 영역 */}
       {/* 🔍 Search + Sort 영역 */}
       <div
         style={{
@@ -101,37 +103,51 @@ function App() {
             search
           </button>
         </div>
-
-        {/* 오른쪽: 정렬 드롭다운 */}
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          {/* <label htmlFor="sortType">정렬:</label> */}
-          <select
-            id="sortType"
-            value={sortType}
-            onChange={(e) => {
-              const newSort = e.target.value as
-                | "AGE_ASC"
-                | "AGE_DESC"
-                | "RANK_DESC"
-                | "RANK_ASC"
-                | "OVR_DESC"
-                | "OVR_ASC";
-              setSortType(newSort);
-              fetchPage(0, searchTerm, newSort);
+          {/* 오른쪽: 정렬 드롭다운 */}
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            {/* <label htmlFor="sortType">정렬:</label> */}
+            <select
+              id="sortType"
+              value={sortType}
+              onChange={(e) => {
+                const newSort = e.target.value as
+                  | "AGE_ASC"
+                  | "AGE_DESC"
+                  | "RANK_DESC"
+                  | "RANK_ASC"
+                  | "OVR_DESC"
+                  | "OVR_ASC";
+                setSortType(newSort);
+                fetchPage(0, searchTerm, newSort);
+              }}
+              style={{ padding: "6px", fontSize: "14px" }}
+            >
+              <option value="AGE_DESC">age desc</option>
+              <option value="AGE_ASC">age asc</option>
+              <option value="RANK_DESC">rank desc</option>
+              <option value="RANK_ASC">rank asc</option>
+              <option value="OVR_DESC">ovr desc</option>
+              <option value="OVR_ASC">ovr asc</option>
+            </select>
+          </div>
+          {/* 모달 버튼 */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "0px",
             }}
-            style={{ padding: "6px", fontSize: "14px" }}
           >
-            <option value="AGE_DESC">age desc</option>
-            <option value="AGE_ASC">age asc</option>
-            <option value="RANK_DESC">rank desc</option>
-            <option value="RANK_ASC">rank asc</option>
-            <option value="OVR_DESC">ovr desc</option>
-            <option value="OVR_ASC">ovr asc</option>
-          </select>
+            <button onClick={() => setModalOpen(true)}>Filter</button>
+            <FilterModal
+              isOpen={isModalOpen}
+              onClose={() => setModalOpen(false)}
+            />
+          </div>
         </div>
       </div>
-
-      <br></br>
       {/* 🧾 Player Table */}
       <table style={{ width: "90%", margin: "0 auto" }}>
         <tbody>
@@ -168,13 +184,12 @@ function App() {
           ))}
         </tbody>
       </table>
-
       {/* 📄 Pagination */}
       <div style={{ marginTop: "16px", textAlign: "center" }}>
         {Array.from({ length: pageInfo.totalPages }).map((_, index) => (
           <button
             key={index}
-            onClick={() => fetchPage(index, searchTerm)}
+            onClick={() => fetchPage(index, searchTerm, sortType)}
             style={{
               margin: "0 4px",
               padding: "4px 8px",
