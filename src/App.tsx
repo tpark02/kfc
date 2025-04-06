@@ -27,6 +27,11 @@ function App() {
     fetchPage(0, searchTerm, "AGE_DESC"); // 초기 첫 페이지
   }, []);
 
+  const getCurrentFilters = () =>
+    selectedCountries.map((c) => ({
+      name: c.country.name,
+      code: c.country.code,
+    }));
   // const fetchPage = (page: number, search: string = "") => {
   //   axios
   //     .get<PlayerPage>(
@@ -78,7 +83,13 @@ function App() {
 
   const handleSearch = () => {
     console.log("sortType : " + sortType);
-    fetchPage(0, searchTerm, sortType);
+
+    // const filters = selectedCountries.map((c) => ({
+    //   name: c.country.name,
+    //   code: c.country.code,
+    // }));
+
+    fetchPage(0, searchTerm, sortType, getCurrentFilters());
   };
 
   return (
@@ -123,7 +134,12 @@ function App() {
                   | "OVR_DESC"
                   | "OVR_ASC";
                 setSortType(newSort);
-                fetchPage(0, searchTerm, newSort);
+                // const filters = selectedCountries.map((c) => ({
+                //   name: c.country.name,
+                //   code: c.country.code,
+                // }));
+
+                fetchPage(0, searchTerm, newSort, getCurrentFilters());
               }}
               style={{ padding: "6px", fontSize: "14px" }}
             >
@@ -200,18 +216,7 @@ function App() {
                 alt={country.country.name}
                 style={{ width: 25, height: 20 }}
               />
-              <Icon
-                size="small"
-                style={{
-                  padding: 0,
-                  marginLeft: "auto",
-                  outline: "none",
-                  boxShadow: "none",
-                  color: "white",
-                }}
-              >
-                <CloseIcon fontSize="small" />
-              </Icon>
+              <CloseIcon fontSize="small" />
             </Button>
           ))}
         </div>
@@ -258,7 +263,9 @@ function App() {
         {Array.from({ length: pageInfo.totalPages }).map((_, index) => (
           <button
             key={index}
-            onClick={() => fetchPage(index, searchTerm, sortType)}
+            onClick={() =>
+              fetchPage(index, searchTerm, sortType, getCurrentFilters())
+            }
             style={{
               margin: "0 4px",
               padding: "4px 8px",
