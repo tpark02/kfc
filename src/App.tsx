@@ -4,10 +4,14 @@ import React, { useState, useEffect } from "react";
 import { Player } from "./types/Player";
 import { PlayerPage } from "./types/PlayerPage";
 import FilterModal from "./Modal/FilterModal";
+import { Button, Icon } from "@mui/material";
+import { CountryList } from "./types/Country";
+import CloseIcon from "@mui/icons-material/Close";
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<CountryList>([]);
   const [pageInfo, setPageInfo] = useState<Omit<PlayerPage, "content">>({
     totalPages: 0,
     totalElements: 0,
@@ -49,16 +53,16 @@ function App() {
       | "RANK_DESC"
       | "RANK_ASC"
       | "OVR_DESC"
-      | "OVR_ASC" = sortType
+      | "OVR_ASC" = sortType,
+    filters: { name: string; code: string }[] = []
   ) => {
     axios
-      .get<PlayerPage>("http://localhost:8080/api/player", {
-        params: {
-          page,
-          size: pageInfo.size,
-          search,
-          sortType: sort,
-        },
+      .post<PlayerPage>("http://localhost:8080/api/player", {
+        page,
+        size: pageInfo.size || 10,
+        search,
+        sortType: sort,
+        filters,
       })
       .then((response) => {
         setPlayers(response.data.content);
@@ -74,7 +78,7 @@ function App() {
 
   const handleSearch = () => {
     console.log("sortType : " + sortType);
-    fetchPage(0, searchTerm, sortType); // 검색은 항상 0페이지부터
+    fetchPage(0, searchTerm, sortType);
   };
 
   return (
@@ -84,7 +88,7 @@ function App() {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between", // 🔥 좌우 끝 정렬
+          justifyContent: "space-between",
           alignItems: "center",
           width: "90%",
           margin: "16px auto",
@@ -94,7 +98,7 @@ function App() {
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <input
             type="text"
-            placeholder="이름으로 검색"
+            placeholder="name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ padding: "6px", fontSize: "14px", width: "200px" }}
@@ -144,10 +148,75 @@ function App() {
             <FilterModal
               isOpen={isModalOpen}
               onClose={() => setModalOpen(false)}
+              onSelectCountry={(newCountryList) => {
+                setSelectedCountries(newCountryList);
+                const filters =
+                  newCountryList.length > 0
+                    ? newCountryList.map((country) => ({
+                        name: country.country.name,
+                        code: country.country.code,
+                      }))
+                    : [];
+                fetchPage(0, searchTerm, sortType, filters);
+              }}
+              prevList={selectedCountries}
             />
           </div>
         </div>
       </div>
+      {selectedCountries.length > 0 && (
+        <div
+          style={{
+            width: "90%",
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "flex-start",
+            marginBottom: "16px",
+          }}
+        >
+          {selectedCountries.map((country) => (
+            <Button
+              key={country.country.code}
+              variant="contained"
+              style={{ display: "flex", alignItems: "center", gap: 8 }}
+              onClick={() => {
+                const newList = selectedCountries.filter(
+                  (c) => c.country.code !== country.country.code
+                );
+                const filters =
+                  newList.length > 0
+                    ? newList.map((country) => ({
+                        name: country.country.name,
+                        code: country.country.code,
+                      }))
+                    : [];
+                fetchPage(0, searchTerm, sortType, filters);
+                setSelectedCountries(newList);
+              }}
+            >
+              {country.country.name}
+              <img
+                src={`https://flagcdn.com/w40/${country.country.code}.png`}
+                alt={country.country.name}
+                style={{ width: 25, height: 20 }}
+              />
+              <Icon
+                size="small"
+                style={{
+                  padding: 0,
+                  marginLeft: "auto",
+                  outline: "none",
+                  boxShadow: "none",
+                  color: "white",
+                }}
+              >
+                <CloseIcon fontSize="small" />
+              </Icon>
+            </Button>
+          ))}
+        </div>
+      )}
+
       {/* 🧾 Player Table */}
       <table style={{ width: "90%", margin: "0 auto" }}>
         <tbody>

@@ -1,16 +1,24 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import "./Modal.css";
-import AddIcon from "@mui/icons-material/Add";
+import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import NationModal from "./NationModal";
+import { CountryList } from "../types/Country";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSelectCountry: (selectedCountries: CountryList) => void;
+  prevList: CountryList; // 👈 기존 선택된 목록 받기
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
+const FilterModal: React.FC<FilterModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectCountry,
+  prevList,
+}) => {
   const [isNationModalOpen, setNationModalOpen] = useState(false);
 
   useEffect(() => {
@@ -59,6 +67,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
         <NationModal
           isOpen={isNationModalOpen}
           onClose={() => setNationModalOpen(false)}
+          onSelectCountry={onSelectCountry}
+          prevList={prevList} // 👈 추가
         ></NationModal>
       </div>
     </div>

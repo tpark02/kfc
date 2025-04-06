@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
+import "./Modal.css";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { countries } from "../data/countries";
-import "./Modal.css";
+import { CountryList } from "../types/Country";
 
 interface NationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSelectCountry: (countries: CountryList) => void; // 배열 전달
+  prevList: CountryList; // 👈 기존 선택된 목록 받기
 }
 
-const NationModal: React.FC<NationModalProps> = ({ isOpen, onClose }) => {
+const NationModal: React.FC<NationModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectCountry,
+  prevList,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -71,7 +79,15 @@ const NationModal: React.FC<NationModalProps> = ({ isOpen, onClose }) => {
             alignItems="center"
             mb={1}
             style={{ cursor: "pointer" }}
-            onClick={() => console.log(`선택된 국가: ${country.name}`)}
+            onClick={() => {
+              const alreadySelected = prevList.some(
+                (c) => c.country.code === country.code
+              );
+              if (alreadySelected) return;
+
+              const newList = [...prevList, { country }];
+              onSelectCountry(newList);
+            }}
           >
             <img
               src={`https://flagcdn.com/w40/${country.code}.png`}
