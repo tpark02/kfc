@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Player } from "./types/Player";
 import { PlayerPage } from "./types/PlayerPage";
 import FilterModal from "./Modal/FilterModal";
-import { Button, Icon } from "@mui/material";
+import { Button } from "@mui/material";
 import { CountryList } from "./types/Country";
 import CloseIcon from "@mui/icons-material/Close";
 
