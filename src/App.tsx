@@ -175,7 +175,9 @@ function App() {
                     : [];
                 fetchPage(0, searchTerm, sortType, filters);
               }}
+              onSelectTeam={() => {}}
               prevList={selectedCountries}
+              prevTeamList={[]}
             />
           </div>
         </div>

@@ -2,29 +2,37 @@ import React from "react";
 import "./Modal.css";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import NationModal from "./NationModal";
 import { CountryList } from "../types/Country";
+import { Team } from "../types/Team";
+import NationModal from "./NationModal";
+import TeamModal from "./TeamModal";
+import AddIcon from "@mui/icons-material/Add";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectCountry: (selectedCountries: CountryList) => void;
-  prevList: CountryList; // 👈 기존 선택된 목록 받기
+  onSelectTeam: (selectedTeams: Team[]) => void;
+  prevList: CountryList;
+  prevTeamList: Team[];
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
   onClose,
   onSelectCountry,
+  onSelectTeam,
   prevList,
+  prevTeamList,
 }) => {
   const [isNationModalOpen, setNationModalOpen] = useState(false);
+  const [isTeamModalOpen, setTeamModalOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (isNationModalOpen) return;
+        if (isTeamModalOpen) return;
         onClose();
       }
     };
@@ -36,7 +44,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose, isNationModalOpen]);
+  }, [isOpen, onClose, isNationModalOpen, isTeamModalOpen]);
 
   if (!isOpen) return null;
 
@@ -52,7 +60,13 @@ const FilterModal: React.FC<FilterModalProps> = ({
         >
           Country
         </Button>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => {
+            setTeamModalOpen(true);
+          }}
+        >
           Club
         </Button>
         <Button variant="contained" startIcon={<AddIcon />}>
@@ -68,8 +82,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
           isOpen={isNationModalOpen}
           onClose={() => setNationModalOpen(false)}
           onSelectCountry={onSelectCountry}
-          prevList={prevList} // 👈 추가
+          prevList={prevList}
         ></NationModal>
+        <TeamModal
+          isOpen={isTeamModalOpen}
+          onClose={() => setTeamModalOpen(false)}
+          onSelectTeam={onSelectTeam}
+          prevList={prevTeamList}
+        ></TeamModal>
       </div>
     </div>
   );
