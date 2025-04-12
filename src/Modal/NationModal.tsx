@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import { Box, Typography, Button, TextField } from "@mui/material";
-import { countries } from "../data/countries";
+import { countryData } from "../data/countryData";
 import { CountryList } from "../types/Country";
 
 interface NationModalProps {
@@ -35,8 +35,8 @@ const NationModal: React.FC<NationModalProps> = ({
 
   if (!isOpen) return null;
 
-  const filteredCountries = countries.filter((country) =>
-    country.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCountries = countryData.filter((d) =>
+    d.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -105,11 +105,11 @@ const NationModal: React.FC<NationModalProps> = ({
 
         <Button
           variant="contained"
+          color="secondary"
           onClick={onClose}
-          style={{ marginTop: 16 }}
-          fullWidth
+          style={{ marginTop: 1 }}
         >
-          닫기
+          close
         </Button>
       </div>
     </div>

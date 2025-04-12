@@ -120,9 +120,9 @@ const TeamModal: React.FC<TeamModalProps> = ({
 
         <Button
           variant="contained"
+          color="secondary"
           onClick={onClose}
-          style={{ marginTop: 16 }}
-          fullWidth
+          sx={{ marginLeft: 1 }}
         >
           close
         </Button>

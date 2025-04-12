@@ -177,9 +177,11 @@ function App() {
               }}
               onSelectTeam={() => {}}
               onSelectLeague={() => {}}
+              onSelectPlayerPos={() => {}}
               prevList={selectedCountries}
               prevTeamList={[]}
               prevLeagueList={[]}
+              prevplayerPositionList={[]}
             />
           </div>
         </div>

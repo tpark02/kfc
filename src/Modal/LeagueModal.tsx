@@ -120,9 +120,9 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
         {/* ✅ 취소 버튼 */}
         <Button
           variant="contained"
+          color="secondary"
           onClick={onClose}
-          style={{ marginTop: 16 }}
-          fullWidth
+          sx={{ marginLeft: 1 }}
         >
           close
         </Button>

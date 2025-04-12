@@ -1,4 +1,4 @@
-export const countries = [
+export const countryData = [
   { code: 'al', name: 'Albania' },
   { code: 'dz', name: 'Algeria' },
   { code: 'ad', name: 'Andorra' },
