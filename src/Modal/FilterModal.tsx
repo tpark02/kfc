@@ -7,14 +7,18 @@ import { Team } from "../types/Team";
 import NationModal from "./NationModal";
 import TeamModal from "./TeamModal";
 import AddIcon from "@mui/icons-material/Add";
+import { League } from "../types/League";
+import LeagueModal from "./LeagueModal";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectCountry: (selectedCountries: CountryList) => void;
   onSelectTeam: (selectedTeams: Team[]) => void;
+  onSelectLeague: (selectedLeagues: League[]) => void;
   prevList: CountryList;
   prevTeamList: Team[];
+  prevLeagueList: League[];
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({
@@ -22,11 +26,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
   onClose,
   onSelectCountry,
   onSelectTeam,
+  onSelectLeague,
   prevList,
   prevTeamList,
+  prevLeagueList,
 }) => {
   const [isNationModalOpen, setNationModalOpen] = useState(false);
   const [isTeamModalOpen, setTeamModalOpen] = useState(false);
+  const [isLeagueModalOpen, setLeagueModalOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -44,7 +51,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose, isNationModalOpen, isTeamModalOpen]);
+  }, [isOpen, onClose, isNationModalOpen, isTeamModalOpen, isLeagueModalOpen]);
 
   if (!isOpen) return null;
 
@@ -69,7 +76,13 @@ const FilterModal: React.FC<FilterModalProps> = ({
         >
           Club
         </Button>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => {
+            setLeagueModalOpen(true);
+          }}
+        >
           League
         </Button>
         <Button variant="contained" startIcon={<AddIcon />}>
@@ -90,6 +103,12 @@ const FilterModal: React.FC<FilterModalProps> = ({
           onSelectTeam={onSelectTeam}
           prevList={prevTeamList}
         ></TeamModal>
+        <LeagueModal
+          isOpen={isLeagueModalOpen}
+          onClose={() => setLeagueModalOpen(false)}
+          onSelectLeague={onSelectLeague}
+          prevList={prevLeagueList}
+        ></LeagueModal>
       </div>
     </div>
   );

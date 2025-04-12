@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
-import "./Modal.css";
 import { Box, Typography, Button, TextField } from "@mui/material";
-import { countries } from "../data/countries";
-import { CountryList } from "../types/Country";
+import { League } from "../types/League";
+import { LeaguePage } from "../types/LeaguePage";
+import axios from "axios";
 
-interface NationModalProps {
+interface LeagueModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectCountry: (countries: CountryList) => void; // 배열 전달
-  prevList: CountryList; // 👈 기존 선택된 목록 받기
+  onSelectLeague: (leagues: League[]) => void;
+  prevList: League[];
 }
 
-const NationModal: React.FC<NationModalProps> = ({
+const LeagueModal: React.FC<LeagueModalProps> = ({
   isOpen,
   onClose,
-  onSelectCountry,
+  onSelectLeague,
   prevList,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [leagues, setLeagues] = useState<League[]>([]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -33,10 +34,20 @@ const NationModal: React.FC<NationModalProps> = ({
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    axios
+      .get<LeaguePage>("http://localhost:8080/api/leagues", {})
+      .then((response) => {
+        console.log(response.data.content);
+        setLeagues(response.data.content);
+      })
+      .catch((err) => console.error(err));
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
-  const filteredCountries = countries.filter((country) =>
-    country.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredLeagues = leagues.filter((league) =>
+    league.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -71,49 +82,53 @@ const NationModal: React.FC<NationModalProps> = ({
           }}
         />
 
-        {/* ✅ 필터링된 국가 리스트 */}
-        {filteredCountries.map((country) => (
+        {/* ✅ 리그 리스트 */}
+        {filteredLeagues.map((league) => (
           <Box
-            key={country.code}
+            key={league.id}
             display="flex"
             alignItems="center"
             mb={1}
             style={{ cursor: "pointer" }}
             onClick={() => {
               const alreadySelected = prevList.some(
-                (c) => c.country.code === country.code
+                (c) => c.name === league.name
               );
               if (alreadySelected) return;
 
-              const newList = [...prevList, { country }];
-              onSelectCountry(newList);
+              const newList = [...prevList, league];
+              onSelectLeague(newList);
             }}
           >
             <img
-              src={`https://flagcdn.com/w40/${country.code}.png`}
-              alt={country.name}
+              src={league.url !== "" ? league.url : "../../img/fallback.png"}
+              alt={league.name}
               style={{
                 width: "8%",
                 height: "8%",
                 marginRight: 8,
                 backgroundColor: "white", // ✅ add white background
               }}
+              onError={(e) => {
+                e.currentTarget.onerror = null; // 무한 루프 방지
+                e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
+              }}
             />
-            <Typography variant="body2">{country.name}</Typography>
+            <Typography>{league.name}</Typography>
           </Box>
         ))}
-
+        {/* ✅ 취소 버튼 */}
         <Button
           variant="contained"
           onClick={onClose}
           style={{ marginTop: 16 }}
           fullWidth
         >
-          닫기
+          close
         </Button>
       </div>
     </div>
   );
 };
 
-export default NationModal;
+export default LeagueModal;

@@ -100,13 +100,20 @@ const TeamModal: React.FC<TeamModalProps> = ({
             }}
           >
             <img
-              src={team.url}
+              src={team.url !== "" ? team.url : "../../img/fallback.png"}
               alt={team.name}
-              style={{ width: 40, height: 30, marginRight: 8 }}
+              style={{
+                width: "8%",
+                height: "8%",
+                marginRight: 8,
+                backgroundColor: "white", // ✅ add white background
+              }}
               onError={(e) => {
-                e.currentTarget.style.display = "none";
+                e.currentTarget.onerror = null; // 무한 루프 방지
+                e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
               }}
             />
+
             <Typography variant="body2">{team.name}</Typography>
           </Box>
         ))}
@@ -117,7 +124,7 @@ const TeamModal: React.FC<TeamModalProps> = ({
           style={{ marginTop: 16 }}
           fullWidth
         >
-          닫기
+          close
         </Button>
       </div>
     </div>
