@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { countryData } from "../data/countryData";
-import { CountryList } from "../types/Country";
+import { Country } from "../types/Country";
 
 interface NationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectCountry: (countries: CountryList) => void; // 배열 전달
-  prevList: CountryList; // 👈 기존 선택된 목록 받기
+  onSelectCountry: (countries: Country[]) => void; // 배열 전달
+  prevList: Country[]; // 👈 기존 선택된 목록 받기
 }
 
 const NationModal: React.FC<NationModalProps> = ({
@@ -81,11 +81,11 @@ const NationModal: React.FC<NationModalProps> = ({
             style={{ cursor: "pointer" }}
             onClick={() => {
               const alreadySelected = prevList.some(
-                (c) => c.country.code === country.code
+                (c) => c.code === country.code
               );
               if (alreadySelected) return;
 
-              const newList = [...prevList, { country }];
+              const newList = [...prevList, country];
               onSelectCountry(newList);
             }}
           >

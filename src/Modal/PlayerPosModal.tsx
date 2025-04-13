@@ -2,13 +2,13 @@ import "./Modal.css";
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { playerPosData } from "../data/playerPosData";
-import { PlayerPosList } from "../types/PlayerPosition";
+import { PlayerPos } from "../types/PlayerPosition";
 
 interface PlayerPosModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectPlayerPos: (playerPositions: PlayerPosList) => void; // 배열 전달
-  prevList: PlayerPosList;
+  onSelectPlayerPos: (playerPositions: PlayerPos[]) => void; // 배열 전달
+  prevList: PlayerPos[];
 }
 
 const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
@@ -36,7 +36,7 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
   if (!isOpen) return null;
 
   const filteredPositions = playerPosData.filter((d) =>
-    d.name.toLowerCase().includes(searchTerm.toLowerCase())
+    d.code.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -58,6 +58,15 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
                 color: "gray", // ✅ placeholder 색
                 opacity: 1, // ✅ 일부 브라우저에서 회색 제대로 보이게
               },
+              "& fieldset": {
+                borderColor: "gray",
+              },
+              "&:hover fieldset": {
+                borderColor: "gray",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "gray",
+              },
             },
           }}
         />
@@ -76,16 +85,15 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
               key={playerPos.code}
               display="flex"
               alignItems="center"
-              justifyContent="space-between"
-              padding={1}
-              borderRadius={1}
+              mb={1}
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 const alreadySelected = prevList.some(
-                  (c) => c.playerPos.code === playerPos.code
+                  (c) => c.code === playerPos.code
                 );
                 if (alreadySelected) return;
 
-                const newList = [...prevList, { playerPos }];
+                const newList = [...prevList, playerPos];
                 onSelectPlayerPos(newList);
               }}
             >
@@ -95,7 +103,6 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
             </Box>
           ))}
         </Box>
-
         <Button
           variant="contained"
           color="secondary"

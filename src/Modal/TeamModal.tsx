@@ -38,7 +38,7 @@ const TeamModal: React.FC<TeamModalProps> = ({
     axios
       .get<TeamPage>("http://localhost:8080/api/teams", {})
       .then((response) => {
-        console.log(response.data.content);
+        //console.log(response.data.content);
         setTeams(response.data.content);
       })
       .catch((err) => console.error(err));

@@ -38,7 +38,7 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
     axios
       .get<LeaguePage>("http://localhost:8080/api/leagues", {})
       .then((response) => {
-        console.log(response.data.content);
+        //console.log(response.data.content);
         setLeagues(response.data.content);
       })
       .catch((err) => console.error(err));

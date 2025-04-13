@@ -8,21 +8,21 @@ import PlayerPosModal from "./PlayerPosModal";
 import { League } from "../types/League";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-import { CountryList } from "../types/Country";
+import { Country } from "../types/Country";
 import { Team } from "../types/Team";
-import { PlayerPosList } from "../types/PlayerPosition";
+import { PlayerPos } from "../types/PlayerPosition";
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectCountry: (selectedCountries: CountryList) => void;
+  onSelectCountry: (selectedCountries: Country[]) => void;
   onSelectTeam: (selectedTeams: Team[]) => void;
   onSelectLeague: (selectedLeagues: League[]) => void;
-  onSelectPlayerPos: (selectedPlayerPositions: PlayerPosList) => void;
-  prevList: CountryList;
+  onSelectPlayerPos: (selectedPlayerPositions: PlayerPos[]) => void;
+  prevList: Country[];
   prevTeamList: Team[];
   prevLeagueList: League[];
-  prevplayerPositionList: PlayerPosList;
+  prevplayerPositionList: PlayerPos[];
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({

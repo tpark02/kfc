@@ -5,13 +5,20 @@ import { Player } from "./types/Player";
 import { PlayerPage } from "./types/PlayerPage";
 import FilterModal from "./Modal/FilterModal";
 import { Button } from "@mui/material";
-import { CountryList } from "./types/Country";
+import { Country } from "./types/Country";
 import CloseIcon from "@mui/icons-material/Close";
+import { Team } from "./types/Team";
+import { PlayerPos } from "./types/PlayerPosition";
+import { League } from "./types/League"; // Ensure this import exists
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [selectedCountries, setSelectedCountries] = useState<CountryList>([]);
+  const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
+  const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
+  const [selectedPosition, setSelectedPosition] = useState<PlayerPos[]>([]);
+  const [selectedLeagues, setSelectedLeagues] = useState<League[]>([]);
+
   const [pageInfo, setPageInfo] = useState<Omit<PlayerPage, "content">>({
     totalPages: 0,
     totalElements: 0,
@@ -27,28 +34,6 @@ function App() {
     fetchPage(0, searchTerm, "AGE_DESC"); // 초기 첫 페이지
   }, []);
 
-  const getCurrentFilters = () =>
-    selectedCountries.map((c) => ({
-      name: c.country.name,
-      code: c.country.code,
-    }));
-  // const fetchPage = (page: number, search: string = "") => {
-  //   axios
-  //     .get<PlayerPage>(
-  //       `http://localhost:8080/api/player?page=${page}&size=${pageInfo.size}&search=${search}`
-  //     )
-  //     .then((response) => {
-  //       setPlayers(response.data.content);
-  //       setPageInfo({
-  //         totalPages: response.data.totalPages,
-  //         totalElements: response.data.totalElements,
-  //         number: response.data.number,
-  //         size: response.data.size,
-  //       });
-  //     })
-  //     .catch((err) => console.error(err));
-  // };
-
   const fetchPage = (
     page: number,
     search: string = "",
@@ -59,7 +44,10 @@ function App() {
       | "RANK_ASC"
       | "OVR_DESC"
       | "OVR_ASC" = sortType,
-    filters: { name: string; code: string }[] = []
+    countryFilter: { name: string; code: string }[] = [],
+    teamFilter: { id: number; name: string }[] = [],
+    leagueFilter: { id: number; name: string }[] = [],
+    playerPositionFilter: { name: string; code: string }[] = []
   ) => {
     axios
       .post<PlayerPage>("http://localhost:8080/api/player", {
@@ -67,7 +55,10 @@ function App() {
         size: pageInfo.size || 10,
         search,
         sortType: sort,
-        filters,
+        countryFilter,
+        teamFilter,
+        leagueFilter,
+        playerPositionFilter,
       })
       .then((response) => {
         setPlayers(response.data.content);
@@ -89,7 +80,15 @@ function App() {
     //   code: c.country.code,
     // }));
 
-    fetchPage(0, searchTerm, sortType, getCurrentFilters());
+    fetchPage(
+      0,
+      searchTerm,
+      sortType,
+      selectedCountries,
+      selectedTeams,
+      selectedLeagues,
+      selectedPosition
+    );
   };
 
   return (
@@ -134,12 +133,15 @@ function App() {
                   | "OVR_DESC"
                   | "OVR_ASC";
                 setSortType(newSort);
-                // const filters = selectedCountries.map((c) => ({
-                //   name: c.country.name,
-                //   code: c.country.code,
-                // }));
-
-                fetchPage(0, searchTerm, newSort, getCurrentFilters());
+                fetchPage(
+                  0,
+                  searchTerm,
+                  newSort,
+                  selectedCountries,
+                  selectedTeams,
+                  selectedLeagues,
+                  selectedPosition
+                );
               }}
               style={{ padding: "6px", fontSize: "14px" }}
             >
@@ -166,22 +168,57 @@ function App() {
               onClose={() => setModalOpen(false)}
               onSelectCountry={(newCountryList) => {
                 setSelectedCountries(newCountryList);
-                const filters =
-                  newCountryList.length > 0
-                    ? newCountryList.map((country) => ({
-                        name: country.country.name,
-                        code: country.country.code,
-                      }))
-                    : [];
-                fetchPage(0, searchTerm, sortType, filters);
+                fetchPage(
+                  0,
+                  searchTerm,
+                  sortType,
+                  newCountryList,
+                  selectedTeams,
+                  selectedLeagues,
+                  selectedPosition
+                );
               }}
-              onSelectTeam={() => {}}
-              onSelectLeague={() => {}}
-              onSelectPlayerPos={() => {}}
+              onSelectTeam={(newTeamList) => {
+                console.log("TeamList: ", newTeamList);
+                setSelectedTeams(newTeamList);
+                fetchPage(
+                  0,
+                  searchTerm,
+                  sortType,
+                  selectedCountries,
+                  newTeamList,
+                  selectedLeagues,
+                  selectedPosition
+                );
+              }}
+              onSelectLeague={(newLeagueList) => {
+                setSelectedLeagues(newLeagueList);
+                fetchPage(
+                  0,
+                  searchTerm,
+                  sortType,
+                  selectedCountries,
+                  selectedTeams,
+                  newLeagueList,
+                  selectedPosition
+                );
+              }}
+              onSelectPlayerPos={(newPositionList) => {
+                setSelectedPosition(newPositionList);
+                fetchPage(
+                  0,
+                  searchTerm,
+                  sortType,
+                  selectedCountries,
+                  selectedTeams,
+                  selectedLeagues,
+                  newPositionList
+                );
+              }}
               prevList={selectedCountries}
-              prevTeamList={[]}
-              prevLeagueList={[]}
-              prevplayerPositionList={[]}
+              prevTeamList={selectedTeams}
+              prevLeagueList={selectedLeagues}
+              prevplayerPositionList={selectedPosition}
             />
           </div>
         </div>
@@ -198,28 +235,28 @@ function App() {
         >
           {selectedCountries.map((country) => (
             <Button
-              key={country.country.code}
+              key={country.code}
               variant="contained"
               style={{ display: "flex", alignItems: "center", gap: 8 }}
               onClick={() => {
                 const newList = selectedCountries.filter(
-                  (c) => c.country.code !== country.country.code
+                  (c) => c.code !== country.code
                 );
                 const filters =
                   newList.length > 0
                     ? newList.map((country) => ({
-                        name: country.country.name,
-                        code: country.country.code,
+                        name: country.name,
+                        code: country.code,
                       }))
                     : [];
                 fetchPage(0, searchTerm, sortType, filters);
                 setSelectedCountries(newList);
               }}
             >
-              {country.country.name}
+              {country.name}
               <img
-                src={`https://flagcdn.com/w40/${country.country.code}.png`}
-                alt={country.country.name}
+                src={`https://flagcdn.com/w40/${country.code}.png`}
+                alt={country.name}
                 style={{ width: 25, height: 20 }}
               />
               <CloseIcon fontSize="small" />
@@ -270,7 +307,15 @@ function App() {
           <button
             key={index}
             onClick={() =>
-              fetchPage(index, searchTerm, sortType, getCurrentFilters())
+              fetchPage(
+                index,
+                searchTerm,
+                sortType,
+                selectedCountries,
+                selectedTeams,
+                selectedLeagues,
+                selectedPosition
+              )
             }
             style={{
               margin: "0 4px",
