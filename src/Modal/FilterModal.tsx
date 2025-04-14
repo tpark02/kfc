@@ -51,6 +51,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
   const [isLeagueModalOpen, setLeagueModalOpen] = useState(false);
   const [isPlayerPositionModalOpen, setPlayerPositionModalOpen] =
     useState(false);
+  const prevIsOpen = React.useRef(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -59,18 +60,21 @@ const FilterModal: React.FC<FilterModalProps> = ({
       }
     };
 
-    if (isOpen) {
+    if (isOpen && !prevIsOpen.current) {
       setNationModalOpen(true);
       setTeamModalOpen(false);
       setLeagueModalOpen(false);
       setPlayerPositionModalOpen(false);
+
       document.addEventListener("keydown", handleKeyDown);
     }
+
+    prevIsOpen.current = isOpen;
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
