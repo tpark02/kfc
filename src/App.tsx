@@ -7,7 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 // 스타일
 import "./App.css";
-
+import { getStatDisplay } from "./style/PlayerStyle.tsx";
 // 모달
 import FilterModal from "./Modal/FilterModal";
 
@@ -363,41 +363,44 @@ function App() {
       )}
 
       {/* 🧾 Player Table */}
-      <table style={{ width: "90%", margin: "0 auto" }}>
-        <tbody>
-          {players.map((repo) => (
-            <React.Fragment key={repo.id}>
-              <tr>
-                <td rowSpan={2}>
-                  <img
-                    src={repo.img}
-                    alt={repo.name}
-                    style={{ width: "100px", height: "auto" }}
-                  />
-                </td>
-                <td className="player-name" rowSpan={2}>
-                  {repo.name}
-                </td>
-                <td className="player-pos" rowSpan={2}>
-                  {" "}
-                  {repo.pos}{" "}
-                </td>
-                <td>{repo.age}</td>
-                <td rowSpan={2}>{repo.ovr}</td>
-                <td>{repo.pac}</td>
-                <td>{repo.sho}</td>
-                <td>{repo.pas}</td>
-              </tr>
-              <tr>
-                <td>{repo.height}</td>
-                <td>{repo.dri}</td>
-                <td>{repo.def}</td>
-                <td>{repo.phy}</td>
-              </tr>
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
+      {players.map((repo) => (
+        <div key={repo.id} className="player-wrapper">
+          {/* 이미지 */}
+          <div className="cell-img">
+            <img src={repo.img} alt={repo.name} className="player-img" />
+          </div>
+
+          {/* 카드 본문 - 테이블로 유지 */}
+          <div className="card-row">
+            <table className="player-table">
+              <tbody>
+                <tr>
+                  <td rowSpan={2} className="cell">
+                    {repo.name}
+                  </td>
+                  <td rowSpan={2} className="cell">
+                    {repo.pos}
+                  </td>
+                  <td className="cell">{repo.age}</td>
+                  <td rowSpan={2} className="cell">
+                    {getStatDisplay("OVR", repo.ovr)}
+                  </td>
+                  <td className="cell">{getStatDisplay("PAC", repo.pac)}</td>
+                  <td className="cell">{getStatDisplay("SHO", repo.sho)}</td>
+                  <td className="cell">{getStatDisplay("PAS", repo.pas)}</td>
+                </tr>
+                <tr>
+                  <td className="cell">{repo.height}</td>
+                  <td className="cell">{getStatDisplay("DRI", repo.dri)}</td>
+                  <td className="cell">{getStatDisplay("DEF", repo.def)}</td>
+                  <td className="cell">{getStatDisplay("PHY", repo.phy)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+
       {/* 📄 Pagination */}
       <div style={{ marginTop: "16px", textAlign: "center" }}>
         {Array.from({ length: pageInfo.totalPages }).map((_, index) => (

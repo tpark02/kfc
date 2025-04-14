@@ -53,12 +53,7 @@ th, td {
   text-align: center;
 }
 
-.player-name {
-  font-weight: 600;
+.player {
+  font-weight: bold;
   font-size: 1.1rem;
-}
-
-.player-pos {
-  color: #555;
-  font-style: italic;
 }
