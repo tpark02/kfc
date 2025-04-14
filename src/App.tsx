@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 // MUI
@@ -37,6 +37,10 @@ function App() {
   const [sortType, setSortType] = useState<
     "AGE_ASC" | "AGE_DESC" | "RANK_DESC" | "RANK_ASC" | "OVR_DESC" | "OVR_ASC"
   >("AGE_DESC");
+
+  const handleClose = useCallback(() => {
+    setModalOpen(false);
+  }, []);
 
   useEffect(() => {
     fetchPage(0, searchTerm, "AGE_DESC"); // 초기 첫 페이지
@@ -166,7 +170,9 @@ function App() {
             <button onClick={() => setModalOpen(true)}>Filter</button>
             <FilterModal
               isOpen={isModalOpen}
-              onClose={() => setModalOpen(false)}
+              onClose={() => {
+                handleClose();
+              }}
               onSelectCountry={(newCountryList) => {
                 setSelectedCountries(newCountryList);
                 fetchPage(
@@ -365,16 +371,18 @@ function App() {
       {/* 🧾 Player Table */}
       {players.map((repo) => (
         <div key={repo.id} className="player-wrapper">
-          {/* 이미지 */}
-          <div className="cell-img">
-            <img src={repo.img} alt={repo.name} className="player-img" />
-          </div>
-
           {/* 카드 본문 - 테이블로 유지 */}
           <div className="card-row">
             <table className="player-table">
               <tbody>
                 <tr>
+                  <td rowSpan={2}>
+                    <img
+                      src={repo.img}
+                      alt={repo.name}
+                      className="player-img"
+                    />
+                  </td>
                   <td rowSpan={2} className="cell">
                     {repo.name}
                   </td>

@@ -46,12 +46,17 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+  outline: 2px solid #aaa;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
 }
+
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
+  box-shadow: none;
 }
 
 @media (prefers-color-scheme: light) {
@@ -60,7 +65,7 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #ffffff80;
   }
   button {
     background-color: #f9f9f9;
@@ -76,7 +81,7 @@ button:focus-visible {
 }
 
 .card-row {
-  flex: 1;
+  flex: 1; /* ✅ 나머지 공간 차지 */
   background-color: #1e1e1e;
   padding: 12px;
   border-radius: 8px;
@@ -84,8 +89,10 @@ button:focus-visible {
   transition: background-color 0.2s;
 }
 
-.player-wrapper:hover .card-row {
-  background-color: #2a2a2a;
+.player-wrapper:hover {
+  outline: 2px solid #ffffff80;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
 }
 
 /* --- Table inside card --- */
@@ -111,7 +118,7 @@ td {
 td.cell {
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.035) !important;
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
   font-size: 0.95rem;
   vertical-align: middle;
@@ -119,35 +126,27 @@ td.cell {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
-/* --- Image block --- */
-.cell-img {
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 .player-img {
   height: 100%;
   width: auto;
-  max-height: 160px; /* ✅ 이미지 최대 높이 제한 */
-  object-fit: contain; /* ✅ 내용이 잘리지 않게 */
-  border-radius: 6px;
-  transition: outline 0.2s ease-in-out;
-  padding: 10px;
+  max-height: 200px;     /* ✅ 또는 적당한 최대치 */
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;         /* ✅ 가운데 정렬 */
 }
 
-.player-wrapper:hover .player-img {
-  outline: 2px solid #ffffff80;
-  outline-offset: 2px;
+.player-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: stretch; /* ✅ 중요: 자식 높이 맞춤 */
+  margin-bottom: 16px;
 }
 
 /* --- Optional: Flex-based card content --- */
 .card-flex {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
   gap: 12px;
 }
 
@@ -156,10 +155,31 @@ td.cell {
   min-width: 80px;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.035);
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
   font-size: 0.95rem;
   text-align: center;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
   transition: background-color 0.2s;
+}
+
+.filter-box {    
+  transition: all 0.0s ;
+}
+
+.filter-box:hover {
+  outline: 2px solid #aaa;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
+}
+
+.filter-button {
+  border-radius: 8px;
+  font-size: 12px !important;
+}
+
+.filter-button:hover {
+  outline: 2px solid #aaa;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
 }
