@@ -28,6 +28,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  display: block; /* 기본값으로 되돌림 */
 }
 
 h1 {
@@ -72,14 +73,6 @@ button:focus-visible {
   }
 }
 
-/* --- Layout & Card --- */
-.player-wrapper {
-  display: flex;
-  gap: 12px;
-  align-items: stretch;
-  margin-bottom: 16px;
-}
-
 .card-row {
   flex: 1; /* ✅ 나머지 공간 차지 */
   background-color: #1e1e1e;
@@ -87,13 +80,6 @@ button:focus-visible {
   border-radius: 8px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   transition: background-color 0.2s;
-}
-
-.player-wrapper:hover {
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.035);
-  outline: 2px solid #ffffff80;
-  outline-offset: 2px;  
 }
 
 /* --- Table inside card --- */
@@ -116,52 +102,13 @@ td {
   box-shadow: none;
 }
 
-td.cell {
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.035) !important;
-  border-radius: 8px;
-  color: white;
-  font-size: 0.95rem;
-  vertical-align: middle;
-  text-align: center;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
-}
-
 .player-img {
   height: 100%;
-  width: auto;
+  width: 80%;
   max-height: 200px;     /* ✅ 또는 적당한 최대치 */
   object-fit: contain;
   display: block;
   margin: 0 auto;         /* ✅ 가운데 정렬 */
-}
-
-.player-wrapper {
-  display: flex;
-  gap: 12px;
-  align-items: stretch; /* ✅ 중요: 자식 높이 맞춤 */
-  margin-bottom: 16px;
-}
-
-/* --- Optional: Flex-based card content --- */
-.card-flex {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.cell {
-  flex: 1 1 8%;
-  min-width: 80px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.035);
-  border-radius: 8px;
-  color: white;
-  font-size: 0.95rem;
-  text-align: center;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
-  transition: background-color 0.2s;
 }
 
 .filter-box {    
@@ -183,4 +130,57 @@ td.cell {
   outline: 2px solid #aaa;
   outline-offset: 2px;
   background-color: rgba(255, 255, 255, 0.035);
+}
+
+
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.card-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;  
+  border-radius: 8px;
+  padding: 8px;
+  box-sizing: border-box;
+  background-color: #1e1e1e;
+}
+
+.player-table {
+  width: 100%;
+  table-layout: fixed; /* ✅ 셀 크기 고정 */
+  border-collapse: collapse;
+  outline: 1px solid hsla(0, 0%, 67%, 0.119);
+  border-radius: 8px;
+  margin: 10px auto;
+}
+
+.player-table:hover {
+  outline: 2px solid #aaa;
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
+}
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.left-group,
+.right-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cell {
+  background-color: #1e1e1e;
 }
