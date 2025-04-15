@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// MUI
-import { Button, Stack } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-
 // 스타일
 import "./App.css";
-import { getStatDisplay } from "./style/PlayerStyle.tsx";
+
 // 모달
 import FilterModal from "./Modal/FilterModal";
 
@@ -18,6 +14,9 @@ import { Country } from "./types/Country";
 import { Team } from "./types/Team";
 import { PlayerPos } from "./types/PlayerPosition";
 import { League } from "./types/League";
+
+import PlayerList from "./Components/PlayerList";
+import Filters from "./Components/Filter";
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -211,181 +210,23 @@ function App() {
             prevplayerPositionList={selectedPosition}
           />
 
-          {(selectedCountries.length > 0 ||
-            selectedTeams.length > 0 ||
-            selectedLeagues.length > 0 ||
-            selectedPosition.length > 0) && (
-            <Stack
-              direction="row"
-              spacing={1}
-              flexWrap="wrap"
-              useFlexGap
-              sx={{
-                width: "100%", // ✅ app-container 기준
-                maxWidth: "100%", // ✅ 절대 넘치지 않게
-                marginBottom: 2,
-              }}
-            >
-              {/* ✅ 국가 필터 */}
-              {selectedCountries.map((country) => (
-                <Button
-                  key={country.code}
-                  variant="contained"
-                  onClick={() => {
-                    const newList = selectedCountries.filter(
-                      (c) => c.code !== country.code
-                    );
-                    fetchPage(
-                      0,
-                      searchTerm,
-                      sortType,
-                      newList,
-                      selectedTeams,
-                      selectedLeagues,
-                      selectedPosition
-                    );
-                    setSelectedCountries(newList);
-                  }}
-                >
-                  {country.name}
-                  <img
-                    src={`https://flagcdn.com/w40/${country.code}.png`}
-                    alt={country.name}
-                    style={{ width: 25, height: 20 }}
-                  />
-                  <CloseIcon fontSize="small" />
-                </Button>
-              ))}
-
-              {/* ✅ 팀 필터 */}
-              {selectedTeams.map((team) => (
-                <Button
-                  key={team.id}
-                  variant="contained"
-                  onClick={() => {
-                    const newList = selectedTeams.filter(
-                      (t) => t.id !== team.id
-                    );
-                    fetchPage(
-                      0,
-                      searchTerm,
-                      sortType,
-                      selectedCountries,
-                      newList,
-                      selectedLeagues,
-                      selectedPosition
-                    );
-                    setSelectedTeams(newList);
-                  }}
-                >
-                  {team.name}
-                  <img
-                    src={`${team.url}`}
-                    alt={team.name}
-                    style={{ width: 25, height: 20 }}
-                  />
-                  <CloseIcon fontSize="small" />
-                </Button>
-              ))}
-
-              {/* ✅ 리그 필터 */}
-              {selectedLeagues.map((league) => (
-                <Button
-                  key={league.id}
-                  variant="contained"
-                  onClick={() => {
-                    const newList = selectedLeagues.filter(
-                      (l) => l.id !== league.id
-                    );
-                    fetchPage(
-                      0,
-                      searchTerm,
-                      sortType,
-                      selectedCountries,
-                      selectedTeams,
-                      newList,
-                      selectedPosition
-                    );
-                    setSelectedLeagues(newList);
-                  }}
-                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                >
-                  {league.name}
-                  <img
-                    src={`${league.url}`}
-                    alt={league.name}
-                    style={{ width: 25, height: 20 }}
-                  />
-                  <CloseIcon fontSize="small" />
-                </Button>
-              ))}
-
-              {/* ✅ 포지션 필터 */}
-              {selectedPosition.map((position) => (
-                <Button
-                  key={position.code}
-                  variant="contained"
-                  onClick={() => {
-                    const newList = selectedPosition.filter(
-                      (p) => p.code !== position.code
-                    );
-                    fetchPage(
-                      0,
-                      searchTerm,
-                      sortType,
-                      selectedCountries,
-                      selectedTeams,
-                      selectedLeagues,
-                      newList
-                    );
-                    setSelectedPosition(newList);
-                  }}
-                >
-                  {position.code}
-                  <CloseIcon fontSize="small" />
-                </Button>
-              ))}
-            </Stack>
-          )}
+          {/* 🧾 Filter  */}
+          <Filters
+            selectedCountries={selectedCountries}
+            selectedTeams={selectedTeams}
+            selectedLeagues={selectedLeagues}
+            selectedPosition={selectedPosition}
+            fetchPage={fetchPage}
+            searchTerm={searchTerm}
+            sortType={sortType}
+            setSelectedCountries={setSelectedCountries}
+            setSelectedTeams={setSelectedTeams}
+            setSelectedLeagues={setSelectedLeagues}
+            setSelectedPosition={setSelectedPosition}
+          />
 
           {/* 🧾 Player Table */}
-          {players.map((repo) => (
-            <div className="player-card" key={repo.id}>
-              {/* 카드 본문 - 테이블로 유지 */}
-              <table className="player-table">
-                <tbody>
-                  <tr>
-                    <td rowSpan={2}>
-                      <img
-                        src={repo.img}
-                        alt={repo.name}
-                        className="player-img"
-                      />
-                    </td>
-                    <td rowSpan={2} className="cell">
-                      {repo.name}
-                    </td>
-                    <td rowSpan={2} className="cell">
-                      {repo.pos}
-                    </td>
-                    <td className="cell">{repo.age}</td>
-                    <td rowSpan={2} className="cell">
-                      {getStatDisplay("OVR", repo.ovr)}
-                    </td>
-                    <td className="cell">{getStatDisplay("PAC", repo.pac)}</td>
-                    <td className="cell">{getStatDisplay("SHO", repo.sho)}</td>
-                    <td className="cell">{getStatDisplay("PAS", repo.pas)}</td>
-                  </tr>
-                  <tr>
-                    <td className="cell">{repo.height}</td>
-                    <td className="cell">{getStatDisplay("DRI", repo.dri)}</td>
-                    <td className="cell">{getStatDisplay("DEF", repo.def)}</td>
-                    <td className="cell">{getStatDisplay("PHY", repo.phy)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          ))}
+          <PlayerList players={players} />
 
           {/* 📄 Pagination */}
           <div style={{ marginTop: "16px", textAlign: "center" }}>
