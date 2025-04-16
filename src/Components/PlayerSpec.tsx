@@ -1,23 +1,82 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Team } from "../types/Team";
+import { TeamPage } from "../types/TeamPage";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
-import "../PlayerSpec.css"; // 스타일은 여기에 따로 분리할게
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RadarStatChart from "./RadarStatsChart";
+import { getColor } from "../Util/Util";
+import { countryData } from "../data/countryData";
+import "../PlayerSpec.css";
 
 const PlayerSpec: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const player = (location.state as { player: Player })?.player;
-  const getValue = (key: keyof Player, name: string) => {
+
+  const countryCode =
+    countryData.find((d) =>
+      d.name.toLowerCase().includes(player.nation.toLowerCase())
+    )?.code ?? "unknown";
+
+  const [teams, setTeams] = useState<Team[]>([]);
+
+  useEffect(() => {
+    axios
+      .get<TeamPage>("http://localhost:8080/api/teams", {})
+      .then((response) => {
+        console.log(response.data.content);
+        setTeams(response.data.content);
+      })
+      .catch((err) => console.error(err));
+  }, [location.pathname]);
+
+  const teamData = teams.find((team) =>
+    team.name.toLowerCase().includes(player.team.toLowerCase())
+  ) ?? {
+    name: "",
+    url: "", // 기본값 설정
+  };
+
+  console.log(player.team.toLowerCase());
+  console.log("teamData", teamData.name);
+
+  const getValue = (
+    key: keyof Player,
+    name: string,
+    isStat: boolean = true
+  ) => {
     return (
-      <>
-        <div className="player-info-cell-group">
-          <div className="player-info-cell">{name}</div>
-          <div className="player-info-cell">
-            {player[key] !== null ? String(player[key]) : "N/A"}
-          </div>
-        </div>
-      </>
+      <div className="player-info-cell-group">
+        {isStat ? (
+          <>
+            <div className="player-info-cell">{name}</div>
+            <div
+              className="player-info-cell"
+              style={{
+                color: getColor(player[key] as number),
+                width: "20%",
+                borderRadius: "3px",
+              }}
+            >
+              {player[key]}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="player-info-cell-label">{name}</div>
+            <div
+              className="player-info-cell"
+              style={{
+                borderRadius: "3px",
+              }}
+            >
+              {player[key]}
+            </div>
+          </>
+        )}
+      </div>
     );
   };
 
@@ -48,19 +107,86 @@ const PlayerSpec: React.FC = () => {
             def={player.def}
             phy={player.phy}
           />
-
           <div className="player-info">
-            {getValue("nation", "Nation")}
-            {getValue("league", "League")}
-            {getValue("rank", "Rank")}
-            {getValue("ovr", "OVR")}
-            {getValue("team", "Club")}
-            {getValue("pos", "Position")}
-            {getValue("age", "Age")}
-            {getValue("height", "Height")}
-            {getValue("weight", "Weight")}
+            {/* ✅ 국가 코드에 해당하는 flag 이미지 추가 */}
+            <div className="player-info-cell-group">
+              <div className="player-info-cell-label">Nation</div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <img
+                  src={`https://flagcdn.com/w40/${countryCode}.png`}
+                  alt={countryCode}
+                  style={{
+                    width: "auto",
+                    height: "15px",
+                    backgroundColor: "white", // ✅ add white background
+                    margin: "0 5px",
+                  }}
+                />
+                <div
+                  className="player-info-cell"
+                  style={{
+                    borderRadius: "3px",
+                  }}
+                >
+                  {player.nation}
+                </div>
+              </div>
+            </div>
+            {getValue("league", "League", false)}
+            {getValue("rank", "Rank", false)}
+            {getValue("ovr", "OVR", false)}
+            {/* {getValue("team", "Club", false)} */}
+            {
+              <div className="player-info-cell-group">
+                <div className="player-info-cell-label">Club</div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {teamData.url ? (
+                    <img
+                      src={teamData.url}
+                      alt={teamData.name}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src =
+                          "/img/fallback.png";
+                      }}
+                      style={{
+                        width: "auto",
+                        height: "20px",
+                        backgroundColor: "white",
+                        margin: "0 5px",
+                      }}
+                    />
+                  ) : null}
+
+                  <div
+                    className="player-info-cell"
+                    style={{
+                      borderRadius: "3px",
+                    }}
+                  >
+                    {player.team}
+                  </div>
+                </div>
+              </div>
+            }
+            {getValue("pos", "Position", false)}
+            {getValue("age", "Age", false)}
+            {getValue("height", "Height", false)}
+            {getValue("weight", "Weight", false)}
           </div>
         </div>
+
         <div className="player-info-stats">
           <>
             <div className="player-info-stats-row">

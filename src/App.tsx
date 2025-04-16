@@ -32,7 +32,7 @@ function App() {
     totalPages: 0,
     totalElements: 0,
     number: 0,
-    size: 100,
+    size: 20,
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState<

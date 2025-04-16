@@ -2,6 +2,7 @@ import {
   Radar,
   RadarChart,
   PolarGrid,
+  PolarRadiusAxis,
   PolarAngleAxis,
   ResponsiveContainer,
 } from "recharts";
@@ -39,7 +40,12 @@ const RadarStatChart: React.FC<PlayerStats> = ({
         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
           <PolarGrid />
           <PolarAngleAxis dataKey="stat" />
-          {/* <PolarRadiusAxis angle={30} domain={[0, 100]} /> */}
+          <PolarRadiusAxis
+            angle={30}
+            domain={[0, 100]}
+            tick={false}
+            axisLine={false}
+          />
           <Radar
             name="Player Stats"
             dataKey="value"
