@@ -103,12 +103,11 @@ td {
 }
 
 .player-img {
-  height: 100%;
-  width: 80%;
-  max-height: 200px;     /* ✅ 또는 적당한 최대치 */
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;         /* ✅ 가운데 정렬 */
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 8px;  
 }
 
 .filter-box {    
@@ -132,7 +131,6 @@ td {
   background-color: rgba(255, 255, 255, 0.035);
 }
 
-
 .app-container {
   width: 100%;
   max-width: 1200px;
@@ -152,12 +150,19 @@ td {
 }
 
 .player-table {
+  display: table;
   width: 100%;
-  table-layout: fixed; /* ✅ 셀 크기 고정 */
   border-collapse: collapse;
-  outline: 1px solid hsla(0, 0%, 67%, 0.119);
+
+  table-layout: fixed; /* ✅ 셀 크기 고정 */  
   border-radius: 8px;
-  margin: 10px auto;
+  margin: 1px auto;
+}
+
+.player-table td {
+  text-align: center;
+  width: 12.5%; /* 8칸일 경우: 100% / 8 */
+  padding: 4px;
 }
 
 .player-table:hover {
@@ -172,6 +177,7 @@ td {
   align-items: center;
   gap: 16px;
   margin: 16px 0;
+  flex-wrap: wrap;
 }
 
 .left-group,
@@ -183,4 +189,39 @@ td {
 
 .cell {
   background-color: #1e1e1e;
+  /* outline: 1px solid #b31818; */
 }
+
+.search-bar .left-group input {
+  width: 200px;
+  flex: none;
+}
+
+.search-bar .left-group button,
+.search-bar .right-group select,
+.search-bar .right-group button {
+  width: 100px;
+  flex: none;
+}
+
+/* --- Player Spec --- */
+.player-spec {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  color: white;
+}
+
+.player-spec-header {
+  margin-bottom: 16px;
+}
+
+.back-button {
+  padding: 6px 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+

@@ -1,4 +1,5 @@
 // src/components/PlayerList.tsx
+import { useNavigate } from "react-router-dom";
 
 import React from "react";
 import { Player } from "../types/Player";
@@ -9,10 +10,19 @@ interface PlayerListProps {
 }
 
 const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       {players.map((repo) => (
-        <div className="player-card" key={repo.id}>
+        <div
+          className="player-card"
+          key={repo.id}
+          onClick={() =>
+            navigate(`/player/${repo.id}`, { state: { player: repo } })
+          }
+          style={{ cursor: "pointer" }}
+        >
           <table className="player-table">
             <tbody>
               <tr>
