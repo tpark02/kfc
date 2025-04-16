@@ -25,6 +25,14 @@ const NationModal: React.FC<NationModalProps> = ({
     d.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  filteredCountries.sort((a, b) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+    if (nameA < nameB) return -1;
+    if (nameA > nameB) return 1;
+    return 0;
+  });
+
   return (
     <Box sx={{ mt: 2 }}>
       {/* ✅ 검색 입력창 */}

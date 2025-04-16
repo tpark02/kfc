@@ -36,15 +36,15 @@ function App() {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState<
-    "AGE_ASC" | "AGE_DESC" | "RANK_DESC" | "RANK_ASC" | "OVR_DESC" | "OVR_ASC"
-  >("AGE_DESC");
+    "OVR_DESC" | "OVR_ASC" | "RANK_DESC" | "RANK_ASC" | "AGE_ASC" | "AGE_DESC"
+  >("OVR_DESC");
 
   const handleClose = useCallback(() => {
     setModalOpen(false);
   }, []);
 
   useEffect(() => {
-    fetchPage(0, searchTerm, "AGE_DESC"); // 초기 첫 페이지
+    fetchPage(0, searchTerm, "OVR_DESC"); // 초기 첫 페이지
   }, []);
 
   const fetchPage = (
@@ -127,12 +127,12 @@ function App() {
                         value={sortType}
                         onChange={(e) => {
                           const newSort = e.target.value as
-                            | "AGE_ASC"
-                            | "AGE_DESC"
+                            | "OVR_DESC"
+                            | "OVR_ASC"
                             | "RANK_DESC"
                             | "RANK_ASC"
-                            | "OVR_DESC"
-                            | "OVR_ASC";
+                            | "AGE_ASC"
+                            | "AGE_DESC";
                           setSortType(newSort);
                           fetchPage(
                             0,
@@ -146,12 +146,12 @@ function App() {
                         }}
                         style={{ padding: "6px", fontSize: "14px" }}
                       >
-                        <option value="AGE_DESC">age desc</option>
-                        <option value="AGE_ASC">age asc</option>
-                        <option value="RANK_DESC">rank desc</option>
-                        <option value="RANK_ASC">rank asc</option>
                         <option value="OVR_DESC">ovr desc</option>
                         <option value="OVR_ASC">ovr asc</option>
+                        <option value="RANK_DESC">rank desc</option>
+                        <option value="RANK_ASC">rank asc</option>
+                        <option value="AGE_DESC">age desc</option>
+                        <option value="AGE_ASC">age asc</option>
                       </select>
 
                       <button onClick={() => setModalOpen(true)}>Filter</button>
