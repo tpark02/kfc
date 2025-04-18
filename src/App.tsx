@@ -4,6 +4,7 @@ import axios from "axios";
 
 // 스타일
 import "./App.css";
+import "./Player.css";
 
 // 모달
 import FilterModal from "./Modal/FilterModal";
@@ -19,6 +20,8 @@ import { League } from "./types/League";
 import PlayerList from "./Components/PlayerList";
 import PlayerSpec from "./Components/PlayerSpec";
 import Filters from "./Components/Filter";
+import Squad from "./Components/Squad"; // 💡 make sure the path is correct
+import NavBar from "./Components/NavBar"; // 💡 make sure the path is correct
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -94,12 +97,14 @@ function App() {
   return (
     <>
       <Router>
+        {/* <NavBar /> */}
         <Routes>
           <Route
             path="/"
             element={
               <div className="app-container">
-                <div className="card-wrapper">
+                {/* <div className="card-wrapper"> */}
+                <div className="player-list">
                   <div className="search-bar">
                     <div className="left-group">
                       <input
@@ -117,7 +122,7 @@ function App() {
                         onClick={handleSearch}
                         style={{ padding: "6px 12px" }}
                       >
-                        search
+                        Search
                       </button>
                     </div>
 
@@ -338,6 +343,7 @@ function App() {
             path="/player/:id"
             element={<PlayerSpec />} // Example: Pass the first player as a prop
           />
+          <Route path="/squad" element={<Squad />} />
         </Routes>
       </Router>
     </>

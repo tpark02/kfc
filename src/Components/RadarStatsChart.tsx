@@ -26,18 +26,22 @@ const RadarStatChart: React.FC<PlayerStats> = ({
   def,
   phy,
 }) => {
-  let data = [
-    { stat: "PAC", value: pac },
-    { stat: "SHO", value: sho },
-    { stat: "PAS", value: pas },
-    { stat: "DRI", value: dri },
-    { stat: "DEF", value: def },
-    { stat: "PHY", value: phy },
-  ];
   return (
     <div className="player-spec-radar-chart">
       <ResponsiveContainer>
-        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+        <RadarChart
+          cx="50%"
+          cy="50%"
+          outerRadius="80%"
+          data={[
+            { stat: "PAC", value: pac },
+            { stat: "SHO", value: sho },
+            { stat: "PAS", value: pas },
+            { stat: "DRI", value: dri },
+            { stat: "DEF", value: def },
+            { stat: "PHY", value: phy },
+          ]}
+        >
           <PolarGrid />
           <PolarAngleAxis dataKey="stat" />
           <PolarRadiusAxis

@@ -1,13 +1,24 @@
+// ✅ React & Router
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+// ✅ External Libraries
 import axios from "axios";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+// ✅ Types
 import { Team } from "../types/Team";
 import { TeamPage } from "../types/TeamPage";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+// ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
 import { getColor } from "../Util/Util";
+
+// ✅ Data
 import { countryData } from "../data/countryData";
+
+// ✅ Styles
 import "../PlayerSpec.css";
 
 const PlayerSpec: React.FC = () => {
@@ -36,11 +47,11 @@ const PlayerSpec: React.FC = () => {
     team.name.toLowerCase().includes(player.team.toLowerCase())
   ) ?? {
     name: "",
-    url: "", // 기본값 설정
+    url: "",
   };
 
-  console.log(player.team.toLowerCase());
-  console.log("teamData", teamData.name);
+  // console.log(player.team.toLowerCase());
+  // console.log("teamData", teamData.name);
 
   const getValue = (
     key: keyof Player,

@@ -1,0 +1,34 @@
+/* squad352.css */
+
+.squad-formation.formation-352 {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 0.3vw;
+    justify-items: center;
+    align-items: center;
+    padding: 2rem;
+    height: 500px;
+  }
+  
+  /* Goalkeeper (1) */
+  .squad-formation.formation-352 .squad-player:nth-child(1) {
+    grid-column: 4;
+    grid-row: 4;
+  }
+  
+  /* Defenders (2–4) */
+  .squad-formation.formation-352 .squad-player:nth-child(2) { grid-column: 2; grid-row: 3; }
+  .squad-formation.formation-352 .squad-player:nth-child(3) { grid-column: 4; grid-row: 3; }
+  .squad-formation.formation-352 .squad-player:nth-child(4) { grid-column: 6; grid-row: 3; }
+  
+  /* Midfielders (5–9) */
+  .squad-formation.formation-352 .squad-player:nth-child(5) { grid-column: 7; grid-row: 2; }
+  .squad-formation.formation-352 .squad-player:nth-child(6) { grid-column: 1; grid-row: 2; }
+  .squad-formation.formation-352 .squad-player:nth-child(7) { grid-column: 2; grid-row: 2; }
+  .squad-formation.formation-352 .squad-player:nth-child(8) { grid-column: 4; grid-row: 2; }
+  .squad-formation.formation-352 .squad-player:nth-child(9) { grid-column: 6; grid-row: 2; }
+  
+  /* Forwards (10–11) */
+  .squad-formation.formation-352 .squad-player:nth-child(10) { grid-column: 3; grid-row: 1; }
+  .squad-formation.formation-352 .squad-player:nth-child(11) { grid-column: 5; grid-row: 1; }
+  

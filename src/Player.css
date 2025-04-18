@@ -1,0 +1,70 @@
+.player-list {
+  width: 100%;
+  max-width: 850px;  /* make this match .player-row or .player-card */
+  margin: 0 auto;
+  box-sizing: border-box;  
+}
+
+.player-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;    
+    outline: 1px solid white;
+    flex-wrap: wrap;
+    margin: 0 auto;        
+
+  }
+  
+  .player-row.top-row {
+    align-items: center;
+    /* outline: 1px solid white; */
+  }
+  
+  .player-row.bottom-row {
+    /* outline: 1px solid white; */
+  }
+
+  .player-img {
+    width: 100px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  
+  .player-name {
+    width: 100px;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .player-cell {
+    width: 64px; /* ✅ fixed width for all stat cells */
+    text-align: center;
+    color: #fff;
+  }
+  
+  
+  .player-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: fit-content; /* ✅ shrink-wrap the card to its contents */
+    margin-top: 4px;
+    margin-bottom: 12px;
+    width: 100%; /* ✅ full width of container */
+    margin: 0 auto;        
+
+  }
+  
+
+  .player-card:hover {
+    background-color: #333;
+    cursor: pointer;
+  }
+  
+  .player-name, .player-cell {
+    font-weight: 500;
+  }

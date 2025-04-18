@@ -1,0 +1,36 @@
+.squad-container {    
+    margin: 50px auto;         
+    width: 100%;  
+    height: auto;  
+    background-color: var(--background-color);
+    /* outline: 1px solid #333; */
+}
+
+.squad-dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;    
+    outline: 1px solid white;
+}
+
+.squad-dropdown-label{
+    font-size: 1em;
+}
+
+.squad-formation{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+    width: auto;
+    height: 1200px;
+    outline: 1px solid white;
+}
+
+.squad-player{
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+    outline: 1px solid white;
+}

@@ -1,5 +1,5 @@
 .player-spec-body {
-    
+    margin: 50px auto;
 }
 
 .player-spec-backbutton {  
@@ -60,12 +60,6 @@
   /* outline: 1px solid #333; */
 }
 
-.player-name {
-  font-size: 20px;
-  font-weight: bold;
-  /* outline: 1px solid #333; */
-}
-
 .player-info-row {
   display: flex;
   flex-direction: row;
@@ -78,11 +72,11 @@
 }
 
 .player-info-stats {
-  border-top: 1px solid #555; /* or any color you like */
-  margin-top: 24px;           /* spacing from above section */
-  padding-top: 16px;          /* spacing inside top border */
+  border-top: 1px solid #555; 
+  margin-top: 24px;          
+  padding-top: 16px;          
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 16px;
   width: 80%;
   /* outline: 1px solid #9e9e9e; */
@@ -103,7 +97,7 @@
   flex-direction: row;
   justify-content: center;
   width: 100%;
-  margin: 0;
+  margin: 0;  
   /* outline: 1px solid #333;   */
 }
 
