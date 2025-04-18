@@ -137,42 +137,21 @@ td {
 }
 
 .app-container {
-  width: 100%;
   display: flex;
   justify-content: center;
   padding: 0 16px;
   box-sizing: border-box;
-}
-
-.player-table {
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
-
-  table-layout: fixed; /* ✅ 셀 크기 고정 */  
-  border-radius: 8px;
-  margin: 1px auto;
-}
-
-.player-table td {
-  text-align: center;
-  width: 12.5%; /* 8칸일 경우: 100% / 8 */
-  padding: 4px;
-}
-
-.player-table:hover {
-  outline-offset: 2px;
-  background-color: rgba(255, 255, 255, 0.035);
+  /* outline: 1px solid white; */
 }
 
 .search-bar {
   display: flex;
-  justify-content: space-between; /* left + right aligned */
-  align-items: center;
-  flex-wrap: wrap;
-  width: 100%;
+  flex-wrap: wrap;  
+  justify-content: space-between;
+  align-items: center;  
   margin-bottom: 1rem;
   gap: 12px;
+  /* outline: 1px solid #b31818;      */
 }
 
 .left-group,
@@ -181,11 +160,6 @@ td {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-}
-
-.cell {
-  background-color: #1e1e1e;
-  /* outline: 1px solid #b31818; */
 }
 
 .search-bar .left-group input {

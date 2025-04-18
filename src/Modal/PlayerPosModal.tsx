@@ -2,7 +2,7 @@ import "./Modal.css";
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { playerPosData } from "../data/playerPosData";
-import { PlayerPos } from "../types/PlayerPosition";
+import { PlayerPos } from "../Types/PlayerPosition";
 
 interface PlayerPosModalProps {
   isOpen: boolean;

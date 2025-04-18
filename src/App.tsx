@@ -10,12 +10,12 @@ import "./Player.css";
 import FilterModal from "./Modal/FilterModal";
 
 // 타입
-import { Player } from "./types/Player";
-import { PlayerPage } from "./types/PlayerPage";
-import { Country } from "./types/Country";
-import { Team } from "./types/Team";
-import { PlayerPos } from "./types/PlayerPosition";
-import { League } from "./types/League";
+import { Player } from "./Types/Player";
+import { PlayerPage } from "./Types/PlayerPage";
+import { Country } from "./Types/Country";
+import { Team } from "./Types/Team";
+import { PlayerPos } from "./Types/PlayerPosition";
+import { League } from "./Types/League";
 
 import PlayerList from "./Components/PlayerList";
 import PlayerSpec from "./Components/PlayerSpec";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
-import { League } from "../types/League";
-import { LeaguePage } from "../types/LeaguePage";
+import { League } from "../Types/League";
+import { LeaguePage } from "../Types/LeaguePage";
 import axios from "axios";
 
 interface LeagueModalProps {
