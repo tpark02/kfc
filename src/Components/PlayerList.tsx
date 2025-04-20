@@ -2,8 +2,8 @@
 import { useNavigate } from "react-router-dom";
 
 import React from "react";
-import { Player } from "../Types/Player";
-import { getStatDisplay } from "../Style/PlayerStyle";
+import { Player } from "../types/Player";
+import { getStatDisplay } from "../style/PlayerStyle";
 import "../Player.css";
 interface PlayerListProps {
   players: Player[];

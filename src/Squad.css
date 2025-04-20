@@ -8,7 +8,7 @@
 
 .squad-dropdown {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-end;    
     outline: 1px solid white;
 }

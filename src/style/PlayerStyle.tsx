@@ -1,5 +1,5 @@
 import React from "react";
-import { getColor } from "../Util/Util";
+import { getColor } from "../util/Util";
 
 export const getStatDisplay = (label: string, value: number) => {
   return (

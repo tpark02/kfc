@@ -7,13 +7,13 @@ import axios from "axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // ✅ Types
-import { Team } from "../Types/Team";
-import { TeamPage } from "../Types/TeamPage";
-import { Player } from "../Types/Player";
+import { Team } from "../types/Team";
+import { TeamPage } from "../types/TeamPage";
+import { Player } from "../types/Player";
 
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
-import { getColor } from "../Util/Util";
+import { getColor } from "../util/Util";
 
 // ✅ Data
 import { countryData } from "../data/countryData";

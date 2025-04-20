@@ -2,10 +2,10 @@
 import "./Modal.css";
 
 // 🗂️ 타입 정의
-import { PlayerPos } from "../Types/PlayerPosition";
-import { League } from "../Types/League";
-import { Team } from "../Types/Team";
-import { Country } from "../Types/Country";
+import { PlayerPos } from "../types/PlayerPosition";
+import { League } from "../types/League";
+import { Team } from "../types/Team";
+import { Country } from "../types/Country";
 
 // 🧩 내부 컴포넌트
 import PlayerPosModal from "./PlayerPosModal";

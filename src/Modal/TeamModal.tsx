@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, TextField } from "@mui/material";
-import { Team } from "../Types/Team";
-import { TeamPage } from "../Types/TeamPage";
+import { Box, Typography, TextField } from "@mui/material";
+import { Team } from "../types/Team";
+import { TeamPage } from "../types/TeamPage";
 import axios from "axios";
 
 interface TeamModalProps {

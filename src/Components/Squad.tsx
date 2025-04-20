@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Team } from "../types/Team";
+import { TeamPage } from "../types/TeamPage";
 
 import "../Squad.css";
 import "../Squad/442.css";
@@ -61,18 +64,38 @@ const createHoverOption = (setSelectedFormation: (value: string) => void) => {
 
 const FormationDropdown: React.FC = () => {
   const [selectedFormation, setSelectedFormation] = useState("");
+  const [teams, setTeams] = useState<Team[]>([]);
+
+  useEffect(() => {
+    axios
+      .get<TeamPage>("http://localhost:8080/api/teams", {})
+      .then((response) => {
+        console.log(response.data.content);
+        setTeams(response.data.content);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const teamOptions = teams.map((team) => ({
+    value: team.id,
+    label: team.name,
+    imageUrl: team.url,
+  }));
 
   return (
     <div className="squad-container">
       <div className="squad-dropdown">
-        <label className="squad-dropdown-label">Formation</label>
         <Select
           options={formations}
           onChange={(option) => setSelectedFormation(option?.value || "")}
-          placeholder="Select formation"
+          placeholder="Select a formation"
           isSearchable={false}
           components={{ Option: createHoverOption(setSelectedFormation) }} // pass setter
           styles={{
+            container: (base) => ({
+              ...base,
+              width: "100%",
+            }),
             control: (base) => ({
               ...base,
               backgroundColor: "#242424",
@@ -83,6 +106,7 @@ const FormationDropdown: React.FC = () => {
               "&:hover": {
                 borderColor: "#666", // optional: change border on hover
               },
+              width: "100%",
             }),
             singleValue: (base) => ({
               ...base,
@@ -91,6 +115,70 @@ const FormationDropdown: React.FC = () => {
             menu: (base) => ({
               ...base,
               backgroundColor: "#242424",
+              width: "100%",
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? "#3a3a3a" : "#242424",
+              color: "#fff", // text color of each option
+              width: "100%",
+            }),
+            placeholder: (base) => ({
+              ...base,
+              color: "#ccc", // placeholder text
+            }),
+            input: (base) => ({
+              ...base,
+              color: "#fff", // typing text color
+            }),
+          }}
+        />
+        <Select
+          options={teamOptions}
+          placeholder="Select a team"
+          formatOptionLabel={(option) => (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img
+                src={
+                  option.imageUrl !== ""
+                    ? option.imageUrl
+                    : "../../img/fallback.png"
+                }
+                alt={option.label}
+                style={{ width: "24px", height: "24px", objectFit: "contain" }}
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // 무한 루프 방지
+                  e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
+                }}
+              />
+              <span>{option.label}</span>
+            </div>
+          )}
+          styles={{
+            container: (base) => ({
+              ...base,
+              width: "100%",
+            }),
+            control: (base) => ({
+              ...base,
+              backgroundColor: "#242424",
+              color: "#fff", // input text color
+              border: "1px solid transparent", // ✅ removes border
+              boxShadow: "none", // ✅ removes glow
+              outline: "none", // ✅ ensures no native outline
+              "&:hover": {
+                borderColor: "#666", // optional: change border on hover
+              },
+              width: "100%",
+            }),
+            singleValue: (base) => ({
+              ...base,
+              color: "#fff", // selected item shown in the input
+            }),
+            menu: (base) => ({
+              ...base,
+              backgroundColor: "#242424",
+              width: "100%",
             }),
             option: (base, state) => ({
               ...base,
@@ -108,7 +196,6 @@ const FormationDropdown: React.FC = () => {
           }}
         />
       </div>
-
       {selectedFormation && (
         <div className={`squad-formation formation-${selectedFormation}`}>
           {Array.from({ length: 11 }, (_, i) => (

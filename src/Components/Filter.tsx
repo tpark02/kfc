@@ -3,10 +3,10 @@ import React from "react";
 import { Button, Stack } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { Country } from "../Types/Country";
-import { Team } from "../Types/Team";
-import { PlayerPos } from "../Types/PlayerPosition";
-import { League } from "../Types/League";
+import { Country } from "../types/Country";
+import { Team } from "../types/Team";
+import { PlayerPos } from "../types/PlayerPosition";
+import { League } from "../types/League";
 
 interface FilterProps {
   selectedCountries: Country[];

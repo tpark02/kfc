@@ -7,21 +7,21 @@ import "./App.css";
 import "./Player.css";
 
 // 모달
-import FilterModal from "./Modal/FilterModal";
+import FilterModal from "./modal/FilterModal";
 
 // 타입
-import { Player } from "./Types/Player";
-import { PlayerPage } from "./Types/PlayerPage";
-import { Country } from "./Types/Country";
-import { Team } from "./Types/Team";
-import { PlayerPos } from "./Types/PlayerPosition";
-import { League } from "./Types/League";
+import { Player } from "./types/Player";
+import { PlayerPage } from "./types/PlayerPage";
+import { Country } from "./types/Country";
+import { Team } from "./types/Team";
+import { PlayerPos } from "./types/PlayerPosition";
+import { League } from "./types/League";
 
-import PlayerList from "./Components/PlayerList";
-import PlayerSpec from "./Components/PlayerSpec";
-import Filters from "./Components/Filter";
-import Squad from "./Components/Squad"; // 💡 make sure the path is correct
-import NavBar from "./Components/NavBar"; // 💡 make sure the path is correct
+import PlayerList from "./components/PlayerList";
+import PlayerSpec from "./components/PlayerSpec";
+import Filters from "./components/Filter";
+import Squad from "./components/Squad"; // 💡 make sure the path is correct
+import NavBar from "./components/NavBar"; // 💡 make sure the path is correct
 
 function App() {
   const [isModalOpen, setModalOpen] = useState(false);

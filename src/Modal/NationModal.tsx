@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { countryData } from "../data/countryData";
-import { Country } from "../Types/Country";
+import { Country } from "../types/Country";
 
 interface NationModalProps {
   isOpen: boolean;
