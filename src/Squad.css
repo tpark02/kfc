@@ -3,44 +3,43 @@
     width: 100%;  
     height: auto;  
     background-color: var(--background-color);
-    outline: 1px solid red;
+    /* outline: 1px solid red; */
 }
 
 .squad-dropdown {
     display: flex;
     flex-direction: row;
-    outline: 1px solid blue;
+    /* outline: 1px solid blue; */
 }
 
 .squad-dropdown-label{
     font-size: 1em;
 }
 
-.squad-formation {
+.squad-formation {    
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     gap: 0.3vw;
-    justify-items: center;
-    align-items: center;
-    padding: 2rem;
-    outline: 1px solid white;
+    padding: 2rem;    
+    height: 500px;
+    width: 50%;
+    justify-content: center;
+    outline: 1px solid green;
+
+   
   }
 
 .squad-main {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;    
     outline: 1px solid yellow;
 }
 
 .squad-select {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex;    
     width: 50% !important;
-    height: auto;
-    outline: 1px solid green;
+    outline: 1px solid red;
 }
 
 .squad-team {
@@ -49,7 +48,6 @@
     justify-content: center;
     align-items: center;
     width: 50% !important;
-
     height: auto;
 }
 
@@ -69,5 +67,7 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
+    width: 50px;
+    height: 50px;
   }
 

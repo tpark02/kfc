@@ -6,19 +6,6 @@ import { SquadMap, Player } from "../types/Player";
 import { formationGrid } from "../types/FormationGrid";
 
 import "../Squad.css";
-import "../Squad/442.css";
-import "../Squad/443.css";
-import "../Squad/4231.css";
-import "../Squad/451.css";
-import "../Squad/343.css";
-import "../Squad/352.css";
-import "../Squad/532.css";
-import "../Squad/541.css";
-import "../Squad/41212.css";
-import "../Squad/4222.css";
-import "../Squad/4321.css";
-import "../Squad/4132.css";
-import "../Squad/424.css";
 import Select from "react-select";
 import { OptionProps } from "react-select";
 
@@ -314,11 +301,11 @@ const FormationDropdown: React.FC = () => {
         />
       </div>
       <div className="squad-main">
-        <div className="squad-select">
-          {selectedFormation && squad && (
-            <SquadFormation formation={selectedFormation} squad={squad} />
-          )}
-        </div>
+        {/* <div className="squad-select"> */}
+        {selectedFormation && squad && (
+          <SquadFormation formation={selectedFormation} squad={squad} />
+        )}
+        {/* </div> */}
         <div className="squad-team">
           {squad &&
             Object.entries(squad ?? []).flatMap(([_, players]) =>
