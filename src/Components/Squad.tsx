@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Team } from "../types/Team";
 import { TeamPage } from "../types/TeamPage";
+import { SquadMap, Player } from "../types/Player";
+import { formationGrid } from "../types/FormationGrid";
 
 import "../Squad.css";
 import "../Squad/442.css";
@@ -36,8 +38,25 @@ const formations = [
   { value: "424", label: "4-2-4" },
 ];
 
+const positions = [
+  "ST",
+  "RW",
+  "LW",
+  "CAM",
+  "RM",
+  "LM",
+  "CDM",
+  "CM",
+  "CB",
+  "RB",
+  "LB",
+  "GK",
+];
+
+const positionMap: { [key: string]: number } = {};
+
 const createHoverOption = (setSelectedFormation: (value: string) => void) => {
-  return (props: OptionProps<any>) => {
+  return (props: OptionProps<{ value: string; label: string }>) => {
     const { data, isFocused, innerRef, innerProps } = props;
 
     useEffect(() => {
@@ -62,9 +81,81 @@ const createHoverOption = (setSelectedFormation: (value: string) => void) => {
   };
 };
 
+const getSquad = ({
+  value,
+  setSelectedSquad,
+}: {
+  value: string;
+  setSelectedSquad: (squad: SquadMap) => void;
+}) => {
+  axios
+    .post<SquadMap>("http://localhost:8080/api/squad", {
+      teamName: value,
+    })
+    .then((response) => {
+      setSelectedSquad(response.data);
+    })
+    .catch((err) => console.error(err));
+};
+
+const SquadFormation = ({
+  formation,
+  squad,
+}: {
+  formation: string;
+  squad: SquadMap;
+}) => {
+  const playerList: Player[] = positions.flatMap((pos) => squad[pos] ?? []);
+
+  return (
+    <div className={`squad-formation formation-${formation}`}>
+      {formation
+        .split("")
+        .reverse()
+        .flatMap((numStr, rowIndex) => {
+          console.log(rowIndex + " " + numStr);
+          const count = parseInt(numStr, 10);
+          return Array.from({ length: count }).map((_, i) => {
+            const idx =
+              formation
+                .split("")
+                .reverse()
+                .slice(0, rowIndex)
+                .reduce((acc, val) => acc + parseInt(val, 10), 0) + i;
+
+            const grid = formationGrid[formation]?.[idx];
+            if (!grid) return null;
+
+            return (
+              <div
+                key={`player-${idx}`}
+                className="squad-player"
+                style={{
+                  gridColumn: grid.gridColumn,
+                  gridRow: grid.gridRow,
+                }}
+              >
+                {idx + 1}
+                {playerList[idx]?.name}
+              </div>
+            );
+          });
+        })}
+    </div>
+  );
+};
+
 const FormationDropdown: React.FC = () => {
   const [selectedFormation, setSelectedFormation] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
+  const [squad, setSquad] = useState<SquadMap>();
+
+  // make position dictionary
+  positions.forEach((position, index) => {
+    positionMap[position] = index + 1;
+  });
+
+  console.log(positionMap);
 
   useEffect(() => {
     axios
@@ -72,6 +163,18 @@ const FormationDropdown: React.FC = () => {
       .then((response) => {
         console.log(response.data.content);
         setTeams(response.data.content);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .post<SquadMap>("http://localhost:8080/api/squad", {
+        teamName: "Real Madrid",
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSquad(response.data);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -87,7 +190,13 @@ const FormationDropdown: React.FC = () => {
       <div className="squad-dropdown">
         <Select
           options={formations}
-          onChange={(option) => setSelectedFormation(option?.value || "")}
+          onChange={(option) => {
+            if (option && "value" in option) {
+              setSelectedFormation(option.value);
+            } else {
+              setSelectedFormation("");
+            }
+          }}
           placeholder="Select a formation"
           isSearchable={false}
           components={{ Option: createHoverOption(setSelectedFormation) }} // pass setter
@@ -136,6 +245,14 @@ const FormationDropdown: React.FC = () => {
         <Select
           options={teamOptions}
           placeholder="Select a team"
+          onChange={(team) => {
+            if (team?.label) {
+              console.log(team.label);
+              getSquad({ value: team.label, setSelectedSquad: setSquad });
+            } else {
+              console.error("Team label is undefined");
+            }
+          }}
           formatOptionLabel={(option) => (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <img
@@ -196,15 +313,24 @@ const FormationDropdown: React.FC = () => {
           }}
         />
       </div>
-      {selectedFormation && (
-        <div className={`squad-formation formation-${selectedFormation}`}>
-          {Array.from({ length: 11 }, (_, i) => (
-            <div key={i} className="squad-player">
-              {i + 1}
-            </div>
-          ))}
+      <div className="squad-main">
+        <div className="squad-select">
+          {selectedFormation && squad && (
+            <SquadFormation formation={selectedFormation} squad={squad} />
+          )}
         </div>
-      )}
+        <div className="squad-team">
+          {squad &&
+            Object.entries(squad ?? []).flatMap(([_, players]) =>
+              players.map((p) => (
+                <div key={p.id} className="squad-team-player">
+                  <div>{p.name}</div>
+                  <div>{p.pos}</div>
+                </div>
+              ))
+            )}
+        </div>
+      </div>
     </div>
   );
 };

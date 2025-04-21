@@ -58,3 +58,7 @@ export type Player = {
     gkPositioning: number;
     gkReflexes: number;
   };
+
+  export type SquadMap = {
+    [position: string]: Player[];
+  };

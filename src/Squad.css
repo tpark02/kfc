@@ -1,36 +1,73 @@
-.squad-container {    
+.squad-container {            
     margin: 50px auto;         
     width: 100%;  
     height: auto;  
     background-color: var(--background-color);
-    /* outline: 1px solid #333; */
+    outline: 1px solid red;
 }
 
 .squad-dropdown {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;    
-    outline: 1px solid white;
+    outline: 1px solid blue;
 }
 
 .squad-dropdown-label{
     font-size: 1em;
 }
 
-.squad-formation{
-    display: flex;
-    flex-direction: column;
+.squad-formation {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 0.3vw;
+    justify-items: center;
     align-items: center;
-    justify-content: center;
-    background-color: green;
-    width: auto;
-    height: 1200px;
+    padding: 2rem;
     outline: 1px solid white;
+  }
+
+.squad-main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;    
+    outline: 1px solid yellow;
 }
 
-.squad-player{
-    width: 100px;
-    height: 100px;
-    background-color: blue;
-    outline: 1px solid white;
+.squad-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50% !important;
+    height: auto;
+    outline: 1px solid green;
 }
+
+.squad-team {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50% !important;
+
+    height: auto;
+}
+
+.squad-team-player {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
+.squad-player {
+    background-color: #007bff;
+    border-radius: 8px !important; /* ✅ force square */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+  }
+
