@@ -1,10 +1,10 @@
 // src/components/PlayerList.tsx
 import { useNavigate } from "react-router-dom";
-
-import React from "react";
 import { Player } from "../types/Player";
 import { getStatDisplay } from "../style/PlayerStyle";
+import CroppedAvatar from "./CroppedAvatar";
 import "../Player.css";
+
 interface PlayerListProps {
   players: Player[];
 }
@@ -24,7 +24,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
           style={{ cursor: "pointer" }}
         >
           <div className="player-row">
-            <img src={repo.img} alt={repo.name} className="player-img" />
+            <CroppedAvatar src={repo.img} />
             <div className="player-name">{repo.name}</div>
             <div className="player-cell">{repo.age}</div>
             <div className="player-cell">{repo.pos}</div>

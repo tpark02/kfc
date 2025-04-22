@@ -4,10 +4,12 @@ import { Team } from "../types/Team";
 import { TeamPage } from "../types/TeamPage";
 import { SquadMap, Player } from "../types/Player";
 import { formationGrid } from "../types/FormationGrid";
-
-import "../Squad.css";
 import Select from "react-select";
 import { OptionProps } from "react-select";
+import { useDrag } from "react-dnd";
+import { useDrop } from "react-dnd";
+import CroppedAvatar from "./CroppedAvatar";
+import "../Squad.css";
 
 const formations = [
   { value: "442", label: "4-4-2" },
@@ -41,6 +43,75 @@ const positions = [
 ];
 
 const positionMap: { [key: string]: number } = {};
+
+const DropZone = ({
+  grid,
+  onDrop,
+  player,
+}: {
+  grid: { gridColumn: number; gridRow: number };
+  onDrop: (player: Player) => void;
+  player?: Player;
+}) => {
+  const [, dropRef] = useDrop(() => ({
+    accept: "PLAYER",
+    drop: (player: Player) => {
+      onDrop(player);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
+
+  return (
+    <div
+      ref={dropRef}
+      style={{
+        gridColumn: grid.gridColumn,
+        gridRow: grid.gridRow,
+      }}
+    >
+      {/* Render the dropped player's name */}
+      <CroppedAvatar
+        src={player?.img && player.img !== "" ? player.img : "/img/avatar.jpg"}
+        width={90}
+        height={90}
+        offsetX={30}
+      />
+    </div>
+  );
+};
+
+const DraggablePlayer = ({
+  player,
+  color,
+}: {
+  player: Player;
+  color: string;
+}) => {
+  const [{ isDragging }, dragRef] = useDrag(() => ({
+    type: "PLAYER",
+    item: player,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <div
+      className="squad-team-player"
+      key={player.id}
+      ref={dragRef}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        cursor: "move",
+      }}
+    >
+      <div style={{ backgroundColor: color, width: "50px" }}>{player.pos}</div>
+      <div>{player.name}</div>
+    </div>
+  );
+};
 
 const createHoverOption = (setSelectedFormation: (value: string) => void) => {
   return (props: OptionProps<{ value: string; label: string }>) => {
@@ -88,9 +159,15 @@ const getSquad = ({
 const SquadFormation = ({
   formation,
   squad,
+  dropPlayers,
+  setDropPlayers,
 }: {
   formation: string;
   squad: SquadMap;
+  dropPlayers: { [index: number]: Player | null };
+  setDropPlayers: React.Dispatch<
+    React.SetStateAction<{ [index: number]: Player | null }>
+  >;
 }) => {
   const playerList: Player[] = positions.flatMap((pos) => squad[pos] ?? []);
 
@@ -114,17 +191,28 @@ const SquadFormation = ({
             if (!grid) return null;
 
             return (
-              <div
-                key={`player-${idx}`}
-                className="squad-player"
-                style={{
-                  gridColumn: grid.gridColumn,
-                  gridRow: grid.gridRow,
+              <DropZone
+                key={`drop-${idx}`}
+                grid={grid}
+                player={dropPlayers[idx] ?? playerList[idx]}
+                onDrop={(player) => {
+                  setDropPlayers((prev) => ({
+                    ...prev,
+                    [idx]: player, // <- associate this player with this position
+                  }));
                 }}
-              >
-                {idx + 1}
-                {playerList[idx]?.name}
-              </div>
+              />
+              // <div
+              //   key={`player-${idx}`}
+              //   className="squad-player"
+              //   style={{
+              //     gridColumn: grid.gridColumn,
+              //     gridRow: grid.gridRow,
+              //   }}
+              // >
+              //   {idx + 1}
+              //   {playerList[idx]?.name}
+              // </div>
             );
           });
         })}
@@ -133,16 +221,19 @@ const SquadFormation = ({
 };
 
 const FormationDropdown: React.FC = () => {
-  const [selectedFormation, setSelectedFormation] = useState("");
+  const [selectedFormation, setSelectedFormation] = useState("442");
   const [teams, setTeams] = useState<Team[]>([]);
   const [squad, setSquad] = useState<SquadMap>();
+  const [dropPlayers, setDropPlayers] = useState<{
+    [index: number]: Player | null;
+  }>({});
 
   // make position dictionary
   positions.forEach((position, index) => {
     positionMap[position] = index + 1;
   });
 
-  console.log(positionMap);
+  // console.log(positionMap);
 
   useEffect(() => {
     axios
@@ -174,148 +265,166 @@ const FormationDropdown: React.FC = () => {
 
   return (
     <div className="squad-container">
-      <div className="squad-dropdown">
-        <Select
-          options={formations}
-          onChange={(option) => {
-            if (option && "value" in option) {
-              setSelectedFormation(option.value);
-            } else {
-              setSelectedFormation("");
-            }
-          }}
-          placeholder="Select a formation"
-          isSearchable={false}
-          components={{ Option: createHoverOption(setSelectedFormation) }} // pass setter
-          styles={{
-            container: (base) => ({
-              ...base,
-              width: "100%",
-            }),
-            control: (base) => ({
-              ...base,
-              backgroundColor: "#242424",
-              color: "#fff", // input text color
-              border: "1px solid transparent", // ✅ removes border
-              boxShadow: "none", // ✅ removes glow
-              outline: "none", // ✅ ensures no native outline
-              "&:hover": {
-                borderColor: "#666", // optional: change border on hover
-              },
-              width: "100%",
-            }),
-            singleValue: (base) => ({
-              ...base,
-              color: "#fff", // selected item shown in the input
-            }),
-            menu: (base) => ({
-              ...base,
-              backgroundColor: "#242424",
-              width: "100%",
-            }),
-            option: (base, state) => ({
-              ...base,
-              backgroundColor: state.isFocused ? "#3a3a3a" : "#242424",
-              color: "#fff", // text color of each option
-              width: "100%",
-            }),
-            placeholder: (base) => ({
-              ...base,
-              color: "#ccc", // placeholder text
-            }),
-            input: (base) => ({
-              ...base,
-              color: "#fff", // typing text color
-            }),
-          }}
-        />
-        <Select
-          options={teamOptions}
-          placeholder="Select a team"
-          onChange={(team) => {
-            if (team?.label) {
-              console.log(team.label);
-              getSquad({ value: team.label, setSelectedSquad: setSquad });
-            } else {
-              console.error("Team label is undefined");
-            }
-          }}
-          formatOptionLabel={(option) => (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <img
-                src={
-                  option.imageUrl !== ""
-                    ? option.imageUrl
-                    : "../../img/fallback.png"
-                }
-                alt={option.label}
-                style={{ width: "24px", height: "24px", objectFit: "contain" }}
-                onError={(e) => {
-                  e.currentTarget.onerror = null; // 무한 루프 방지
-                  e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
-                }}
-              />
-              <span>{option.label}</span>
-            </div>
-          )}
-          styles={{
-            container: (base) => ({
-              ...base,
-              width: "100%",
-            }),
-            control: (base) => ({
-              ...base,
-              backgroundColor: "#242424",
-              color: "#fff", // input text color
-              border: "1px solid transparent", // ✅ removes border
-              boxShadow: "none", // ✅ removes glow
-              outline: "none", // ✅ ensures no native outline
-              "&:hover": {
-                borderColor: "#666", // optional: change border on hover
-              },
-              width: "100%",
-            }),
-            singleValue: (base) => ({
-              ...base,
-              color: "#fff", // selected item shown in the input
-            }),
-            menu: (base) => ({
-              ...base,
-              backgroundColor: "#242424",
-              width: "100%",
-            }),
-            option: (base, state) => ({
-              ...base,
-              backgroundColor: state.isFocused ? "#3a3a3a" : "#242424",
-              color: "#fff", // text color of each option
-            }),
-            placeholder: (base) => ({
-              ...base,
-              color: "#ccc", // placeholder text
-            }),
-            input: (base) => ({
-              ...base,
-              color: "#fff", // typing text color
-            }),
-          }}
-        />
-      </div>
+      <div className="squad-dropdown"></div>
       <div className="squad-main">
-        {/* <div className="squad-select"> */}
-        {selectedFormation && squad && (
-          <SquadFormation formation={selectedFormation} squad={squad} />
-        )}
-        {/* </div> */}
+        <div className="squad-select">
+          <Select
+            options={formations}
+            onChange={(option) => {
+              if (option && "value" in option) {
+                setSelectedFormation(option.value);
+              } else {
+                setSelectedFormation("");
+              }
+            }}
+            placeholder="Select a formation"
+            isSearchable={false}
+            components={{ Option: createHoverOption(setSelectedFormation) }} // pass setter
+            styles={{
+              container: (base) => ({
+                ...base,
+                width: "100%",
+              }),
+              control: (base) => ({
+                ...base,
+                backgroundColor: "#242424",
+                color: "#fff", // input text color
+                border: "1px solid transparent", // ✅ removes border
+                boxShadow: "none", // ✅ removes glow
+                outline: "none", // ✅ ensures no native outline
+                "&:hover": {
+                  borderColor: "#666", // optional: change border on hover
+                },
+                width: "100%",
+              }),
+              singleValue: (base) => ({
+                ...base,
+                color: "#fff", // selected item shown in the input
+              }),
+              menu: (base) => ({
+                ...base,
+                backgroundColor: "#242424",
+                width: "100%",
+              }),
+              option: (base, state) => ({
+                ...base,
+                backgroundColor: state.isFocused ? "#3a3a3a" : "#242424",
+                color: "#fff", // text color of each option
+                width: "100%",
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: "#ccc", // placeholder text
+              }),
+              input: (base) => ({
+                ...base,
+                color: "#fff", // typing text color
+              }),
+            }}
+          />
+          {selectedFormation && squad && (
+            <SquadFormation
+              formation={selectedFormation}
+              squad={squad}
+              dropPlayers={dropPlayers}
+              setDropPlayers={setDropPlayers}
+            />
+          )}
+        </div>
         <div className="squad-team">
-          {squad &&
-            Object.entries(squad ?? []).flatMap(([_, players]) =>
-              players.map((p) => (
-                <div key={p.id} className="squad-team-player">
-                  <div>{p.name}</div>
-                  <div>{p.pos}</div>
-                </div>
-              ))
+          <Select
+            options={teamOptions}
+            placeholder="Select a team"
+            onChange={(team) => {
+              if (team?.label) {
+                console.log(team.label);
+                setDropPlayers({});
+                getSquad({ value: team.label, setSelectedSquad: setSquad });
+              } else {
+                console.error("Team label is undefined");
+              }
+            }}
+            formatOptionLabel={(option) => (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <img
+                  src={
+                    option.imageUrl !== ""
+                      ? option.imageUrl
+                      : "../../img/fallback.png"
+                  }
+                  alt={option.label}
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    objectFit: "contain",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // 무한 루프 방지
+                    e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
+                  }}
+                />
+                <span>{option.label}</span>
+              </div>
             )}
+            styles={{
+              container: (base) => ({
+                ...base,
+                width: "100%",
+              }),
+              control: (base) => ({
+                ...base,
+                backgroundColor: "#242424",
+                color: "#fff", // input text color
+                border: "1px solid transparent", // ✅ removes border
+                boxShadow: "none", // ✅ removes glow
+                outline: "none", // ✅ ensures no native outline
+                "&:hover": {
+                  borderColor: "#666", // optional: change border on hover
+                },
+                width: "100%",
+              }),
+              singleValue: (base) => ({
+                ...base,
+                color: "#fff", // selected item shown in the input
+              }),
+              menu: (base) => ({
+                ...base,
+                backgroundColor: "#242424",
+                width: "100%",
+              }),
+              option: (base, state) => ({
+                ...base,
+                backgroundColor: state.isFocused ? "#3a3a3a" : "#242424",
+                color: "#fff", // text color of each option
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: "#ccc", // placeholder text
+              }),
+              input: (base) => ({
+                ...base,
+                color: "#fff", // typing text color
+              }),
+            }}
+          />
+          {squad &&
+            positions.map((pos) => {
+              const players = squad[pos];
+              if (!players) return null;
+
+              let c = "black";
+              if (pos.includes("ST") || pos.includes("W")) c = "red";
+              else if (pos.includes("M")) c = "yellow";
+              else if (pos.includes("B")) c = "blue";
+              else if (pos.includes("G")) c = "orange";
+              return players.map((p) => (
+                <div key={p.id}>
+                  <DraggablePlayer key={p.id} player={p} color={c} />
+                </div>
+              ));
+            })}
         </div>
       </div>
     </div>

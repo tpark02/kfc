@@ -1,49 +1,59 @@
-.player-list {  
+.player-list {
   width: 100%;
   max-width: 900px;
   margin: 50px auto;
-  box-sizing: border-box;  
+  box-sizing: border-box;
   /* outline: 1px solid white; */
 }
 
 .player-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;    
-    flex-wrap: wrap;  
-    /* outline: 1px solid white;       */
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  /* outline: 1px solid white;       */
+}
 
-  .player-img {
-    width: 100px;
-    height: auto;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  
-  .player-name {
-    width: 100px;
-    text-align: center;
-    color: #fff;
-  }
-  
-  .player-cell {          
-    width: 60px;        
-    color: #fff;
-    flex-wrap: wrap;  
-  }
-  
-  
-  .player-table {
-    margin-top: 4px;
-    margin-bottom: 12px;    
-  }
-  
-  .player-card:hover {
-    background-color: #333;
-    cursor: pointer;
-  }
-  
-  .player-name, .player-cell {
-    font-weight: 500;
-  }
+.player-img {
+  width: 100px;
+  overflow: 'hidden';
+  position: 'relative';
+  border-radius: 6px;
+}
+
+.player-name {
+  width: 100px;
+  text-align: center;
+  color: #fff;
+}
+
+.player-cell {
+  width: 60px;
+  color: #fff;
+  flex-wrap: wrap;
+}
+
+
+.player-table {
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.player-card:hover {
+  background-color: #333;
+  cursor: pointer;
+}
+
+.player-name,
+.player-cell {
+  font-weight: 500;
+}
+
+.player-crop {
+  position: 'absolute';
+  top: -20px;
+  left: -30px;
+  width: 100px;
+  height: auto;
+  object-fit: 'cover';
+}

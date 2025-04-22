@@ -11,14 +11,14 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   --background-color: #242424;
-  --squad-dropdown-text-color: #5A5A5A;  
+  --squad-dropdown-text-color: #5A5A5A;
   background-color: var(--background-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
 }
 
 a {
@@ -26,6 +26,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -40,8 +41,7 @@ a:hover {
 } */
 
 body {
-  
-  justify-content: center;  
+  justify-content: center;
   min-height: 100vh;
   background-color: #121212;
 }
@@ -80,16 +80,19 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #ffffff80;
   }
+
   button {
     background-color: #f9f9f9;
   }
 }
 
 .card-row {
-  flex: 1; /* ✅ 나머지 공간 차지 */
+  flex: 1;
+  /* ✅ 나머지 공간 차지 */
   background-color: #1e1e1e;
   padding: 12px;
   border-radius: 8px;
@@ -117,8 +120,8 @@ td {
   box-shadow: none;
 }
 
-.filter-box {    
-  transition: all 0.0s;  
+.filter-box {
+  transition: all 0.0s;
 }
 
 .filter-box:hover {
@@ -146,9 +149,9 @@ td {
 
 .search-bar {
   display: flex;
-  flex-wrap: wrap;  
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;  
+  align-items: center;
   margin-bottom: 1rem;
   gap: 12px;
   /* outline: 1px solid #b31818;      */
@@ -194,4 +197,3 @@ td {
   border-radius: 6px;
   cursor: pointer;
 }
-
