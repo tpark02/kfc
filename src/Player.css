@@ -22,9 +22,13 @@
 }
 
 .player-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100px;
   text-align: center;
   color: #fff;
+  /* outline: 1px solid white; */
 }
 
 .player-cell {

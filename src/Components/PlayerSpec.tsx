@@ -14,6 +14,7 @@ import { Player } from "../types/Player";
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
 import { getColor } from "../util/Util";
+import CroppedAvatar from "./CroppedAvatar";
 
 // ✅ Data
 import { countryData } from "../data/countryData";
@@ -100,14 +101,20 @@ const PlayerSpec: React.FC = () => {
       <div className="player-content">
         <div className="player-basic-info">
           <div className="player-img-container">
-            <img
+            {/* <img
               className="player-spec-img"
               src={player.img}
               alt={player.name}
+            /> */}
+            <CroppedAvatar
+              src={player.img}
+              width={200}
+              height={200}
+              offsetX={70}
+              offsetY={5}
+              borderRadius="30%"
             />
-            <div className="player-name-row">
-              <h2 className="player-name">{player.name}</h2>
-            </div>
+            <div className="player-name-row">{player.name}</div>
           </div>
 
           <RadarStatChart

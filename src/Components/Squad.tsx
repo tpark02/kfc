@@ -72,12 +72,7 @@ const DropZone = ({
       }}
     >
       {/* Render the dropped player's name */}
-      <CroppedAvatar
-        src={player?.img && player.img !== "" ? player.img : "/img/avatar.jpg"}
-        width={90}
-        height={90}
-        offsetX={30}
-      />
+      <CroppedAvatar src={player?.img} />
     </div>
   );
 };

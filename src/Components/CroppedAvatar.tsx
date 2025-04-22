@@ -11,11 +11,11 @@ interface CroppedAvatarProps {
 
 const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   src,
-  width = 90,
-  height = 90,
+  width = 80,
+  height = 80,
   offsetX = 30,
   offsetY = 0,
-  borderRadius = "60%",
+  borderRadius = "30%",
 }) => {
   return (
     <div
