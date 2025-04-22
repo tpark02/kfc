@@ -112,7 +112,6 @@ const PlayerSpec: React.FC = () => {
               height={200}
               offsetX={70}
               offsetY={5}
-              borderRadius="30%"
             />
             <div className="player-name-row">{player.name}</div>
           </div>

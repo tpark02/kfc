@@ -1,7 +1,7 @@
 .player-list {
   width: 100%;
   max-width: 900px;
-  margin: 50px auto;
+  margin: 20px auto;
   box-sizing: border-box;
   /* outline: 1px solid white; */
 }

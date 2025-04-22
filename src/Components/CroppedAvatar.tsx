@@ -15,7 +15,7 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   height = 80,
   offsetX = 30,
   offsetY = 0,
-  borderRadius = "30%",
+  borderRadius = "8px",
 }) => {
   return (
     <div
