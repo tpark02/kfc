@@ -171,7 +171,7 @@ const PlayerSpec: React.FC = () => {
                 >
                   {teamData.url ? (
                     <img
-                      src={teamData.url}
+                      src={teamData.url || "/img/fallback.png"}
                       alt={teamData.name}
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src =

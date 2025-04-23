@@ -14,7 +14,7 @@ import FilterModal from "./modal/FilterModal";
 
 // 타입
 import { Player } from "./types/Player";
-import { PlayerPage } from "./types/PlayerPage";
+import { ResponsePlayerPage } from "./types/ResponsePlayerPage";
 import { Country } from "./types/Country";
 import { Team } from "./types/Team";
 import { PlayerPos } from "./types/PlayerPosition";
@@ -34,12 +34,14 @@ function App() {
   const [selectedPosition, setSelectedPosition] = useState<PlayerPos[]>([]);
   const [selectedLeagues, setSelectedLeagues] = useState<League[]>([]);
 
-  const [pageInfo, setPageInfo] = useState<Omit<PlayerPage, "content">>({
-    totalPages: 0,
-    totalElements: 0,
-    number: 0,
-    size: 20,
-  });
+  const [pageInfo, setPageInfo] = useState<Omit<ResponsePlayerPage, "content">>(
+    {
+      totalPages: 0,
+      totalElements: 0,
+      number: 0,
+      size: 20,
+    }
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState<
     "OVR_DESC" | "OVR_ASC" | "RANK_DESC" | "RANK_ASC" | "AGE_ASC" | "AGE_DESC"
@@ -63,7 +65,7 @@ function App() {
     selectedPosition: PlayerPos[] = []
   ) => {
     axios
-      .post<PlayerPage>("http://localhost:8080/api/players", {
+      .post<ResponsePlayerPage>("http://localhost:8080/api/players", {
         page,
         size: pageInfo.size || 10,
         search: searchTerm,

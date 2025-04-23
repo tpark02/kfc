@@ -28,10 +28,9 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
       }}
     >
       <img
-        src={src}
+        src={src || "/img/avatar.jpg"}
         onError={(e) => {
-          e.currentTarget.onerror = null;
-          e.currentTarget.src = "/img/avatar.jpg";
+          (e.currentTarget as HTMLImageElement).src = "/img/avatar.jpg";
         }}
         alt="avatar"
         style={{

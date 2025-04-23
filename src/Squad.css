@@ -40,19 +40,19 @@
     grid-template-columns: repeat(20, 1fr);
     width: 100%;
     padding: 10rem 0 10rem 0;
-    outline: 1px solid green;
+    /* outline: 1px solid green; */
 }
 
 
 .squad-team {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: stretch;
     /* ✅ allow child to take full width */
-    width: 30%;
+    width: 20%;
     height: auto;
-    outline: 1px solid white;
+    /* outline: 1px solid white; */
 }
 
 .squad-team-player {
@@ -61,7 +61,7 @@
     width: 100%;
     height: auto;
     gap: 10px;
-    outline: 1px solid white;
+    /* outline: 1px solid white; */
 }
 
 .squad-player {

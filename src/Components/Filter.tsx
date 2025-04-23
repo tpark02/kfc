@@ -84,7 +84,11 @@ const Filters: React.FC<FilterProps> = ({
             >
               {country.name}
               <img
-                src={`https://flagcdn.com/w40/${country.code}.png`}
+                src={
+                  country.code
+                    ? `https://flagcdn.com/w40/${country.code}.png`
+                    : "/img/fallback.png"
+                }
                 alt={country.name}
                 style={{ width: 25, height: 20 }}
               />
@@ -113,7 +117,7 @@ const Filters: React.FC<FilterProps> = ({
             >
               {team.name}
               <img
-                src={`${team.url}`}
+                src={`${team.url || "/img/fallback.png"}`}
                 alt={team.name}
                 style={{ width: 25, height: 20 }}
               />
@@ -145,7 +149,7 @@ const Filters: React.FC<FilterProps> = ({
             >
               {league.name}
               <img
-                src={`${league.url}`}
+                src={`${league.url || "/img/fallback.png"}`}
                 alt={league.name}
                 style={{ width: 25, height: 20 }}
               />

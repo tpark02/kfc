@@ -8,8 +8,11 @@ import Select from "react-select";
 import { OptionProps } from "react-select";
 import { useDrag } from "react-dnd";
 import { useDrop } from "react-dnd";
+import { Snackbar, Alert } from "@mui/material";
+import { ResponseLoadSquad } from "../types/ResponseLoadSquad";
 import CroppedAvatar from "./CroppedAvatar";
 import "../Squad.css";
+import { ResponseSaveSquad } from "../types/ResponseSaveSquad";
 
 const formations = [
   { value: "442", label: "4-4-2" },
@@ -63,16 +66,19 @@ const DropZone = ({
     }),
   }));
 
+  const divRef = React.useRef<HTMLDivElement>(null);
+  dropRef(divRef);
+
   return (
     <div
-      ref={dropRef}
+      ref={divRef}
       style={{
         gridColumn: grid.gridColumn,
         gridRow: grid.gridRow,
       }}
     >
       {/* Render the dropped player's name */}
-      <CroppedAvatar src={player?.img} />
+      <CroppedAvatar src={player?.img ?? ""} />
     </div>
   );
 };
@@ -96,7 +102,9 @@ const DraggablePlayer = ({
     <div
       className="squad-team-player"
       key={player.id}
-      ref={dragRef}
+      ref={(node) => {
+        dragRef(node);
+      }}
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
@@ -134,101 +142,21 @@ const createHoverOption = (setSelectedFormation: (value: string) => void) => {
   };
 };
 
-const getSquad = ({
-  value,
-  setSelectedSquad,
-}: {
-  value: string;
-  setSelectedSquad: (squad: SquadMap) => void;
-}) => {
-  axios
-    .post<SquadMap>("http://localhost:8080/api/squad", {
-      teamName: value,
-    })
-    .then((response) => {
-      setSelectedSquad(response.data);
-    })
-    .catch((err) => console.error(err));
-};
-
-const SquadFormation = ({
-  formation,
-  squad,
-  dropPlayers,
-  setDropPlayers,
-}: {
-  formation: string;
-  squad: SquadMap;
-  dropPlayers: { [index: number]: Player | null };
-  setDropPlayers: React.Dispatch<
-    React.SetStateAction<{ [index: number]: Player | null }>
-  >;
-}) => {
-  const playerList: Player[] = positions.flatMap((pos) => squad[pos] ?? []);
-
-  return (
-    <div className={`squad-formation formation-${formation}`}>
-      {formation
-        .split("")
-        .reverse()
-        .flatMap((numStr, rowIndex) => {
-          console.log(rowIndex + " " + numStr);
-          const count = parseInt(numStr, 10);
-          return Array.from({ length: count }).map((_, i) => {
-            const idx =
-              formation
-                .split("")
-                .reverse()
-                .slice(0, rowIndex)
-                .reduce((acc, val) => acc + parseInt(val, 10), 0) + i;
-
-            const grid = formationGrid[formation]?.[idx];
-            if (!grid) return null;
-
-            return (
-              <DropZone
-                key={`drop-${idx}`}
-                grid={grid}
-                player={dropPlayers[idx] ?? playerList[idx]}
-                onDrop={(player) => {
-                  setDropPlayers((prev) => ({
-                    ...prev,
-                    [idx]: player, // <- associate this player with this position
-                  }));
-                }}
-              />
-              // <div
-              //   key={`player-${idx}`}
-              //   className="squad-player"
-              //   style={{
-              //     gridColumn: grid.gridColumn,
-              //     gridRow: grid.gridRow,
-              //   }}
-              // >
-              //   {idx + 1}
-              //   {playerList[idx]?.name}
-              // </div>
-            );
-          });
-        })}
-    </div>
-  );
-};
-
 const FormationDropdown: React.FC = () => {
-  const [selectedFormation, setSelectedFormation] = useState("442");
+  const [selectedFormation, setSelectedFormation] = useState(
+    formations[0].value
+  );
   const [teams, setTeams] = useState<Team[]>([]);
   const [squad, setSquad] = useState<SquadMap>();
   const [dropPlayers, setDropPlayers] = useState<{
     [index: number]: Player | null;
   }>({});
-
+  const [open, setOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   // make position dictionary
   positions.forEach((position, index) => {
     positionMap[position] = index + 1;
   });
-
-  // console.log(positionMap);
 
   useEffect(() => {
     axios
@@ -237,20 +165,84 @@ const FormationDropdown: React.FC = () => {
         console.log(response.data.content);
         setTeams(response.data.content);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        setErrorMsg(err.message);
+        setOpen(true);
+      });
   }, []);
 
-  useEffect(() => {
+  const getSquad = ({
+    value,
+    setSelectedSquad,
+  }: {
+    value: string;
+    setSelectedSquad: (squad: SquadMap) => void;
+  }) => {
     axios
       .post<SquadMap>("http://localhost:8080/api/squad", {
-        teamName: "Real Madrid",
+        teamName: value,
       })
       .then((response) => {
-        console.log(response.data);
-        setSquad(response.data);
+        setSelectedSquad(response.data);
       })
-      .catch((err) => console.error(err));
-  }, []);
+      .catch((err) => {
+        setErrorMsg(err.message);
+        setOpen(true);
+      });
+  };
+
+  const SquadFormation = ({
+    formation,
+    dropPlayers,
+    setDropPlayers,
+  }: {
+    formation: string;
+    squad: SquadMap;
+    dropPlayers: { [index: number]: Player | null };
+    setDropPlayers: React.Dispatch<
+      React.SetStateAction<{ [index: number]: Player | null }>
+    >;
+  }) => {
+    return (
+      <div className={`squad-formation formation-${formation}`}>
+        {formation
+          .split("")
+          .reverse()
+          .flatMap((numStr, rowIndex) => {
+            // console.log(rowIndex + " " + numStr);
+            const count = parseInt(numStr, 10);
+            return Array.from({ length: count }).map((_, i) => {
+              const idx =
+                formation
+                  .split("")
+                  .reverse()
+                  .slice(0, rowIndex)
+                  .reduce((acc, val) => acc + parseInt(val, 10), 0) + i;
+
+              const grid = formationGrid[formation]?.[idx];
+              if (!grid) {
+                console.log("gird is null");
+                return null;
+              }
+
+              return (
+                <DropZone
+                  key={`drop-${idx}`}
+                  grid={grid}
+                  player={dropPlayers[idx] ?? undefined}
+                  onDrop={(player) => {
+                    setDropPlayers((prev) => ({
+                      ...prev,
+                      [idx]: player, // <- associate this player with this position
+                    }));
+                  }}
+                />
+              );
+            });
+          })}
+      </div>
+    );
+  };
 
   const teamOptions = teams.map((team) => ({
     value: team.id,
@@ -263,8 +255,111 @@ const FormationDropdown: React.FC = () => {
       <div className="squad-dropdown"></div>
       <div className="squad-main">
         <div className="squad-select">
+          {selectedFormation && (
+            <SquadFormation
+              formation={selectedFormation}
+              squad={squad || ({} as SquadMap)}
+              dropPlayers={dropPlayers}
+              setDropPlayers={setDropPlayers}
+            />
+          )}
+          <button
+            onClick={() => {
+              console.log("load clicked");
+              axios
+                .post<ResponseLoadSquad>(
+                  "http://localhost:8080/api/loadsquad",
+                  {
+                    name: selectedFormation,
+                  }
+                )
+                .then((response) => {
+                  console.log("Squad load successfully", response.data.content);
+
+                  const newDropPlayers: { [index: number]: Player | null } = {};
+                  response.data.content.forEach((p: Player, index: number) => {
+                    newDropPlayers[index] = p;
+                  });
+
+                  setSelectedFormation(response.data.name);
+                  setDropPlayers(newDropPlayers);
+                })
+                .catch((err) => {
+                  setErrorMsg(err.message);
+                  setOpen(true);
+                });
+            }}
+          >
+            load
+          </button>
+          <Snackbar
+            open={open}
+            autoHideDuration={5000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="error" onClose={() => setOpen(false)}>
+              {errorMsg}
+            </Alert>
+          </Snackbar>
+          <button
+            style={{
+              borderTopLeftRadius: "0px",
+              borderTopRightRadius: "0px",
+              borderBottomLeftRadius: "8px",
+              borderBottomRightRadius: "8px",
+            }}
+            onClick={() => {
+              console.log("save clicked");
+              axios
+                .post<ResponseSaveSquad>(
+                  "http://localhost:8080/api/savesquad",
+                  {
+                    name: selectedFormation,
+                    p1: dropPlayers[0]?.id,
+                    p2: dropPlayers[1]?.id,
+                    p3: dropPlayers[2]?.id,
+                    p4: dropPlayers[3]?.id,
+                    p5: dropPlayers[4]?.id,
+                    p6: dropPlayers[5]?.id,
+                    p7: dropPlayers[6]?.id,
+                    p8: dropPlayers[7]?.id,
+                    p9: dropPlayers[8]?.id,
+                    p10: dropPlayers[9]?.id,
+                    p11: dropPlayers[10]?.id,
+                  }
+                )
+                .then((response) => {
+                  if (Object.keys(response.data.isSuccessful === "true"))
+                    console.log("Formation saved successfully");
+                  else {
+                    setErrorMsg("Formation not saved");
+                    setOpen(true);
+                  }
+                })
+                .catch((err) => {
+                  setErrorMsg(err.message);
+                  setOpen(true);
+                });
+            }}
+          >
+            save
+          </button>
+          <Snackbar
+            open={open}
+            autoHideDuration={5000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="error" onClose={() => setOpen(false)}>
+              {errorMsg}
+            </Alert>
+          </Snackbar>
+        </div>
+        <div className="squad-team">
           <Select
             options={formations}
+            value={formations.find((f) => f.value === selectedFormation)}
             onChange={(option) => {
               if (option && "value" in option) {
                 setSelectedFormation(option.value);
@@ -272,7 +367,6 @@ const FormationDropdown: React.FC = () => {
                 setSelectedFormation("");
               }
             }}
-            placeholder="Select a formation"
             isSearchable={false}
             components={{ Option: createHoverOption(setSelectedFormation) }} // pass setter
             styles={{
@@ -317,23 +411,17 @@ const FormationDropdown: React.FC = () => {
               }),
             }}
           />
-          {selectedFormation && squad && (
-            <SquadFormation
-              formation={selectedFormation}
-              squad={squad}
-              dropPlayers={dropPlayers}
-              setDropPlayers={setDropPlayers}
-            />
-          )}
-        </div>
-        <div className="squad-team">
           <Select
             options={teamOptions}
             placeholder="Select a team"
             onChange={(team) => {
               if (team?.label) {
                 console.log(team.label);
-                setDropPlayers({});
+                if (Object.keys(dropPlayers).length <= 0) {
+                  setDropPlayers({});
+                } else {
+                  setDropPlayers(dropPlayers);
+                }
                 getSquad({ value: team.label, setSelectedSquad: setSquad });
               } else {
                 console.error("Team label is undefined");
