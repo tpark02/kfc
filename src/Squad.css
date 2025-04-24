@@ -25,6 +25,8 @@
     flex-direction: row;
     align-items: stretch;
     border-radius: 8px;
+    flex-wrap: wrap;
+
     /* outline: 1px solid yellow; */
 }
 
@@ -32,6 +34,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .squad-formation {
@@ -39,20 +42,36 @@
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     width: 100%;
-    padding: 10rem 0 10rem 0;
-    /* outline: 1px solid green; */
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 2rem 1rem;
+    gap: 0.3vw;
 }
-
 
 .squad-team {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    /* ✅ allow child to take full width */
-    width: 20%;
-    height: auto;
+    overflow-y: auto;
+    flex-basis: 20%;
+    min-width: 300px;
+    /* when there's no space, it wraps below */
+    transition: flex-basis 0.3s ease;
     /* outline: 1px solid white; */
+}
+
+@media (max-width: 1000px) {
+    .squad-team {
+        flex-basis: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .squad-formation {
+        /* 모바일에선 간소화 */
+        grid-template-columns: repeat(10, 1fr);
+    }
 }
 
 .squad-team-player {

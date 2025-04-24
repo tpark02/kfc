@@ -68,7 +68,7 @@ const SearchComponent = () => {
   }, [query, debouncedSearch]);
 
   return (
-    <>
+    <div>
       <TextField
         fullWidth
         placeholder="Search..."
@@ -98,7 +98,7 @@ const SearchComponent = () => {
             );
           })}
       </div>
-    </>
+    </div>
   );
 };
 

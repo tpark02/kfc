@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { TeamPage } from "../types/TeamPage";
 import { SquadMap, Player } from "../types/Player";
 import { formationGrid } from "../types/FormationGrid";
 import Select from "react-select";
@@ -112,29 +111,25 @@ const FormationDropdown: React.FC = () => {
   const [selectedFormation, setSelectedFormation] = useState(
     formations[0].value
   );
-  const [squad, setSquad] = useState<SquadMap>();
+  const [squad] = useState<SquadMap>();
   const [dropPlayers, setDropPlayers] = useState<{
     [index: number]: Player | null;
   }>({});
   const [open, setOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const squadSelectRef = useRef<HTMLDivElement>(null);
+  const [selectHeight, setSelectHeight] = useState<number>(0);
+
+  useEffect(() => {
+    if (squadSelectRef.current) {
+      setSelectHeight(squadSelectRef.current.offsetHeight);
+    }
+  }, [dropPlayers, selectedFormation]); // 상황에 따라 업데이트
+
   // make position dictionary
   positions.forEach((position, index) => {
     positionMap[position] = index + 1;
   });
-
-  useEffect(() => {
-    axios
-      .get<TeamPage>("http://localhost:8080/api/teams", {})
-      .then((response) => {
-        console.log(response.data.content);
-        setTeams(response.data.content);
-      })
-      .catch((err) => {
-        setErrorMsg(err.message);
-        setOpen(true);
-      });
-  }, []);
 
   const SquadFormation = ({
     formation,
@@ -150,7 +145,7 @@ const FormationDropdown: React.FC = () => {
   }) => {
     return (
       <div className={`squad-formation formation-${formation}`}>
-        {formation
+        {("1" + formation)
           .split("")
           .reverse()
           .flatMap((numStr, rowIndex) => {
@@ -193,7 +188,7 @@ const FormationDropdown: React.FC = () => {
     <div className="squad-container">
       <div className="squad-dropdown"></div>
       <div className="squad-main">
-        <div className="squad-select">
+        <div className="squad-select" ref={squadSelectRef}>
           {selectedFormation && (
             <SquadFormation
               formation={selectedFormation}
@@ -295,7 +290,13 @@ const FormationDropdown: React.FC = () => {
             </Alert>
           </Snackbar>
         </div>
-        <div className="squad-team">
+        <div
+          className="squad-team"
+          style={{
+            height: `${selectHeight}px`,
+            overflowY: "auto",
+          }}
+        >
           <Select
             options={formations}
             value={formations.find((f) => f.value === selectedFormation)}
