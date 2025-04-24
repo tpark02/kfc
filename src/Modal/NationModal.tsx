@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Modal.css";
-import { Box, Typography, Button, TextField } from "@mui/material";
+import { Box, Typography, TextField } from "@mui/material";
 import { countryData } from "../data/countryData";
 import { Country } from "../types/Country";
 

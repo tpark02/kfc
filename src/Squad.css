@@ -26,7 +26,6 @@
     align-items: stretch;
     border-radius: 8px;
     flex-wrap: wrap;
-
     /* outline: 1px solid yellow; */
 }
 
@@ -34,7 +33,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    width: auto;
+    height: auto;
 }
 
 .squad-formation {
@@ -46,6 +46,7 @@
     box-sizing: border-box;
     padding: 2rem 1rem;
     gap: 0.3vw;
+    outline: 1px solid white;
 }
 
 .squad-team {
@@ -113,4 +114,9 @@
     /* 👈 focus on the top part of image */
     overflow: hidden;
     display: block;
+}
+
+#label {
+    color: white;
+    font-size: 1rem;
 }

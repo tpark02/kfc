@@ -1,0 +1,15 @@
+export const formations = [
+  { value: "442", label: "4-4-2" },
+  { value: "433", label: "4-3-3" },
+  { value: "4231", label: "4-2-3-1" },
+  { value: "451", label: "4-5-1" },
+  { value: "343", label: "3-4-3" },
+  { value: "352", label: "3-5-2" },
+  { value: "532", label: "5-3-2" },
+  { value: "541", label: "5-4-1" },
+  { value: "41212", label: "4-1-2-1-2" },
+  { value: "4222", label: "4-2-2-2" },
+  { value: "4321", label: "4-3-2-1" },
+  { value: "4132", label: "4-1-3-2" },
+  { value: "424", label: "4-2-4" },
+];

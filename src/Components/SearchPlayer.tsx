@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
@@ -39,7 +39,7 @@ const DraggablePlayer = ({
   );
 };
 
-const SearchComponent = () => {
+const SearchPlayer = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Player[]>([]);
 
@@ -70,6 +70,7 @@ const SearchComponent = () => {
   return (
     <div>
       <TextField
+        id="label"
         fullWidth
         placeholder="Search..."
         value={query}
@@ -77,7 +78,7 @@ const SearchComponent = () => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon />
+              <SearchIcon sx={{ color: "white" }} />
             </InputAdornment>
           ),
         }}
@@ -102,4 +103,4 @@ const SearchComponent = () => {
   );
 };
 
-export default SearchComponent;
+export default SearchPlayer;
