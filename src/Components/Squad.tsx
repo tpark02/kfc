@@ -1,119 +1,122 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import axios from "axios";
-import { useDrop } from "react-dnd";
 import { Snackbar, Alert } from "@mui/material";
 
+// 타입
 import { SquadMap, Player } from "../types/Player";
 import { Team } from "../types/Team";
 import { League } from "../types/League";
-import { formationGrid } from "../types/FormationGrid";
 import { ResponseLoadSquad, ResponseSaveSquad } from "../types/Response";
 import { Country } from "../types/Country";
 
-import CroppedAvatar from "./CroppedAvatar";
-
-import "../Squad.css";
+// 컴포넌트
+import SquadFormation from "./SquadFormation";
 import SelectFormation from "./SelectFormation";
-import SearchPlayer from "./SearchPlayer";
+import SearchPlayer from "./SearchPlayer"; // ✅ default export
 import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
 import SearchPosition from "./SearchPosition";
 
-const positions = [
-  "ST",
-  "RW",
-  "LW",
-  "CAM",
-  "RM",
-  "LM",
-  "CDM",
-  "CM",
-  "CB",
-  "RB",
-  "LB",
-  "GK",
-];
-
-const positionMap: { [key: string]: number } = {};
-
-const DropZone = ({
-  grid,
-  onDrop,
-  player,
-}: {
-  grid: { gridColumn: number; gridRow: number };
-  onDrop: (player: Player) => void;
-  player?: Player;
-}) => {
-  const [, dropRef] = useDrop(() => ({
-    accept: "PLAYER",
-    drop: (player: Player) => {
-      onDrop(player);
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-  }));
-
-  const divRef = React.useRef<HTMLDivElement>(null);
-  dropRef(divRef);
-
-  return (
-    <div
-      ref={divRef}
-      style={{
-        gridColumn: grid.gridColumn,
-        gridRow: grid.gridRow,
-      }}
-    >
-      {/* Render the dropped player's name */}
-      <CroppedAvatar src={player?.img ?? ""} />
-    </div>
-  );
-};
+// 스타일
+import "../Squad.css";
 
 const FormationDropdown: React.FC = () => {
-  const [squad] = useState<SquadMap>();
+  // 🔢 기본 데이터 상태
+  const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
   const [dropPlayers, setDropPlayers] = useState<{
     [index: number]: Player | null;
   }>({});
-  const [open, setOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const squadSelectRef = useRef<HTMLDivElement>(null);
-  const [selectHeight, setSelectHeight] = useState<number>(0);
-  const [selectedFormation, setSelectedFormation] = useState<string>("442");
+
+  // 📦 필터 상태
+  const [selectedFormation, setSelectedFormation] = useState("442");
   const [seletecCountry, setSelectedCountries] = useState<Country>();
-
   const [selectedLeague, setLeague] = useState<League>();
-  const [setLeagueTerm, selectedLeagueTerm] = useState("");
-
   const [selectedClub, setClub] = useState<Team>();
-  const [setClubTerm, selectedClubTerm] = useState("");
-
   const [selectedPos, selectedPosition] = useState("");
 
+  // 📌 UI 제어
+  const [selectHeight, setSelectHeight] = useState<number>(0);
+  const [selectedDropZone, setSelectedDropZone] = useState<{ index: number }>({
+    index: -1,
+  });
+  const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
+
+  // ⚠️ 에러 핸들링
+  const [open, setOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // 📏 높이 측정용 ref
+  const squadSelectRef = useRef<HTMLDivElement>(null);
+
+  // 🔍 DropZone 클릭 감지용
+  const dropZoneRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const searchPlayerRef = useRef<HTMLDivElement | null>(null);
+
+  // 🧩 포지션 매핑
+  const positions = [
+    "ST",
+    "RW",
+    "LW",
+    "CAM",
+    "RM",
+    "LM",
+    "CDM",
+    "CM",
+    "CB",
+    "RB",
+    "LB",
+    "GK",
+  ];
+  const positionMap: { [key: string]: number } = {};
+  positions.forEach((position, index) => {
+    positionMap[position] = index + 1;
+  });
+
+  // 📏 DropZone 높이 측정
   useEffect(() => {
     if (squadSelectRef.current) {
       setSelectHeight(squadSelectRef.current.offsetHeight);
     }
-  }, [dropPlayers, selectedFormation]); // 상황에 따라 업데이트
+  }, [dropPlayers, selectedFormation]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+
+      const clickedInsideDropZone = dropZoneRefs.current.some(
+        (ref) => ref && ref.contains(target)
+      );
+      const clickedInsideSearch = !!target.closest("#search-player-root");
+
+      console.log("DropZone?", clickedInsideDropZone);
+      console.log("SearchPlayer?", clickedInsideSearch);
+
+      if (!clickedInsideDropZone && !clickedInsideSearch) {
+        console.log("❌ 외부 클릭, 닫기");
+        setIsDropZoneSelected(false);
+      } else {
+        console.log("✅ 내부 클릭, 유지");
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+
+  // ⬇️ 스쿼드 불러오기
   const loadSquadData = () => {
-    console.log("load clicked");
     axios
       .post<ResponseLoadSquad>("http://localhost:8080/api/loadsquad", {
         name: selectedFormation,
       })
       .then((response) => {
-        console.log("Squad load successfully", response.data.content);
-
         const newDropPlayers: { [index: number]: Player | null } = {};
-        response.data.content.forEach((p: Player, index: number) => {
+        response.data.content.forEach((p, index) => {
           newDropPlayers[index] = p;
         });
-
         setSelectedFormation(response.data.name);
         setDropPlayers(newDropPlayers);
       })
@@ -123,8 +126,8 @@ const FormationDropdown: React.FC = () => {
       });
   };
 
+  // 💾 스쿼드 저장하기
   const saveSquadData = () => {
-    console.log("save clicked");
     axios
       .post<ResponseSaveSquad>("http://localhost:8080/api/savesquad", {
         name: selectedFormation,
@@ -141,9 +144,9 @@ const FormationDropdown: React.FC = () => {
         p11: dropPlayers[10]?.id,
       })
       .then((response) => {
-        if (Object.keys(response.data.isSuccessful === "true"))
+        if (Object.keys(response.data.isSuccessful === "true")) {
           console.log("Formation saved successfully");
-        else {
+        } else {
           setErrorMsg("Formation not saved");
           setOpen(true);
         }
@@ -153,117 +156,48 @@ const FormationDropdown: React.FC = () => {
         setOpen(true);
       });
   };
-  // make position dictionary
-  positions.forEach((position, index) => {
-    positionMap[position] = index + 1;
-  });
-
-  const SquadFormation = ({
-    formation,
-    dropPlayers,
-    setDropPlayers,
-  }: {
-    formation: string;
-    squad: SquadMap;
-    dropPlayers: { [index: number]: Player | null };
-    setDropPlayers: React.Dispatch<
-      React.SetStateAction<{ [index: number]: Player | null }>
-    >;
-  }) => {
-    return (
-      <div className={`squad-formation formation-${formation}`}>
-        {("1" + formation)
-          .split("")
-          .reverse()
-          .flatMap((numStr, rowIndex) => {
-            // console.log(rowIndex + " " + numStr);
-            const count = parseInt(numStr, 10);
-            return Array.from({ length: count }).map((_, i) => {
-              const idx =
-                formation
-                  .split("")
-                  .reverse()
-                  .slice(0, rowIndex)
-                  .reduce((acc, val) => acc + parseInt(val, 10), 0) + i;
-
-              const grid = formationGrid[formation]?.[idx];
-              if (!grid) {
-                console.log("gird is null");
-                return null;
-              }
-
-              return (
-                <DropZone
-                  key={`drop-${idx}`}
-                  grid={grid}
-                  player={dropPlayers[idx] ?? undefined}
-                  onDrop={(player) => {
-                    setDropPlayers((prev) => ({
-                      ...prev,
-                      [idx]: player, // <- associate this player with this position
-                    }));
-                  }}
-                />
-              );
-            });
-          })}
-      </div>
-    );
-  };
 
   return (
     <div className="squad-container">
-      <div className="squad-dropdown"></div>
+      <div className="squad-dropdown">
+        {/* <SelectFormation ... /> 등 필터용 */}
+      </div>
       <div className="squad-main">
         <div className="squad-select" ref={squadSelectRef}>
           {selectedFormation && (
             <SquadFormation
               formation={selectedFormation}
-              squad={squad || ({} as SquadMap)}
               dropPlayers={dropPlayers}
               setDropPlayers={setDropPlayers}
+              setSelectedDropZone={setSelectedDropZone}
+              setIsDropZoneSelected={setIsDropZoneSelected}
+              dropZoneRefs={dropZoneRefs}
+              squad={squad || {}}
+              selectedDropZone={selectedDropZone}
             />
           )}
+
           <button onClick={loadSquadData}>load</button>
+          <button onClick={saveSquadData}>save</button>
+
           <Snackbar
             open={open}
             autoHideDuration={5000}
             onClose={() => setOpen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Alert severity="error" onClose={() => setOpen(false)}>
-              {errorMsg}
-            </Alert>
-          </Snackbar>
-          <button
-            style={{
-              borderTopLeftRadius: "0px",
-              borderTopRightRadius: "0px",
-              borderBottomLeftRadius: "8px",
-              borderBottomRightRadius: "8px",
-            }}
-            onClick={saveSquadData}
-          >
-            save
-          </button>
-          <Snackbar
-            open={open}
-            autoHideDuration={5000}
-            onClose={() => setOpen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Alert severity="error" onClose={() => setOpen(false)}>
               {errorMsg}
             </Alert>
           </Snackbar>
         </div>
+
         <div className="squad-team">
           <div>
             <SelectFormation
               setSelectedFormation={setSelectedFormation}
               selectedFormation={selectedFormation}
             />
-            <SearchCountry OnSetSelectedCountry={setSelectedCountries} />
+            {/* <SearchCountry OnSetSelectedCountry={setSelectedCountries} />
             <SearchLeague
               setLeague={setLeague}
               setSearchLeauge={selectedLeagueTerm}
@@ -272,19 +206,17 @@ const FormationDropdown: React.FC = () => {
               setClub={setClub}
               setSearchTermClub={selectedClubTerm}
             />
-            <SearchPosition selectedPos={selectedPosition} />
-            <div
-              style={{
-                height: `${selectHeight}px`,
-                overflowY: "auto",
-              }}
-            >
-              <SearchPlayer
-                country={seletecCountry?.name ?? ""}
-                league={selectedLeague?.name ?? ""}
-                club={selectedClub?.name ?? ""}
-                pos={selectedPos}
-              />
+            <SearchPosition selectedPos={selectedPosition} /> */}
+            <div>
+              {isDropZoneSelected && (
+                <SearchPlayer
+                  ref={searchPlayerRef}
+                  country={seletecCountry?.name ?? ""}
+                  league={selectedLeague?.name ?? ""}
+                  club={selectedClub?.name ?? ""}
+                  pos={selectedPos}
+                />
+              )}
             </div>
           </div>
         </div>
