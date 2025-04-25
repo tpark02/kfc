@@ -14,7 +14,7 @@ import FilterModal from "./modal/FilterModal";
 
 // 타입
 import { Player } from "./types/Player";
-import { ResponsePlayerPage } from "./types/ResponsePlayerPage";
+import { ResponsePlayerPage } from "./types/Response";
 import { Country } from "./types/Country";
 import { Team } from "./types/Team";
 import { PlayerPos } from "./types/PlayerPosition";

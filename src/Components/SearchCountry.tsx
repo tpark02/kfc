@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
 import { countryData } from "../data/countryData";
+import { Country } from "../types/Country";
 
 interface FilterCountryProp {
-  name: string;
+  OnSetSelectedCountry: (countries: Country) => void;
 }
 
-const SearchCountry: React.FC<FilterCountryProp> = ({ name }) => {
+const SearchCountry: React.FC<FilterCountryProp> = ({
+  OnSetSelectedCountry,
+}) => {
   const [selectedCountry, setSelectedCountry] = useState("");
 
   return (
@@ -15,7 +18,13 @@ const SearchCountry: React.FC<FilterCountryProp> = ({ name }) => {
       <Select
         labelId="country-label"
         value={selectedCountry}
-        onChange={(e) => setSelectedCountry(e.target.value)}
+        onChange={(e) => {
+          setSelectedCountry(e.target.value);
+          const selected = countryData.find((c) => c.code === e.target.value);
+          if (selected) {
+            OnSetSelectedCountry(selected);
+          }
+        }}
         label="Country"
         MenuProps={{
           PaperProps: {

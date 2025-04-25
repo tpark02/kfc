@@ -7,7 +7,7 @@ import "../Squad.css";
 
 interface SearchClubProp {
   setSearchTermClub: (term: string) => void;
-  setClub: (team: Team) => void;
+  setClub: (teams: Team) => void;
 }
 const SearchClub: React.FC<SearchClubProp> = ({
   setSearchTermClub,
@@ -35,10 +35,9 @@ const SearchClub: React.FC<SearchClubProp> = ({
           value={selectedTeam?.id ?? ""}
           onChange={(e) => {
             const t = teams.find((team) => {
-              console.log(e.target.value);
               return team.id === Number(e.target.value);
             });
-            console.log(e.target.value);
+
             if (t) {
               setClub(t);
               setClubValue(t);

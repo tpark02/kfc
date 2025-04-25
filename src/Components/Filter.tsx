@@ -82,13 +82,9 @@ const Filters: React.FC<FilterProps> = ({
                 setSelectedCountries(newList);
               }}
             >
-              {country.name}
+              {/* {country.name} */}
               <img
-                src={
-                  country.code
-                    ? `https://flagcdn.com/w40/${country.code}.png`
-                    : "/img/fallback.png"
-                }
+                src={`https://flagcdn.com/w40/${country.code}.png`}
                 alt={country.name}
                 style={{ width: 25, height: 20 }}
               />
@@ -115,9 +111,9 @@ const Filters: React.FC<FilterProps> = ({
                 setSelectedTeams(newList);
               }}
             >
-              {team.name}
+              {/* {team.name} */}
               <img
-                src={`${team.url || "/img/fallback.png"}`}
+                src={`${team.url}`}
                 alt={team.name}
                 style={{ width: 25, height: 20 }}
               />
@@ -147,9 +143,9 @@ const Filters: React.FC<FilterProps> = ({
               }}
               sx={{ display: "flex", alignItems: "center", gap: 1 }}
             >
-              {league.name}
+              {/* {league.name} */}
               <img
-                src={`${league.url || "/img/fallback.png"}`}
+                src={`${league.url}`}
                 alt={league.name}
                 style={{ width: 25, height: 20 }}
               />

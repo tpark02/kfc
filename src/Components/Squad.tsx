@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 
 import axios from "axios";
 import { useDrop } from "react-dnd";
-import { Snackbar, Alert, backdropClasses } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
 
 import { SquadMap, Player } from "../types/Player";
 import { Team } from "../types/Team";
 import { League } from "../types/League";
 import { formationGrid } from "../types/FormationGrid";
-import { ResponseLoadSquad } from "../types/ResponseLoadSquad";
-import { ResponseSaveSquad } from "../types/ResponseSaveSquad";
+import { ResponseLoadSquad, ResponseSaveSquad } from "../types/Response";
+import { Country } from "../types/Country";
 
 import CroppedAvatar from "./CroppedAvatar";
 
@@ -19,6 +19,8 @@ import SearchPlayer from "./SearchPlayer";
 import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
+import SearchPosition from "./SearchPosition";
+
 const positions = [
   "ST",
   "RW",
@@ -82,12 +84,15 @@ const FormationDropdown: React.FC = () => {
   const squadSelectRef = useRef<HTMLDivElement>(null);
   const [selectHeight, setSelectHeight] = useState<number>(0);
   const [selectedFormation, setSelectedFormation] = useState<string>("442");
+  const [seletecCountry, setSelectedCountries] = useState<Country>();
 
   const [selectedLeague, setLeague] = useState<League>();
   const [setLeagueTerm, selectedLeagueTerm] = useState("");
 
   const [selectedClub, setClub] = useState<Team>();
   const [setClubTerm, selectedClubTerm] = useState("");
+
+  const [selectedPos, selectedPosition] = useState("");
 
   useEffect(() => {
     if (squadSelectRef.current) {
@@ -258,7 +263,7 @@ const FormationDropdown: React.FC = () => {
               setSelectedFormation={setSelectedFormation}
               selectedFormation={selectedFormation}
             />
-            <SearchCountry name="argentina" />
+            <SearchCountry OnSetSelectedCountry={setSelectedCountries} />
             <SearchLeague
               setLeague={setLeague}
               setSearchLeauge={selectedLeagueTerm}
@@ -267,13 +272,19 @@ const FormationDropdown: React.FC = () => {
               setClub={setClub}
               setSearchTermClub={selectedClubTerm}
             />
+            <SearchPosition selectedPos={selectedPosition} />
             <div
               style={{
                 height: `${selectHeight}px`,
                 overflowY: "auto",
               }}
             >
-              <SearchPlayer />
+              <SearchPlayer
+                country={seletecCountry?.name ?? ""}
+                league={selectedLeague?.name ?? ""}
+                club={selectedClub?.name ?? ""}
+                pos={selectedPos}
+              />
             </div>
           </div>
         </div>

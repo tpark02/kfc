@@ -31,10 +31,9 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
         value={selectedLeague?.id ?? ""}
         onChange={(e) => {
           const l = leagues.find((league) => {
-            console.log(e.target.value);
             return league.id === Number(e.target.value);
           });
-          console.log(e.target.value);
+
           if (l) {
             setLeague(l);
             setLeagueValue(l);

@@ -1,10 +1,17 @@
-import { useState, useEffect, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import _ from "lodash";
 import { Player } from "../types/Player";
 import { useDrag } from "react-dnd";
+import { ResponseSearch } from "../types/Response";
 
 const DraggablePlayer = ({
   player,
@@ -39,33 +46,103 @@ const DraggablePlayer = ({
   );
 };
 
-const SearchPlayer = () => {
+interface SearchPlayerProp {
+  country: string;
+  league: string;
+  club: string;
+  pos: string;
+}
+const SearchPlayer: React.FC<SearchPlayerProp> = ({
+  country,
+  league,
+  club,
+  pos,
+}) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Player[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const debouncedSearch = useMemo(
-    () =>
-      _.debounce(async (q: string) => {
-        if (q.length < 2) {
-          setResults([]); // 2글자 미만이면 초기화
-          return;
+  const fetchPlayers = useCallback(
+    async (q: string, pageNumber: number) => {
+      if (q.length < 2) {
+        setResults([]);
+        setPage(0);
+        setHasMore(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const response = await axios.post<ResponseSearch>(
+          "http://localhost:8080/api/squadsearch",
+          {
+            page: pageNumber,
+            name: q,
+            country,
+            league,
+            club,
+            pos,
+            q,
+          }
+        );
+
+        if (response.data && response.data.content) {
+          if (pageNumber === 0) {
+            setResults(response.data.content);
+          } else {
+            setResults((prev) => [...prev, ...response.data.content]);
+          }
+          setHasMore(response.data.content.length > 0);
+        } else {
+          setHasMore(false);
         }
-        try {
-          const res = await axios.get(
-            `http://localhost:8080/api/search?query=${encodeURIComponent(q)}`
-          );
-          setResults(res.data);
-        } catch (err) {
-          console.error(err);
-        }
-      }, 300),
-    []
+      } catch (err) {
+        console.error(err);
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [country, league, club, pos]
   );
 
   useEffect(() => {
-    debouncedSearch(query);
-    return () => debouncedSearch.cancel();
-  }, [query, debouncedSearch]);
+    const handler = _.debounce(() => {
+      if (query.trim() === "") {
+        setResults([]);
+        setPage(0);
+        setHasMore(false);
+        return;
+      }
+      setPage(0);
+      fetchPlayers(query, 0);
+    }, 300);
+
+    handler();
+    return () => handler.cancel();
+  }, [query, fetchPlayers]);
+
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = listRef.current;
+      if (!el || loading || !hasMore) return;
+
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
+        setPage((prev) => {
+          const next = prev + 1;
+          fetchPlayers(query, next);
+          return next;
+        });
+      }
+    };
+
+    const current = listRef.current;
+    current?.addEventListener("scroll", handleScroll);
+    return () => current?.removeEventListener("scroll", handleScroll);
+  }, [fetchPlayers, loading, hasMore, query]);
 
   return (
     <div>
@@ -83,7 +160,16 @@ const SearchPlayer = () => {
           ),
         }}
       />
-      <div>
+      <div
+        ref={listRef}
+        style={{
+          maxHeight: "300px",
+          overflowY: "auto",
+          border: "1px solid gray",
+          marginTop: "1rem",
+          padding: "0.5rem",
+        }}
+      >
         {results &&
           results.map((player) => {
             const pos = player.pos;
@@ -92,12 +178,17 @@ const SearchPlayer = () => {
             else if (pos.includes("M")) c = "yellow";
             else if (pos.includes("B")) c = "blue";
             else if (pos.includes("G")) c = "orange";
+
             return (
               <div key={player.id}>
                 <DraggablePlayer key={player.id} player={player} color={c} />
               </div>
             );
           })}
+
+        {loading && (
+          <div style={{ color: "white", textAlign: "center" }}>Loading...</div>
+        )}
       </div>
     </div>
   );
