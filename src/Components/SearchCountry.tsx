@@ -1,69 +1,110 @@
 import React, { useState } from "react";
-import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import { Autocomplete, TextField, Box, InputAdornment } from "@mui/material";
 import { countryData } from "../data/countryData";
 import { Country } from "../types/Country";
 
 interface FilterCountryProp {
-  OnSetSelectedCountry: (countries: Country) => void;
+  setSelectedCountry: (country: Country[]) => void;
+  prevList: Country[];
 }
 
 const SearchCountry: React.FC<FilterCountryProp> = ({
-  OnSetSelectedCountry,
+  setSelectedCountry,
+  prevList,
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedCountry, setSelectedCountryInternal] =
+    useState<Country | null>(null);
 
   return (
-    <FormControl fullWidth variant="outlined" size="small">
-      <InputLabel id="label">Country</InputLabel>
-      <Select
-        labelId="country-label"
-        value={selectedCountry}
-        onChange={(e) => {
-          setSelectedCountry(e.target.value);
-          const selected = countryData.find((c) => c.code === e.target.value);
-          if (selected) {
-            OnSetSelectedCountry(selected);
-          }
-        }}
-        label="Country"
-        MenuProps={{
-          PaperProps: {
-            sx: {
-              backgroundColor: "#242424",
-              color: "#fff",
+    <Autocomplete
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      options={countryData}
+      value={selectedCountry}
+      onChange={(_, newValue) => {
+        if (!newValue) return;
+        setSelectedCountry([...prevList, newValue]);
+        setSelectedCountryInternal(newValue);
+      }}
+      getOptionLabel={(option) => option.name}
+      isOptionEqualToValue={(option, value) => option.code === value.code}
+      renderOption={(props, option) => {
+        const { key, ...rest } = props;
+        return (
+          <Box
+            key={option.code}
+            component="li"
+            sx={{ display: "flex", alignItems: "center", gap: 1 }}
+            {...rest}
+          >
+            <img
+              src={`https://flagcdn.com/w40/${option.code}.png`} // ✅ flag URL 사용
+              alt={option.name}
+              style={{
+                width: 20,
+                height: 15,
+                objectFit: "cover",
+                borderRadius: 2,
+                backgroundColor: "white",
+              }}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "../../img/fallback.png";
+              }}
+            />
+            {option.name}
+          </Box>
+        );
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Select Country"
+          variant="outlined"
+          size="small"
+          InputProps={{
+            ...params.InputProps,
+            startAdornment:
+              selectedCountry && selectedCountry.code ? (
+                <InputAdornment position="start">
+                  <img
+                    src={`https://flagcdn.com/w40/${selectedCountry.code}.png`}
+                    alt={selectedCountry.name}
+                    style={{
+                      width: 20,
+                      height: 15,
+                      objectFit: "cover",
+                      borderRadius: 2,
+                      backgroundColor: "white",
+                      marginRight: 5,
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "../../img/fallback.png";
+                    }}
+                  />
+                </InputAdornment>
+              ) : null,
+          }}
+          sx={{
+            backgroundColor: "#242424",
+            input: { color: "#fff" },
+            "& .MuiInputLabel-root": { color: "#fff" },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: "#fff" },
+              "&:hover fieldset": { borderColor: "#fff" },
+              "&.Mui-focused fieldset": { borderColor: "#fff" },
             },
-          },
-        }}
-        sx={{
-          backgroundColor: "#242424",
-          color: "#fff",
-          "& .MuiSelect-icon": {
-            color: "#fff",
-            borderLeft: "none",
-          },
-        }}
-      >
-        {countryData.map((country) => (
-          <MenuItem key={country.code} value={country.code}>
-            <Box display="flex" alignItems="center">
-              <img
-                src={`https://flagcdn.com/w40/${country.code}.png`}
-                alt={country.name}
-                style={{
-                  width: 20,
-                  height: 15,
-                  marginRight: 8,
-                  backgroundColor: "white",
-                  borderRadius: 2,
-                  objectFit: "cover",
-                }}
-              />
-              {country.name}
-            </Box>
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+          }}
+        />
+      )}
+      sx={{
+        backgroundColor: "#242424",
+        color: "#fff",
+      }}
+    />
   );
 };
 

@@ -2,91 +2,143 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Team } from "../types/Team";
 import { TeamPage } from "../types/TeamPage";
-import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import { Autocomplete, TextField, Box, InputAdornment } from "@mui/material";
 import "../Squad.css";
 
 interface SearchClubProp {
   setSearchTermClub: (term: string) => void;
-  setClub: (teams: Team) => void;
+  setClub: (teams: Team[]) => void;
+  prevList: Team[];
 }
+
 const SearchClub: React.FC<SearchClubProp> = ({
   setSearchTermClub,
   setClub,
+  prevList,
 }) => {
-  const [teams, recvTeams] = useState<Team[]>([]);
-  const [selectedTeam, setClubValue] = useState<Team>();
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
   useEffect(() => {
-    axios
-      .get<TeamPage>("http://localhost:8080/api/teams", {})
-      .then((response) => {
-        //console.log(response.data.content);
-        recvTeams(response.data.content);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+    if (open && teams.length === 0) {
+      setLoading(true);
+      axios
+        .get<TeamPage>("http://localhost:8080/api/teams")
+        .then((response) => {
+          setTeams(response.data.content);
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setLoading(false));
+    }
+  }, [open]);
 
   return (
-    <>
-      <FormControl fullWidth variant="outlined" size="small">
-        <InputLabel id="label">Club</InputLabel>
-        <Select
-          labelId="club-label"
-          value={selectedTeam?.id ?? ""}
-          onChange={(e) => {
-            const t = teams.find((team) => {
-              return team.id === Number(e.target.value);
-            });
+    <Autocomplete
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      options={teams}
+      loading={loading}
+      value={selectedTeam}
+      onChange={(_, newValue) => {
+        if (!newValue) return;
 
-            if (t) {
-              setClub(t);
-              setClubValue(t);
-            }
-          }}
-          label="Club"
-          MenuProps={{
-            PaperProps: {
-              sx: {
-                backgroundColor: "#242424",
-                color: "#fff",
-              },
-            },
+        const alreadySelected = prevList.some((p) => p.id === newValue.id);
+        if (alreadySelected) {
+          return;
+        }
+
+        setClub([
+          ...prevList,
+          { id: newValue.id, name: newValue.name, url: newValue.url },
+        ]);
+        setSelectedTeam(newValue);
+      }}
+      getOptionLabel={(option) => option.name}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      renderOption={(props, option) => {
+        const { key, ...rest } = props;
+        return (
+          <Box
+            component="li"
+            key={option.id} // 🔥 key를 명시적으로 따로 지정
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              outline: 1,
+              outlineColor: "red",
+            }}
+            {...rest} // 나머지 props만 spread
+          >
+            <img
+              src={option.url || "../../img/fallback.png"}
+              alt={option.name}
+              style={{
+                width: 20,
+                height: 15,
+                objectFit: "cover",
+                borderRadius: 2,
+                backgroundColor: "white",
+              }}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "../../img/fallback.png";
+              }}
+            />
+            {option.name}
+          </Box>
+        );
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Select Club"
+          variant="outlined"
+          size="small"
+          InputProps={{
+            ...params.InputProps,
+            startAdornment:
+              selectedTeam && selectedTeam.id ? (
+                <InputAdornment position="start">
+                  <img
+                    src={selectedTeam.url}
+                    alt={selectedTeam.name}
+                    style={{
+                      width: 20,
+                      height: 15,
+                      objectFit: "cover",
+                      borderRadius: 2,
+                      backgroundColor: "white",
+                      marginRight: 5,
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "../../img/fallback.png";
+                    }}
+                  />
+                </InputAdornment>
+              ) : null,
           }}
           sx={{
             backgroundColor: "#242424",
-            color: "#fff",
-            "& .MuiSelect-icon": {
-              color: "#fff",
-              borderLeft: "none",
+            input: { color: "#fff" },
+            "& .MuiInputLabel-root": { color: "#fff" },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: "#fff" },
+              "&:hover fieldset": { borderColor: "#fff" },
+              "&.Mui-focused fieldset": { borderColor: "#fff" },
             },
           }}
-        >
-          {teams.map((team) => (
-            <MenuItem key={team.id} value={team.id}>
-              <Box display="flex" alignItems="center">
-                <img
-                  src={team.url || "../../img/fallback.png"}
-                  alt={team.name}
-                  style={{
-                    width: 20,
-                    height: 15,
-                    marginRight: 8,
-                    backgroundColor: "white",
-                    borderRadius: 2,
-                    objectFit: "cover",
-                  }}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null; // 무한 루프 방지
-                    e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
-                  }}
-                />
-                {team.name}
-              </Box>
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </>
+        />
+      )}
+      sx={{
+        backgroundColor: "#242424",
+        color: "#fff",
+      }}
+    />
   );
 };
 

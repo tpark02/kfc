@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
-  forwardRef,
-} from "react";
+import React, { useState, useEffect, useCallback, forwardRef } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
@@ -17,9 +10,11 @@ import { ResponseSearch } from "../types/Response";
 const DraggablePlayer = ({
   player,
   color,
+  onStartDrag,
 }: {
   player: Player;
   color: string;
+  onStartDrag: () => void;
 }) => {
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: "PLAYER",
@@ -33,13 +28,12 @@ const DraggablePlayer = ({
     <div
       className="squad-team-player"
       key={player.id}
-      ref={(node) => {
-        dragRef(node);
-      }}
+      ref={dragRef}
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: "move",
       }}
+      onMouseDown={onStartDrag}
     >
       <div style={{ backgroundColor: color, width: "50px" }}>{player.pos}</div>
       <div>{player.name}</div>
@@ -52,10 +46,12 @@ interface SearchPlayerProp {
   league: string;
   club: string;
   pos: string;
+  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
+  listRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
-  ({ country, league, club, pos }, ref) => {
+  ({ country, league, club, pos, setIsDragging, listRef }, ref) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
     const [page, setPage] = useState(0);
@@ -64,24 +60,22 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
 
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
-        if (q.length < 2) {
-          setResults([]);
-          setPage(0);
-          setHasMore(false);
-          return;
+        let localPos = "";
+        if (q.trim().length < 2) {
+          localPos = pos;
         }
+
         try {
           setLoading(true);
           const response = await axios.post<ResponseSearch>(
             "http://localhost:8080/api/squadsearch",
             {
               page: pageNumber,
-              name: q,
+              name: q.trim().length >= 2 ? q : "",
               country,
               league,
               club,
-              pos,
-              q,
+              pos: localPos,
             }
           );
 
@@ -89,7 +83,13 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
             if (pageNumber === 0) {
               setResults(response.data.content);
             } else {
-              setResults((prev) => [...prev, ...response.data.content]);
+              setResults((prev) => {
+                const newResults = [...prev, ...response.data.content];
+                const uniqueResults = Array.from(
+                  new Map(newResults.map((item) => [item.id, item])).values()
+                );
+                return uniqueResults;
+              });
             }
             setHasMore(response.data.content.length > 0);
           } else {
@@ -105,14 +105,9 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       [country, league, club, pos]
     );
 
+    // 초기 또는 query 변경 시
     useEffect(() => {
       const handler = _.debounce(() => {
-        if (query.trim() === "") {
-          setResults([]);
-          setPage(0);
-          setHasMore(false);
-          return;
-        }
         setPage(0);
         fetchPlayers(query, 0);
       }, 300);
@@ -121,8 +116,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       return () => handler.cancel();
     }, [query, fetchPlayers]);
 
-    const listRef = useRef<HTMLDivElement | null>(null);
-
+    // 스크롤 내려갈 때
     useEffect(() => {
       const handleScroll = () => {
         const el = listRef.current;
@@ -130,9 +124,9 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
 
         if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
           setPage((prev) => {
-            const next = prev + 1;
-            fetchPlayers(query, next);
-            return next;
+            const nextPage = prev + 1;
+            fetchPlayers(query, nextPage);
+            return nextPage;
           });
         }
       };
@@ -142,6 +136,12 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       return () => current?.removeEventListener("scroll", handleScroll);
     }, [fetchPlayers, loading, hasMore, query]);
 
+    // 컴포넌트 처음 mount될 때
+    useEffect(() => {
+      setPage(0);
+      fetchPlayers("", 0);
+    }, [fetchPlayers]);
+
     return (
       <div id="search-player-root" ref={ref}>
         <TextField
@@ -149,7 +149,10 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
           fullWidth
           placeholder="Search..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            if (listRef.current) listRef.current.scrollTop = 0; // 검색창 입력하면 스크롤도 위로
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -159,6 +162,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
           }}
         />
         <div
+          id="search-player-list"
           ref={listRef}
           style={{
             maxHeight: "300px",
@@ -167,21 +171,24 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
             padding: "0.5rem",
           }}
         >
-          {results &&
-            results.map((player) => {
-              const pos = player.pos;
-              let c = "black";
-              if (pos.includes("ST") || pos.includes("W")) c = "red";
-              else if (pos.includes("M")) c = "yellow";
-              else if (pos.includes("B")) c = "blue";
-              else if (pos.includes("G")) c = "orange";
+          {results.map((player) => {
+            const pos = player.pos;
+            let c = "black";
+            if (pos.includes("ST") || pos.includes("W")) c = "red";
+            else if (pos.includes("M")) c = "orange";
+            else if (pos.includes("B")) c = "blue";
+            else if (pos.includes("G")) c = "orange";
 
-              return (
-                <div key={player.id}>
-                  <DraggablePlayer key={player.id} player={player} color={c} />
-                </div>
-              );
-            })}
+            return (
+              <div key={player.id}>
+                <DraggablePlayer
+                  player={player}
+                  color={c}
+                  onStartDrag={() => setIsDragging(true)}
+                />
+              </div>
+            );
+          })}
 
           {loading && (
             <div style={{ color: "white", textAlign: "center" }}>
@@ -193,4 +200,5 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     );
   }
 );
+
 export default SearchPlayer;

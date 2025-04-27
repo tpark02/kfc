@@ -16,7 +16,7 @@ import SearchPlayer from "./SearchPlayer"; // ✅ default export
 import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
-import SearchPosition from "./SearchPosition";
+import Filters from "./Filter";
 
 // 스타일
 import "../Squad.css";
@@ -30,17 +30,22 @@ const FormationDropdown: React.FC = () => {
 
   // 📦 필터 상태
   const [selectedFormation, setSelectedFormation] = useState("442");
-  const [seletecCountry, setSelectedCountries] = useState<Country>();
-  const [selectedLeague, setLeague] = useState<League>();
-  const [selectedClub, setClub] = useState<Team>();
+  const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
+  const [selectedLeagues, setLeague] = useState<League[]>([]);
+  const [selectedClubs, setClub] = useState<Team[]>([]);
   const [selectedPos, selectedPosition] = useState("");
 
   // 📌 UI 제어
   const [selectHeight, setSelectHeight] = useState<number>(0);
-  const [selectedDropZone, setSelectedDropZone] = useState<{ index: number }>({
+  const [selectedDropZone, setSelectedDropZone] = useState<{
+    index: number;
+    pos: string;
+  }>({
     index: -1,
+    pos: "",
   });
   const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   // ⚠️ 에러 핸들링
   const [open, setOpen] = useState(false);
@@ -52,6 +57,7 @@ const FormationDropdown: React.FC = () => {
   // 🔍 DropZone 클릭 감지용
   const dropZoneRefs = useRef<(HTMLDivElement | null)[]>([]);
   const searchPlayerRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   // 🧩 포지션 매핑
   const positions = [
@@ -73,38 +79,37 @@ const FormationDropdown: React.FC = () => {
     positionMap[position] = index + 1;
   });
 
-  // 📏 DropZone 높이 측정
-  useEffect(() => {
-    if (squadSelectRef.current) {
-      setSelectHeight(squadSelectRef.current.offsetHeight);
-    }
-  }, [dropPlayers, selectedFormation]);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      if (isDragging) {
+        console.log("드래그 중 - 외부 클릭 무시");
+        return;
+      }
+
       const target = event.target as HTMLElement;
 
       const clickedInsideDropZone = dropZoneRefs.current.some(
         (ref) => ref && ref.contains(target)
       );
-      const clickedInsideSearch = !!target.closest("#search-player-root");
 
-      console.log("DropZone?", clickedInsideDropZone);
-      console.log("SearchPlayer?", clickedInsideSearch);
+      const clickedInsideSearch =
+        searchPlayerRef.current?.contains(target) ?? false;
 
       if (!clickedInsideDropZone && !clickedInsideSearch) {
         console.log("❌ 외부 클릭, 닫기");
         setIsDropZoneSelected(false);
+        setSelectedDropZone({ index: -1, pos: "" });
       } else {
         console.log("✅ 내부 클릭, 유지");
       }
     };
 
-    document.addEventListener("click", handleClickOutside, true);
+    document.addEventListener("mousedown", handleClickOutside, true);
+
     return () => {
-      document.removeEventListener("click", handleClickOutside, true);
+      document.removeEventListener("mousedown", handleClickOutside, true);
     };
-  }, []);
+  }, [isDragging]);
 
   // ⬇️ 스쿼드 불러오기
   const loadSquadData = () => {
@@ -174,6 +179,8 @@ const FormationDropdown: React.FC = () => {
               dropZoneRefs={dropZoneRefs}
               squad={squad || {}}
               selectedDropZone={selectedDropZone}
+              setPosition={selectedPosition}
+              searchPlayerRef={listRef}
             />
           )}
 
@@ -197,25 +204,55 @@ const FormationDropdown: React.FC = () => {
               setSelectedFormation={setSelectedFormation}
               selectedFormation={selectedFormation}
             />
-            {/* <SearchCountry OnSetSelectedCountry={setSelectedCountries} />
-            <SearchLeague
-              setLeague={setLeague}
-              setSearchLeauge={selectedLeagueTerm}
-            />
-            <SearchClub
-              setClub={setClub}
-              setSearchTermClub={selectedClubTerm}
-            />
-            <SearchPosition selectedPos={selectedPosition} /> */}
+
             <div>
-              {isDropZoneSelected && (
+              {isDropZoneSelected ? (
                 <SearchPlayer
                   ref={searchPlayerRef}
-                  country={seletecCountry?.name ?? ""}
-                  league={selectedLeague?.name ?? ""}
-                  club={selectedClub?.name ?? ""}
+                  listRef={listRef} // ✅ 추가!
+                  country={
+                    selectedCountries.map((c) => c.name).join(", ") || ""
+                  }
+                  league={selectedLeagues.map((l) => l.name).join(", ") || ""}
+                  club={selectedClubs.map((c) => c.name).join(", ") || ""}
                   pos={selectedPos}
+                  setIsDragging={setIsDragging} // ✅ 추가
                 />
+              ) : (
+                <>
+                  <SearchCountry
+                    setSelectedCountry={setSelectedCountries}
+                    prevList={selectedCountries}
+                  />
+                  <SearchLeague
+                    setSelectedLeague={setLeague}
+                    prevList={selectedLeagues}
+                  />
+                  <SearchClub
+                    setClub={setClub}
+                    setSearchTermClub={(term: string) =>
+                      console.log("Search term:", term)
+                    }
+                    prevList={selectedClubs}
+                  />
+                  {/* <SearchPosition selectedPos={selectedPosition} /> */}
+                  {/* 🧾 Filter  */}
+                  <Filters
+                    selectedCountries={selectedCountries}
+                    selectedTeams={selectedClubs}
+                    selectedLeagues={selectedLeagues}
+                    selectedPosition={[]}
+                    searchTerm={""}
+                    sortType={""}
+                    setSelectedCountries={setSelectedCountries}
+                    setSelectedTeams={setClub}
+                    setSelectedLeagues={setLeague}
+                    fetchPage={(page: number) =>
+                      console.log(`Fetching page ${page}`)
+                    }
+                    setSelectedPosition={() => {}}
+                  />
+                </>
               )}
             </div>
           </div>

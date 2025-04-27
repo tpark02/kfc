@@ -1,83 +1,128 @@
-import { useState, useEffect } from "react";
-import { League } from "../types/League";
-import { LeaguePage } from "../types/LeaguePage";
-import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Autocomplete, TextField, Box, InputAdornment } from "@mui/material";
+import { League } from "../types/League";
+import { LeaguePage } from "../types/LeaguePage"; // 필요하면 타입 만들어
+import "../Squad.css";
 
 interface SearchLeagueProp {
-  setSearchLeauge: (term: string) => void;
-  setLeague: (league: League) => void;
+  setSelectedLeague: (league: League[]) => void;
+  prevList: League[];
 }
+
 const SearchLeague: React.FC<SearchLeagueProp> = ({
-  setSearchLeauge,
-  setLeague,
+  setSelectedLeague,
+  prevList,
 }) => {
-  const [leagues, recvLeague] = useState<League[]>([]);
-  const [selectedLeague, setLeagueValue] = useState<League>();
+  const [leagues, setLeagues] = useState<League[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedLeague, setSelectedLeagueInternal] = useState<League | null>(
+    null
+  );
 
   useEffect(() => {
-    axios
-      .get<LeaguePage>("http://localhost:8080/api/leagues", {})
-      .then((response) => {
-        recvLeague(response.data.content);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-  return (
-    <FormControl fullWidth variant="outlined" size="small">
-      <InputLabel id="label">League</InputLabel>
-      <Select
-        labelId="league-label"
-        value={selectedLeague?.id ?? ""}
-        onChange={(e) => {
-          const l = leagues.find((league) => {
-            return league.id === Number(e.target.value);
-          });
+    if (open && leagues.length === 0) {
+      setLoading(true);
+      axios
+        .get<LeaguePage>("http://localhost:8080/api/leagues")
+        .then((response) => {
+          setLeagues(response.data.content);
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setLoading(false));
+    }
+  }, [open]);
 
-          if (l) {
-            setLeague(l);
-            setLeagueValue(l);
-          }
-        }}
-        label="League"
-        MenuProps={{
-          PaperProps: {
-            sx: {
-              backgroundColor: "#242424",
-              color: "#fff",
+  return (
+    <Autocomplete
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      options={leagues}
+      loading={loading}
+      value={selectedLeague}
+      onChange={(_, newValue) => {
+        if (!newValue) return;
+        const alreadySelected = prevList.some((p) => p.id === newValue.id);
+        if (alreadySelected) return;
+        setSelectedLeague([...prevList, newValue]);
+        setSelectedLeagueInternal(newValue);
+      }}
+      getOptionLabel={(option) => option.name}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      renderOption={(props, option) => {
+        const { key, ...rest } = props;
+        return (
+          <Box
+            key={option.id}
+            component="li"
+            sx={{ display: "flex", alignItems: "center", gap: 1 }}
+            {...rest}
+          >
+            <img
+              src={option.url || "../../img/fallback.png"}
+              alt={option.name}
+              style={{
+                width: 20,
+                height: 15,
+                objectFit: "cover",
+                borderRadius: 2,
+                backgroundColor: "white",
+              }}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "../../img/fallback.png";
+              }}
+            />
+            {option.name}
+          </Box>
+        );
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Select League"
+          variant="outlined"
+          size="small"
+          InputProps={{
+            ...params.InputProps,
+            startAdornment:
+              selectedLeague && selectedLeague.id ? (
+                <InputAdornment position="start">
+                  <img
+                    src={selectedLeague.url}
+                    alt={selectedLeague.name}
+                    style={{
+                      width: 20,
+                      height: 15,
+                      objectFit: "cover",
+                      borderRadius: 2,
+                      backgroundColor: "white",
+                      marginRight: 5,
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "../../img/fallback.png";
+                    }}
+                  />
+                </InputAdornment>
+              ) : null,
+          }}
+          sx={{
+            backgroundColor: "#242424",
+            input: { color: "#fff" },
+            "& .MuiInputLabel-root": { color: "#fff" },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: "#fff" },
+              "&:hover fieldset": { borderColor: "#fff" },
+              "&.Mui-focused fieldset": { borderColor: "#fff" },
             },
-          },
-        }}
-        sx={{
-          backgroundColor: "#242424",
-          color: "#fff",
-          "& .MuiSelect-icon": {
-            color: "#fff",
-            borderLeft: "none",
-          },
-        }}
-      >
-        {leagues.map((league) => (
-          <MenuItem key={league.id} value={league.id}>
-            <Box display="flex" alignItems="center">
-              <img
-                src={league.url || "../../img/fallback.png"}
-                alt={league.name}
-                style={{
-                  width: 20,
-                  height: 15,
-                  marginRight: 8,
-                  backgroundColor: "white",
-                  borderRadius: 2,
-                  objectFit: "cover",
-                }}
-              />
-              {league.name}
-            </Box>
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+          }}
+        />
+      )}
+      sx={{ backgroundColor: "#242424", color: "#fff" }}
+    />
   );
 };
 

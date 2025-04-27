@@ -12,10 +12,14 @@ interface SquadProp {
   setDropPlayers: React.Dispatch<
     React.SetStateAction<{ [index: number]: Player | null }>
   >;
-  setSelectedDropZone: React.Dispatch<React.SetStateAction<{ index: number }>>;
+  setSelectedDropZone: React.Dispatch<
+    React.SetStateAction<{ index: number; pos: string }>
+  >;
   setIsDropZoneSelected: (b: boolean) => void;
   dropZoneRefs: React.RefObject<(HTMLDivElement | null)[]>; // ✅ React.RefObject can be used as a non-deprecated alternative
   selectedDropZone: { index: number };
+  setPosition: React.Dispatch<React.SetStateAction<string>>;
+  searchPlayerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const SquadFormation: React.FC<SquadProp> = ({
@@ -26,6 +30,8 @@ const SquadFormation: React.FC<SquadProp> = ({
   setSelectedDropZone,
   setIsDropZoneSelected,
   selectedDropZone,
+  setPosition,
+  searchPlayerRef,
 }) => {
   return (
     <div className={`squad-formation formation-${formation}`}>
@@ -67,11 +73,21 @@ const SquadFormation: React.FC<SquadProp> = ({
                   }));
                 }}
                 onClick={() => {
-                  setSelectedDropZone({ index: idx ?? null }); // Update the selected DropZone index
+                  // Update the selected DropZone index
+                  setSelectedDropZone({
+                    index: idx ?? null,
+                    pos: grid?.position ?? "",
+                  });
+                  setPosition(grid?.position ?? "");
                   // ✅ 렌더링 다음 tick에 true 설정
-                  setTimeout(() => {
-                    setIsDropZoneSelected(true);
-                  }, 0);
+                  setIsDropZoneSelected(true); // ✅ 바로 실행 (setTimeout 필요 없음)
+                  // 스크롤 최상단 이동
+                  if (searchPlayerRef.current) {
+                    searchPlayerRef.current.scrollTop = 0;
+                  }
+                  // setTimeout(() => {
+                  //   setIsDropZoneSelected(true);
+                  // }, 0);
                   console.log(`DropZone clicked at index ${idx}`);
                 }}
                 containerClassName={
