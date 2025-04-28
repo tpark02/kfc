@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Button } from "@mui/material";
 
 // 타입
 import { SquadMap, Player } from "../types/Player";
 import { Team } from "../types/Team";
 import { League } from "../types/League";
-import { ResponseLoadSquad, ResponseSaveSquad } from "../types/Response";
+import {
+  ResponseLoadSquad,
+  ResponseSaveSquad,
+  ResponseRandomSquad,
+} from "../types/Response";
 import { Country } from "../types/Country";
 
 // 컴포넌트
@@ -162,6 +166,22 @@ const FormationDropdown: React.FC = () => {
       });
   };
 
+  const loadRandomSquad = () => {
+    axios
+      .get<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {})
+      .then((response) => {
+        const newDropPlayers: { [index: number]: Player | null } = {};
+        console.log(response.data.content);
+        response.data.content.forEach((p, index) => {
+          newDropPlayers[index] = p;
+        });
+        setDropPlayers(newDropPlayers);
+      })
+      .catch((err) => {
+        setErrorMsg(err.message);
+        setOpen(true);
+      });
+  };
   return (
     <div className="squad-container">
       <div className="squad-dropdown">
@@ -252,6 +272,16 @@ const FormationDropdown: React.FC = () => {
                     }
                     setSelectedPosition={() => {}}
                   />
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      loadRandomSquad();
+                    }}
+                    sx={{ marginLeft: 1 }}
+                  >
+                    Create Squad
+                  </Button>
                 </>
               )}
             </div>

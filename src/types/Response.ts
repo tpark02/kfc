@@ -18,3 +18,10 @@ export type ResponseLoadSquad = {
   content: Player[];
   name: string;
 };
+
+export type ResponseRandomSquad = {
+  content: Player[];
+  totalovr: number;
+  averageovr: number;
+  chemistry: number;
+};
