@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Snackbar, Alert, Button } from "@mui/material";
 
@@ -24,6 +24,7 @@ import Filters from "./Filter";
 
 // 스타일
 import "../Squad.css";
+import { formationGrid } from "../types/FormationGrid";
 
 const FormationDropdown: React.FC = () => {
   // 🔢 기본 데이터 상태
@@ -39,8 +40,11 @@ const FormationDropdown: React.FC = () => {
   const [selectedClubs, setClub] = useState<Team[]>([]);
   const [selectedPos, selectedPosition] = useState("");
 
+  // 📦 스낵바 상태 하나로 통일
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
   // 📌 UI 제어
-  const [selectHeight, setSelectHeight] = useState<number>(0);
   const [selectedDropZone, setSelectedDropZone] = useState<{
     index: number;
     pos: string;
@@ -49,11 +53,6 @@ const FormationDropdown: React.FC = () => {
     pos: "",
   });
   const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-
-  // ⚠️ 에러 핸들링
-  const [open, setOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   // 📏 높이 측정용 ref
   const squadSelectRef = useRef<HTMLDivElement>(null);
@@ -83,38 +82,6 @@ const FormationDropdown: React.FC = () => {
     positionMap[position] = index + 1;
   });
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (isDragging) {
-        console.log("드래그 중 - 외부 클릭 무시");
-        return;
-      }
-
-      const target = event.target as HTMLElement;
-
-      const clickedInsideDropZone = dropZoneRefs.current.some(
-        (ref) => ref && ref.contains(target)
-      );
-
-      const clickedInsideSearch =
-        searchPlayerRef.current?.contains(target) ?? false;
-
-      if (!clickedInsideDropZone && !clickedInsideSearch) {
-        console.log("❌ 외부 클릭, 닫기");
-        setIsDropZoneSelected(false);
-        setSelectedDropZone({ index: -1, pos: "" });
-      } else {
-        console.log("✅ 내부 클릭, 유지");
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside, true);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside, true);
-    };
-  }, [isDragging]);
-
   // ⬇️ 스쿼드 불러오기
   const loadSquadData = () => {
     axios
@@ -129,9 +96,11 @@ const FormationDropdown: React.FC = () => {
         setSelectedFormation(response.data.name);
         setDropPlayers(newDropPlayers);
       })
-      .catch((err) => {
-        setErrorMsg(err.message);
-        setOpen(true);
+      .catch((error) => {
+        setSnackbarMessage(
+          error.response?.data || "스쿼드를 불러오지 못했습니다."
+        );
+        setSnackbarOpen(true);
       });
   };
 
@@ -156,135 +125,175 @@ const FormationDropdown: React.FC = () => {
         if (Object.keys(response.data.isSuccessful === "true")) {
           console.log("Formation saved successfully");
         } else {
-          setErrorMsg("Formation not saved");
-          setOpen(true);
+          setSnackbarMessage("Formation 저장 실패");
+          setSnackbarOpen(true);
         }
       })
-      .catch((err) => {
-        setErrorMsg(err.message);
-        setOpen(true);
+      .catch((error) => {
+        setSnackbarMessage(
+          error.response?.data || "Formation 저장 중 오류 발생"
+        );
+        setSnackbarOpen(true);
       });
   };
 
   const loadRandomSquad = () => {
     axios
-      .get<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {})
+      .post<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {
+        name: selectedFormation,
+        countries: selectedCountries,
+        leagues: selectedLeagues,
+        clubs: selectedClubs,
+      })
       .then((response) => {
         const newDropPlayers: { [index: number]: Player | null } = {};
         console.log(response.data.content);
+        const grid = formationGrid[selectedFormation];
+
         response.data.content.forEach((p, index) => {
-          newDropPlayers[index] = p;
+          grid.forEach((g) => {
+            console.log(g.position);
+            if (g.position === p.pos) {
+              newDropPlayers[index] = p;
+              console.log(newDropPlayers[index].url);
+            }
+          });
         });
         setDropPlayers(newDropPlayers);
       })
-      .catch((err) => {
-        setErrorMsg(err.message);
-        setOpen(true);
+      .catch((error) => {
+        console.log("🔥 error 전체:", error);
+        console.log("🔥 error.response:", error.response);
+        console.log("🔥 error.response.data:", error.response?.data);
+        if (axios.isAxiosError(error) && error.response) {
+          setSnackbarMessage(error.response.data || "에러가 발생했습니다.");
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarMessage("알 수 없는 오류가 발생했습니다.");
+          setSnackbarOpen(true);
+        }
       });
   };
+
   return (
     <div className="squad-container">
-      <div className="squad-dropdown">
-        {/* <SelectFormation ... /> 등 필터용 */}
-      </div>
-      <div className="squad-main">
-        <div className="squad-select" ref={squadSelectRef}>
-          {selectedFormation && (
-            <SquadFormation
-              formation={selectedFormation}
-              dropPlayers={dropPlayers}
-              setDropPlayers={setDropPlayers}
-              setSelectedDropZone={setSelectedDropZone}
-              setIsDropZoneSelected={setIsDropZoneSelected}
-              dropZoneRefs={dropZoneRefs}
-              squad={squad || {}}
-              selectedDropZone={selectedDropZone}
-              setPosition={selectedPosition}
-              searchPlayerRef={listRef}
-            />
-          )}
-
-          <button onClick={loadSquadData}>load</button>
-          <button onClick={saveSquadData}>save</button>
-
-          <Snackbar
-            open={open}
-            autoHideDuration={5000}
-            onClose={() => setOpen(false)}
+      <div className="squad-random-team">asdf</div>
+      <div className="squad-select" ref={squadSelectRef}>
+        {selectedFormation && (
+          <SquadFormation
+            formation={selectedFormation}
+            dropPlayers={dropPlayers}
+            setSelectedDropZone={setSelectedDropZone}
+            setIsDropZoneSelected={setIsDropZoneSelected}
+            dropZoneRefs={dropZoneRefs}
+            squad={squad || {}}
+            setPosition={selectedPosition}
+            searchPlayerRef={listRef}
+            // ignoreNextClick={ignoreNextClick}
+          />
+        )}
+        <div className="button-group">
+          <button
+            onClick={() => {
+              loadSquadData();
+            }}
           >
-            <Alert severity="error" onClose={() => setOpen(false)}>
-              {errorMsg}
-            </Alert>
-          </Snackbar>
+            Load
+          </button>
+          <button
+            onClick={() => {
+              saveSquadData();
+            }}
+          >
+            Save
+          </button>
         </div>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </div>
+      <div className="squad-team">
+        <div>
+          <SelectFormation
+            setSelectedFormation={setSelectedFormation}
+            selectedFormation={selectedFormation}
+          />
 
-        <div className="squad-team">
+          {isDropZoneSelected && (
+            <Button
+              onClick={() => {
+                setIsDropZoneSelected(!isDropZoneSelected);
+              }}
+            >
+              Close
+            </Button>
+          )}
           <div>
-            <SelectFormation
-              setSelectedFormation={setSelectedFormation}
-              selectedFormation={selectedFormation}
-            />
-
-            <div>
-              {isDropZoneSelected ? (
-                <SearchPlayer
-                  ref={searchPlayerRef}
-                  listRef={listRef} // ✅ 추가!
-                  country={
-                    selectedCountries.map((c) => c.name).join(", ") || ""
-                  }
-                  league={selectedLeagues.map((l) => l.name).join(", ") || ""}
-                  club={selectedClubs.map((c) => c.name).join(", ") || ""}
-                  pos={selectedPos}
-                  setIsDragging={setIsDragging} // ✅ 추가
+            {isDropZoneSelected ? (
+              <SearchPlayer
+                ref={searchPlayerRef}
+                listRef={listRef} // ✅ 추가!
+                country=""
+                league=""
+                club=""
+                pos={selectedPos}
+                selectedDropZone={selectedDropZone}
+                dropPlayers={dropPlayers}
+                setDropPlayers={setDropPlayers}
+              />
+            ) : (
+              <>
+                <SearchCountry
+                  setSelectedCountry={setSelectedCountries}
+                  prevList={selectedCountries}
                 />
-              ) : (
-                <>
-                  <SearchCountry
-                    setSelectedCountry={setSelectedCountries}
-                    prevList={selectedCountries}
-                  />
-                  <SearchLeague
-                    setSelectedLeague={setLeague}
-                    prevList={selectedLeagues}
-                  />
-                  <SearchClub
-                    setClub={setClub}
-                    setSearchTermClub={(term: string) =>
-                      console.log("Search term:", term)
-                    }
-                    prevList={selectedClubs}
-                  />
-                  {/* <SearchPosition selectedPos={selectedPosition} /> */}
-                  {/* 🧾 Filter  */}
-                  <Filters
-                    selectedCountries={selectedCountries}
-                    selectedTeams={selectedClubs}
-                    selectedLeagues={selectedLeagues}
-                    selectedPosition={[]}
-                    searchTerm={""}
-                    sortType={""}
-                    setSelectedCountries={setSelectedCountries}
-                    setSelectedTeams={setClub}
-                    setSelectedLeagues={setLeague}
-                    fetchPage={(page: number) =>
-                      console.log(`Fetching page ${page}`)
-                    }
-                    setSelectedPosition={() => {}}
-                  />
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      loadRandomSquad();
-                    }}
-                    sx={{ marginLeft: 1 }}
-                  >
-                    Create Squad
-                  </Button>
-                </>
-              )}
-            </div>
+                <SearchLeague
+                  setSelectedLeague={(league) => setLeague(league || [])}
+                  prevList={selectedLeagues}
+                />
+                <SearchClub
+                  setClub={setClub}
+                  setSearchTermClub={(term: string) =>
+                    console.log("Search term:", term)
+                  }
+                  prevList={selectedClubs}
+                />
+                {/* <SearchPosition selectedPos={selectedPosition} /> */}
+                {/* 🧾 Filter  */}
+                <Filters
+                  selectedCountries={selectedCountries}
+                  selectedTeams={selectedClubs}
+                  selectedLeagues={selectedLeagues}
+                  selectedPosition={[]}
+                  searchTerm={""}
+                  sortType={""}
+                  setSelectedCountries={setSelectedCountries}
+                  setSelectedTeams={setClub}
+                  setSelectedLeagues={setLeague}
+                  fetchPage={(page: number) =>
+                    console.log(`Fetching page ${page}`)
+                  }
+                  setSelectedPosition={() => {}}
+                />
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    loadRandomSquad();
+                  }}
+                  sx={{ marginLeft: 1 }}
+                >
+                  Create Squad
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

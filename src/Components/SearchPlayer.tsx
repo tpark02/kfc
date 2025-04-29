@@ -1,62 +1,46 @@
 import React, { useState, useEffect, useCallback, forwardRef } from "react";
-import { TextField, InputAdornment } from "@mui/material";
+import { TextField, InputAdornment, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import _ from "lodash";
 import { Player } from "../types/Player";
-import { useDrag } from "react-dnd";
 import { ResponseSearch } from "../types/Response";
-
-const DraggablePlayer = ({
-  player,
-  color,
-  onStartDrag,
-}: {
-  player: Player;
-  color: string;
-  onStartDrag: () => void;
-}) => {
-  const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: "PLAYER",
-    item: player,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
-
-  return (
-    <div
-      className="squad-team-player"
-      key={player.id}
-      ref={dragRef}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-        cursor: "move",
-      }}
-      onMouseDown={onStartDrag}
-    >
-      <div style={{ backgroundColor: color, width: "50px" }}>{player.pos}</div>
-      <div>{player.name}</div>
-    </div>
-  );
-};
 
 interface SearchPlayerProp {
   country: string;
   league: string;
   club: string;
   pos: string;
-  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   listRef: React.RefObject<HTMLDivElement | null>;
+  dropPlayers: { [index: number]: Player | null };
+  selectedDropZone: { index: number; pos: string };
+  setDropPlayers: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: Player | null;
+    }>
+  >;
 }
 
 const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
-  ({ country, league, club, pos, setIsDragging, listRef }, ref) => {
+  (
+    {
+      country,
+      league,
+      club,
+      pos,
+      listRef,
+      dropPlayers,
+      selectedDropZone,
+      setDropPlayers,
+    },
+    ref
+  ) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
 
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
@@ -143,58 +127,103 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     }, [fetchPlayers]);
 
     return (
-      <div id="search-player-root" ref={ref}>
-        <TextField
-          id="label"
-          fullWidth
-          placeholder="Search..."
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            if (listRef.current) listRef.current.scrollTop = 0; // 검색창 입력하면 스크롤도 위로
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: "white" }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <div
-          id="search-player-list"
-          ref={listRef}
-          style={{
-            maxHeight: "300px",
-            overflowY: "auto",
-            marginTop: "1rem",
-            padding: "0.5rem",
-          }}
-        >
-          {results.map((player) => {
-            const pos = player.pos;
-            let c = "black";
-            if (pos.includes("ST") || pos.includes("W")) c = "red";
-            else if (pos.includes("M")) c = "orange";
-            else if (pos.includes("B")) c = "blue";
-            else if (pos.includes("G")) c = "orange";
-
+      <div>
+        <div className="search-player-src">
+          {(() => {
+            const p = dropPlayers[selectedDropZone?.index]
+              ? dropPlayers[selectedDropZone.index]
+              : null;
             return (
-              <div key={player.id}>
-                <DraggablePlayer
-                  player={player}
-                  color={c}
-                  onStartDrag={() => setIsDragging(true)}
-                />
-              </div>
+              p && (
+                <div style={{ color: "white", marginBottom: "1rem" }}>
+                  <div>이름: {p.name}</div>
+                  <div>국가: {p.nation}</div>
+                  <div>포지션: {p.pos}</div>
+                  <div>OVR: {p.ovr}</div>
+                </div>
+              )
             );
-          })}
-
-          {loading && (
-            <div style={{ color: "white", textAlign: "center" }}>
-              Loading...
+          })()}
+        </div>
+        <div className="search-player-desc">
+          {hoveredPlayer && (
+            <div style={{ color: "white", marginBottom: "1rem" }}>
+              <div>이름: {hoveredPlayer.name}</div>
+              <div>국가: {hoveredPlayer.nation}</div>
+              <div>포지션: {hoveredPlayer.pos}</div>
+              <div>OVR: {hoveredPlayer.ovr}</div>
             </div>
           )}
+        </div>
+        <div id="search-player-root" ref={ref}>
+          <TextField
+            id="label"
+            fullWidth
+            placeholder="Search..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (listRef.current) listRef.current.scrollTop = 0; // 검색창 입력하면 스크롤도 위로
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "white" }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <div
+            id="search-player-list"
+            ref={listRef}
+            style={{
+              maxHeight: "300px",
+              overflowY: "auto",
+              marginTop: "1rem",
+              padding: "0.5rem",
+            }}
+          >
+            {results.map((player) => {
+              const pos = player.pos;
+              let c = "black";
+              if (pos.includes("ST") || pos.includes("W")) c = "red";
+              else if (pos.includes("M")) c = "orange";
+              else if (pos.includes("B")) c = "blue";
+              else if (pos.includes("G")) c = "orange";
+
+              return (
+                <Button
+                  key={player.id}
+                  onMouseEnter={() => setHoveredPlayer(player)}
+                  onMouseLeave={() => setHoveredPlayer(null)}
+                  onClick={() => {
+                    console.log(
+                      "🔥 선택된 dropzone index:",
+                      selectedDropZone.index
+                    );
+                    console.log("🔥 넣을 player:", player);
+                    setDropPlayers((prev) => ({
+                      ...prev,
+                      [selectedDropZone.index]: player,
+                    }));
+                  }}
+                >
+                  <div className="squad-team-player" key={player.id}>
+                    <div style={{ backgroundColor: c, width: "50px" }}>
+                      {player.pos}
+                    </div>
+                    <div>{player.name}</div>
+                  </div>
+                </Button>
+              );
+            })}
+
+            {loading && (
+              <div style={{ color: "white", textAlign: "center" }}>
+                Loading...
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

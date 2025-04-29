@@ -1,42 +1,41 @@
 import React from "react";
-import DropZone from "./DropZone";
+// import DropZone from "./DropZone";
 import { SquadMap } from "../types/Player";
 import { Player } from "../types/Player";
 import { formationGrid } from "../types/FormationGrid";
 import "../DropZone.css";
+import { Button } from "@mui/material";
+import CroppedAvatar from "./CroppedAvatar";
 
 interface SquadProp {
   formation: string;
   squad: SquadMap;
   dropPlayers: { [index: number]: Player | null };
-  setDropPlayers: React.Dispatch<
-    React.SetStateAction<{ [index: number]: Player | null }>
-  >;
   setSelectedDropZone: React.Dispatch<
     React.SetStateAction<{ index: number; pos: string }>
   >;
   setIsDropZoneSelected: (b: boolean) => void;
   dropZoneRefs: React.RefObject<(HTMLDivElement | null)[]>; // ✅ React.RefObject can be used as a non-deprecated alternative
-  selectedDropZone: { index: number };
+
   setPosition: React.Dispatch<React.SetStateAction<string>>;
   searchPlayerRef: React.RefObject<HTMLDivElement | null>;
+  // ignoreNextClick: React.RefObject<boolean>;
 }
 
 const SquadFormation: React.FC<SquadProp> = ({
-  dropZoneRefs,
+  // dropZoneRefs,
   formation,
   dropPlayers,
-  setDropPlayers,
+  // setDropPlayers,
   setSelectedDropZone,
   setIsDropZoneSelected,
-  selectedDropZone,
   setPosition,
   searchPlayerRef,
+  // ignoreNextClick,
 }) => {
   return (
     <div className={`squad-formation formation-${formation}`}>
       {(() => {
-        console.log(selectedDropZone.index);
         return "1" + formation;
       })()
         .split("")
@@ -59,43 +58,71 @@ const SquadFormation: React.FC<SquadProp> = ({
             }
 
             return (
-              <DropZone
-                ref={(el) => {
-                  dropZoneRefs.current[idx] = el; // ✅ 각 DropZone DOM 저장
-                }}
+              <Button
                 key={`drop-${idx}`}
-                grid={grid}
-                player={dropPlayers[idx] ?? undefined}
-                onDrop={(player) => {
-                  setDropPlayers((prev) => ({
-                    ...prev,
-                    [idx]: player,
-                  }));
-                }}
                 onClick={() => {
-                  // Update the selected DropZone index
                   setSelectedDropZone({
-                    index: idx ?? null,
-                    pos: grid?.position ?? "",
+                    index: idx,
+                    pos: grid.position ?? "",
                   });
-                  setPosition(grid?.position ?? "");
-                  // ✅ 렌더링 다음 tick에 true 설정
-                  setIsDropZoneSelected(true); // ✅ 바로 실행 (setTimeout 필요 없음)
-                  // 스크롤 최상단 이동
+                  setPosition(grid.position ?? "");
+                  setIsDropZoneSelected(true);
+                  // ignoreNextClick.current = true;
                   if (searchPlayerRef.current) {
                     searchPlayerRef.current.scrollTop = 0;
                   }
-                  // setTimeout(() => {
-                  //   setIsDropZoneSelected(true);
-                  // }, 0);
                   console.log(`DropZone clicked at index ${idx}`);
                 }}
-                containerClassName={
-                  selectedDropZone.index === idx
-                    ? "dropzone-container selected"
-                    : "dropzone-container"
-                }
-              ></DropZone>
+                // sx={{
+                //   width: 60, // 버튼 크기 지정
+                //   height: 60,
+                //   minWidth: 0,
+                //   padding: 0,
+                // }}
+                style={{
+                  gridColumn: grid.gridColumn,
+                  gridRow: grid.gridRow,
+                }}
+              >
+                <div className="dropzone-button">
+                  <CroppedAvatar src={dropPlayers[idx]?.img ?? ""} />
+                </div>
+              </Button>
+
+              // <DropZone
+              //   ref={(el) => {
+              //     dropZoneRefs.current[idx] = el; // ✅ 각 DropZone DOM 저장
+              //   }}
+              //   key={`drop-${idx}`}
+              //   grid={grid}
+              //   player={dropPlayers[idx] ?? undefined}
+              //   onDrop={(player) => {
+              //     setDropPlayers((prev) => ({
+              //       ...prev,
+              //       [idx]: player,
+              //     }));
+              //   }}
+              //   onClick={() => {
+              //     // Update the selected DropZone index
+              //     setSelectedDropZone({
+              //       index: idx ?? null,
+              //       pos: grid?.position ?? "",
+              //     });
+              //     setPosition(grid?.position ?? "");
+              //     setIsDropZoneSelected(true);
+              //     ignoreNextClick.current = true;
+              //     // 스크롤 최상단 이동
+              //     if (searchPlayerRef.current) {
+              //       searchPlayerRef.current.scrollTop = 0;
+              //     }
+              //     console.log(`DropZone clicked at index ${idx}`);
+              //   }}
+              //   containerClassName={
+              //     selectedDropZone.index === idx
+              //       ? "dropzone-container selected"
+              //       : "dropzone-container"
+              //   }
+              // ></DropZone>
             );
           });
         })}

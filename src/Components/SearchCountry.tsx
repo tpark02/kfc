@@ -26,7 +26,7 @@ const SearchCountry: React.FC<FilterCountryProp> = ({
       onChange={(_, newValue) => {
         if (!newValue) return;
         setSelectedCountry([...prevList, newValue]);
-        setSelectedCountryInternal(newValue);
+        setSelectedCountryInternal(null);
       }}
       getOptionLabel={(option) => option.name}
       isOptionEqualToValue={(option, value) => option.code === value.code}

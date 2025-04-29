@@ -11,11 +11,7 @@ interface SearchClubProp {
   prevList: Team[];
 }
 
-const SearchClub: React.FC<SearchClubProp> = ({
-  setSearchTermClub,
-  setClub,
-  prevList,
-}) => {
+const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,7 +50,7 @@ const SearchClub: React.FC<SearchClubProp> = ({
           ...prevList,
           { id: newValue.id, name: newValue.name, url: newValue.url },
         ]);
-        setSelectedTeam(newValue);
+        setSelectedTeam(null);
       }}
       getOptionLabel={(option) => option.name}
       isOptionEqualToValue={(option, value) => option.id === value.id}

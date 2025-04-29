@@ -6,7 +6,7 @@ import { LeaguePage } from "../types/LeaguePage"; // 필요하면 타입 만들�
 import "../Squad.css";
 
 interface SearchLeagueProp {
-  setSelectedLeague: (league: League[]) => void;
+  setSelectedLeague: (league: League[] | null) => void;
   prevList: League[];
 }
 
@@ -47,7 +47,7 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
         const alreadySelected = prevList.some((p) => p.id === newValue.id);
         if (alreadySelected) return;
         setSelectedLeague([...prevList, newValue]);
-        setSelectedLeagueInternal(newValue);
+        setSelectedLeagueInternal(null);
       }}
       getOptionLabel={(option) => option.name}
       isOptionEqualToValue={(option, value) => option.id === value.id}

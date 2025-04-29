@@ -23,7 +23,7 @@ export const formationGrid: FormationGrid = {
     { gridColumn: 10, gridRow: 4, position: "GK" },
   ],
   "433": [
-    { gridColumn: 8, gridRow: 1, position: "ST" },
+    { gridColumn: 8, gridRow: 1, position: "LW" },
     { gridColumn: 10, gridRow: 1, position: "ST" },
     { gridColumn: 12, gridRow: 1, position: "RW" },
     { gridColumn: 8, gridRow: 2, position: "LM" },
@@ -125,7 +125,7 @@ export const formationGrid: FormationGrid = {
     { gridColumn: 10, gridRow: 4, position: "CDM" },
 
     { gridColumn: 6, gridRow: 5, position: "LB" },
-    { gridColumn: 8, gridRow: 5, position: "LCB" },
+    { gridColumn: 8, gridRow: 5, position: "LB" },
     { gridColumn: 12, gridRow: 5, position: "CB" },
     { gridColumn: 14, gridRow: 5, position: "RB" },
 
@@ -143,8 +143,8 @@ export const formationGrid: FormationGrid = {
     { gridColumn: 12, gridRow: 3, position: "CDM" },
 
     { gridColumn: 6, gridRow: 4, position: "LB" },
-    { gridColumn: 8, gridRow: 4, position: "LCB" },
-    { gridColumn: 12, gridRow: 4, position: "RCB" },
+    { gridColumn: 8, gridRow: 4, position: "LB" },
+    { gridColumn: 12, gridRow: 4, position: "RB" },
     { gridColumn: 14, gridRow: 4, position: "RB" },
 
     { gridColumn: 10, gridRow: 5, position: "GK" },

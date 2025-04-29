@@ -45,6 +45,7 @@ const Filters: React.FC<FilterProps> = ({
 }) => {
   return (
     <>
+      {console.log(selectedCountries.map((c) => c.name))}
       {(selectedCountries.length > 0 ||
         selectedTeams.length > 0 ||
         selectedLeagues.length > 0 ||
@@ -57,19 +58,23 @@ const Filters: React.FC<FilterProps> = ({
           sx={{
             width: "100%", // ✅ app-container 기준
             maxWidth: "100%", // ✅ 절대 넘치지 않게
-            marginLeft: 5,
-            marginBottom: 2,
+            // marginLeft: 5,
+            // marginBottom: 2,
           }}
         >
           {/* ✅ 국가 필터 */}
+          {selectedCountries.map((country) => {
+            console.log(country.name);
+          })}
           {selectedCountries.map((country) => (
             <Button
               key={country.code}
               variant="contained"
               onClick={() => {
-                const newList = selectedCountries.filter(
-                  (c) => c.code !== country.code
-                );
+                const newList = selectedCountries.filter((c) => {
+                  console.log(c.name);
+                  return c.code !== country.code;
+                });
                 fetchPage(
                   0,
                   searchTerm,
