@@ -65,7 +65,7 @@ const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
               alignItems: "center",
               gap: 1,
               outline: 1,
-              outlineColor: "red",
+              // outlineColor: "red",
             }}
             {...rest} // 나머지 props만 spread
           >

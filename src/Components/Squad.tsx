@@ -33,7 +33,7 @@ const FormationDropdown: React.FC = () => {
   const [dropPlayers, setDropPlayers] = useState<{
     [key: string]: Player[] | null;
   }>({});
-
+  const [teamOvr, setTeamOvr] = useState(0);
   // 📦 필터 상태
   const [selectedFormation, setSelectedFormation] = useState("442");
   const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
@@ -154,6 +154,8 @@ const FormationDropdown: React.FC = () => {
       })
       .then((response) => {
         const newDropPlayers: { [key: string]: Player[] | null } = {};
+        let teamOvr: number = 0;
+
         response.data.content.forEach((p, index) => {
           const key = p.pos;
           console.log("load:" + key + ":" + index + ":" + p.img);
@@ -162,8 +164,12 @@ const FormationDropdown: React.FC = () => {
             newDropPlayers[key] = []; // ❗ key가 없을 때만 초기화
           }
           newDropPlayers[key]!.push(p); // 확실하게 push
+          teamOvr += p.ovr;
         });
         setDropPlayers(newDropPlayers);
+        teamOvr /= 11;
+        teamOvr = Math.ceil(teamOvr);
+        setTeamOvr(teamOvr);
       })
       .catch((error) => {
         console.log("🔥 error 전체:", error);
@@ -181,7 +187,9 @@ const FormationDropdown: React.FC = () => {
 
   return (
     <div className="squad-container">
-      <div className="squad-random-team">asdf</div>
+      <div className="squad-random-team">
+        <div>OVR : {teamOvr}</div>
+      </div>
       {/* <div ref={squadSelectRef}> */}
       <div className="squad-select" ref={squadSelectRef}>
         {selectedFormation && (
@@ -226,6 +234,7 @@ const FormationDropdown: React.FC = () => {
           <SelectFormation
             setSelectedFormation={setSelectedFormation}
             selectedFormation={selectedFormation}
+            setDropPlayers={setDropPlayers}
           />
 
           {isDropZoneSelected && (
