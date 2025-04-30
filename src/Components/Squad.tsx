@@ -31,7 +31,7 @@ const FormationDropdown: React.FC = () => {
   // 🔢 기본 데이터 상태
   // const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
   const [dropPlayers, setDropPlayers] = useState<{
-    [key: string]: Player[] | null;
+    [idx: number]: Player | null;
   }>({});
   const [teamOvr, setTeamOvr] = useState(0);
   // 📦 필터 상태
@@ -90,12 +90,9 @@ const FormationDropdown: React.FC = () => {
         name: selectedFormation,
       })
       .then((response) => {
-        const newDropPlayers: { [key: string]: Player[] | null } = {};
-        response.data.content.forEach((p) => {
-          if (!newDropPlayers[p.pos]) {
-            newDropPlayers[p.pos] = [];
-          }
-          newDropPlayers[p.pos]!.push(p);
+        const newDropPlayers: { [idx: number]: Player | null } = {};
+        response.data.content.forEach((p, idx) => {
+          newDropPlayers[idx] = p;
         });
         setSelectedFormation(response.data.name);
         setDropPlayers(newDropPlayers);
@@ -110,23 +107,20 @@ const FormationDropdown: React.FC = () => {
 
   // 💾 스쿼드 저장하기
   const saveSquadData = () => {
-    const entries = Object.values(dropPlayers)
-      .filter((arr): arr is Player[] => Array.isArray(arr)) // remove nulls
-      .flat();
     axios
       .post<ResponseSaveSquad>("http://localhost:8080/api/savesquad", {
         name: selectedFormation,
-        p1: entries[0]?.id,
-        p2: entries[1]?.id,
-        p3: entries[2]?.id,
-        p4: entries[3]?.id,
-        p5: entries[4]?.id,
-        p6: entries[5]?.id,
-        p7: entries[6]?.id,
-        p8: entries[7]?.id,
-        p9: entries[8]?.id,
-        p10: entries[9]?.id,
-        p11: entries[10]?.id,
+        p1: dropPlayers[0]?.id,
+        p2: dropPlayers[1]?.id,
+        p3: dropPlayers[2]?.id,
+        p4: dropPlayers[3]?.id,
+        p5: dropPlayers[4]?.id,
+        p6: dropPlayers[5]?.id,
+        p7: dropPlayers[6]?.id,
+        p8: dropPlayers[7]?.id,
+        p9: dropPlayers[8]?.id,
+        p10: dropPlayers[9]?.id,
+        p11: dropPlayers[10]?.id,
       })
       .then((response) => {
         if (Object.keys(response.data.isSuccessful === "true")) {
@@ -153,17 +147,12 @@ const FormationDropdown: React.FC = () => {
         clubs: selectedClubs,
       })
       .then((response) => {
-        const newDropPlayers: { [key: string]: Player[] | null } = {};
+        const newDropPlayers: { [idx: number]: Player | null } = {};
         let teamOvr: number = 0;
 
-        response.data.content.forEach((p, index) => {
-          const key = p.pos;
-          console.log("load:" + key + ":" + index + ":" + p.img);
-
-          if (!newDropPlayers[key]) {
-            newDropPlayers[key] = []; // ❗ key가 없을 때만 초기화
-          }
-          newDropPlayers[key]!.push(p); // 확실하게 push
+        response.data.content.forEach((p, idx) => {
+          console.log(p.pos + " : " + p.name);
+          newDropPlayers[idx] = p;
           teamOvr += p.ovr;
         });
         setDropPlayers(newDropPlayers);

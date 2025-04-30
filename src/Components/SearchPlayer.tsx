@@ -12,11 +12,11 @@ interface SearchPlayerProp {
   club: string;
   pos: string;
   listRef: React.RefObject<HTMLDivElement | null>;
-  dropPlayers: { [key: string]: Player[] | null };
+  dropPlayers: { [idx: number]: Player | null };
   selectedDropZone: { index: number; pos: string };
   setDropPlayers: React.Dispatch<
     React.SetStateAction<{
-      [key: string]: Player[] | null;
+      [idx: number]: Player | null;
     }>
   >;
   setSnackbarMessage: (formation: string) => void;
@@ -45,15 +45,8 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
-    const convertedDropPlayers: { [index: number]: Player | null } = {};
+    // const convertedDropPlayers: { [index: number]: Player | null } = {};
 
-    Object.entries(dropPlayers).forEach(([, players]) => {
-      if (Array.isArray(players)) {
-        players.forEach((player) => {
-          convertedDropPlayers[player.id] = player;
-        });
-      }
-    });
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
         let localPos = "";
@@ -142,8 +135,8 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       <div>
         <div className="search-player-src">
           {(() => {
-            const p = convertedDropPlayers[selectedDropZone?.index]
-              ? convertedDropPlayers[selectedDropZone.index]
+            const p = dropPlayers[selectedDropZone?.index]
+              ? dropPlayers[selectedDropZone.index]
               : null;
             return (
               p && (
@@ -196,7 +189,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
             }}
           >
             {results.map((player) => {
-              const pos = player.pos;
               let c = "black";
               if (pos.includes("ST") || pos.includes("W")) c = "red";
               else if (pos.includes("M")) c = "orange";
@@ -214,34 +206,21 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                       selectedDropZone.index
                     );
                     console.log("🔥 넣을 player:", player);
-                    setDropPlayers((prev) => {
-                      const posKey = selectedDropZone.pos;
-                      const currentList = prev[posKey] || [];
 
-                      if (currentList.some((p) => p.id === player.id)) {
-                        setSnackbarMessage(
-                          "You already selected " + player.name
-                        );
-                        setSnackbarOpen(true);
-                        return { ...prev };
-                      }
+                    const repeatedPlayer = Object.values(dropPlayers).some(
+                      (d) => d && d.id === player.id
+                    );
 
-                      const updatedList = currentList.map((p) => {
-                        console.log(
-                          selectedDropZone.pos +
-                            ":" +
-                            p.id +
-                            ":" +
-                            selectedDropZone.index
-                        );
-                        return p.id === selectedDropZone.index ? player : p;
-                      });
+                    if (repeatedPlayer) {
+                      setSnackbarMessage("You already selected " + player.name);
+                      setSnackbarOpen(true);
+                      return;
+                    }
 
-                      return {
-                        ...prev,
-                        [posKey]: updatedList,
-                      };
-                    });
+                    setDropPlayers((prev) => ({
+                      ...prev,
+                      [selectedDropZone.index]: player,
+                    }));
                   }}
                 >
                   <div className="squad-team-player" key={player.id}>

@@ -8,7 +8,7 @@ interface SelectFormationProp {
   selectedFormation: string;
   setDropPlayers: React.Dispatch<
     React.SetStateAction<{
-      [key: string]: Player[] | null;
+      [idx: number]: Player | null;
     }>
   >;
 }
