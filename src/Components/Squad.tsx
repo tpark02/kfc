@@ -257,7 +257,9 @@ const FormationDropdown: React.FC = () => {
                 pos={selectedPos}
                 selectedDropZone={selectedDropZone}
                 dropPlayers={dropPlayers}
-                setDropPlayers={setDropPlayers} // ✅ Added missing prop
+                setDropPlayers={setDropPlayers}
+                setSnackbarMessage={setSnackbarMessage}
+                setSnackbarOpen={setSnackbarOpen}
               />
             ) : (
               <>

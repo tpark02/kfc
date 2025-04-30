@@ -19,6 +19,8 @@ interface SearchPlayerProp {
       [key: string]: Player[] | null;
     }>
   >;
+  setSnackbarMessage: (formation: string) => void;
+  setSnackbarOpen: (isOpen: boolean) => void;
 }
 
 const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
@@ -32,6 +34,8 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       dropPlayers,
       selectedDropZone,
       setDropPlayers,
+      setSnackbarMessage,
+      setSnackbarOpen,
     },
     ref
   ) => {
@@ -213,6 +217,14 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                     setDropPlayers((prev) => {
                       const posKey = selectedDropZone.pos;
                       const currentList = prev[posKey] || [];
+
+                      if (currentList.some((p) => p.id === player.id)) {
+                        setSnackbarMessage(
+                          "You already selected " + player.name
+                        );
+                        setSnackbarOpen(true);
+                        return { ...prev };
+                      }
 
                       const updatedList = currentList.map((p) => {
                         console.log(
