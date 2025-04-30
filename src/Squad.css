@@ -28,6 +28,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     outline: 1px solid red;
 }
 
@@ -38,8 +39,8 @@
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     box-sizing: border-box;
-    padding: 2rem 1rem;
-    gap: 0.3vw;
+    /* padding: 2rem; */
+    /* gap: 1rem; */
     outline: 1px solid blue;
 }
 
@@ -77,18 +78,6 @@
     height: auto;
     object-fit: cover;
     border-radius: 8px;
-}
-
-.player-avatar {
-    width: 80px;
-    /* or any size you want */
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center top;
-    /* 👈 focus on the top part of image */
-    overflow: hidden;
-    display: block;
 }
 
 #label {

@@ -12,11 +12,11 @@ interface SearchPlayerProp {
   club: string;
   pos: string;
   listRef: React.RefObject<HTMLDivElement | null>;
-  dropPlayers: { [index: number]: Player | null };
+  dropPlayers: { [key: string]: Player[] | null };
   selectedDropZone: { index: number; pos: string };
   setDropPlayers: React.Dispatch<
     React.SetStateAction<{
-      [index: number]: Player | null;
+      [key: string]: Player[] | null;
     }>
   >;
 }
@@ -37,11 +37,19 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
   ) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
-    const [page, setPage] = useState(0);
+    const [, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
+    const convertedDropPlayers: { [index: number]: Player | null } = {};
 
+    Object.entries(dropPlayers).forEach(([, players]) => {
+      if (Array.isArray(players)) {
+        players.forEach((player) => {
+          convertedDropPlayers[player.id] = player;
+        });
+      }
+    });
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
         let localPos = "";
@@ -130,8 +138,8 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       <div>
         <div className="search-player-src">
           {(() => {
-            const p = dropPlayers[selectedDropZone?.index]
-              ? dropPlayers[selectedDropZone.index]
+            const p = convertedDropPlayers[selectedDropZone?.index]
+              ? convertedDropPlayers[selectedDropZone.index]
               : null;
             return (
               p && (
@@ -202,10 +210,26 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                       selectedDropZone.index
                     );
                     console.log("🔥 넣을 player:", player);
-                    setDropPlayers((prev) => ({
-                      ...prev,
-                      [selectedDropZone.index]: player,
-                    }));
+                    setDropPlayers((prev) => {
+                      const posKey = selectedDropZone.pos;
+                      const currentList = prev[posKey] || [];
+
+                      const updatedList = currentList.map((p) => {
+                        console.log(
+                          selectedDropZone.pos +
+                            ":" +
+                            p.id +
+                            ":" +
+                            selectedDropZone.index
+                        );
+                        return p.id === selectedDropZone.index ? player : p;
+                      });
+
+                      return {
+                        ...prev,
+                        [posKey]: updatedList,
+                      };
+                    });
                   }}
                 >
                   <div className="squad-team-player" key={player.id}>

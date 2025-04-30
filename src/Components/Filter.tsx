@@ -45,7 +45,6 @@ const Filters: React.FC<FilterProps> = ({
 }) => {
   return (
     <>
-      {console.log(selectedCountries.map((c) => c.name))}
       {(selectedCountries.length > 0 ||
         selectedTeams.length > 0 ||
         selectedLeagues.length > 0 ||

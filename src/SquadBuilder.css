@@ -1,0 +1,33 @@
+/* SquadBuilder.css */
+
+.squad-container {
+    width: 100%;
+    background-color: #1e1e1e;
+    color: white;
+    text-align: center;
+}
+
+.pitch {
+    width: 100%;
+    /* background-color: white; */
+    aspect-ratio: 4 / 3;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    border: 2px solid yellow;
+}
+
+.player {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    outline: 1px solid red;
+}

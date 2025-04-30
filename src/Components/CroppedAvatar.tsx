@@ -41,6 +41,7 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
           height: height * 1.5,
           objectFit: "cover",
         }}
+        loading="lazy"
       />
     </div>
   );

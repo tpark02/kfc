@@ -3,7 +3,7 @@ import axios from "axios";
 import { Snackbar, Alert, Button } from "@mui/material";
 
 // 타입
-import { SquadMap, Player } from "../types/Player";
+import { Player } from "../types/Player";
 import { Team } from "../types/Team";
 import { League } from "../types/League";
 import {
@@ -12,9 +12,11 @@ import {
   ResponseRandomSquad,
 } from "../types/Response";
 import { Country } from "../types/Country";
+import { formations } from "../data/formations";
 
 // 컴포넌트
-import SquadFormation from "./SquadFormation";
+import SquadBuilder from "./SquadBuilder";
+// import SquadFormation from "./SquadFormation";
 import SelectFormation from "./SelectFormation";
 import SearchPlayer from "./SearchPlayer"; // ✅ default export
 import SearchCountry from "./SearchCountry";
@@ -24,13 +26,12 @@ import Filters from "./Filter";
 
 // 스타일
 import "../Squad.css";
-import { formationGrid } from "../types/FormationGrid";
 
 const FormationDropdown: React.FC = () => {
   // 🔢 기본 데이터 상태
-  const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
+  // const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
   const [dropPlayers, setDropPlayers] = useState<{
-    [index: number]: Player | null;
+    [key: string]: Player[] | null;
   }>({});
 
   // 📦 필터 상태
@@ -58,7 +59,7 @@ const FormationDropdown: React.FC = () => {
   const squadSelectRef = useRef<HTMLDivElement>(null);
 
   // 🔍 DropZone 클릭 감지용
-  const dropZoneRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // const dropZoneRefs = useRef<(HTMLDivElement | null)[]>([]);
   const searchPlayerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -89,9 +90,12 @@ const FormationDropdown: React.FC = () => {
         name: selectedFormation,
       })
       .then((response) => {
-        const newDropPlayers: { [index: number]: Player | null } = {};
-        response.data.content.forEach((p, index) => {
-          newDropPlayers[index] = p;
+        const newDropPlayers: { [key: string]: Player[] | null } = {};
+        response.data.content.forEach((p) => {
+          if (!newDropPlayers[p.pos]) {
+            newDropPlayers[p.pos] = [];
+          }
+          newDropPlayers[p.pos]!.push(p);
         });
         setSelectedFormation(response.data.name);
         setDropPlayers(newDropPlayers);
@@ -106,20 +110,23 @@ const FormationDropdown: React.FC = () => {
 
   // 💾 스쿼드 저장하기
   const saveSquadData = () => {
+    const entries = Object.values(dropPlayers)
+      .filter((arr): arr is Player[] => Array.isArray(arr)) // remove nulls
+      .flat();
     axios
       .post<ResponseSaveSquad>("http://localhost:8080/api/savesquad", {
         name: selectedFormation,
-        p1: dropPlayers[0]?.id,
-        p2: dropPlayers[1]?.id,
-        p3: dropPlayers[2]?.id,
-        p4: dropPlayers[3]?.id,
-        p5: dropPlayers[4]?.id,
-        p6: dropPlayers[5]?.id,
-        p7: dropPlayers[6]?.id,
-        p8: dropPlayers[7]?.id,
-        p9: dropPlayers[8]?.id,
-        p10: dropPlayers[9]?.id,
-        p11: dropPlayers[10]?.id,
+        p1: entries[0]?.id,
+        p2: entries[1]?.id,
+        p3: entries[2]?.id,
+        p4: entries[3]?.id,
+        p5: entries[4]?.id,
+        p6: entries[5]?.id,
+        p7: entries[6]?.id,
+        p8: entries[7]?.id,
+        p9: entries[8]?.id,
+        p10: entries[9]?.id,
+        p11: entries[10]?.id,
       })
       .then((response) => {
         if (Object.keys(response.data.isSuccessful === "true")) {
@@ -146,18 +153,15 @@ const FormationDropdown: React.FC = () => {
         clubs: selectedClubs,
       })
       .then((response) => {
-        const newDropPlayers: { [index: number]: Player | null } = {};
-        console.log(response.data.content);
-        const grid = formationGrid[selectedFormation];
-
+        const newDropPlayers: { [key: string]: Player[] | null } = {};
         response.data.content.forEach((p, index) => {
-          grid.forEach((g) => {
-            console.log(g.position);
-            if (g.position === p.pos) {
-              newDropPlayers[index] = p;
-              console.log(newDropPlayers[index].url);
-            }
-          });
+          const key = p.pos;
+          console.log("load:" + key + ":" + index + ":" + p.img);
+
+          if (!newDropPlayers[key]) {
+            newDropPlayers[key] = []; // ❗ key가 없을 때만 초기화
+          }
+          newDropPlayers[key]!.push(p); // 확실하게 push
         });
         setDropPlayers(newDropPlayers);
       })
@@ -178,18 +182,16 @@ const FormationDropdown: React.FC = () => {
   return (
     <div className="squad-container">
       <div className="squad-random-team">asdf</div>
+      {/* <div ref={squadSelectRef}> */}
       <div className="squad-select" ref={squadSelectRef}>
         {selectedFormation && (
-          <SquadFormation
-            formation={selectedFormation}
+          <SquadBuilder
+            selectedFormation={selectedFormation as keyof typeof formations}
             dropPlayers={dropPlayers}
             setSelectedDropZone={setSelectedDropZone}
             setIsDropZoneSelected={setIsDropZoneSelected}
-            dropZoneRefs={dropZoneRefs}
-            squad={squad || {}}
             setPosition={selectedPosition}
             searchPlayerRef={listRef}
-            // ignoreNextClick={ignoreNextClick}
           />
         )}
         <div className="button-group">
@@ -239,14 +241,14 @@ const FormationDropdown: React.FC = () => {
             {isDropZoneSelected ? (
               <SearchPlayer
                 ref={searchPlayerRef}
-                listRef={listRef} // ✅ 추가!
+                listRef={listRef}
                 country=""
                 league=""
                 club=""
                 pos={selectedPos}
                 selectedDropZone={selectedDropZone}
                 dropPlayers={dropPlayers}
-                setDropPlayers={setDropPlayers}
+                setDropPlayers={setDropPlayers} // ✅ Added missing prop
               />
             ) : (
               <>

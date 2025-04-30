@@ -1,6 +1,6 @@
 import React from "react";
 import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
-import { formations } from "../data/formations";
+import { baseFormations } from "../data/formations";
 
 interface SelectFormationProp {
   setSelectedFormation: (formation: string) => void;
@@ -36,17 +36,17 @@ const SelectFormation: React.FC<SelectFormationProp> = ({
           },
         }}
       >
-        {formations.map((f) => (
+        {Object.entries(baseFormations).map(([key]) => (
           <MenuItem
-            key={f.value}
-            value={f.value}
+            key={key}
+            value={key}
             sx={{
               backgroundColor: "#242424",
               color: "#fff",
             }}
           >
             <Box display="flex" alignItems="center">
-              {f.label}
+              {key}
             </Box>
           </MenuItem>
         ))}
