@@ -249,6 +249,7 @@ const FormationDropdown: React.FC = () => {
                 setDropPlayers={setDropPlayers}
                 setSnackbarMessage={setSnackbarMessage}
                 setSnackbarOpen={setSnackbarOpen}
+                setTeamOvr={setTeamOvr}
               />
             ) : (
               <>
