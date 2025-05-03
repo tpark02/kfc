@@ -1,19 +1,3 @@
-// export const formations = [
-//   { value: "442", label: "4-4-2" },
-//   { value: "433", label: "4-3-3" },
-//   { value: "4231", label: "4-2-3-1" },
-//   { value: "451", label: "4-5-1" },
-//   { value: "343", label: "3-4-3" },
-//   { value: "352", label: "3-5-2" },
-//   { value: "532", label: "5-3-2" },
-//   { value: "541", label: "5-4-1" },
-//   { value: "41212", label: "4-1-2-1-2" },
-//   { value: "4222", label: "4-2-2-2" },
-//   { value: "4321", label: "4-3-2-1" },
-//   { value: "4132", label: "4-1-3-2" },
-//   { value: "424", label: "4-2-4" },
-// ];
-
 export const baseFormations = {
   "442": [
     { pos: "GK", top: 95, left: 50 },
@@ -246,3 +230,129 @@ export const formations = {
   "4132": centerFormationVertically(baseFormations["4132"]),
   "424": centerFormationVertically(baseFormations["424"]),
 };
+
+export const positionMultiplier: { [key: string]: number } = {
+  GK: 0.9,
+  CB: 1.0,
+  LB: 1.0,
+  RB: 1.0,
+  CDM: 1.05,
+  CM: 1.1,
+  CAM: 1.15,
+  LM: 1.1,
+  RM: 1.1,
+  LW: 1.2,
+  RW: 1.2,
+  ST: 1.3,
+  CF: 1.25,
+};
+
+// const defenders = ["GK", "CB", "LB", "RB", "LWB", "RWB", "CDM"];
+// const attackers = ["ST", "CF", "CAM", "LW", "RW", "LM", "RM"];
+
+// export const estimateValue = (player: { ovr: number; pos: string }) => {
+//   const baseValue = Math.pow(player.ovr, 2) * 1000;
+//   const multiplier = positionMultiplier[player.pos] ?? 1;
+//   return Math.round(baseValue * multiplier);
+// };
+
+// export const gettotalSquadValue = (players: {
+//   [index: number]: Player | null;
+// }) => {
+//   return Object.values(players).reduce((sum, player) => {
+//     return sum + (player ? estimateValue(player) : 0);
+//   }, 0);
+// };
+
+// export const getPaceIndex = (players: { [index: number]: Player | null }) => {
+//   if (Object.keys(players).length === 0) return 0;
+//   const totalPace = Object.values(players).reduce(
+//     (sum, player) => sum + (player ? player.pac : 0),
+//     0
+//   );
+//   return Math.round(totalPace / Object.keys(players).length);
+// };
+
+// export const getDefenseAttackSplit = (players: {
+//   [index: number]: Player | null;
+// }) => {
+//   const defPlayers = Object.values(players)?.filter(
+//     (p) => p && defenders.includes(p.pos)
+//   );
+//   const atkPlayers = Object.values(players)?.filter(
+//     (p) => p && attackers.includes(p.pos)
+//   );
+
+//   const avgDefending =
+//     (defPlayers?.reduce((sum, p) => sum + (p?.def ?? 0), 0) ?? 0) /
+//     (defPlayers?.length || 1);
+
+//   const avgShooting =
+//     (atkPlayers?.reduce((sum, p) => sum + (p ? p.sho : 0), 0) ?? 0) /
+//     (atkPlayers?.length || 1);
+
+//   return {
+//     defense: Math.round(avgDefending),
+//     attack: Math.round(avgShooting),
+//   };
+// };
+
+// export const getTeamStamina = (players: { [index: number]: Player | null }) => {
+//   const totalstamina = Object.values(players)?.reduce(
+//     (sum, player) => sum + (player ? player.stamina : 0),
+//     0
+//   );
+//   return Math.round(totalstamina / Object.values(players).length);
+// };
+
+// const getNationalitySpread = (players: { [index: number]: Player | null }) => {
+//   const uniqueNations = new Set(Object.values(players).map((p) => p?.nation));
+//   return uniqueNations;
+// };
+
+// const getLeagueSpread = (players: { [index: number]: Player | null }) => {
+//   const uniqueLeagues = new Set(Object.values(players).map((p) => p?.league));
+//   return uniqueLeagues;
+// };
+
+// const getClubCohesion = (players: { [index: number]: Player | null }) => {
+//   const clubCountMap: { [club: string]: number } = {};
+
+//   Object.values(players).forEach((p: Player | null) => {
+//     if (p && p.team) {
+//       clubCountMap[p.team] = (clubCountMap[p.team] || 0) + 1;
+//     }
+//   });
+
+//   const maxCount = Math.max(...Object.values(clubCountMap));
+//   return maxCount;
+// };
+
+// const getTeamOvr = (players: { [index: number]: Player | null }) => {
+//   const totalovr = Object.values(players).reduce((sum, p) => {
+//     return sum + (p ? p.ovr : 0);
+//   }, 0);
+//   return Math.ceil(totalovr / 11);
+// };
+
+// const getTeamAge = (players: { [index: number]: Player | null }) => {
+//   const totalage = Object.values(players).reduce((sum, p) => {
+//     return sum + (p ? p.age : 0);
+//   }, 0);
+//   return Math.ceil(totalage / 11);
+// };
+
+// export const metrics = (players: { [index: number]: Player | null }) => {
+//   return {
+//     teamovr: getTeamOvr(players),
+//     teamage: getTeamAge(players),
+//     squadvalue: gettotalSquadValue(players),
+//     nationalityspread: getNationalitySpread(players),
+//     leaguespread: getLeagueSpread(players),
+//     clubcohesion: getClubCohesion(players),
+//     teamstamina: getTeamStamina(players),
+//     teamdef: getDefenseAttackSplit(players).defense,
+//     teamattack: getDefenseAttackSplit(players).attack,
+//     teampace: getPaceIndex(players),
+//   };
+// };

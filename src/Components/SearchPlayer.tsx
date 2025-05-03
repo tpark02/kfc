@@ -21,7 +21,6 @@ interface SearchPlayerProp {
   >;
   setSnackbarMessage: (formation: string) => void;
   setSnackbarOpen: (isOpen: boolean) => void;
-  setTeamOvr: (teamOvr: number) => void;
 }
 
 const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
@@ -37,7 +36,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       setDropPlayers,
       setSnackbarMessage,
       setSnackbarOpen,
-      setTeamOvr,
     },
     ref
   ) => {
@@ -223,14 +221,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                       ...prev,
                       [selectedDropZone.index]: player,
                     }));
-
-                    let teamOvr = 0;
-                    Object.values(dropPlayers).forEach((d) => {
-                      if (d) teamOvr += d.ovr;
-                    });
-                    teamOvr /= 11;
-                    teamOvr = Math.ceil(teamOvr);
-                    setTeamOvr(teamOvr);
                   }}
                 >
                   <div className="squad-team-player" key={player.id}>

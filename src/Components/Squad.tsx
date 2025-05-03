@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { Snackbar, Alert, Button } from "@mui/material";
 
@@ -13,7 +13,7 @@ import {
 } from "../types/Response";
 import { Country } from "../types/Country";
 import { formations } from "../data/formations";
-
+import { metrics } from "../util/SquadMetrics";
 // 컴포넌트
 import SquadBuilder from "./SquadBuilder";
 // import SquadFormation from "./SquadFormation";
@@ -23,7 +23,6 @@ import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
 import Filters from "./Filter";
-
 // 스타일
 import "../Squad.css";
 
@@ -34,6 +33,19 @@ const FormationDropdown: React.FC = () => {
     [idx: number]: Player | null;
   }>({});
   const [teamOvr, setTeamOvr] = useState(0);
+  const [teamAge, setTeamAge] = useState(0);
+  const [teamValue, setTeamValue] = useState(0);
+  const [teamPace, setTeamPace] = useState(0);
+  const [teamAttack, setTeamAttack] = useState(0);
+  const [teamDef, setTeamDef] = useState(0);
+  const [teamStamina, setTeamStamina] = useState(0);
+  const [clubCohesion, setClubCohesion] = useState(0);
+  const [leagueSpread, setLeagueSpread] = useState<Set<string | undefined>>(
+    new Set()
+  );
+  const [nationalSpread, setNationalSpread] = useState<Set<string | undefined>>(
+    new Set()
+  );
   // 📦 필터 상태
   const [selectedFormation, setSelectedFormation] = useState("442");
   const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
@@ -148,17 +160,12 @@ const FormationDropdown: React.FC = () => {
       })
       .then((response) => {
         const newDropPlayers: { [idx: number]: Player | null } = {};
-        let teamOvr: number = 0;
 
         response.data.content.forEach((p, idx) => {
-          console.log(p.pos + " : " + p.name);
           newDropPlayers[idx] = p;
-          teamOvr += p.ovr;
         });
+
         setDropPlayers(newDropPlayers);
-        teamOvr /= 11;
-        teamOvr = Math.ceil(teamOvr);
-        setTeamOvr(teamOvr);
       })
       .catch((error) => {
         console.log("🔥 error 전체:", error);
@@ -174,10 +181,53 @@ const FormationDropdown: React.FC = () => {
       });
   };
 
+  useEffect(() => {
+    const {
+      teamovr,
+      teamage,
+      squadvalue,
+      nationalityspread,
+      leaguespread,
+      clubcohesion,
+      teamstamina,
+      teamdef,
+      teamattack,
+      teampace,
+    } = metrics(dropPlayers);
+    setClubCohesion(clubcohesion);
+    setLeagueSpread(leaguespread);
+    setNationalSpread(nationalityspread);
+    setTeamOvr(teamovr);
+    setTeamAge(teamage);
+    setTeamValue(squadvalue);
+    setTeamPace(teampace);
+    setTeamDef(teamdef);
+    setTeamAttack(teamattack);
+    setTeamStamina(teamstamina);
+  }, [dropPlayers]);
   return (
     <div className="squad-container">
       <div className="squad-random-team">
         <div>OVR : {teamOvr}</div>
+        <div>Total Squad Value : {teamValue}</div>
+        <div>Average Age : {teamAge}</div>
+        <div>Team Pace: {teamPace}</div>
+        <div>Team Attack: {teamAttack}</div>
+        <div>Team Defense: {teamDef}</div>
+        <div>Team Stamina: {teamStamina}</div>
+        <div>Team Cohesion: {clubCohesion}</div>
+        <div>
+          Team National Spread:
+          {Array.from(nationalSpread).map((nation) => {
+            return <div>{nation}</div>;
+          })}
+        </div>
+        <div>
+          Team League Spread:
+          {Array.from(leagueSpread).map((league) => {
+            return <div>{league}</div>;
+          })}
+        </div>
       </div>
       {/* <div ref={squadSelectRef}> */}
       <div className="squad-select" ref={squadSelectRef}>
@@ -249,7 +299,6 @@ const FormationDropdown: React.FC = () => {
                 setDropPlayers={setDropPlayers}
                 setSnackbarMessage={setSnackbarMessage}
                 setSnackbarOpen={setSnackbarOpen}
-                setTeamOvr={setTeamOvr}
               />
             ) : (
               <>
