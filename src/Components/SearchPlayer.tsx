@@ -177,6 +177,10 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                 </InputAdornment>
               ),
             }}
+            style={{
+              width: "100%",
+              outline: "1px solid gray",
+            }}
           />
           <div
             id="search-player-list"

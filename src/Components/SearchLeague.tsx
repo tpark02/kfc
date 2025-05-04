@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Autocomplete, TextField, Box, InputAdornment } from "@mui/material";
+import {
+  Autocomplete,
+  TextField,
+  Box,
+  InputAdornment,
+  Card,
+} from "@mui/material";
 import { League } from "../types/League";
 import { LeaguePage } from "../types/LeaguePage"; // 필요하면 타입 만들어
 import "../Squad.css";
+import Popper from "@mui/material/Popper";
 
 interface SearchLeagueProp {
   setSelectedLeague: (league: League[] | null) => void;
@@ -20,7 +27,27 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
   const [selectedLeague, setSelectedLeagueInternal] = useState<League | null>(
     null
   );
-
+  const CustomPopper = (props: any) => (
+    <Popper
+      {...props}
+      modifiers={[
+        {
+          name: "offset",
+          options: {
+            offset: [0, 4],
+          },
+        },
+      ]}
+      sx={{
+        "& .MuiAutocomplete-paper": {
+          backgroundColor: "#242424",
+          color: "white",
+          boxShadow: "none",
+          border: "1px solid #444",
+        },
+      }}
+    />
+  );
   useEffect(() => {
     if (open && leagues.length === 0) {
       setLoading(true);
@@ -35,94 +62,113 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
   }, [open]);
 
   return (
-    <Autocomplete
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      options={leagues}
-      loading={loading}
-      value={selectedLeague}
-      onChange={(_, newValue) => {
-        if (!newValue) return;
-        const alreadySelected = prevList.some((p) => p.id === newValue.id);
-        if (alreadySelected) return;
-        setSelectedLeague([...prevList, newValue]);
-        setSelectedLeagueInternal(null);
-      }}
-      getOptionLabel={(option) => option.name}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderOption={(props, option) => {
-        const { key, ...rest } = props;
-        return (
-          <Box
-            key={option.id}
-            component="li"
-            sx={{ display: "flex", alignItems: "center", gap: 1 }}
-            {...rest}
-          >
-            <img
-              src={option.url || "../../img/fallback.png"}
-              alt={option.name}
+    <Card sx={{ margin: "10px" }}>
+      <Autocomplete
+        PopperComponent={CustomPopper}
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        options={leagues}
+        loading={loading}
+        value={selectedLeague}
+        onChange={(_, newValue) => {
+          if (!newValue) return;
+          const alreadySelected = prevList.some((p) => p.id === newValue.id);
+          if (alreadySelected) return;
+          setSelectedLeague([...prevList, newValue]);
+          setSelectedLeagueInternal(null);
+        }}
+        getOptionLabel={(option) => option.name}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        renderOption={(props, option) => {
+          const { key, ...rest } = props;
+
+          return (
+            <li
+              key={key}
+              {...rest}
               style={{
-                width: 20,
-                height: 15,
-                objectFit: "cover",
-                borderRadius: 2,
-                backgroundColor: "white",
+                backgroundColor: "#242424",
+                color: "white",
+                cursor: "pointer",
               }}
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = "../../img/fallback.png";
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#444";
               }}
-            />
-            {option.name}
-          </Box>
-        );
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Select League"
-          variant="outlined"
-          size="small"
-          InputProps={{
-            ...params.InputProps,
-            startAdornment:
-              selectedLeague && selectedLeague.id ? (
-                <InputAdornment position="start">
-                  <img
-                    src={selectedLeague.url}
-                    alt={selectedLeague.name}
-                    style={{
-                      width: 20,
-                      height: 15,
-                      objectFit: "cover",
-                      borderRadius: 2,
-                      backgroundColor: "white",
-                      marginRight: 5,
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = "../../img/fallback.png";
-                    }}
-                  />
-                </InputAdornment>
-              ) : null,
-          }}
-          sx={{
-            backgroundColor: "#242424",
-            input: { color: "#fff" },
-            "& .MuiInputLabel-root": { color: "#fff" },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": { borderColor: "#fff" },
-              "&:hover fieldset": { borderColor: "#fff" },
-              "&.Mui-focused fieldset": { borderColor: "#fff" },
-            },
-          }}
-        />
-      )}
-      sx={{ backgroundColor: "#242424", color: "#fff" }}
-    />
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#242424";
+              }}
+            >
+              <Box
+                component="div"
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+              >
+                <img
+                  src={option.url || "../../img/fallback.png"}
+                  alt={option.name}
+                  style={{
+                    width: 20,
+                    height: 15,
+                    objectFit: "cover",
+                    borderRadius: 2,
+                    backgroundColor: "white",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "../../img/fallback.png";
+                  }}
+                />
+                {option.name}
+              </Box>
+            </li>
+          );
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            placeholder="Select League"
+            variant="outlined"
+            size="small"
+            InputProps={{
+              ...params.InputProps,
+              startAdornment:
+                selectedLeague && selectedLeague.id ? (
+                  <InputAdornment position="start">
+                    <img
+                      src={selectedLeague.url}
+                      alt={selectedLeague.name}
+                      style={{
+                        width: 20,
+                        height: 15,
+                        objectFit: "cover",
+                        borderRadius: 2,
+                        backgroundColor: "white",
+                        marginRight: 5,
+                      }}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "../../img/fallback.png";
+                      }}
+                    />
+                  </InputAdornment>
+                ) : null,
+            }}
+            sx={{
+              backgroundColor: "#242424",
+              input: { color: "#fff" },
+              "& .MuiInputLabel-root": { color: "#fff" },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "gray" },
+                "&:hover fieldset": { borderColor: "#fff" },
+                "&.Mui-focused fieldset": { borderColor: "#fff" },
+                "& svg": { color: "white" },
+              },
+            }}
+          />
+        )}
+        sx={{ backgroundColor: "#242424", color: "#fff" }}
+      />
+    </Card>
   );
 };
 

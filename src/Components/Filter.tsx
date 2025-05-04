@@ -57,6 +57,7 @@ const Filters: React.FC<FilterProps> = ({
           sx={{
             width: "100%", // ✅ app-container 기준
             maxWidth: "100%", // ✅ 절대 넘치지 않게
+            margin: "10px",
             // marginLeft: 5,
             // marginBottom: 2,
           }}

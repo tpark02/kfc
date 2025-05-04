@@ -7,6 +7,7 @@ interface CroppedAvatarProps {
   offsetX?: number;
   offsetY?: number;
   borderRadius?: string;
+  selected?: boolean;
 }
 
 const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
@@ -16,9 +17,11 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   offsetX = 30,
   offsetY = 0,
   borderRadius = "8px",
+  selected = false,
 }) => {
   return (
     <div
+      className={`player${selected ? " selected" : ""}`}
       style={{
         width,
         height,

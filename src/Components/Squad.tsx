@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
-import { Snackbar, Alert, Button } from "@mui/material";
+import { Snackbar, Alert, Button, Typography, Card } from "@mui/material";
 
 // 타입
 import { Player } from "../types/Player";
@@ -13,7 +13,7 @@ import {
 } from "../types/Response";
 import { Country } from "../types/Country";
 import { formations } from "../data/formations";
-import { metrics } from "../util/SquadMetrics";
+import SquadMetrics from "../components/SquadMetrics";
 // 컴포넌트
 import SquadBuilder from "./SquadBuilder";
 // import SquadFormation from "./SquadFormation";
@@ -23,6 +23,7 @@ import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
 import Filters from "./Filter";
+import LoadingSpinner from "./LoadingSpinner";
 // 스타일
 import "../Squad.css";
 
@@ -32,20 +33,7 @@ const FormationDropdown: React.FC = () => {
   const [dropPlayers, setDropPlayers] = useState<{
     [idx: number]: Player | null;
   }>({});
-  const [teamOvr, setTeamOvr] = useState(0);
-  const [teamAge, setTeamAge] = useState(0);
-  const [teamValue, setTeamValue] = useState(0);
-  const [teamPace, setTeamPace] = useState(0);
-  const [teamAttack, setTeamAttack] = useState(0);
-  const [teamDef, setTeamDef] = useState(0);
-  const [teamStamina, setTeamStamina] = useState(0);
-  const [clubCohesion, setClubCohesion] = useState(0);
-  const [leagueSpread, setLeagueSpread] = useState<Set<string | undefined>>(
-    new Set()
-  );
-  const [nationalSpread, setNationalSpread] = useState<Set<string | undefined>>(
-    new Set()
-  );
+
   // 📦 필터 상태
   const [selectedFormation, setSelectedFormation] = useState("442");
   const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
@@ -66,6 +54,7 @@ const FormationDropdown: React.FC = () => {
     pos: "",
   });
   const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // 📏 높이 측정용 ref
   const squadSelectRef = useRef<HTMLDivElement>(null);
@@ -151,6 +140,8 @@ const FormationDropdown: React.FC = () => {
   };
 
   const loadRandomSquad = () => {
+    console.log("start");
+    setLoading(true);
     axios
       .post<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {
         name: selectedFormation,
@@ -166,6 +157,18 @@ const FormationDropdown: React.FC = () => {
         });
 
         setDropPlayers(newDropPlayers);
+
+        // 이미지 URL이 모두 로드될 때까지 대기
+        const imagePromises = response.data.content.map((player) => {
+          return new Promise<void>((resolve) => {
+            const img = new Image();
+            img.src = player.img; // ✅ 실제 이미지 경로
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // 실패해도 해제
+          });
+        });
+
+        return Promise.all(imagePromises);
       })
       .catch((error) => {
         console.log("🔥 error 전체:", error);
@@ -178,178 +181,149 @@ const FormationDropdown: React.FC = () => {
           setSnackbarMessage("알 수 없는 오류가 발생했습니다.");
           setSnackbarOpen(true);
         }
+      })
+      .finally(() => {
+        console.log("finish");
+        setLoading(false);
       });
   };
 
-  useEffect(() => {
-    const {
-      teamovr,
-      teamage,
-      squadvalue,
-      nationalityspread,
-      leaguespread,
-      clubcohesion,
-      teamstamina,
-      teamdef,
-      teamattack,
-      teampace,
-    } = metrics(dropPlayers);
-    setClubCohesion(clubcohesion);
-    setLeagueSpread(leaguespread);
-    setNationalSpread(nationalityspread);
-    setTeamOvr(teamovr);
-    setTeamAge(teamage);
-    setTeamValue(squadvalue);
-    setTeamPace(teampace);
-    setTeamDef(teamdef);
-    setTeamAttack(teamattack);
-    setTeamStamina(teamstamina);
-  }, [dropPlayers]);
   return (
-    <div className="squad-container">
-      <div className="squad-random-team">
-        <div>OVR : {teamOvr}</div>
-        <div>Total Squad Value : {teamValue}</div>
-        <div>Average Age : {teamAge}</div>
-        <div>Team Pace: {teamPace}</div>
-        <div>Team Attack: {teamAttack}</div>
-        <div>Team Defense: {teamDef}</div>
-        <div>Team Stamina: {teamStamina}</div>
-        <div>Team Cohesion: {clubCohesion}</div>
-        <div>
-          Team National Spread:
-          {Array.from(nationalSpread).map((nation) => {
-            return <div>{nation}</div>;
-          })}
-        </div>
-        <div>
-          Team League Spread:
-          {Array.from(leagueSpread).map((league) => {
-            return <div>{league}</div>;
-          })}
-        </div>
-      </div>
-      {/* <div ref={squadSelectRef}> */}
-      <div className="squad-select" ref={squadSelectRef}>
-        {selectedFormation && (
-          <SquadBuilder
-            selectedFormation={selectedFormation as keyof typeof formations}
-            dropPlayers={dropPlayers}
-            setSelectedDropZone={setSelectedDropZone}
-            setIsDropZoneSelected={setIsDropZoneSelected}
-            setPosition={selectedPosition}
-            searchPlayerRef={listRef}
-          />
-        )}
-        <div className="button-group">
-          <button
-            onClick={() => {
-              loadSquadData();
-            }}
-          >
-            Load
-          </button>
-          <button
-            onClick={() => {
-              saveSquadData();
-            }}
-          >
-            Save
-          </button>
-        </div>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={4000}
-          onClose={() => setSnackbarOpen(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </div>
-      <div className="squad-team">
-        <div>
-          <SelectFormation
-            setSelectedFormation={setSelectedFormation}
-            selectedFormation={selectedFormation}
-            setDropPlayers={setDropPlayers}
-          />
-
-          {isDropZoneSelected && (
-            <Button
+    <>
+      {loading && <LoadingSpinner />}
+      <div className="squad-container">
+        <SquadMetrics players={dropPlayers} />
+        <div className="squad-select" ref={squadSelectRef}>
+          {selectedFormation && (
+            <SquadBuilder
+              selectedFormation={selectedFormation as keyof typeof formations}
+              dropPlayers={dropPlayers}
+              setSelectedDropZone={setSelectedDropZone}
+              setIsDropZoneSelected={setIsDropZoneSelected}
+              setPosition={selectedPosition}
+              searchPlayerRef={listRef}
+              selectedDropZone={selectedDropZone}
+            />
+          )}
+          <div className="button-group">
+            <button
               onClick={() => {
-                setIsDropZoneSelected(!isDropZoneSelected);
+                loadSquadData();
               }}
             >
-              Close
-            </Button>
-          )}
+              Load
+            </button>
+            <button
+              onClick={() => {
+                saveSquadData();
+              }}
+            >
+              Save
+            </button>
+          </div>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={4000}
+            onClose={() => setSnackbarOpen(false)}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
+        </div>
+        <div className="squad-team">
+          <Typography variant="h6" gutterBottom>
+            Select Formation
+          </Typography>
           <div>
-            {isDropZoneSelected ? (
-              <SearchPlayer
-                ref={searchPlayerRef}
-                listRef={listRef}
-                country=""
-                league=""
-                club=""
-                pos={selectedPos}
-                selectedDropZone={selectedDropZone}
-                dropPlayers={dropPlayers}
-                setDropPlayers={setDropPlayers}
-                setSnackbarMessage={setSnackbarMessage}
-                setSnackbarOpen={setSnackbarOpen}
-              />
-            ) : (
-              <>
-                <SearchCountry
-                  setSelectedCountry={setSelectedCountries}
-                  prevList={selectedCountries}
-                />
-                <SearchLeague
-                  setSelectedLeague={(league) => setLeague(league || [])}
-                  prevList={selectedLeagues}
-                />
-                <SearchClub
-                  setClub={setClub}
-                  setSearchTermClub={(term: string) =>
-                    console.log("Search term:", term)
-                  }
-                  prevList={selectedClubs}
-                />
-                {/* <SearchPosition selectedPos={selectedPosition} /> */}
-                {/* 🧾 Filter  */}
-                <Filters
-                  selectedCountries={selectedCountries}
-                  selectedTeams={selectedClubs}
-                  selectedLeagues={selectedLeagues}
-                  selectedPosition={[]}
-                  searchTerm={""}
-                  sortType={""}
-                  setSelectedCountries={setSelectedCountries}
-                  setSelectedTeams={setClub}
-                  setSelectedLeagues={setLeague}
-                  fetchPage={(page: number) =>
-                    console.log(`Fetching page ${page}`)
-                  }
-                  setSelectedPosition={() => {}}
-                />
+            <SelectFormation
+              setSelectedFormation={setSelectedFormation}
+              selectedFormation={selectedFormation}
+              setDropPlayers={setDropPlayers}
+            />
+
+            <div>
+              {isDropZoneSelected && (
                 <Button
-                  variant="contained"
-                  color="secondary"
                   onClick={() => {
-                    loadRandomSquad();
+                    setIsDropZoneSelected(!isDropZoneSelected);
                   }}
-                  sx={{ marginLeft: 1 }}
                 >
-                  Create Squad
+                  Close
                 </Button>
-              </>
-            )}
+              )}
+              <Card sx={{ mb: 2 }}></Card>
+              <div>
+                <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                  Filters
+                </Typography>
+                {isDropZoneSelected ? (
+                  <SearchPlayer
+                    ref={searchPlayerRef}
+                    listRef={listRef}
+                    country=""
+                    league=""
+                    club=""
+                    pos={selectedPos}
+                    selectedDropZone={selectedDropZone}
+                    dropPlayers={dropPlayers}
+                    setDropPlayers={setDropPlayers}
+                    setSnackbarMessage={setSnackbarMessage}
+                    setSnackbarOpen={setSnackbarOpen}
+                  />
+                ) : (
+                  <>
+                    <SearchCountry
+                      setSelectedCountry={setSelectedCountries}
+                      prevList={selectedCountries}
+                    />
+                    <SearchLeague
+                      setSelectedLeague={(league) => setLeague(league || [])}
+                      prevList={selectedLeagues}
+                    />
+                    <SearchClub
+                      setClub={setClub}
+                      setSearchTermClub={(term: string) =>
+                        console.log("Search term:", term)
+                      }
+                      prevList={selectedClubs}
+                    />
+                    {/* <SearchPosition selectedPos={selectedPosition} /> */}
+                    {/* 🧾 Filter  */}
+                    <Filters
+                      selectedCountries={selectedCountries}
+                      selectedTeams={selectedClubs}
+                      selectedLeagues={selectedLeagues}
+                      selectedPosition={[]}
+                      searchTerm={""}
+                      sortType={""}
+                      setSelectedCountries={setSelectedCountries}
+                      setSelectedTeams={setClub}
+                      setSelectedLeagues={setLeague}
+                      fetchPage={(page: number) =>
+                        console.log(`Fetching page ${page}`)
+                      }
+                      setSelectedPosition={() => {}}
+                    />
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        loadRandomSquad();
+                      }}
+                      sx={{ margin: "10px" }}
+                    >
+                      Create Squad
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

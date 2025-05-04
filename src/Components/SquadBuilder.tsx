@@ -14,6 +14,10 @@ interface SquadBuilderProp {
   setIsDropZoneSelected: (b: boolean) => void;
   setPosition: React.Dispatch<React.SetStateAction<string>>;
   searchPlayerRef: React.RefObject<HTMLDivElement | null>;
+  selectedDropZone: {
+    index: number;
+    pos: string;
+  };
 }
 
 const SquadBuilder: React.FC<SquadBuilderProp> = ({
@@ -23,6 +27,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   setIsDropZoneSelected,
   setPosition,
   searchPlayerRef,
+  selectedDropZone,
 }) => {
   return (
     <div className="squad-container">
@@ -31,7 +36,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
           const player = dropPlayers[idx];
           return (
             <Button
-              className="player"
+              // className="player"
               key={`drop-${idx}`}
               onClick={() => {
                 setSelectedDropZone({
@@ -51,7 +56,10 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               }}
             >
               <div className="dropzone-button">
-                <CroppedAvatar src={player?.img ?? ""} />
+                <CroppedAvatar
+                  src={player?.img ?? ""}
+                  selected={selectedDropZone.index === idx}
+                />
               </div>
             </Button>
           );
