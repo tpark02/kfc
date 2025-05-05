@@ -154,3 +154,25 @@ export const getCodeByCountryName = (name: string) => {
   const country = countryData.find((c) => c.name === name);
   return country?.code || null;
 };
+
+export const getImgByCountryName = (
+  name: string,
+  idx: number,
+  width: number,
+  height: number
+) => {
+  return (
+    <img
+      key={name || `nation-${idx}`}
+      src={`https://flagcdn.com/w40/${
+        name ? getCodeByCountryName(name) : ""
+      }.png`}
+      alt={name ?? "Unknown"}
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        backgroundColor: "white", // ✅ add white background
+      }}
+    />
+  );
+};

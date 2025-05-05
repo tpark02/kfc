@@ -1,5 +1,5 @@
 import React from "react";
-import { Select, MenuItem, FormControl, Box } from "@mui/material";
+import { Select, MenuItem, Box } from "@mui/material";
 import { baseFormations } from "../data/formations";
 import { Player } from "../types/Player";
 
@@ -18,26 +18,19 @@ const SelectFormation: React.FC<SelectFormationProp> = ({
   setDropPlayers,
 }) => {
   return (
-    <FormControl
-      fullWidth
-      variant="outlined"
-      size="small"
-      style={{
-        width: "90%",
-        outline: "1px solid gray",
-        margin: "5px 0 0 0",
-        borderRadius: "2px",
-      }}
-    >
-      {/* <InputLabel id="label">Formation</InputLabel> */}
+    <>
       <Select
+        variant="outlined"
+        style={{
+          width: "90%",
+          borderRadius: "8px",
+        }}
         labelId="formation-label"
         value={selectedFormation}
         onChange={(e) => {
           setSelectedFormation(e.target.value);
           setDropPlayers({});
         }}
-        label="Formation"
         sx={{
           backgroundColor: "#242424",
           color: "white",
@@ -78,7 +71,7 @@ const SelectFormation: React.FC<SelectFormationProp> = ({
           </MenuItem>
         ))}
       </Select>
-    </FormControl>
+    </>
   );
 };
 

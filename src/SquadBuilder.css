@@ -2,24 +2,24 @@
 
 .squad-container {
     width: 100%;
-    background-color: #1e1e1e;
     color: white;
     text-align: center;
+    padding: 0 0 10px 0;
 }
 
 .pitch {
     width: 100%;
-    /* background-color: white; */
+    height: 1210px;
     aspect-ratio: 10 / 16;
     position: relative;
     background-size: cover;
     background-position: center;
     border-radius: 12px;
-    /* border: 1px solid yellow; */
     background-image: url('/field.png');
-    outline: 3px solid gray;
+    outline: 1px solid gray;
     background-color: rgba(0, 54, 14, 0.5);
-
+    /* outline: 1px solid red; */
+    margin: 0px 0 0 0;
 }
 
 .player {

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { Snackbar, Alert, Button, Typography, Card } from "@mui/material";
+import { Snackbar, Alert, Button, Typography, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 // 타입
 import { Player } from "../types/Player";
@@ -194,6 +195,9 @@ const FormationDropdown: React.FC = () => {
       <div className="squad-container">
         <SquadMetrics players={dropPlayers} />
         <div className="squad-select" ref={squadSelectRef}>
+          <Typography variant="h6" gutterBottom>
+            Formation
+          </Typography>
           {selectedFormation && (
             <SquadBuilder
               selectedFormation={selectedFormation as keyof typeof formations}
@@ -205,22 +209,7 @@ const FormationDropdown: React.FC = () => {
               selectedDropZone={selectedDropZone}
             />
           )}
-          <div className="button-group">
-            <button
-              onClick={() => {
-                loadSquadData();
-              }}
-            >
-              Load
-            </button>
-            <button
-              onClick={() => {
-                saveSquadData();
-              }}
-            >
-              Save
-            </button>
-          </div>
+
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={4000}
@@ -236,28 +225,59 @@ const FormationDropdown: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Select Formation
           </Typography>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <SelectFormation
               setSelectedFormation={setSelectedFormation}
               selectedFormation={selectedFormation}
               setDropPlayers={setDropPlayers}
             />
-
-            <div>
-              {isDropZoneSelected && (
-                <Button
-                  onClick={() => {
-                    setIsDropZoneSelected(!isDropZoneSelected);
-                  }}
-                >
-                  Close
-                </Button>
-              )}
-              <Card sx={{ mb: 2 }}></Card>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                outline: "1px solid gray",
+                borderRadius: "8px",
+                width: "90%",
+                margin: "20px 0 0 0",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                }}
+              >
+                {isDropZoneSelected && (
+                  <IconButton
+                    onClick={() => {
+                      setIsDropZoneSelected(!isDropZoneSelected);
+                    }}
+                    sx={{
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "transparent", // 🔑 배경 유지
+                        outline: "none",
+                        boxShadow: "none",
+                      },
+                      "&:focus": {
+                        outline: "none",
+                        boxShadow: "none",
+                      },
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                )}
+              </div>
               <div>
-                <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-                  Filters
-                </Typography>
                 {isDropZoneSelected ? (
                   <SearchPlayer
                     ref={searchPlayerRef}
@@ -274,6 +294,9 @@ const FormationDropdown: React.FC = () => {
                   />
                 ) : (
                   <>
+                    <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                      Filters
+                    </Typography>
                     <SearchCountry
                       setSelectedCountry={setSelectedCountries}
                       prevList={selectedCountries}
@@ -289,8 +312,6 @@ const FormationDropdown: React.FC = () => {
                       }
                       prevList={selectedClubs}
                     />
-                    {/* <SearchPosition selectedPos={selectedPosition} /> */}
-                    {/* 🧾 Filter  */}
                     <Filters
                       selectedCountries={selectedCountries}
                       selectedTeams={selectedClubs}
@@ -316,6 +337,22 @@ const FormationDropdown: React.FC = () => {
                     >
                       Create Squad
                     </Button>
+                    <div className="button-group">
+                      <button
+                        onClick={() => {
+                          loadSquadData();
+                        }}
+                      >
+                        Load
+                      </button>
+                      <button
+                        onClick={() => {
+                          saveSquadData();
+                        }}
+                      >
+                        Save
+                      </button>
+                    </div>
                   </>
                 )}
               </div>

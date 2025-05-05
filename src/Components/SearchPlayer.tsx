@@ -1,10 +1,14 @@
+import "../SearchPlayer.css";
 import React, { useState, useEffect, useCallback, forwardRef } from "react";
-import { TextField, InputAdornment, Button } from "@mui/material";
+import { TextField, InputAdornment, Button, Divider } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import _ from "lodash";
 import { Player } from "../types/Player";
 import { ResponseSearch } from "../types/Response";
+import { getImgByCountryName } from "../data/countryData";
+import { getPosColor } from "../util/Util";
+import RadarStatChart from "./RadarStatsChart";
 
 interface SearchPlayerProp {
   country: string;
@@ -45,8 +49,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
-    // const convertedDropPlayers: { [index: number]: Player | null } = {};
-
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
         let localPos = "";
@@ -131,35 +133,75 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       fetchPlayers("", 0);
     }, [fetchPlayers]);
 
-    return (
-      <div>
-        <div className="search-player-src">
-          {(() => {
-            const p = dropPlayers[selectedDropZone?.index]
-              ? dropPlayers[selectedDropZone.index]
-              : null;
-            return (
-              p && (
-                <div style={{ color: "white", marginBottom: "1rem" }}>
-                  <div>이름: {p.name}</div>
-                  <div>국가: {p.nation}</div>
-                  <div>포지션: {p.pos}</div>
-                  <div>OVR: {p.ovr}</div>
-                </div>
-              )
-            );
-          })()}
-        </div>
-        <div className="search-player-desc">
-          {hoveredPlayer && (
-            <div style={{ color: "white", marginBottom: "1rem" }}>
-              <div>이름: {hoveredPlayer.name}</div>
-              <div>국가: {hoveredPlayer.nation}</div>
-              <div>포지션: {hoveredPlayer.pos}</div>
-              <div>OVR: {hoveredPlayer.ovr}</div>
+    const displayPlayerSpec = (p: Player | null) => {
+      const c = getPosColor(p ? p.pos : "");
+      return (
+        <>
+          <div className="search-player-mid">
+            <RadarStatChart
+              pac={p ? p.pac : 0}
+              sho={p ? p.sho : 0}
+              pas={p ? p.pas : 0}
+              dri={p ? p.dri : 0}
+              def={p ? p.def : 0}
+              phy={p ? p.phy : 0}
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "20px",
+                margin: "0 0 10px 0",
+                position: "relative",
+                // outline: "1px solid red",
+                width: "100%",
+                height: "50px",
+              }}
+            >
+              {p ? p.name : "N/A"}
             </div>
-          )}
-        </div>
+            <div className="search-player-src-group">
+              <div className="search-player-src-item">
+                {getImgByCountryName(
+                  p?.nation ?? "",
+                  selectedDropZone?.index,
+                  35,
+                  25
+                )}
+              </div>
+              <div className="search-player-src-item">
+                <div style={{ backgroundColor: c, width: "35px" }}>
+                  {p ? p.pos : "N/A"}
+                </div>
+              </div>
+              <div className="search-player-src-item">{p ? p.ovr : 0}</div>
+            </div>
+          </div>
+        </>
+      );
+    };
+
+    return (
+      <div className="search-player">
+        {(() => {
+          const p = dropPlayers[selectedDropZone?.index]
+            ? dropPlayers[selectedDropZone.index]
+            : null;
+          return displayPlayerSpec(p);
+        })()}
+        <Divider
+          sx={{
+            width: "90%",
+            backgroundColor: "#555", // 원하는 회색
+            margin: "1rem auto",
+            height: "1px",
+          }}
+        />
+
+        {(() => {
+          return displayPlayerSpec(hoveredPlayer);
+        })()}
         <div id="search-player-root" ref={ref}>
           <TextField
             id="label"
@@ -178,27 +220,14 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
               ),
             }}
             style={{
-              width: "100%",
+              width: "90%",
               outline: "1px solid gray",
+              borderRadius: "8px",
             }}
           />
-          <div
-            id="search-player-list"
-            ref={listRef}
-            style={{
-              maxHeight: "300px",
-              overflowY: "auto",
-              marginTop: "1rem",
-              padding: "0.5rem",
-            }}
-          >
+          <div id="search-player-list" ref={listRef}>
             {results.map((player) => {
-              let c = "black";
-              if (pos.includes("ST") || pos.includes("W")) c = "red";
-              else if (pos.includes("M")) c = "orange";
-              else if (pos.includes("B")) c = "blue";
-              else if (pos.includes("G")) c = "orange";
-
+              const c = getPosColor(player.pos);
               return (
                 <Button
                   key={player.id}
@@ -244,6 +273,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
             )}
           </div>
         </div>
+        {/* </div> */}
       </div>
     );
   }

@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import SquadRadarChart from "./SquadRadarChart";
-import { getCodeByCountryName } from "../data/countryData";
+import { getImgByCountryName } from "../data/countryData";
 
 interface SquadMetricsProp {
   players: Record<number, Player | null>;
@@ -200,20 +200,9 @@ const SquadMetrics: React.FC<SquadMetricsProp> = ({ players }) => {
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1}>
               {Array.from(nationalSpread).length > 0 ? (
-                Array.from(nationalSpread).map((nation, idx) => (
-                  <img
-                    key={nation ?? `nation-${idx}`}
-                    src={`https://flagcdn.com/w40/${
-                      nation ? getCodeByCountryName(nation) : ""
-                    }.png`}
-                    alt={nation ?? "Unknown"}
-                    style={{
-                      width: "35px",
-                      height: "25px",
-                      backgroundColor: "white", // ✅ add white background
-                    }}
-                  />
-                ))
+                Array.from(nationalSpread).map((nation, idx) =>
+                  getImgByCountryName(nation ?? "", idx, 35, 25)
+                )
               ) : (
                 <div>&nbsp;</div>
               )}

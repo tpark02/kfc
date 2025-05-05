@@ -30,42 +30,44 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   selectedDropZone,
 }) => {
   return (
-    <div className="squad-container">
-      <div className="pitch">
-        {formations[selectedFormation].map((position, idx) => {
-          const player = dropPlayers[idx];
-          return (
-            <Button
-              // className="player"
-              key={`drop-${idx}`}
-              onClick={() => {
-                setSelectedDropZone({
-                  index: idx,
-                  pos: position.pos ?? "",
-                });
-                setPosition(position.pos ?? "");
-                setIsDropZoneSelected(true);
-                if (searchPlayerRef.current) {
-                  searchPlayerRef.current.scrollTop = 0;
-                }
-              }}
-              style={{
-                position: "absolute",
-                top: `${position.top}%`,
-                left: `${position.left}%`,
-              }}
-            >
-              <div className="dropzone-button">
-                <CroppedAvatar
-                  src={player?.img ?? ""}
-                  selected={selectedDropZone.index === idx}
-                />
-              </div>
-            </Button>
-          );
-        })}
+    <>
+      <div className="squad-container">
+        <div className="pitch">
+          {formations[selectedFormation].map((position, idx) => {
+            const player = dropPlayers[idx];
+            return (
+              <Button
+                // className="player"
+                key={`drop-${idx}`}
+                onClick={() => {
+                  setSelectedDropZone({
+                    index: idx,
+                    pos: position.pos ?? "",
+                  });
+                  setPosition(position.pos ?? "");
+                  setIsDropZoneSelected(true);
+                  if (searchPlayerRef.current) {
+                    searchPlayerRef.current.scrollTop = 0;
+                  }
+                }}
+                style={{
+                  position: "absolute",
+                  top: `${position.top}%`,
+                  left: `${position.left}%`,
+                }}
+              >
+                <div className="dropzone-button">
+                  <CroppedAvatar
+                    src={player?.img ?? ""}
+                    selected={selectedDropZone.index === idx}
+                  />
+                </div>
+              </Button>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
