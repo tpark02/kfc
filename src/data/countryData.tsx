@@ -172,6 +172,16 @@ export const getImgByCountryName = (
         width: `${width}px`,
         height: `${height}px`,
         backgroundColor: "white", // ✅ add white background
+        outline: "1px solid gray",
+        borderRadius: "8px",
+      }}
+      onError={(e) => {
+        e.currentTarget.onerror = null;
+        e.currentTarget.src = "../../img/fallback.png";
+        e.currentTarget.style.width = "45px";
+        e.currentTarget.style.height = "35px";
+        e.currentTarget.style.outline = "1px solid gray";
+        e.currentTarget.style.borderRadius = "8px";
       }}
     />
   );

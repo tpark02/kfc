@@ -92,6 +92,10 @@ const NationModal: React.FC<NationModalProps> = ({
               marginRight: 8,
               backgroundColor: "white", // ✅ add white background
             }}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "../../img/fallback.png";
+            }}
           />
           <Typography variant="body2">{country.name}</Typography>
         </Box>

@@ -2,6 +2,7 @@
 
 .squad-container {
     width: 100%;
+    height: 100%;
     color: white;
     text-align: center;
     padding: 0 0 10px 0;
@@ -9,18 +10,18 @@
 
 .pitch {
     width: 100%;
-    height: 1245px;
-    aspect-ratio: 10 / 16;
+    height: 100%;
     position: relative;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     border-radius: 12px;
     background-image: url('/field.png');
     outline: 1px solid gray;
     background-color: rgba(0, 54, 14, 0.5);
-    /* outline: 1px solid red; */
-    margin: 0px 0 0 0;
+    margin: 0;
 }
+
 
 .player {
     outline: 3px solid gray;

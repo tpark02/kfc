@@ -1,27 +1,18 @@
 .squad-container {
     display: flex;
     flex-wrap: nowrap;
-    /* margin: 50px 0 0 0; */
+    width: 100%;
+    height: auto;
+    /* 고정 높이 삭제 */
+    align-items: stretch;
+    /* 각 column이 동일한 높이를 가지도록 */
     width: 100%;
     height: 100%;
     border-radius: 8px;
     background-color: var(--background-color);
 }
 
-.squad-random-team {
-    flex: 1 1 25%;
-    max-width: 25%;
-    box-sizing: border-box;
-    margin: 45px 0 0 0;
-}
 
-.squad-team {
-    flex: 1 1 25%;
-    max-width: 25%;
-    box-sizing: border-box;
-    margin: 60px 0 0 0;
-    /* outline: 1px solid red; */
-}
 
 .squad-select {
     flex: 1 1 50%;
@@ -31,19 +22,19 @@
     align-items: center;
     justify-content: center;
     margin: 60px 0 0 0;
+    height: 888px;
     /* outline: 1px solid red; */
 }
 
-
-.squad-formation {
-    width: 100%;
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(20, 1fr);
+.squad-team,
+.squad-random-team {
+    flex: 1 1 25%;
+    max-width: 25%;
+    height: 100%;
+    /* ✅ squad-select의 높이를 따라감 */
     box-sizing: border-box;
-    /* padding: 2rem; */
-    /* gap: 1rem; */
-    outline: 1px solid blue;
+    margin: 60px 0 0 0;
+    /* margin-top 제거 또는 조정 */
 }
 
 .button-group {

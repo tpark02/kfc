@@ -7,7 +7,7 @@ import _ from "lodash";
 import { Player } from "../types/Player";
 import { ResponseSearch } from "../types/Response";
 import { getImgByCountryName } from "../data/countryData";
-import { getPosColor } from "../util/Util";
+import { getOvrColor, getPosColor } from "../util/Util";
 import RadarStatChart from "./RadarStatsChart";
 
 interface SearchPlayerProp {
@@ -134,7 +134,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     }, [fetchPlayers]);
 
     const displayPlayerSpec = (p: Player | null) => {
-      const c = getPosColor(p ? p.pos : "");
       return (
         <>
           <div className="search-player-mid">
@@ -154,9 +153,10 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                 fontSize: "20px",
                 margin: "0 0 10px 0",
                 position: "relative",
-                // outline: "1px solid red",
-                width: "100%",
+                width: "90%",
                 height: "50px",
+                outline: "1px solid gray",
+                borderRadius: "8px",
               }}
             >
               {p ? p.name : "N/A"}
@@ -166,16 +166,37 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                 {getImgByCountryName(
                   p?.nation ?? "",
                   selectedDropZone?.index,
-                  35,
-                  25
+                  45,
+                  35
                 )}
               </div>
               <div className="search-player-src-item">
-                <div style={{ backgroundColor: c, width: "35px" }}>
+                <div
+                  style={{
+                    backgroundColor: getPosColor(p ? p.pos : ""),
+                    width: "35px",
+                    height: "25px",
+                    padding: "5px",
+                    borderRadius: "8px",
+                    outline: "1px solid gray",
+                  }}
+                >
                   {p ? p.pos : "N/A"}
                 </div>
               </div>
-              <div className="search-player-src-item">{p ? p.ovr : 0}</div>
+              <div
+                className="search-player-src-item"
+                style={{
+                  backgroundColor: getOvrColor(p ? p.ovr : 0),
+                  width: "35px",
+                  height: "25px",
+                  padding: "5px",
+                  borderRadius: "8px",
+                  outline: "1px solid gray",
+                }}
+              >
+                {p ? p.ovr : 0}
+              </div>
             </div>
           </div>
         </>
@@ -183,25 +204,28 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     };
 
     return (
-      <div className="search-player">
-        {(() => {
-          const p = dropPlayers[selectedDropZone?.index]
-            ? dropPlayers[selectedDropZone.index]
-            : null;
-          return displayPlayerSpec(p);
-        })()}
-        <Divider
-          sx={{
-            width: "90%",
-            backgroundColor: "#555", // 원하는 회색
-            margin: "1rem auto",
-            height: "1px",
-          }}
-        />
-
-        {(() => {
-          return displayPlayerSpec(hoveredPlayer);
-        })()}
+      <div className="search-player-root">
+        <div className="search-player">
+          {(() => {
+            const p = dropPlayers[selectedDropZone?.index]
+              ? dropPlayers[selectedDropZone.index]
+              : null;
+            return displayPlayerSpec(p);
+          })()}
+          <div style={{ padding: "20px" }}></div>
+          {/* <Divider
+            orientation="vertical"
+            flexItem
+            sx={{
+              backgroundColor: "#555",
+              margin: "0 1rem",
+              width: "1px",
+            }}
+          /> */}
+          {(() => {
+            return displayPlayerSpec(hoveredPlayer);
+          })()}
+        </div>
         <div id="search-player-root" ref={ref}>
           <TextField
             id="label"
@@ -218,10 +242,21 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                   <SearchIcon sx={{ color: "white" }} />
                 </InputAdornment>
               ),
+              sx: {
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+              },
             }}
             style={{
-              width: "90%",
-              outline: "1px solid gray",
+              width: "100%",
+              // outline: "1px solid gray",
               borderRadius: "8px",
             }}
           />
@@ -273,7 +308,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
             )}
           </div>
         </div>
-        {/* </div> */}
       </div>
     );
   }

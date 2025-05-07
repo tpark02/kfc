@@ -13,7 +13,7 @@ import { Player } from "../types/Player";
 
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
-import { getColor } from "../util/Util";
+import { getOvrColor } from "../util/Util";
 import CroppedAvatar from "./CroppedAvatar";
 
 // ✅ Data
@@ -67,7 +67,7 @@ const PlayerSpec: React.FC = () => {
             <div
               className="player-info-cell"
               style={{
-                color: getColor(player[key] as number),
+                color: getOvrColor(player[key] as number),
                 width: "20%",
                 borderRadius: "3px",
               }}
@@ -143,6 +143,10 @@ const PlayerSpec: React.FC = () => {
                     height: "15px",
                     backgroundColor: "white", // ✅ add white background
                     margin: "0 5px",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "../../img/fallback.png";
                   }}
                 />
                 <div

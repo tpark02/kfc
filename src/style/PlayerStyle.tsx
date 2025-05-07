@@ -1,5 +1,5 @@
 import React from "react";
-import { getColor } from "../util/Util";
+import { getOvrColor } from "../util/Util";
 
 export const getStatDisplay = (label: string, value: number) => {
   return (
@@ -14,7 +14,7 @@ export const getStatDisplay = (label: string, value: number) => {
           position: "relative",
           display: "inline-block",
           paddingBottom: "4px",
-          color: getColor(value),
+          color: getOvrColor(value),
         }}
       >
         {value}

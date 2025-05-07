@@ -92,6 +92,10 @@ const Filters: React.FC<FilterProps> = ({
                 src={`https://flagcdn.com/w40/${country.code}.png`}
                 alt={country.name}
                 style={{ width: 25, height: 20 }}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "../../img/fallback.png";
+                }}
               />
               <CloseIcon fontSize="small" />
             </Button>
