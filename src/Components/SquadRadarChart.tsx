@@ -24,10 +24,10 @@ const SquadBarChart: React.FC<SquadBarChartProps> = ({ players }) => {
     return (
       <>
         <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="40%">
-            <stop offset="0%" stopColor="red" />
-            {/* <stop offset="64.43%" stopColor="blue" /> */}
-            <stop offset="100%" stopColor="blue" />
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="100%">
+            <stop offset="0%" stopColor="green" />
+            <stop offset="80%" stopColor="orange" />
+            <stop offset="100%" stopColor="red" />
           </linearGradient>
 
           <clipPath id={clipPathId}>
