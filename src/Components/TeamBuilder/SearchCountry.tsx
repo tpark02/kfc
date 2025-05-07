@@ -6,8 +6,8 @@ import {
   InputAdornment,
   Card,
 } from "@mui/material";
-import { countryData } from "../data/countryData";
-import { Country } from "../types/Country";
+import { countryData } from "../../data/countryData";
+import { Country } from "../../types/Country";
 import Popper from "@mui/material/Popper";
 
 interface FilterCountryProp {

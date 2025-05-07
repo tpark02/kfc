@@ -1,14 +1,14 @@
-import "../SearchPlayer.css";
 import React, { useState, useEffect, useCallback, forwardRef } from "react";
 import { TextField, InputAdornment, Button, Divider } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import _ from "lodash";
-import { Player } from "../types/Player";
-import { ResponseSearch } from "../types/Response";
-import { getImgByCountryName } from "../data/countryData";
-import { getOvrColor, getPosColor } from "../util/Util";
-import RadarStatChart from "./RadarStatsChart";
+import { Player } from "../../types/Player";
+import { ResponseSearch } from "../../types/Response";
+import { getImgByCountryName } from "../../data/countryData";
+import { getOvrColor, getPosColor } from "../../util/Util";
+import RadarStatChart from "../Players/RadarStatsChart";
+import "../../style/SearchPlayer.css";
 
 interface SearchPlayerProp {
   country: string;

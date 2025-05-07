@@ -4,17 +4,17 @@ import { Snackbar, Alert, Button, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 // 타입
-import { Player } from "../types/Player";
-import { Team } from "../types/Team";
-import { League } from "../types/League";
+import { Player } from "../../types/Player";
+import { Team } from "../../types/Team";
+import { League } from "../../types/League";
 import {
   ResponseLoadSquad,
   ResponseSaveSquad,
   ResponseRandomSquad,
-} from "../types/Response";
-import { Country } from "../types/Country";
-import { formations } from "../data/formations";
-import SquadMetrics from "../components/SquadMetrics";
+} from "../../types/Response";
+import { Country } from "../../types/Country";
+import { formations } from "../../data/formations";
+import SquadMetrics from "./SquadMetrics";
 // 컴포넌트
 import SquadBuilder from "./SquadBuilder";
 // import SquadFormation from "./SquadFormation";
@@ -23,12 +23,12 @@ import SearchPlayer from "./SearchPlayer"; // ✅ default export
 import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
-import Filters from "./Filter";
-import LoadingSpinner from "./LoadingSpinner";
+import Filters from "../Players/Filter";
+import LoadingSpinner from "../LoadingSpinner";
 // 스타일
-import "../Squad.css";
+import "../../style/Squad.css";
 
-const FormationDropdown: React.FC = () => {
+const Squad: React.FC = () => {
   // 🔢 기본 데이터 상태
   // const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
   const [dropPlayers, setDropPlayers] = useState<{
@@ -364,4 +364,4 @@ const FormationDropdown: React.FC = () => {
   );
 };
 
-export default FormationDropdown;
+export default Squad;

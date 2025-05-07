@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import "../PlayerSpec.css";
+import "../../style/PlayerSpec.css";
 
 interface PlayerStats {
   pac: number | null;

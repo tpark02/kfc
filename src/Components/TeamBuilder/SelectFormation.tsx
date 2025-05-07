@@ -1,7 +1,7 @@
 import React from "react";
 import { Select, MenuItem, Box } from "@mui/material";
-import { baseFormations } from "../data/formations";
-import { Player } from "../types/Player";
+import { baseFormations } from "../../data/formations";
+import { Player } from "../../types/Player";
 
 interface SelectFormationProp {
   setSelectedFormation: (formation: string) => void;

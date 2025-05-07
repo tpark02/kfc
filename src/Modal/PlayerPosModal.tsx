@@ -13,7 +13,6 @@ interface PlayerPosModalProps {
 
 const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
   isOpen,
-  onClose,
   onSelectPlayerPos,
   prevList,
 }) => {

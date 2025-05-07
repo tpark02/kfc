@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Team } from "../types/Team";
-import { TeamPage } from "../types/TeamPage";
+import { Team } from "../../types/Team";
+import { TeamPage } from "../../types/TeamPage";
 import {
   Autocomplete,
   TextField,
@@ -9,8 +9,8 @@ import {
   InputAdornment,
   Card,
 } from "@mui/material";
-import "../Squad.css";
 import Popper, { PopperProps } from "@mui/material/Popper";
+import "../../style/Squad.css";
 
 interface SearchClubProp {
   setSearchTermClub: (term: string) => void;

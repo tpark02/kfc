@@ -23,7 +23,7 @@ const NavBar: React.FC = () => {
         style={{ marginRight: "10px" }}
         onClick={() => (window.location.href = "/")}
       >
-        Home
+        Players
       </button>
       <button onClick={() => navigate("/squad")}>Team Builder</button>
     </div>

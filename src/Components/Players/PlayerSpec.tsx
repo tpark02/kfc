@@ -7,20 +7,20 @@ import axios from "axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // ✅ Types
-import { Team } from "../types/Team";
-import { TeamPage } from "../types/TeamPage";
-import { Player } from "../types/Player";
+import { Team } from "../../types/Team";
+import { TeamPage } from "../../types/TeamPage";
+import { Player } from "../../types/Player";
 
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
-import { getOvrColor } from "../util/Util";
-import CroppedAvatar from "./CroppedAvatar";
+import { getOvrColor } from "../../util/Util";
+import CroppedAvatar from "../TeamBuilder/CroppedAvatar";
 
 // ✅ Data
-import { countryData } from "../data/countryData";
+import { countryData } from "../../data/countryData";
 
 // ✅ Styles
-import "../PlayerSpec.css";
+import "../../style/PlayerSpec.css";
 
 const PlayerSpec: React.FC = () => {
   const location = useLocation();

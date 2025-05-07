@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 import { type BarRectangleItem } from "recharts/types/cartesian/Bar";
-import { Player } from "../types/Player";
+import { Player } from "../../types/Player";
 
 interface SquadBarChartProps {
   players: Record<number, Player | null>;

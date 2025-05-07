@@ -1,12 +1,12 @@
 import React from "react";
-import { Player } from "../types/Player";
+import { Player } from "../../types/Player";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import SquadRadarChart from "./SquadRadarChart";
-import { getImgByCountryName } from "../data/countryData";
+import { getImgByCountryName } from "../../data/countryData";
 
 interface SquadMetricsProp {
   players: Record<number, Player | null>;

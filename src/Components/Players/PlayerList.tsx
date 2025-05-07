@@ -1,9 +1,9 @@
 // src/components/PlayerList.tsx
 import { useNavigate } from "react-router-dom";
-import { Player } from "../types/Player";
-import { getStatDisplay } from "../style/PlayerStyle";
-import CroppedAvatar from "./CroppedAvatar";
-import "../Player.css";
+import { Player } from "../../types/Player";
+import { getStatDisplay } from "../../style/PlayerStyle";
+import CroppedAvatar from "../TeamBuilder/CroppedAvatar";
+import "../../style/Player.css";
 
 interface PlayerListProps {
   players: Player[];

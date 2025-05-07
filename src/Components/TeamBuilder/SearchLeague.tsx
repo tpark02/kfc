@@ -7,10 +7,10 @@ import {
   InputAdornment,
   Card,
 } from "@mui/material";
-import { League } from "../types/League";
-import { LeaguePage } from "../types/LeaguePage"; // 필요하면 타입 만들어
-import "../Squad.css";
+import { League } from "../../types/League";
+import { LeaguePage } from "../../types/LeaguePage"; // 필요하면 타입 만들어
 import Popper from "@mui/material/Popper";
+import "../../style/Squad.css";
 
 interface SearchLeagueProp {
   setSelectedLeague: (league: League[] | null) => void;

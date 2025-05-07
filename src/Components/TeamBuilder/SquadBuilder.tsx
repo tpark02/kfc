@@ -1,9 +1,9 @@
 import React from "react";
-import { formations } from "../data/formations";
+import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
-import { Player } from "../types/Player";
+import { Player } from "../../types/Player";
 import CroppedAvatar from "./CroppedAvatar";
-import "../SquadBuilder.css";
+import "../../style/SquadBuilder.css";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;

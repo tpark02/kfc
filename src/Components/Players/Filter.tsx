@@ -3,10 +3,10 @@ import React from "react";
 import { Button, Stack } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { Country } from "../types/Country";
-import { Team } from "../types/Team";
-import { PlayerPos } from "../types/PlayerPosition";
-import { League } from "../types/League";
+import { Country } from "../../types/Country";
+import { Team } from "../../types/Team";
+import { PlayerPos } from "../../types/PlayerPosition";
+import { League } from "../../types/League";
 
 interface FilterProps {
   selectedCountries: Country[];
@@ -62,10 +62,6 @@ const Filters: React.FC<FilterProps> = ({
             // marginBottom: 2,
           }}
         >
-          {/* ✅ 국가 필터 */}
-          {selectedCountries.map((country) => {
-            console.log(country.name);
-          })}
           {selectedCountries.map((country) => (
             <Button
               key={country.code}
