@@ -1,5 +1,7 @@
 import React from "react";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import "../index.css";
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
@@ -16,16 +18,22 @@ const NavBar: React.FC = () => {
         display: "flex",
         padding: "10px",
         background: "#f0f0f0",
-        borderBottom: "1px solid #ccc",
+        // borderBottom: "1px solid #ccc",
+        backgroundColor: "var(--background-color)",
       }}
     >
-      <button
-        style={{ marginRight: "10px" }}
+      <Button
+        className="nav-menu-button"
         onClick={() => (window.location.href = "/")}
       >
         Players
-      </button>
-      <button onClick={() => navigate("/squad")}>Team Builder</button>
+      </Button>
+      <Button className="nav-menu-button" onClick={() => navigate("/squad")}>
+        Team Builder
+      </Button>
+      <Button className="nav-menu-button" onClick={() => navigate("/squad")}>
+        League
+      </Button>
     </div>
   );
 };

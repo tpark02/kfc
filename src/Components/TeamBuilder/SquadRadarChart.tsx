@@ -79,15 +79,7 @@ const SquadBarChart: React.FC<SquadBarChartProps> = ({ players }) => {
   }));
 
   return (
-    <ResponsiveContainer
-      width="100%"
-      height={250}
-      style={{
-        outline: "1px solid gray",
-        borderRadius: "8px",
-        padding: "5px 0 0 0",
-      }}
-    >
+    <ResponsiveContainer height={250}>
       <BarChart data={data}>
         <XAxis dataKey="name" />
         <Bar

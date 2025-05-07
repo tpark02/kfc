@@ -10,9 +10,8 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  --background-color: #242424;
+  --background-color: #121212;
   --squad-dropdown-text-color: #5A5A5A;
-  background-color: var(--background-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -146,7 +145,7 @@ td {
   box-sizing: border-box;
   margin: 50px 0 0 0;
   border-radius: 8px;
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
   /* outline: 1px solid white; */
 }
 
@@ -199,4 +198,11 @@ td {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.nav-menu-button {
+  color: white !important;
+  margin: 10px !important;
+  background-color: var(--squad-dropdown-text-color) !important;
+  /* outline: 1px solid red !important; */
 }

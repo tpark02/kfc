@@ -194,7 +194,7 @@ const Squad: React.FC = () => {
       {loading && <LoadingSpinner />}
       <div className="squad-container">
         <SquadMetrics players={dropPlayers} />
-        <div className="squad-select" ref={squadSelectRef}>
+        <div className="squad-formation" ref={squadSelectRef}>
           <Typography variant="h6" gutterBottom>
             Formation
           </Typography>

@@ -1,12 +1,15 @@
 import React from "react";
+
 import { Player } from "../../types/Player";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import { getImgByCountryName } from "../../data/countryData";
+
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import SquadRadarChart from "./SquadRadarChart";
-import { getImgByCountryName } from "../../data/countryData";
+
+import "../../style/Squad.css";
+import { borderRadius } from "@mui/system";
 
 interface SquadMetricsProp {
   players: Record<number, Player | null>;
@@ -147,95 +150,72 @@ const SquadMetrics: React.FC<SquadMetricsProp> = ({ players }) => {
   const leagueSpread = getLeagueSpread(players);
 
   return (
-    <div className="squad-random-team">
-      <Card
-        sx={{ mb: 2 }}
-        style={{ color: "white", backgroundColor: "#242424" }}
-      >
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Squad Overview
+    <div className="squad-overview">
+      <Typography variant="h6" gutterBottom>
+        Squad Overview
+      </Typography>
+      <div>
+        <div
+          style={{
+            outline: "1px solid gray",
+            borderRadius: "8px",
+            padding: "5px",
+            width: "90%",
+            margin: "0 0 20px 0",
+          }}
+        >
+          <Typography>OVR</Typography>
+          <Typography variant="subtitle1" fontWeight="bold">
+            {metricsData.teamovr}
           </Typography>
-          <Box
-            sx={{ mb: 2 }}
-            style={{
-              outline: "1px solid gray",
-              borderRadius: "8px",
-              padding: "5px",
-            }}
-          >
-            <Typography>OVR</Typography>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {metricsData.teamovr}
-            </Typography>
-          </Box>
-          <Box
-            sx={{ mb: 2 }}
-            style={{
-              outline: "1px solid gray",
-              borderRadius: "8px",
-              padding: "5px",
-            }}
-          >
-            <Typography variant="subtitle2" gutterBottom>
-              Total Value
-            </Typography>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {"$" + metricsData.squadvalue.toLocaleString()}
-            </Typography>
-          </Box>
-          <Box sx={{ mb: 2 }}>
-            <SquadRadarChart players={players} />
-          </Box>
-          <Box
-            sx={{ mb: 2 }}
-            style={{
-              outline: "1px solid gray",
-              borderRadius: "8px",
-              padding: "5px",
-            }}
-          >
-            <Typography variant="subtitle2" gutterBottom>
-              Nations
-            </Typography>
-            <Box display="flex" flexWrap="wrap" gap={1}>
-              {Array.from(nationalSpread).length > 0 ? (
-                Array.from(nationalSpread).map((nation, idx) =>
-                  getImgByCountryName(nation ?? "", idx, 35, 25)
-                )
-              ) : (
-                <div>&nbsp;</div>
-              )}
-            </Box>
-          </Box>
-          <Box
-            style={{
-              outline: "1px solid gray",
-              borderRadius: "8px",
-              padding: "5px",
-            }}
-          >
-            <Typography variant="subtitle2" gutterBottom>
-              Leagues
-            </Typography>
-            <Box display="flex" flexWrap="wrap" gap={1}>
-              {leagueSpread.size > 0 ? (
-                Array.from(leagueSpread).map((league, idx) => (
-                  <Chip
-                    key={league ?? `league-${idx}`}
-                    label={league ?? "Unknown"}
-                    size="small"
-                    color="secondary"
-                  />
-                ))
-              ) : (
-                <div>&nbsp;</div>
-              )}
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="squad-metrics-section">
+          <Typography variant="subtitle2" gutterBottom>
+            Total Value
+          </Typography>
+          <Typography variant="subtitle1" fontWeight="bold">
+            {"$" + metricsData.squadvalue.toLocaleString()}
+          </Typography>
+        </div>
+      </div>
+      <div className="squad-metrics-section">
+        <SquadRadarChart players={players} />
+      </div>
+      <div className="squad-metrics-section">
+        <Typography variant="subtitle2" gutterBottom>
+          Nations
+        </Typography>
+        <Box display="flex" flexWrap="wrap" gap={1}>
+          {Array.from(nationalSpread).length > 0 ? (
+            Array.from(nationalSpread).map((nation, idx) =>
+              getImgByCountryName(nation ?? "", idx, 35, 25)
+            )
+          ) : (
+            <div>&nbsp;</div>
+          )}
+        </Box>
+      </div>
+      <div className="squad-metrics-section">
+        <Typography variant="subtitle2" gutterBottom>
+          Leagues
+        </Typography>
+        <Box display="flex" flexWrap="wrap" gap={1}>
+          {leagueSpread.size > 0 ? (
+            Array.from(leagueSpread).map((league, idx) => (
+              <Chip
+                key={league ?? `league-${idx}`}
+                label={league ?? "Unknown"}
+                size="small"
+                color="secondary"
+              />
+            ))
+          ) : (
+            <div>&nbsp;</div>
+          )}
+        </Box>
+      </div>
     </div>
+    // </div>
   );
 };
 

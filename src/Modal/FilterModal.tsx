@@ -1,5 +1,5 @@
-// 🔧 스타일 (CSS)
-import "./Modal.css";
+// ⚛️ 리액트 기본 훅
+import React, { useEffect, useState } from "react";
 
 // 🗂️ 타입 정의
 import { PlayerPos } from "../types/PlayerPosition";
@@ -18,8 +18,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 
-// ⚛️ 리액트 기본 훅
-import React, { useEffect, useState } from "react";
+// 🔧 스타일 (CSS)
+import "./Modal.css";
 
 interface FilterModalProps {
   isOpen: boolean;

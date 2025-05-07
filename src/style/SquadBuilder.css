@@ -1,14 +1,15 @@
 /* SquadBuilder.css */
 
-.squad-container {
+.squad-builder {
     width: 100%;
     height: 100%;
     color: white;
     text-align: center;
     padding: 0 0 10px 0;
+    /* outline: 1px solid red; */
 }
 
-.pitch {
+.squad-field {
     width: 100%;
     height: 100%;
     position: relative;
@@ -19,7 +20,6 @@
     background-image: url('/field.png');
     outline: 1px solid gray;
     background-color: rgba(0, 54, 14, 0.5);
-    margin: 0;
 }
 
 

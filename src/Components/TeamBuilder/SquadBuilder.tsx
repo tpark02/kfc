@@ -31,8 +31,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
 }) => {
   return (
     <>
-      <div className="squad-container">
-        <div className="pitch">
+      <div className="squad-builder">
+        <div className="squad-field">
           {formations[selectedFormation].map((position, idx) => {
             const player = dropPlayers[idx];
             return (
