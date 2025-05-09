@@ -1,22 +1,12 @@
 import React from "react";
 import { Select, MenuItem, Box } from "@mui/material";
 import { baseFormations } from "../../data/formations";
-import { Player } from "../../types/Player";
+import { useSquadStore } from "../../store/useSquadStore";
 
-interface SelectFormationProp {
-  setSelectedFormation: (formation: string) => void;
-  selectedFormation: string;
-  setDropPlayers: React.Dispatch<
-    React.SetStateAction<{
-      [idx: number]: Player | null;
-    }>
-  >;
-}
-const SelectFormation: React.FC<SelectFormationProp> = ({
-  setSelectedFormation,
-  selectedFormation,
-  setDropPlayers,
-}) => {
+const SelectFormation: React.FC = () => {
+  const { myFormation, setIsDropZoneSelected, setDropPlayers, setMyFormation } =
+    useSquadStore();
+
   return (
     <>
       <Select
@@ -26,10 +16,11 @@ const SelectFormation: React.FC<SelectFormationProp> = ({
           borderRadius: "8px",
         }}
         labelId="formation-label"
-        value={selectedFormation}
+        value={myFormation}
         onChange={(e) => {
-          setSelectedFormation(e.target.value);
+          setMyFormation(e.target.value);
           setDropPlayers({});
+          setIsDropZoneSelected(false);
         }}
         sx={{
           backgroundColor: "#242424",

@@ -2,6 +2,7 @@ import React from "react";
 
 import { Player } from "../../types/Player";
 import { getImgByCountryName } from "../../data/countryData";
+import { useSquadStore } from "../../store/useSquadStore";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -9,7 +10,6 @@ import Chip from "@mui/material/Chip";
 import SquadRadarChart from "./SquadRadarChart";
 
 import "../../style/Squad.css";
-import { borderRadius } from "@mui/system";
 
 interface SquadMetricsProp {
   players: Record<number, Player | null>;
@@ -107,13 +107,13 @@ const getClubCohesion = (players: Record<number, Player | null>) => {
   return Math.max(...Object.values(clubCount), 0);
 };
 
-const getTeamOvr = (players: Record<number, Player | null>) => {
-  const validPlayers = Object.values(players).filter((p) => p);
-  if (validPlayers.length === 0) return 0;
+// const getTeamOvr = (players: Record<number, Player | null>) => {
+//   const validPlayers = Object.values(players).filter((p) => p);
+//   if (validPlayers.length === 0) return 0;
 
-  const totalOvr = validPlayers.reduce((sum, p) => sum + (p!.ovr ?? 0), 0);
-  return Math.round(totalOvr / validPlayers.length);
-};
+//   const totalOvr = validPlayers.reduce((sum, p) => sum + (p!.ovr ?? 0), 0);
+//   return Math.round(totalOvr / validPlayers.length);
+// };
 
 const getTeamAge = (players: Record<number, Player | null>) => {
   const validPlayers = Object.values(players).filter((p) => p);
@@ -127,7 +127,7 @@ const metrics = (players: Record<number, Player | null>) => {
   const { defense, attack } = getDefenseAttackSplit(players);
 
   return {
-    teamovr: getTeamOvr(players),
+    // teamovr: getTeamOvr(players),
     teamage: getTeamAge(players),
     squadvalue: getTotalSquadValue(players),
     nationalityspread: getNationalitySpread(players),
@@ -148,7 +148,7 @@ const SquadMetrics: React.FC<SquadMetricsProp> = ({ players }) => {
   const metricsData = metrics(players);
   const nationalSpread = getNationalitySpread(players);
   const leagueSpread = getLeagueSpread(players);
-
+  const { myTeamOvr } = useSquadStore();
   return (
     <div className="squad-overview">
       <Typography variant="h6" gutterBottom>
@@ -166,7 +166,7 @@ const SquadMetrics: React.FC<SquadMetricsProp> = ({ players }) => {
         >
           <Typography>OVR</Typography>
           <Typography variant="subtitle1" fontWeight="bold">
-            {metricsData.teamovr}
+            {myTeamOvr}
           </Typography>
         </div>
         <div className="squad-metrics-section">

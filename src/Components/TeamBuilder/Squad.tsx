@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Snackbar, Alert, Button, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
+import { useSquadStore } from "../../store/useSquadStore";
 // 타입
 import { Player } from "../../types/Player";
 import { Team } from "../../types/Team";
@@ -31,12 +31,21 @@ import "../../style/Squad.css";
 const Squad: React.FC = () => {
   // 🔢 기본 데이터 상태
   // const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
-  const [dropPlayers, setDropPlayers] = useState<{
-    [idx: number]: Player | null;
-  }>({});
+  // const [dropPlayers, setDropPlayers] = useState<{
+  //   [idx: number]: Player | null;
+  // }>({});
+  const {
+    myFormation,
+    dropPlayers,
+    setDropPlayers,
+    setMyTeamName,
+    setMyTeamOvr,
+    isDropZoneSelected,
+    setIsDropZoneSelected,
+  } = useSquadStore();
 
   // 📦 필터 상태
-  const [selectedFormation, setSelectedFormation] = useState("442");
+  //const [selectedFormation, setSelectedFormation] = useState("442");
   const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
   const [selectedLeagues, setLeague] = useState<League[]>([]);
   const [selectedClubs, setClub] = useState<Team[]>([]);
@@ -54,7 +63,7 @@ const Squad: React.FC = () => {
     index: -1,
     pos: "",
   });
-  const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
+  // const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // 📏 높이 측정용 ref
@@ -89,15 +98,23 @@ const Squad: React.FC = () => {
   const loadSquadData = () => {
     axios
       .post<ResponseLoadSquad>("http://localhost:8080/api/loadsquad", {
-        name: selectedFormation,
+        name: myFormation,
       })
       .then((response) => {
         const newDropPlayers: { [idx: number]: Player | null } = {};
         response.data.content.forEach((p, idx) => {
           newDropPlayers[idx] = p;
         });
-        setSelectedFormation(response.data.name);
+        // response.data.name;
+        setMyTeamName(response.data.myTeamName);
+        // setFormation(response.data.name);
         setDropPlayers(newDropPlayers);
+        setMyTeamOvr(response.data.myTeamOvr);
+        console.log("로드 - myTeamOvr:", useSquadStore.getState().myTeamOvr);
+        console.log(
+          "✅ 로드 - dropPlayers:",
+          useSquadStore.getState().dropPlayers
+        );
       })
       .catch((error) => {
         setSnackbarMessage(
@@ -111,7 +128,7 @@ const Squad: React.FC = () => {
   const saveSquadData = () => {
     axios
       .post<ResponseSaveSquad>("http://localhost:8080/api/savesquad", {
-        name: selectedFormation,
+        name: myFormation,
         p1: dropPlayers[0]?.id,
         p2: dropPlayers[1]?.id,
         p3: dropPlayers[2]?.id,
@@ -145,7 +162,7 @@ const Squad: React.FC = () => {
     setLoading(true);
     axios
       .post<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {
-        name: selectedFormation,
+        name: myFormation,
         countries: selectedCountries,
         leagues: selectedLeagues,
         clubs: selectedClubs,
@@ -156,8 +173,9 @@ const Squad: React.FC = () => {
         response.data.content.forEach((p, idx) => {
           newDropPlayers[idx] = p;
         });
-
+        setMyTeamName(response.data.myTeamName);
         setDropPlayers(newDropPlayers);
+        setMyTeamOvr(response.data.myTeamOvr);
 
         // 이미지 URL이 모두 로드될 때까지 대기
         const imagePromises = response.data.content.map((player) => {
@@ -198,9 +216,9 @@ const Squad: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Formation
           </Typography>
-          {selectedFormation && (
+          {myFormation && (
             <SquadBuilder
-              selectedFormation={selectedFormation as keyof typeof formations}
+              selectedFormation={myFormation as keyof typeof formations}
               dropPlayers={dropPlayers}
               setSelectedDropZone={setSelectedDropZone}
               setIsDropZoneSelected={setIsDropZoneSelected}
@@ -232,11 +250,7 @@ const Squad: React.FC = () => {
               alignItems: "center",
             }}
           >
-            <SelectFormation
-              setSelectedFormation={setSelectedFormation}
-              selectedFormation={selectedFormation}
-              setDropPlayers={setDropPlayers}
-            />
+            <SelectFormation />
             <div
               style={{
                 display: "flex",
@@ -287,8 +301,8 @@ const Squad: React.FC = () => {
                     club=""
                     pos={selectedPos}
                     selectedDropZone={selectedDropZone}
-                    dropPlayers={dropPlayers}
-                    setDropPlayers={setDropPlayers}
+                    // dropPlayers={dropPlayers}
+                    // setDropPlayers={setDropPlayers}
                     setSnackbarMessage={setSnackbarMessage}
                     setSnackbarOpen={setSnackbarOpen}
                   />

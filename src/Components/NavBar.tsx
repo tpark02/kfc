@@ -31,7 +31,7 @@ const NavBar: React.FC = () => {
       <Button className="nav-menu-button" onClick={() => navigate("/squad")}>
         Team Builder
       </Button>
-      <Button className="nav-menu-button" onClick={() => navigate("/squad")}>
+      <Button className="nav-menu-button" onClick={() => navigate("/league")}>
         League
       </Button>
     </div>

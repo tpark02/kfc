@@ -9,6 +9,7 @@ import { getImgByCountryName } from "../../data/countryData";
 import { getOvrColor, getPosColor } from "../../util/Util";
 import RadarStatChart from "../Players/RadarStatsChart";
 import "../../style/SearchPlayer.css";
+import { useSquadStore } from "../../store/useSquadStore";
 
 interface SearchPlayerProp {
   country: string;
@@ -16,13 +17,13 @@ interface SearchPlayerProp {
   club: string;
   pos: string;
   listRef: React.RefObject<HTMLDivElement | null>;
-  dropPlayers: { [idx: number]: Player | null };
+  // dropPlayers: { [idx: number]: Player | null };
   selectedDropZone: { index: number; pos: string };
-  setDropPlayers: React.Dispatch<
-    React.SetStateAction<{
-      [idx: number]: Player | null;
-    }>
-  >;
+  // setDropPlayers: React.Dispatch<
+  //   React.SetStateAction<{
+  //     [idx: number]: Player | null;
+  //   }>
+  // >;
   setSnackbarMessage: (formation: string) => void;
   setSnackbarOpen: (isOpen: boolean) => void;
 }
@@ -35,14 +36,16 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       club,
       pos,
       listRef,
-      dropPlayers,
+      // dropPlayers,
       selectedDropZone,
-      setDropPlayers,
+      // setDropPlayers,
       setSnackbarMessage,
       setSnackbarOpen,
     },
     ref
   ) => {
+    const { dropPlayers, updateDropPlayer } = useSquadStore();
+
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
     const [, setPage] = useState(0);
@@ -285,10 +288,11 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                       return;
                     }
 
-                    setDropPlayers((prev) => ({
-                      ...prev,
-                      [selectedDropZone.index]: player,
-                    }));
+                    updateDropPlayer(selectedDropZone.index, player);
+                    // setDropPlayers((prev) => ({
+                    //   ...prev,
+                    //   [selectedDropZone.index]: player,
+                    // }));
                   }}
                 >
                   <div className="squad-team-player" key={player.id}>

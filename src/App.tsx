@@ -11,6 +11,7 @@ import NavBar from "./components/NavBar"; // 💡 make sure the path is correct
 // 스타일
 import "./App.css";
 import "./style/Player.css";
+import { LeagueSimulator } from "./components/LeagueSimulator/LeagueSimulator";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               element={<PlayerSpec />} // Example: Pass the first player as a prop
             />
             <Route path="/squad" element={<Squad />} />
+            <Route path="/league" element={<LeagueSimulator />} />
           </Routes>
         </Router>
       </DndProvider>

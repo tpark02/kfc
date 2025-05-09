@@ -17,11 +17,13 @@ export type ResponseSaveSquad = {
 export type ResponseLoadSquad = {
   content: Player[];
   name: string;
+  myTeamName: string;
+  myTeamOvr: number;
 };
 
 export type ResponseRandomSquad = {
   content: Player[];
-  totalovr: number;
-  averageovr: number;
+  myTeamOvr: number;
   chemistry: number;
+  myTeamName: string;
 };
