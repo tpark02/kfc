@@ -1,10 +1,12 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useSquadStore } from "../store/useSquadStore";
 import "../index.css";
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
+  const { setIsDropZoneSelected } = useSquadStore();
   return (
     <div
       className="tab-bar"
@@ -24,14 +26,30 @@ const NavBar: React.FC = () => {
     >
       <Button
         className="nav-menu-button"
-        onClick={() => (window.location.href = "/")}
+        // onClick={() => (window.location.href = "/")}
+        onClick={() => {
+          setIsDropZoneSelected(false);
+          navigate("/");
+        }}
       >
         Players
       </Button>
-      <Button className="nav-menu-button" onClick={() => navigate("/squad")}>
+      <Button
+        className="nav-menu-button"
+        onClick={() => {
+          setIsDropZoneSelected(false);
+          navigate("/squad");
+        }}
+      >
         Team Builder
       </Button>
-      <Button className="nav-menu-button" onClick={() => navigate("/league")}>
+      <Button
+        className="nav-menu-button"
+        onClick={() => {
+          setIsDropZoneSelected(false);
+          navigate("/league");
+        }}
+      >
         League
       </Button>
     </div>
