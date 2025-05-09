@@ -4,8 +4,13 @@ import { baseFormations } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
 
 const SelectFormation: React.FC = () => {
-  const { myFormation, setIsDropZoneSelected, setDropPlayers, setMyFormation } =
-    useSquadStore();
+  const {
+    myFormation,
+    setIsDropZoneSelected,
+    setDropPlayers,
+    setMyFormation,
+    resetSquadMetric,
+  } = useSquadStore();
 
   return (
     <>
@@ -21,6 +26,7 @@ const SelectFormation: React.FC = () => {
           setMyFormation(e.target.value);
           setDropPlayers({});
           setIsDropZoneSelected(false);
+          resetSquadMetric();
         }}
         sx={{
           backgroundColor: "#242424",

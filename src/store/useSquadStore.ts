@@ -35,6 +35,7 @@ type SquadStore = {
   setMyTeamAttack: (attack: number) => void;
   setMyTeamClubCohesion: (cohesion: number) => void;
   setMyTeamStamina: (stamina: number) => void;
+  resetSquadMetric: () => void;
 
   // unused
   setSelectedDropZone: (info: { index: number; pos: string }) => void;
@@ -56,9 +57,8 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myTeamAttack: 0,
   myTeamClubCohesion: 0,
   myTeamStamina: 0,
+  myTeamOvr: 0,
 
-  myTeamOvr: 0, // 초기값 설정
-  // 추가된 부분
   setMyTeamOvr: (ovr: number) => set({ myTeamOvr: ovr }),
   setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),
@@ -76,7 +76,17 @@ export const useSquadStore = create<SquadStore>((set) => ({
   setMyTeamClubCohesion: (cohesion: number) =>
     set({ myTeamClubCohesion: cohesion }),
   setMyTeamStamina: (stamina: number) => set({ myTeamStamina: stamina }),
-
+  resetSquadMetric: () =>
+    set({
+      myTeamSquadValue: 0,
+      myTeamAge: 0,
+      myTeamPace: 0,
+      myTeamDefense: 0,
+      myTeamAttack: 0,
+      myTeamClubCohesion: 0,
+      myTeamStamina: 0,
+      myTeamOvr: 0,
+    }),
   // unused
   setSelectedDropZone: (info) => set({ selectedDropZone: info }),
   setIsDropZoneSelected: (val) => set({ isDropZoneSelected: val }),

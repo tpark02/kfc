@@ -309,8 +309,6 @@ const Squad: React.FC = () => {
                     club=""
                     pos={selectedPos}
                     selectedDropZone={selectedDropZone}
-                    // dropPlayers={dropPlayers}
-                    // setDropPlayers={setDropPlayers}
                     setSnackbarMessage={setSnackbarMessage}
                     setSnackbarOpen={setSnackbarOpen}
                   />

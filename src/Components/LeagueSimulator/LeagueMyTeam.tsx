@@ -1,7 +1,8 @@
 import { useSquadStore } from "../../store/useSquadStore";
 
 export const LeagueMyTeam = () => {
-  const { myTeamName, dropPlayers, myTeamOvr, myFormation } = useSquadStore();
+  const { myTeamName, dropPlayers, myTeamOvr, myFormation, myTeamSquadValue } =
+    useSquadStore();
 
   return (
     <>
@@ -10,7 +11,7 @@ export const LeagueMyTeam = () => {
           <h2>My Team</h2>
           <div>Formation:{myFormation}</div>
           <div>Team Name: {myTeamName}</div>
-          <div>Squad Value: $100,000,000</div>
+          <div>Squad Value: {myTeamSquadValue}</div>
           <div>OVR: {myTeamOvr}</div>
           <div>Players:</div>
           <ul>
