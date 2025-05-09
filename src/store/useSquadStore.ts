@@ -10,6 +10,13 @@ type SquadStore = {
   dropPlayers: DropPlayers;
   isDropZoneSelected: boolean;
   myTeamOvr: number;
+  myTeamSquadValue: number;
+  myTeamAge: number;
+  myTeamPace: number;
+  myTeamDefense: number;
+  myTeamAttack: number;
+  myTeamClubCohesion: number;
+  myTeamStamina: number;
   // unused
   selectedDropZone: { index: number; pos: string };
   position: string;
@@ -20,6 +27,14 @@ type SquadStore = {
   updateDropPlayer: (idx: number, player: Player | null) => void;
   setDropPlayers: (players: DropPlayers) => void;
   setIsDropZoneSelected: (val: boolean) => void;
+
+  setMyTeamSquadValue: (value: number) => void;
+  setMyTeamAge: (age: number) => void;
+  setMyTeamPace: (pace: number) => void;
+  setMyTeamDefense: (defense: number) => void;
+  setMyTeamAttack: (attack: number) => void;
+  setMyTeamClubCohesion: (cohesion: number) => void;
+  setMyTeamStamina: (stamina: number) => void;
 
   // unused
   setSelectedDropZone: (info: { index: number; pos: string }) => void;
@@ -34,16 +49,34 @@ export const useSquadStore = create<SquadStore>((set) => ({
   selectedDropZone: { index: -1, pos: "" },
   isDropZoneSelected: false,
   position: "",
+  myTeamSquadValue: 0,
+  myTeamAge: 0,
+  myTeamPace: 0,
+  myTeamDefense: 0,
+  myTeamAttack: 0,
+  myTeamClubCohesion: 0,
+  myTeamStamina: 0,
 
   myTeamOvr: 0, // 초기값 설정
-  setMyTeamOvr: (ovr) => set({ myTeamOvr: ovr }), // 추가된 부분
-  setMyTeamName: (s) => set({ myTeamName: s }),
-  setMyFormation: (f) => set({ myFormation: f }),
-  updateDropPlayer: (idx, player) =>
+  // 추가된 부분
+  setMyTeamOvr: (ovr: number) => set({ myTeamOvr: ovr }),
+  setMyTeamName: (s: string) => set({ myTeamName: s }),
+  setMyFormation: (f: string) => set({ myFormation: f }),
+  updateDropPlayer: (idx: number, player: Player | null) =>
     set((state) => ({
       dropPlayers: { ...state.dropPlayers, [idx]: player },
     })),
-  setDropPlayers: (players) => set({ dropPlayers: players }),
+  setDropPlayers: (players: DropPlayers) => set({ dropPlayers: players }),
+
+  setMyTeamSquadValue: (value: number) => set({ myTeamSquadValue: value }),
+  setMyTeamAge: (age: number) => set({ myTeamAge: age }),
+  setMyTeamPace: (pace: number) => set({ myTeamPace: pace }),
+  setMyTeamDefense: (defense: number) => set({ myTeamDefense: defense }),
+  setMyTeamAttack: (attack: number) => set({ myTeamAttack: attack }),
+  setMyTeamClubCohesion: (cohesion: number) =>
+    set({ myTeamClubCohesion: cohesion }),
+  setMyTeamStamina: (stamina: number) => set({ myTeamStamina: stamina }),
+
   // unused
   setSelectedDropZone: (info) => set({ selectedDropZone: info }),
   setIsDropZoneSelected: (val) => set({ isDropZoneSelected: val }),

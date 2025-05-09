@@ -29,11 +29,6 @@ import LoadingSpinner from "../LoadingSpinner";
 import "../../style/Squad.css";
 
 const Squad: React.FC = () => {
-  // 🔢 기본 데이터 상태
-  // const [squad] = useState<SquadMap>(); // 현재 스쿼드 데이터
-  // const [dropPlayers, setDropPlayers] = useState<{
-  //   [idx: number]: Player | null;
-  // }>({});
   const {
     myFormation,
     dropPlayers,
@@ -42,6 +37,13 @@ const Squad: React.FC = () => {
     setMyTeamOvr,
     isDropZoneSelected,
     setIsDropZoneSelected,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
   } = useSquadStore();
 
   // 📦 필터 상태
@@ -176,7 +178,13 @@ const Squad: React.FC = () => {
         setMyTeamName(response.data.myTeamName);
         setDropPlayers(newDropPlayers);
         setMyTeamOvr(response.data.myTeamOvr);
-
+        setMyTeamSquadValue(response.data.myTeamSquadValue);
+        setMyTeamAge(response.data.myTeamAge);
+        setMyTeamPace(response.data.myTeamPace);
+        setMyTeamDefense(response.data.myTeamDef);
+        setMyTeamAttack(response.data.myTeamAtk);
+        setMyTeamClubCohesion(response.data.myTeamClubCohesion);
+        setMyTeamStamina(response.data.myTeamStamina);
         // 이미지 URL이 모두 로드될 때까지 대기
         const imagePromises = response.data.content.map((player) => {
           return new Promise<void>((resolve) => {
@@ -211,7 +219,7 @@ const Squad: React.FC = () => {
     <>
       {loading && <LoadingSpinner />}
       <div className="squad-container">
-        <SquadMetrics players={dropPlayers} />
+        <SquadMetrics />
         <div className="squad-formation" ref={squadSelectRef}>
           <Typography variant="h6" gutterBottom>
             Formation

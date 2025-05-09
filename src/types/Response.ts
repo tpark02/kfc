@@ -26,4 +26,11 @@ export type ResponseRandomSquad = {
   myTeamOvr: number;
   chemistry: number;
   myTeamName: string;
+  myTeamSquadValue: number;
+  myTeamAge: number;
+  myTeamPace: number;
+  myTeamDef: number;
+  myTeamAtk: number;
+  myTeamClubCohesion: number;
+  myTeamStamina: number;
 };

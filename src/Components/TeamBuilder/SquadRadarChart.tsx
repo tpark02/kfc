@@ -9,13 +9,21 @@ import {
 } from "recharts";
 
 import { type BarRectangleItem } from "recharts/types/cartesian/Bar";
-import { Player } from "../../types/Player";
+import { useSquadStore } from "../../store/useSquadStore";
 
-interface SquadBarChartProps {
-  players: Record<number, Player | null>;
-}
+// interface SquadBarChartProps {
+//   players: Record<number, Player | null>;
+// }
 
-const SquadBarChart: React.FC<SquadBarChartProps> = ({ players }) => {
+const SquadBarChart: React.FC = () => {
+  const {
+    myTeamClubCohesion,
+    myTeamPace,
+    myTeamAttack,
+    myTeamDefense,
+    myTeamStamina,
+  } = useSquadStore();
+
   function BarGradient(props: BarRectangleItem) {
     const id = useId();
     const gradientId = `gradient-${id}`;
@@ -46,31 +54,13 @@ const SquadBarChart: React.FC<SquadBarChartProps> = ({ players }) => {
       </>
     );
   }
-  const getAverage = (arr: number[]) =>
-    arr.length
-      ? Math.round(arr.reduce((sum, val) => sum + (val || 0), 0) / arr.length)
-      : 0;
-
-  const values = Object.values(players).filter(Boolean) as Player[];
 
   const metrics = {
-    SPD: getAverage(values.map((p) => p.pac)),
-    ATK: getAverage(values.map((p) => p.sho)),
-    DEF: getAverage(values.map((p) => p.def)),
-    STA: getAverage(values.map((p) => p.stamina)),
-    TC:
-      Math.min(
-        Math.max(
-          ...Object.values(
-            values.reduce((acc, p) => {
-              if (p.team) acc[p.team] = (acc[p.team] || 0) + 1;
-              return acc;
-            }, {} as Record<string, number>)
-          ),
-          0
-        ),
-        10
-      ) * 10,
+    SPD: myTeamPace,
+    ATK: myTeamAttack,
+    DEF: myTeamDefense,
+    STA: myTeamStamina,
+    TC: myTeamClubCohesion,
   };
 
   const data = Object.entries(metrics).map(([name, value]) => ({
