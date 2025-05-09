@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Players } from "./components/Players/Players"; // 💡 make sure the path is correct
+import { Players } from "./Components/Players/Players"; // 💡 make sure the path is correct
 
 // 타입
-import PlayerSpec from "./components/Players/PlayerSpec";
-import Squad from "./components/TeamBuilder/Squad"; // 💡 make sure the path is correct
-import NavBar from "./components/NavBar"; // 💡 make sure the path is correct
+import PlayerSpec from "./Components/Players/PlayerSpec";
+import Squad from "./Components/TeamBuilder/Squad"; // 💡 make sure the path is correct
+import NavBar from "./Components/NavBar"; // 💡 make sure the path is correct
 
 // 스타일
 import "./App.css";
 import "./style/Player.css";
-import { LeagueSimulator } from "./components/LeagueSimulator/LeagueSimulator";
+import LeagueSimulator from "./Components/LeagueSimulator/LeagueSimulator";
 
 function App() {
   return (

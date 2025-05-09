@@ -9,9 +9,10 @@ interface Match {
   round: number;
   ovr: number;
   res: string;
+  members: Player[];
 }
 
-export const LeagueScheduleViewer = () => {
+const LeagueScheduleViewer = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const { myTeamName, dropPlayers, myTeamOvr } = useSquadStore();
 
@@ -62,3 +63,5 @@ export const LeagueScheduleViewer = () => {
     </div>
   );
 };
+
+export default LeagueScheduleViewer;

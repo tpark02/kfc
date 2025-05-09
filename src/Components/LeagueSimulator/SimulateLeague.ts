@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const simulateLeague = async (teams: string[]) => {
+const simulateLeague = async (teams: string[]) => {
   const res = await axios.post(
     "http://localhost:8080/api/simulate-league",
     { teams },
@@ -13,3 +13,5 @@ export const simulateLeague = async (teams: string[]) => {
   );
   return res.data;
 };
+
+export default simulateLeague;

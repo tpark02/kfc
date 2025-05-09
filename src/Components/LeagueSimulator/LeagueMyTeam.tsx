@@ -1,6 +1,6 @@
 import { useSquadStore } from "../../store/useSquadStore";
 
-export const LeagueMyTeam = () => {
+const LeagueMyTeam = () => {
   const { myTeamName, dropPlayers, myTeamOvr, myFormation, myTeamSquadValue } =
     useSquadStore();
 
@@ -30,3 +30,5 @@ export const LeagueMyTeam = () => {
     </>
   );
 };
+
+export default LeagueMyTeam;

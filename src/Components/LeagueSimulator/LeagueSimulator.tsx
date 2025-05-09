@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { simulateLeague } from "./simulateLeague";
+import  simulateLeague  from "../../Components/LeagueSimulator/SimulateLeague";
 import { useSquadStore } from "../../store/useSquadStore";
 import { Player } from "../../types/Player";
-import { LeagueScheduleViewer } from "./LeagueScheduleViewer";
-import { LeagueMyTeam } from "./LeagueMyTeam";
+import  LeagueScheduleViewer from "../../Components/LeagueSimulator/LeagueScheduleViewer";
+import  LeagueMyTeam  from "../../Components/LeagueSimulator/LeagueMyTeam";
+import  LeagueOpponentTeam  from "../../Components/LeagueSimulator/LeagueOpponentTeam";
 
-export const LeagueSimulator = () => {
+const LeagueSimulator = () => {
   const { dropPlayers } = useSquadStore();
   const [showSchedule, setShowSchedule] = useState(false); // ✅ 토글용 상태
   const [showMyTeam, setShowMyTeam] = useState(false); // ✅ 토글용 상태
+  const [showOpponentTeam, setShowOpponentTeam] = useState(false); // ✅ 토글용 상태
   interface LeagueResult {
     table: Record<
       string,
@@ -44,7 +46,9 @@ export const LeagueSimulator = () => {
         리그 일정 보기
       </button>
       <button onClick={() => setShowMyTeam(!showMyTeam)}>My Team</button>
+      <button onClick={() => setShowOpponentTeam(!showOpponentTeam)}>Opponent Team</button>
       {showMyTeam && <LeagueMyTeam />}
+      {showOpponentTeam && <LeagueOpponentTeam />}
       {showSchedule && <LeagueScheduleViewer />}
       {result && (
         <div>
@@ -74,3 +78,5 @@ export const LeagueSimulator = () => {
     </div>
   );
 };
+
+export default LeagueSimulator;
