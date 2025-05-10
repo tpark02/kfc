@@ -1,20 +1,19 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
 import { Player } from "../../types/Player";
-
-interface Match {
-  homeTeam: string;
-  awayTeam: string;
-  round: number;
-  ovr: number;
-  res: string;
-  members: Player[];
-}
+import { Match } from "../../types/Match";
 
 const LeagueScheduleViewer = () => {
-  const [matches, setMatches] = useState<Match[]>([]);
-  const { myTeamName, dropPlayers, myTeamOvr } = useSquadStore();
+  const didRun = useRef(false);
+  const {
+    matches,
+    setMatches,
+    myTeamName,
+    dropPlayers,
+    myTeamOvr,
+    setHoveredMatchIndex,
+  } = useSquadStore();
 
   const fetchSchedule = async () => {
     try {
@@ -34,32 +33,68 @@ const LeagueScheduleViewer = () => {
   };
 
   useEffect(() => {
-    const players = Object.values(dropPlayers).filter(
-      (p): p is Player => p !== null
-    );
+    if (!didRun.current) {
+      const players = Object.values(dropPlayers).filter(
+        (p): p is Player => p !== null
+      );
 
-    if (players.length === 0) {
-      console.log("선수가 없습니다.");
-      return; // 아무것도 없으면 계산 안 함
+      if (players.length === 0) {
+        console.log("선수가 없습니다.");
+        return; // 아무것도 없으면 계산 안 함
+      }
+
+      fetchSchedule(); // 이 시점에 보내면 서버에도 올바른 선수 전달됨
+      didRun.current = true;
     }
-
-    fetchSchedule(); // 이 시점에 보내면 서버에도 올바른 선수 전달됨
   }, [dropPlayers]);
 
   return (
-    <div>
-      <h2>📅 리그 일정</h2>
-      <ul>
+    <div
+      style={{
+        outline: "1px solid blue",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <div>📅 리그 일정</div>
+      <div>
         My Team Ovr : {myTeamOvr}
-        {matches
-          ? matches.map((match, idx) => (
-              <li key={idx}>
-                Round {match.round}: {match.homeTeam} vs {match.awayTeam}, ovr :{" "}
-                {match.ovr} {" ==> "} {match.res}
-              </li>
-            ))
-          : null}
-      </ul>
+        <div
+          style={{
+            outline: "1px solid red",
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "nowrap",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {matches
+            ? matches.map((match, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                    justifyContent: "stretch",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    outline: "1px solid red",
+                  }}
+                  onMouseEnter={() => setHoveredMatchIndex(idx)}
+                  onMouseLeave={() => setHoveredMatchIndex(null)}
+                >
+                  Round {match.round}: {match.homeTeam} vs {match.awayTeam}, ovr
+                  : {match.ovr} {" ==> "} {match.res}
+                </div>
+              ))
+            : null}
+        </div>
+      </div>
     </div>
   );
 };

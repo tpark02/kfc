@@ -1,7 +1,7 @@
 // src/store/useSquadStore.ts
 import { create } from "zustand";
 import { Player } from "../types/Player";
-
+import { Match } from "../types/Match";
 type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
@@ -41,6 +41,12 @@ type SquadStore = {
   setSelectedDropZone: (info: { index: number; pos: string }) => void;
   setPosition: (p: string) => void;
   resetSquad: () => void;
+
+  // league simulator
+  hoveredMatchIndex: number | null;
+  setHoveredMatchIndex: (index: number | null) => void;
+  matches: Match[];
+  setMatches: (matches: Match[]) => void;
 };
 
 export const useSquadStore = create<SquadStore>((set) => ({
@@ -99,4 +105,9 @@ export const useSquadStore = create<SquadStore>((set) => ({
       isDropZoneSelected: false,
       position: "",
     }),
+  // league simulator
+  hoveredMatchIndex: null,
+  setHoveredMatchIndex: (index) => set({ hoveredMatchIndex: index }),
+  matches: [],
+  setMatches: (matches) => set({ matches: matches }),
 }));
