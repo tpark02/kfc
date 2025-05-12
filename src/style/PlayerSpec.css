@@ -1,4 +1,5 @@
 .player-spec-body {
+  width: 80%;
   margin: 50px auto;
 }
 
@@ -20,8 +21,8 @@
   align-items: center;
   /* background-color: #1e1e1e; */
   border-radius: 8px;
-  /* outline: 1px solid #00ff55;    */
   padding: 24px 0 55px 0;
+  outline: 1px solid #333;
 }
 
 .player-img-container {
@@ -43,7 +44,6 @@
   align-items: center;
 }
 
-
 .player-info {
   display: flex;
   flex-direction: column;
@@ -63,7 +63,8 @@
   /* outline: 1px solid #333; */
 }
 
-.player-spec-name {}
+.player-spec-name {
+}
 
 .player-info-row {
   display: flex;
@@ -77,11 +78,11 @@
 }
 
 .player-info-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* fixed 3-column layout */
   border-top: 1px solid #555;
   margin-top: 24px;
   padding-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   width: 80%;
   /* outline: 1px solid #9e9e9e; */
@@ -139,8 +140,28 @@
   flex-direction: column;
   text-align: center;
   background-color: #1e1e1e;
-  color: #BCA988;
+  color: #bca988;
   /* outline: 1px solid #333;   */
   font-size: 14px;
   font-weight: bold;
+}
+
+@media (max-width: 1000px) {
+  .player-basic-info {
+    flex-wrap: wrap;
+    /* ✅ 모바일: 줄바꿈 허용 */
+  }
+}
+/* 🔁 When screen is below 768px, switch to 2 columns */
+@media (max-width: 768px) {
+  .player-info-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 🔁 When screen is even smaller, switch to 1 column */
+@media (max-width: 480px) {
+  .player-info-stats {
+    grid-template-columns: 1fr;
+  }
 }

@@ -27,12 +27,11 @@ import Filters from "../Players/Filter";
 import LoadingSpinner from "../LoadingSpinner";
 // 스타일
 import "../../style/Squad.css";
-import { set } from "lodash";
 
 const Squad: React.FC = () => {
   const {
-    benchPlayers,
-    setBenchPlayers,
+    // benchPlayers,
+    // setBenchPlayers,
     myFormation,
     dropPlayers,
     setDropPlayers,
@@ -174,10 +173,11 @@ const Squad: React.FC = () => {
       })
       .then((response) => {
         const newDropPlayers: { [idx: number]: Player | null } = {};
-
         response.data.content.forEach((p, idx) => {
           newDropPlayers[idx] = p;
         });
+       
+        // setBenchPlayers(response.data.benchPlayers);
         setMyTeamName(response.data.myTeamName);
         setDropPlayers(newDropPlayers);
         setMyTeamOvr(response.data.myTeamOvr);
@@ -230,7 +230,7 @@ const Squad: React.FC = () => {
             </Typography>
             {myFormation && (
               <SquadBuilder
-                benchPlayers={benchPlayers}
+                // benchPlayers={benchPlayers}
                 selectedFormation={myFormation as keyof typeof formations}
                 dropPlayers={dropPlayers}
                 setSelectedDropZone={setSelectedDropZone}

@@ -33,4 +33,5 @@ export type ResponseRandomSquad = {
   myTeamAtk: number;
   myTeamClubCohesion: number;
   myTeamStamina: number;
+  benchPlayers: Player[];
 };

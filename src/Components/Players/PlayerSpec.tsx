@@ -72,7 +72,7 @@ const PlayerSpec: React.FC = () => {
                 borderRadius: "3px",
               }}
             >
-              {player[key]}
+              {player[key] ? player[key] : "N/A"}
             </div>
           </>
         ) : (
@@ -115,15 +115,14 @@ const PlayerSpec: React.FC = () => {
             />
             <div className="player-name-row">{player.name}</div>
           </div>
-
-          <RadarStatChart
-            pac={player.pac}
-            sho={player.sho}
-            pas={player.pas}
-            dri={player.dri}
-            def={player.def}
-            phy={player.phy}
-          />
+            <RadarStatChart
+              pac={player.pac}
+              sho={player.sho}
+              pas={player.pas}
+              dri={player.dri}
+              def={player.def}
+              phy={player.phy}
+            />
           <div className="player-info">
             {/* ✅ 국가 코드에 해당하는 flag 이미지 추가 */}
             <div className="player-info-cell-group">
