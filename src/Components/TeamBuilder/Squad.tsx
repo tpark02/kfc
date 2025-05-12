@@ -78,26 +78,6 @@ const Squad: React.FC = () => {
   const searchPlayerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  // 🧩 포지션 매핑
-  const positions = [
-    "ST",
-    "RW",
-    "LW",
-    "CAM",
-    "RM",
-    "LM",
-    "CDM",
-    "CM",
-    "CB",
-    "RB",
-    "LB",
-    "GK",
-  ];
-  const positionMap: { [key: string]: number } = {};
-  positions.forEach((position, index) => {
-    positionMap[position] = index + 1;
-  });
-
   // ⬇️ 스쿼드 불러오기
   const loadSquadData = () => {
     axios
