@@ -82,7 +82,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               console.log("bench", bench);              
               return (
                 <div
-                  className="bench-player"
+                  // className="bench-player"
                   key={`drop-${actualIndex}`}
                   onClick={() => {
                     setSelectedDropZone({

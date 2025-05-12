@@ -219,8 +219,7 @@ const Squad: React.FC = () => {
   };
 
   return (
-    <>
-           
+    <>           
         {loading && <LoadingSpinner />}
         <div className="squad-container">
           <SquadMetrics />
@@ -253,9 +252,6 @@ const Squad: React.FC = () => {
             </Snackbar>
           </div>
           <div className="squad-team">
-            {/* <Typography variant="h6" gutterBottom>
-              Select Formation
-            </Typography> */}
             <div
               style={{
                 display: "flex",

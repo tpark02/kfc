@@ -11,8 +11,9 @@
 .squad-group {
   display: flex;
   flex-direction: column;
-  align-items: center;  
-  height: 100%;  
+  align-items: center;
+  height: 100%;
+  /* margin: 10px 0 0 0; */
 }
 
 .squad-field {
@@ -29,11 +30,11 @@
   background-image: url("/field.png");
   outline: 1px solid gray;
   background-color: rgba(0, 54, 14, 0.5);
+  flex: 1; /* take remaining space */
 }
 
 .squad-bench {
   width: 99%;
-  height: 150px;
   position: relative;
   border-radius: 12px;
   margin: 10px 0 10px 0;
@@ -48,6 +49,7 @@
   white-space: nowrap;
   padding: 8px;
   gap: 8px;
+  flex-shrink: 0; /* prevent shrinking */
 }
 
 .player {
