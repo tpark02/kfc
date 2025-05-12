@@ -28,71 +28,76 @@ const SquadMetrics: React.FC = () => {
   const leagueSpread = getLeagueSpread(dropPlayers);
 
   return (
-    <div className="squad-overview">
-      <Typography variant="h6" gutterBottom>
-        Squad Overview
-      </Typography>
-      <div>
+    // <div className="squad-metrics">
+      <div className="squad-overview">
+        <Typography variant="h6" gutterBottom>
+          Squad Overview
+        </Typography>
         <div
           style={{
-            outline: "1px solid gray",
-            borderRadius: "8px",
-            padding: "5px",
-            width: "90%",
-            margin: "0 0 20px 0",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",            
           }}
         >
-          <Typography>OVR</Typography>
-          <Typography variant="subtitle1" fontWeight="bold">
-            {myTeamOvr}
-          </Typography>
+          <div
+            style={{
+              outline: "1px solid gray",
+              borderRadius: "8px",
+              width: "90%",              
+            }}
+          >
+            <Typography>OVR</Typography>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {myTeamOvr}
+            </Typography>
+          </div>
+          <div className="squad-metrics-section">
+            <Typography variant="subtitle2" gutterBottom>
+              Total Value
+            </Typography>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {"$" + myTeamSquadValue.toLocaleString()}
+            </Typography>
+          </div>
+          <div className="squad-metrics-section">
+            <SquadRadarChart />
+          </div>
+          <div className="squad-metrics-section">
+            <Typography variant="subtitle2" gutterBottom>
+              Nations
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              {Array.from(nationalSpread).length > 0 ? (
+                Array.from(nationalSpread).map((nation, idx) =>
+                  getImgByCountryName(nation ?? "", idx, 35, 25)
+                )
+              ) : (
+                <div>&nbsp;</div>
+              )}
+            </Box>
+          </div>
+          <div className="squad-metrics-section">
+            <Typography variant="subtitle2" gutterBottom>
+              Leagues
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              {leagueSpread.size > 0 ? (
+                Array.from(leagueSpread).map((league, idx) => (
+                  <Chip
+                    key={league ?? `league-${idx}`}
+                    label={league ?? "Unknown"}
+                    size="small"
+                    color="secondary"
+                  />
+                ))
+              ) : (
+                <div>&nbsp;</div>
+              )}
+            </Box>
+          </div>
         </div>
-        <div className="squad-metrics-section">
-          <Typography variant="subtitle2" gutterBottom>
-            Total Value
-          </Typography>
-          <Typography variant="subtitle1" fontWeight="bold">
-            {"$" + myTeamSquadValue.toLocaleString()}
-          </Typography>
-        </div>
       </div>
-      <div className="squad-metrics-section">
-        <SquadRadarChart />
-      </div>
-      <div className="squad-metrics-section">
-        <Typography variant="subtitle2" gutterBottom>
-          Nations
-        </Typography>
-        <Box display="flex" flexWrap="wrap" gap={1}>
-          {Array.from(nationalSpread).length > 0 ? (
-            Array.from(nationalSpread).map((nation, idx) =>
-              getImgByCountryName(nation ?? "", idx, 35, 25)
-            )
-          ) : (
-            <div>&nbsp;</div>
-          )}
-        </Box>
-      </div>
-      <div className="squad-metrics-section">
-        <Typography variant="subtitle2" gutterBottom>
-          Leagues
-        </Typography>
-        <Box display="flex" flexWrap="wrap" gap={1}>
-          {leagueSpread.size > 0 ? (
-            Array.from(leagueSpread).map((league, idx) => (
-              <Chip
-                key={league ?? `league-${idx}`}
-                label={league ?? "Unknown"}
-                size="small"
-                color="secondary"
-              />
-            ))
-          ) : (
-            <div>&nbsp;</div>
-          )}
-        </Box>
-      </div>
-    </div>
     // </div>
   );
 };

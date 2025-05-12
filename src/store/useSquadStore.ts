@@ -8,6 +8,7 @@ type SquadStore = {
   myTeamName: string;
   myFormation: string;
   dropPlayers: DropPlayers;
+  benchPlayers: Player[];
   isDropZoneSelected: boolean;
   myTeamOvr: number;
   myTeamSquadValue: number;
@@ -26,6 +27,7 @@ type SquadStore = {
   setMyFormation: (f: string) => void;
   updateDropPlayer: (idx: number, player: Player | null) => void;
   setDropPlayers: (players: DropPlayers) => void;
+  setBenchPlayers: (players: Player[]) => void;
   setIsDropZoneSelected: (val: boolean) => void;
 
   setMyTeamSquadValue: (value: number) => void;
@@ -53,6 +55,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myTeamName: "N/A",
   myFormation: "442",
   dropPlayers: {},
+  benchPlayers: Array(15).fill(null),
   selectedDropZone: { index: -1, pos: "" },
   isDropZoneSelected: false,
   position: "",
@@ -73,7 +76,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
       dropPlayers: { ...state.dropPlayers, [idx]: player },
     })),
   setDropPlayers: (players: DropPlayers) => set({ dropPlayers: players }),
-
+  setBenchPlayers: (players: Player[]) => set({ benchPlayers: players }),
   setMyTeamSquadValue: (value: number) => set({ myTeamSquadValue: value }),
   setMyTeamAge: (age: number) => set({ myTeamAge: age }),
   setMyTeamPace: (pace: number) => set({ myTeamPace: pace }),
@@ -101,6 +104,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
     set({
       myFormation: "442",
       dropPlayers: {},
+      benchPlayers: Array(15).fill(null),
       selectedDropZone: { index: -1, pos: "" },
       isDropZoneSelected: false,
       position: "",

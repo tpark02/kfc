@@ -27,9 +27,12 @@ import Filters from "../Players/Filter";
 import LoadingSpinner from "../LoadingSpinner";
 // 스타일
 import "../../style/Squad.css";
+import { set } from "lodash";
 
 const Squad: React.FC = () => {
   const {
+    benchPlayers,
+    setBenchPlayers,
     myFormation,
     dropPlayers,
     setDropPlayers,
@@ -217,169 +220,171 @@ const Squad: React.FC = () => {
 
   return (
     <>
-      {loading && <LoadingSpinner />}
-      <div className="squad-container">
-        <SquadMetrics />
-        <div className="squad-formation" ref={squadSelectRef}>
-          <Typography variant="h6" gutterBottom>
-            Formation
-          </Typography>
-          {myFormation && (
-            <SquadBuilder
-              selectedFormation={myFormation as keyof typeof formations}
-              dropPlayers={dropPlayers}
-              setSelectedDropZone={setSelectedDropZone}
-              setIsDropZoneSelected={setIsDropZoneSelected}
-              setPosition={selectedPosition}
-              searchPlayerRef={listRef}
-              selectedDropZone={selectedDropZone}
-            />
-          )}
+           
+        {loading && <LoadingSpinner />}
+        <div className="squad-container">
+          <SquadMetrics />
+          <div className="squad-formation" ref={squadSelectRef}>
+            <Typography variant="h6" gutterBottom>
+              Formation
+            </Typography>
+            {myFormation && (
+              <SquadBuilder
+                benchPlayers={benchPlayers}
+                selectedFormation={myFormation as keyof typeof formations}
+                dropPlayers={dropPlayers}
+                setSelectedDropZone={setSelectedDropZone}
+                setIsDropZoneSelected={setIsDropZoneSelected}
+                setPosition={selectedPosition}
+                searchPlayerRef={listRef}
+                selectedDropZone={selectedDropZone}
+              />
+            )}
 
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={4000}
-            onClose={() => setSnackbarOpen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-              {snackbarMessage}
-            </Alert>
-          </Snackbar>
-        </div>
-        <div className="squad-team">
-          <Typography variant="h6" gutterBottom>
-            Select Formation
-          </Typography>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <SelectFormation />
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={4000}
+              onClose={() => setSnackbarOpen(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </div>
+          <div className="squad-team">
+            <Typography variant="h6" gutterBottom>
+              Select Formation
+            </Typography>
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
-                outline: "1px solid gray",
-                borderRadius: "8px",
-                width: "90%",
-                margin: "20px 0 0 0",
+                alignItems: "center",
               }}
             >
+              <SelectFormation />
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  outline: "1px solid gray",
+                  borderRadius: "8px",
+                  width: "90%",
+                  margin: "20px 0 0 0",
                 }}
               >
-                {isDropZoneSelected && (
-                  <IconButton
-                    onClick={() => {
-                      setIsDropZoneSelected(!isDropZoneSelected);
-                    }}
-                    sx={{
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "transparent", // 🔑 배경 유지
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                      "&:focus": {
-                        outline: "none",
-                        boxShadow: "none",
-                      },
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                )}
-              </div>
-              <div>
-                {isDropZoneSelected ? (
-                  <SearchPlayer
-                    ref={searchPlayerRef}
-                    listRef={listRef}
-                    country=""
-                    league=""
-                    club=""
-                    pos={selectedPos}
-                    selectedDropZone={selectedDropZone}
-                    setSnackbarMessage={setSnackbarMessage}
-                    setSnackbarOpen={setSnackbarOpen}
-                  />
-                ) : (
-                  <>
-                    <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-                      Filters
-                    </Typography>
-                    <SearchCountry
-                      setSelectedCountry={setSelectedCountries}
-                      prevList={selectedCountries}
-                    />
-                    <SearchLeague
-                      setSelectedLeague={(league) => setLeague(league || [])}
-                      prevList={selectedLeagues}
-                    />
-                    <SearchClub
-                      setClub={setClub}
-                      setSearchTermClub={(term: string) =>
-                        console.log("Search term:", term)
-                      }
-                      prevList={selectedClubs}
-                    />
-                    <Filters
-                      selectedCountries={selectedCountries}
-                      selectedTeams={selectedClubs}
-                      selectedLeagues={selectedLeagues}
-                      selectedPosition={[]}
-                      searchTerm={""}
-                      sortType={""}
-                      setSelectedCountries={setSelectedCountries}
-                      setSelectedTeams={setClub}
-                      setSelectedLeagues={setLeague}
-                      fetchPage={(page: number) =>
-                        console.log(`Fetching page ${page}`)
-                      }
-                      setSelectedPosition={() => {}}
-                    />
-                    <Button
-                      variant="contained"
-                      color="secondary"
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  {isDropZoneSelected && (
+                    <IconButton
                       onClick={() => {
-                        loadRandomSquad();
+                        setIsDropZoneSelected(!isDropZoneSelected);
                       }}
-                      sx={{ margin: "10px" }}
+                      sx={{
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "transparent", // 🔑 배경 유지
+                          outline: "none",
+                          boxShadow: "none",
+                        },
+                        "&:focus": {
+                          outline: "none",
+                          boxShadow: "none",
+                        },
+                      }}
                     >
-                      Create Squad
-                    </Button>
-                    <div className="button-group">
-                      <button
+                      <CloseIcon />
+                    </IconButton>
+                  )}
+                </div>
+                <div>
+                  {isDropZoneSelected ? (
+                    <SearchPlayer
+                      ref={searchPlayerRef}
+                      listRef={listRef}
+                      country=""
+                      league=""
+                      club=""
+                      pos={selectedPos}
+                      selectedDropZone={selectedDropZone}
+                      setSnackbarMessage={setSnackbarMessage}
+                      setSnackbarOpen={setSnackbarOpen}
+                    />
+                  ) : (
+                    <>
+                      <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                        Filters
+                      </Typography>
+                      <SearchCountry
+                        setSelectedCountry={setSelectedCountries}
+                        prevList={selectedCountries}
+                      />
+                      <SearchLeague
+                        setSelectedLeague={(league) => setLeague(league || [])}
+                        prevList={selectedLeagues}
+                      />
+                      <SearchClub
+                        setClub={setClub}
+                        setSearchTermClub={(term: string) =>
+                          console.log("Search term:", term)
+                        }
+                        prevList={selectedClubs}
+                      />
+                      <Filters
+                        selectedCountries={selectedCountries}
+                        selectedTeams={selectedClubs}
+                        selectedLeagues={selectedLeagues}
+                        selectedPosition={[]}
+                        searchTerm={""}
+                        sortType={""}
+                        setSelectedCountries={setSelectedCountries}
+                        setSelectedTeams={setClub}
+                        setSelectedLeagues={setLeague}
+                        fetchPage={(page: number) =>
+                          console.log(`Fetching page ${page}`)
+                        }
+                        setSelectedPosition={() => {}}
+                      />
+                      <Button
+                        variant="contained"
+                        color="secondary"
                         onClick={() => {
-                          loadSquadData();
+                          loadRandomSquad();
                         }}
+                        sx={{ margin: "10px" }}
                       >
-                        Load
-                      </button>
-                      <button
-                        onClick={() => {
-                          saveSquadData();
-                        }}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </>
-                )}
+                        Create Squad
+                      </Button>
+                      <div className="button-group">
+                        <button
+                          onClick={() => {
+                            loadSquadData();
+                          }}
+                        >
+                          Load
+                        </button>
+                        <button
+                          onClick={() => {
+                            saveSquadData();
+                          }}
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 };

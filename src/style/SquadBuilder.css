@@ -1,38 +1,65 @@
 /* SquadBuilder.css */
 
-.squad-builder {
-    width: 100%;
-    height: 100%;
-    color: white;
-    text-align: center;
-    padding: 0 0 10px 0;
-    /* outline: 1px solid red; */
+/* .squad-builder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;    
+  align-items: center;    
+} */
+
+.squad-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  height: 100%;  
 }
 
 .squad-field {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 12px;
-    background-image: url('/field.png');
-    outline: 1px solid gray;
-    background-color: rgba(0, 54, 14, 0.5);
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  background-image: url("/field.png");
+  outline: 1px solid gray;
+  background-color: rgba(0, 54, 14, 0.5);
 }
 
+.squad-bench {
+  width: 100%;
+  height: 150px;
+  position: relative;
+  border-radius: 12px;
+  margin: 10px 0 10px 0;
+  outline: 1px solid gray;
+}
+
+.squad-bench {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 8px;
+  gap: 8px;
+}
 
 .player {
-    outline: 3px solid gray;
+  outline: 3px solid gray;
 }
 
 .player:hover {
-    outline: 5px solid orange;
-    cursor: pointer;
+  outline: 5px solid orange;
+  cursor: pointer;
 }
 
 .player.selected {
-    outline: 5px solid red;
-    cursor: pointer;
+  outline: 5px solid red;
+  cursor: pointer;
 }
