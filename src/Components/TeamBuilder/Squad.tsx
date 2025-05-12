@@ -225,9 +225,9 @@ const Squad: React.FC = () => {
         <div className="squad-container">
           <SquadMetrics />
           <div className="squad-formation" ref={squadSelectRef}>
-            <Typography variant="h6" gutterBottom>
+            {/* <Typography variant="h6" gutterBottom>
               Formation
-            </Typography>
+            </Typography> */}
             {myFormation && (
               <SquadBuilder
                 // benchPlayers={benchPlayers}
@@ -253,9 +253,9 @@ const Squad: React.FC = () => {
             </Snackbar>
           </div>
           <div className="squad-team">
-            <Typography variant="h6" gutterBottom>
+            {/* <Typography variant="h6" gutterBottom>
               Select Formation
-            </Typography>
+            </Typography> */}
             <div
               style={{
                 display: "flex",

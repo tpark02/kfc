@@ -2,25 +2,25 @@ export const baseFormations = {
   "442": [
     { pos: "GK", top: 90, left: 50 },
     { pos: "LB", top: 80, left: 15 },
-    { pos: "CB", top: 85, left: 35 },
-    { pos: "CB", top: 85, left: 65 },
+    { pos: "CB2", top: 85, left: 35 },
+    { pos: "CB1", top: 85, left: 65 },
     { pos: "RB", top: 80, left: 85 },
     { pos: "LM", top: 50, left: 20 },
-    { pos: "CM", top: 60, left: 35 },
-    { pos: "CM", top: 60, left: 65 },
+    { pos: "CM2", top: 60, left: 35 },
+    { pos: "CM1", top: 60, left: 65 },
     { pos: "RM", top: 50, left: 80 },
-    { pos: "ST", top: 30, left: 40 },
-    { pos: "ST", top: 30, left: 60 },
+    { pos: "ST2", top: 30, left: 40 },
+    { pos: "ST1", top: 30, left: 60 },
   ],
   "433": [
     { pos: "GK", top: 90, left: 50 },
     { pos: "LB", top: 80, left: 15 },
-    { pos: "CB", top: 85, left: 35 },
-    { pos: "CB", top: 85, left: 65 },
+    { pos: "CB2", top: 85, left: 35 },
+    { pos: "CB1", top: 85, left: 65 },
     { pos: "RB", top: 80, left: 85 },
-    { pos: "CM", top: 55, left: 20 },
-    { pos: "CM", top: 60, left: 48 },
-    { pos: "CM", top: 55, left: 80 },
+    { pos: "CM3", top: 55, left: 20 },
+    { pos: "CM2", top: 60, left: 48 },
+    { pos: "CM1", top: 55, left: 80 },
     { pos: "LW", top: 35, left: 25 },
     { pos: "ST", top: 30, left: 48 },
     { pos: "RW", top: 35, left: 75 },
@@ -31,37 +31,37 @@ export const baseFormations = {
     { pos: "CB", top: 75, left: 50 },
     { pos: "RB", top: 75, left: 85 },
     { pos: "LM", top: 55, left: 20 },
-    { pos: "CDM", top: 60, left: 33 },
+    { pos: "CDM2", top: 60, left: 33 },
     { pos: "CAM", top: 50, left: 50 },
-    { pos: "CDM", top: 60, left: 63 },
+    { pos: "CDM1", top: 60, left: 63 },
     { pos: "RM", top: 55, left: 80 },
-    { pos: "ST", top: 30, left: 40 },
-    { pos: "ST", top: 30, left: 60 },
+    { pos: "ST2", top: 30, left: 40 },
+    { pos: "ST1", top: 30, left: 60 },
   ],
   "4231": [
     { pos: "GK", top: 90, left: 50 },
     { pos: "LB", top: 75, left: 15 },
-    { pos: "CB", top: 75, left: 38 },
-    { pos: "CB", top: 75, left: 60 },
+    { pos: "CB2", top: 75, left: 38 },
+    { pos: "CB1", top: 75, left: 60 },
     { pos: "RB", top: 75, left: 85 },
-    { pos: "CDM", top: 65, left: 30 },
-    { pos: "CDM", top: 65, left: 70 },
-    { pos: "CAM", top: 37, left: 25 },
-    { pos: "CAM", top: 45, left: 50 },
-    { pos: "CAM", top: 37.5, left: 75 },
+    { pos: "CDM2", top: 65, left: 30 },
+    { pos: "CDM1", top: 65, left: 70 },
+    { pos: "CAM3", top: 37, left: 25 },
+    { pos: "CAM2", top: 45, left: 50 },
+    { pos: "CAM1", top: 37.5, left: 75 },
     { pos: "ST", top: 30, left: 50 },
   ],
   "451": [
     { pos: "GK", top: 90.0, left: 50 },
     { pos: "LB", top: 75.0, left: 15 },
-    { pos: "CB", top: 75.0, left: 35 },
-    { pos: "CB", top: 75.0, left: 65 },
+    { pos: "CB2", top: 75.0, left: 35 },
+    { pos: "CB1", top: 75.0, left: 65 },
     { pos: "RB", top: 75.0, left: 85 },
     { pos: "LM", top: 60.0, left: 20 },
     { pos: "CM", top: 60.0, left: 50 },
     { pos: "RM", top: 60.0, left: 80 },
-    { pos: "CAM", top: 45.0, left: 65 },
-    { pos: "CAM", top: 45.0, left: 35 },
+    { pos: "CAM2", top: 45.0, left: 65 },
+    { pos: "CAM1", top: 45.0, left: 35 },
     { pos: "ST", top: 30, left: 50 },
   ],
   "343": [
@@ -70,8 +70,8 @@ export const baseFormations = {
     { pos: "CB", top: 75, left: 50 },
     { pos: "RB", top: 75, left: 70 },
     { pos: "LM", top: 65, left: 20 },
-    { pos: "CM", top: 65, left: 40 },
-    { pos: "CM", top: 65, left: 60 },
+    { pos: "CM2", top: 65, left: 40 },
+    { pos: "CM1", top: 65, left: 60 },
     { pos: "RM", top: 65, left: 80 },
     { pos: "LW", top: 45, left: 30 },
     { pos: "ST", top: 30, left: 50 },
@@ -80,15 +80,15 @@ export const baseFormations = {
   "532": [
     { pos: "GK", top: 90, left: 50 },
     { pos: "LB", top: 70, left: 20 },
-    { pos: "CB", top: 80, left: 35 },
-    { pos: "CB", top: 70, left: 50 },
-    { pos: "CB", top: 80, left: 65 },
+    { pos: "CB3", top: 80, left: 35 },
+    { pos: "CB2", top: 70, left: 50 },
+    { pos: "CB1", top: 80, left: 65 },
     { pos: "RB", top: 70, left: 80 },
     { pos: "LM", top: 40, left: 25 },
     { pos: "CM", top: 50, left: 50 },
     { pos: "RM", top: 40, left: 75 },
-    { pos: "ST", top: 30, left: 40 },
-    { pos: "ST", top: 30, left: 60 },
+    { pos: "ST2", top: 30, left: 40 },
+    { pos: "ST1", top: 30, left: 60 },
   ],
   "541": [
     // 🧤 Goalkeeper
@@ -96,15 +96,15 @@ export const baseFormations = {
 
     // 🛡 Defenders
     { pos: "LB", top: 70, left: 20 },
-    { pos: "CB", top: 80, left: 35 },
-    { pos: "CB", top: 70, left: 50 },
-    { pos: "CB", top: 80, left: 65 },
+    { pos: "CB3", top: 80, left: 35 },
+    { pos: "CB2", top: 70, left: 50 },
+    { pos: "CB1", top: 80, left: 65 },
     { pos: "RB", top: 70, left: 80 },
 
     // 🧠 Midfielders
     { pos: "LM", top: 40, left: 25 },
-    { pos: "CM", top: 50, left: 40 },
-    { pos: "CM", top: 50, left: 60 },
+    { pos: "CM2", top: 50, left: 40 },
+    { pos: "CM1", top: 50, left: 60 },
     { pos: "RM", top: 40, left: 75 },
 
     // ⚔️ Striker
@@ -114,15 +114,15 @@ export const baseFormations = {
   "41212": [
     { pos: "GK", top: 90, left: 50 },
     { pos: "LB", top: 75, left: 20 },
-    { pos: "CB", top: 75, left: 35 },
-    { pos: "CB", top: 75, left: 65 },
+    { pos: "CB2", top: 75, left: 35 },
+    { pos: "CB1", top: 75, left: 65 },
     { pos: "RB", top: 75, left: 80 },
     { pos: "LM", top: 48, left: 25 },
     { pos: "CDM", top: 60, left: 50 },
     { pos: "RM", top: 48, left: 75 },
     { pos: "CAM", top: 45, left: 50 },
-    { pos: "ST", top: 30, left: 40 },
-    { pos: "ST", top: 30, left: 60 },
+    { pos: "ST2", top: 30, left: 40 },
+    { pos: "ST1", top: 30, left: 60 },
   ],
   "4222": [
     // 🧤 Goalkeeper
@@ -133,47 +133,47 @@ export const baseFormations = {
     { pos: "RB", top: 68, left: 80 },
 
     // 🛡 Center Backs (deeper than CDMs)
-    { pos: "CB", top: 78, left: 42 },
-    { pos: "CB", top: 78, left: 58 },
+    { pos: "CB2", top: 78, left: 42 },
+    { pos: "CB1", top: 78, left: 58 },
 
     // 🧠 Defensive Midfielders
-    { pos: "CDM", top: 55, left: 40 },
-    { pos: "CDM", top: 55, left: 60 },
+    { pos: "CDM2", top: 55, left: 40 },
+    { pos: "CDM1", top: 55, left: 60 },
 
     // 🎯 Wide Attacking Midfielders
     { pos: "LM", top: 44, left: 27 },
     { pos: "RM", top: 44, left: 73 },
 
     // ⚔️ Strikers
-    { pos: "ST", top: 28, left: 42 },
-    { pos: "ST", top: 28, left: 58 },
+    { pos: "ST2", top: 28, left: 42 },
+    { pos: "ST1", top: 28, left: 58 },
   ],
 
   "4321": [
     { pos: "GK", top: 80, left: 50 },
     { pos: "LB", top: 62.5, left: 20 },
-    { pos: "CB", top: 62.5, left: 40 },
-    { pos: "CB", top: 62.5, left: 60 },
+    { pos: "CB2", top: 62.5, left: 40 },
+    { pos: "CB1", top: 62.5, left: 60 },
     { pos: "RB", top: 62.5, left: 80 },
     { pos: "LM", top: 47.5, left: 35 },
     { pos: "CM", top: 42.5, left: 50 },
     { pos: "RM", top: 47.5, left: 65 },
-    { pos: "CAM", top: 32.5, left: 40 },
-    { pos: "CAM", top: 32.5, left: 60 },
+    { pos: "CAM2", top: 32.5, left: 40 },
+    { pos: "CAM1", top: 32.5, left: 60 },
     { pos: "ST", top: 22.5, left: 50 },
   ],
   "4132": [
     { pos: "GK", top: 85, left: 50 },
     { pos: "LB", top: 62.5, left: 20 },
-    { pos: "CB", top: 62.5, left: 40 },
-    { pos: "CB", top: 62.5, left: 60 },
+    { pos: "CB2", top: 62.5, left: 40 },
+    { pos: "CB1", top: 62.5, left: 60 },
     { pos: "RB", top: 62.5, left: 80 },
     { pos: "LM", top: 42.5, left: 25 },
-    { pos: "CM", top: 52.5, left: 50 },
-    { pos: "CM", top: 35.5, left: 50 },
+    { pos: "CM2", top: 52.5, left: 50 },
+    { pos: "CM1", top: 35.5, left: 50 },
     { pos: "RM", top: 42.5, left: 75 },
-    { pos: "ST", top: 22.5, left: 40 },
-    { pos: "ST", top: 22.5, left: 60 },
+    { pos: "ST2", top: 22.5, left: 40 },
+    { pos: "ST1", top: 22.5, left: 60 },
   ],
   "424": [
     // 🧤 Goalkeeper
@@ -181,21 +181,21 @@ export const baseFormations = {
 
     // 🛡 Back 4
     { pos: "LB", top: 65, left: 20 },
-    { pos: "CB", top: 75, left: 40 },
-    { pos: "CB", top: 75, left: 60 },
+    { pos: "CB2", top: 75, left: 40 },
+    { pos: "CB1", top: 75, left: 60 },
     { pos: "RB", top: 65, left: 80 },
 
     // 🧠 Midfield 2 (deeper)
-    { pos: "CDM", top: 55, left: 40 },
-    { pos: "CDM", top: 55, left: 60 },
+    { pos: "CDM2", top: 55, left: 40 },
+    { pos: "CDM1", top: 55, left: 60 },
 
     // 🪂 Wingers
     { pos: "LW", top: 40, left: 25 },
     { pos: "RW", top: 40, left: 75 },
 
     // ⚔️ Strikers
-    { pos: "ST", top: 30, left: 40 },
-    { pos: "ST", top: 30, left: 60 },
+    { pos: "ST2", top: 30, left: 40 },
+    { pos: "ST1", top: 30, left: 60 },
   ],
 };
 
@@ -246,3 +246,5 @@ export const positionMultiplier: { [key: string]: number } = {
   ST: 1.3,
   CF: 1.25,
 };
+
+export const TOTAL_DROP_ZONES = 26;

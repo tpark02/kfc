@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, forwardRef } from "react";
-import { TextField, InputAdornment, Button, Divider } from "@mui/material";
+import { TextField, InputAdornment, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import _ from "lodash";
@@ -54,6 +54,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
+        console.log("🔥 fetchPlayers called with query:", q);
         let localPos = "";
         if (q.trim().length < 2) {
           localPos = pos;
@@ -128,7 +129,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       const current = listRef.current;
       current?.addEventListener("scroll", handleScroll);
       return () => current?.removeEventListener("scroll", handleScroll);
-    }, [fetchPlayers, loading, hasMore, query]);
+    }, [fetchPlayers, loading, hasMore, query, listRef]);
 
     // 컴포넌트 처음 mount될 때
     useEffect(() => {
@@ -158,7 +159,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                 position: "relative",
                 width: "90%",
                 height: "50px",
-                outline: "1px solid gray",
+                // outline: "1px solid gray",
                 borderRadius: "8px",
               }}
             >
@@ -259,8 +260,8 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
             }}
             style={{
               width: "100%",
-              // outline: "1px solid gray",
-              borderRadius: "8px",
+              outline: "1px solid gray",
+              // borderRadius: "8px",
             }}
           />
           <div id="search-player-list" ref={listRef}>
@@ -277,7 +278,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                       selectedDropZone.index
                     );
                     console.log("🔥 넣을 player:", player);
-
+                    console.log("dropPlayers", dropPlayers);
                     const repeatedPlayer = Object.values(dropPlayers).some(
                       (d) => d && d.id === player.id
                     );

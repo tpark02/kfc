@@ -30,9 +30,9 @@ const SquadMetrics: React.FC = () => {
   return (
     // <div className="squad-metrics">
       <div className="squad-overview">
-        <Typography variant="h6" gutterBottom>
+        {/* <Typography variant="h6" gutterBottom>
           Squad Overview
-        </Typography>
+        </Typography> */}
         <div
           style={{
             display: "flex",
@@ -69,10 +69,10 @@ const SquadMetrics: React.FC = () => {
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1}>
               {Array.from(nationalSpread).length > 0 ? (
-                Array.from(nationalSpread).map((nation, idx) =>
+                Array.from(nationalSpread).map((nation, idx) => (
+                  nation && (
                   getImgByCountryName(nation ?? "", idx, 35, 25)
-                )
-              ) : (
+                )))): (
                 <div>&nbsp;</div>
               )}
             </Box>
@@ -83,14 +83,14 @@ const SquadMetrics: React.FC = () => {
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1}>
               {leagueSpread.size > 0 ? (
-                Array.from(leagueSpread).map((league, idx) => (
+                Array.from(leagueSpread).map((league, idx) => ( league && (
                   <Chip
                     key={league ?? `league-${idx}`}
                     label={league ?? "Unknown"}
                     size="small"
                     color="secondary"
                   />
-                ))
+                )))
               ) : (
                 <div>&nbsp;</div>
               )}

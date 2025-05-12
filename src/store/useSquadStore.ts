@@ -2,6 +2,7 @@
 import { create } from "zustand";
 import { Player } from "../types/Player";
 import { Match } from "../types/Match";
+import { TOTAL_DROP_ZONES } from "../data/formations";
 type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
@@ -54,7 +55,9 @@ type SquadStore = {
 export const useSquadStore = create<SquadStore>((set) => ({
   myTeamName: "N/A",
   myFormation: "442",
-  dropPlayers: {},
+  dropPlayers: Object.fromEntries(
+    Array.from({ length: TOTAL_DROP_ZONES }, (_, i) => [i, null])
+  ),
   // benchPlayers: Array(15).fill(null),
   selectedDropZone: { index: -1, pos: "" },
   isDropZoneSelected: false,
@@ -103,7 +106,9 @@ export const useSquadStore = create<SquadStore>((set) => ({
   resetSquad: () =>
     set({
       myFormation: "442",
-      dropPlayers: {},
+      dropPlayers: Object.fromEntries(
+        Array.from({ length: TOTAL_DROP_ZONES }, (_, i) => [i, null])
+      ),
       // benchPlayers: Array(15).fill(null),
       selectedDropZone: { index: -1, pos: "" },
       isDropZoneSelected: false,

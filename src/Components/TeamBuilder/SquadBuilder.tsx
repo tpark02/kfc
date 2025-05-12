@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect}from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { Player } from "../../types/Player";
@@ -31,23 +31,28 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   searchPlayerRef,
   selectedDropZone,
 }) => {
+
+  useEffect(() => {
+  console.log("dropPlayers", dropPlayers);
+}, [dropPlayers]);
+
   return (
     <>
-      {/* <div className="squad-builder"> */}
       <div className="squad-group">
         <div className="squad-field">
           {formations[selectedFormation].map((position, idx) => {
+            const pos = position.pos.replace(/[0-9]/g, "");
             const player = dropPlayers[idx];
+
             return (
               <Button
-                // className="player"
                 key={`drop-${idx}`}
                 onClick={() => {
                   setSelectedDropZone({
                     index: idx,
-                    pos: position.pos ?? "",
+                    pos: pos ?? "",
                   });
-                  setPosition(position.pos ?? "");
+                  setPosition(pos ?? "");
                   setIsDropZoneSelected(true);
                   if (searchPlayerRef.current) {
                     searchPlayerRef.current.scrollTop = 0;
@@ -70,35 +75,36 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
           })}
         </div>
         <div className="squad-bench">
-          {Object.values(dropPlayers).slice(11).map((bench, idx) => {
-            const actualIndex = idx + 11;
-            console.log("bench", actualIndex, bench);
-            return (
-              <div
-                className="bench-player"
-                key={`drop-${actualIndex}`}
-                onClick={() => {
-                  setSelectedDropZone({
-                    index: actualIndex,
-                    pos: "",
-                  });
-                  setPosition("");
-                  setIsDropZoneSelected(true);
-                  if (searchPlayerRef.current) {
-                    searchPlayerRef.current.scrollTop = 0;
-                  }
-                }}
-              >
-                <CroppedAvatar
-                  src={bench?.img ?? ""}
-                  selected={selectedDropZone.index === actualIndex}
-                />
-              </div>
-            );
-          })}
+          {Object.values(dropPlayers)
+            .slice(11)
+            .map((bench, idx) => {
+              const actualIndex = idx + 11;
+              console.log("bench", bench);              
+              return (
+                <div
+                  className="bench-player"
+                  key={`drop-${actualIndex}`}
+                  onClick={() => {
+                    setSelectedDropZone({
+                      index: actualIndex,
+                      pos: "",
+                    });
+                    setPosition("");
+                    setIsDropZoneSelected(true);
+                    if (searchPlayerRef.current) {
+                      searchPlayerRef.current.scrollTop = 0;
+                    }
+                  }}
+                >
+                  <CroppedAvatar
+                    src={bench?.img ?? ""}
+                    selected={selectedDropZone.index === actualIndex}
+                  />
+                </div>
+              );
+            })}
         </div>
       </div>
-      {/* </div> */}
     </>
   );
 };
