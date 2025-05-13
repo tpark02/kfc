@@ -32,12 +32,8 @@
 
 #search-player-list {
   display: flex;
-  flex-direction: column;
-  width: 95%;
-  height: 100%;
-  overflow-y: auto;
-  padding: 0.5rem;
-  align-items: flex-start;
+  flex-direction: column;    
+  overflow-y: auto;    
   /* outline: 1px solid red; */
 }
 
@@ -66,7 +62,8 @@
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  width: 95%;
+  width: 100%;
   height: 370px;
+  /* outline: 1px solid gray; */
   /* overflow: auto; */
 }

@@ -44,11 +44,10 @@
 
 .squad-team-player {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: auto;
-  gap: 10px;
-  /* outline: 1px solid white; */
+  flex-direction: row; 
+  width: 100%; 
+  /* height: 100%; */
+  /* outline: 1px solid yellow; */
 }
 
 .squad-player {

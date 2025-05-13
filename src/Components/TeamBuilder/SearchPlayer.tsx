@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, forwardRef } from "react";
-import { TextField, InputAdornment, Button } from "@mui/material";
+import { TextField, InputAdornment, Button, Divider } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import _ from "lodash";
@@ -216,16 +216,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
               : null;
             return displayPlayerSpec(p);
           })()}
-          <div style={{ padding: "20px" }}></div>
-          {/* <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              backgroundColor: "#555",
-              margin: "0 1rem",
-              width: "1px",
-            }}
-          /> */}
+          <div style={{ padding: "10px" }}></div>
           {(() => {
             return displayPlayerSpec(hoveredPlayer);
           })()}
@@ -290,17 +281,29 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                     }
 
                     updateDropPlayer(selectedDropZone.index, player);
-                    // setDropPlayers((prev) => ({
-                    //   ...prev,
-                    //   [selectedDropZone.index]: player,
-                    // }));
                   }}
+                  sx={{ color: "white" }}
                 >
                   <div className="squad-team-player" key={player.id}>
-                    <div style={{ backgroundColor: c, width: "50px" }}>
+                    <div
+                      style={{
+                        flex: "2",
+                        height: "25px",
+                        backgroundColor: c,
+                        // outline: "1px solid gray",
+                      }}
+                    >
                       {player.pos}
                     </div>
-                    <div>{player.name}</div>
+                    <div
+                      style={{
+                        flex: "8",
+                        height: "25px",
+                        // outline: "1px solid gray",
+                      }}
+                    >
+                      {player.name}
+                    </div>
                   </div>
                 </Button>
               );
