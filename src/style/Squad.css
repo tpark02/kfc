@@ -8,7 +8,7 @@
   /* outline: 1px solid gray; */
   /* align-items: stretch; */
   height: 900px;
-  /* overflow: hidden; */
+  /* overflow:scroll; */
   /* background-color: var(--background-color); */
 }
 
@@ -29,8 +29,8 @@
   width: 90%;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;    
-  height: 100%;  
+  flex-direction: column;
+  /* overflow: auto; */
   /* margin: 10px 0 0 0; */
   /* outline: 1px solid red; */
 }

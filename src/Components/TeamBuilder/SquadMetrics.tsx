@@ -36,7 +36,7 @@ const SquadMetrics: React.FC = () => {
           alignItems: "center",
           justifyContent: "stretch",
           width: "90%",
-          margin: "1px auto",          
+          margin: "1px auto",
         }}
       >
         <div
@@ -66,7 +66,12 @@ const SquadMetrics: React.FC = () => {
           <Typography variant="subtitle2" gutterBottom>
             Nations
           </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1}>
+          <Box
+            display="flex"
+            flexWrap="wrap"
+            gap={1}
+            sx={{ padding: "0 0 0 7px" }}
+          >
             {Array.from(nationalSpread).length > 0 ? (
               Array.from(nationalSpread).map(
                 (nation, idx) =>
@@ -85,10 +90,7 @@ const SquadMetrics: React.FC = () => {
             display="flex"
             flexWrap="wrap"
             gap={1}
-            sx={{                             
-              overflowY: "auto",
-              height: "100%",
-            }}
+            sx={{ padding: "0 0 0 7px" }}
           >
             {leagueSpread.size > 0 ? (
               Array.from(leagueSpread).map(
