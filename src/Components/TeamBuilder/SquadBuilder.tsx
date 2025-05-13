@@ -1,9 +1,10 @@
-import React, {useEffect}from "react";
+import React, { useEffect } from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { Player } from "../../types/Player";
 import CroppedAvatar from "./CroppedAvatar";
 import "../../style/SquadBuilder.css";
+import { useSquadStore } from "../../store/useSquadStore";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
@@ -31,10 +32,12 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   searchPlayerRef,
   selectedDropZone,
 }) => {
+  const { setDropPlayers } = useSquadStore();
 
   useEffect(() => {
-  console.log("dropPlayers", dropPlayers);
-}, [dropPlayers]);
+    console.log("dropPlayers", dropPlayers);
+    setDropPlayers(dropPlayers);
+  }, [dropPlayers, setDropPlayers]);
 
   return (
     <>
@@ -79,7 +82,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             .slice(11)
             .map((bench, idx) => {
               const actualIndex = idx + 11;
-              console.log("bench", bench);              
+              console.log("bench", bench);
               return (
                 <div
                   // className="bench-player"

@@ -1,13 +1,25 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Player } from "../../types/Player";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useSquadStore } from "../../store/useSquadStore";
+import { TOTAL_DROP_ZONES } from "../../data/formations";
+import { DropPlayers } from "../../store/useSquadStore";
+import { Player } from "../../types/Player";
 
 interface Club {
   clubId?: number;
   name: string;
-  players?: Player[];
+  formationName: string;
+  players: Player[];
+  ovr: number;
+  price: number;
+  age: number;
+  pace: number;
+  defense: number;
+  attack: number;
+  clubCohesion: number;
+  stamina: number;
 }
 
 const MyClub = () => {
@@ -17,6 +29,60 @@ const MyClub = () => {
   const [editingClubId, setEditingClubId] = useState<number | null>(null);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const {
+    myTeamName,
+    myFormation,
+    setMyFormation,
+    dropPlayers,
+    setDropPlayers,
+    myTeamOvr,
+    myTeamSquadValue,
+    myTeamAge,
+    myTeamPace,
+    myTeamDefense,
+    myTeamAttack,
+    myTeamClubCohesion,
+    myTeamStamina,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
+  } = useSquadStore();
+
+  const fetchMyClubProperties = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/users/${userId}/myclubs`
+      );
+      console.log("📦 fetchMyClubProperties:", response.data);
+      const clubs = Array.isArray(response.data)
+        ? response.data
+        : [response.data];
+
+    clubs.forEach((club: Club) => {
+        const newDropPlayers: { [idx: number]: Player | null } = {};
+        club.players.forEach((p, idx) => {
+          newDropPlayers[idx] = p;
+        });
+        setDropPlayers(newDropPlayers);
+        setMyFormation(club.formationName);
+        setMyTeamOvr(club.ovr);
+        setMyTeamSquadValue(club.price);
+        setMyTeamAge(club.age);
+        setMyTeamPace(club.pace);
+        setMyTeamDefense(club.defense);
+        setMyTeamAttack(club.attack);
+        setMyTeamClubCohesion(club.clubCohesion);
+        setMyTeamStamina(club.stamina);
+      });
+    } catch (error) {
+      console.error("❌ 클럽 속성 불러오기 실패:", error);
+    }
+  };
 
   // ✅ 1. 클럽 목록 불러오기
   const fetchMyClubs = async () => {
@@ -24,13 +90,13 @@ const MyClub = () => {
       const response = await axios.get(
         `http://localhost:8080/api/users/${userId}/myclubs`
       );
-      console.log("📦 서버 응답 데이터:", response.data);
+      console.log("📦 fetchMyClubs:", response.data);
       const clubs = Array.isArray(response.data)
         ? response.data
         : [response.data];
-      setMyClubs(clubs);
+      setMyClubs(clubs);      
     } catch (error) {
-      console.error("❌ 클럽 불러오기 실패:", error);
+      console.error("❌ 클럽 목록 불러오기 실패:", error);
     }
   };
 
@@ -51,7 +117,18 @@ const MyClub = () => {
       const response = await axios.post(
         `http://localhost:8080/api/users/${userId}/myclubs`,
         {
-          name: newClubName,
+          clubName: newClubName,
+          formation: myFormation,
+          players: Object.values(dropPlayers).map((player) => player?.id),
+          ovr: myTeamOvr,
+          price: myTeamSquadValue,
+          age: myTeamAge,
+          pace: myTeamPace,
+          defense: myTeamDefense,
+          clubCohesion: myTeamClubCohesion,
+          attack: myTeamAttack,
+          stamina: myTeamStamina,
+          formationName: myFormation,          
         }
       );
       console.log("✔ 저장 완료", response.data);
@@ -134,6 +211,7 @@ const MyClub = () => {
                   <button onClick={() => deleteMyClub(club.clubId!)}>
                     🗑 삭제
                   </button>
+                  <button onClick={() => fetchMyClubProperties()}>Set Team</button>
                 </>
               )}
             </li>
@@ -154,7 +232,7 @@ const MyClub = () => {
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity="warning">
           {snackbarMessage}

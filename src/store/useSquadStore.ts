@@ -3,9 +3,9 @@ import { create } from "zustand";
 import { Player } from "../types/Player";
 import { Match } from "../types/Match";
 import { TOTAL_DROP_ZONES } from "../data/formations";
-type DropPlayers = { [index: number]: Player | null };
+export type DropPlayers = { [index: number]: Player | null };
 
-type SquadStore = {
+type SquadStore = {  
   myTeamName: string;
   myFormation: string;
   dropPlayers: DropPlayers;

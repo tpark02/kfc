@@ -56,7 +56,7 @@ const SquadMetrics: React.FC = () => {
             Total Value
           </Typography>
           <Typography variant="subtitle1" fontWeight="bold">
-            {"$" + myTeamSquadValue.toLocaleString()}
+            {"$" + myTeamSquadValue?.toLocaleString()}
           </Typography>
         </div>
         <div className="squad-metrics-section">
