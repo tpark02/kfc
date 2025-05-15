@@ -82,7 +82,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             .slice(11)
             .map((bench, idx) => {
               const actualIndex = idx + 11;
-              console.log("bench", bench);
+              // console.log("bench", bench);
               return (
                 <div
                   // className="bench-player"

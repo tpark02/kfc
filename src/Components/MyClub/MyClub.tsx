@@ -1,49 +1,41 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import React, { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { TOTAL_DROP_ZONES } from "../../data/formations";
-import { DropPlayers } from "../../store/useSquadStore";
+import { fetchMyClubs, createMyClub, deleteMyClub } from "./MyClubUtil";
+import { Club } from "../../types/Club";
+import { Button, Typography, Divider } from "@mui/material";
 import { Player } from "../../types/Player";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from "@mui/icons-material/Check";
 
-interface Club {
-  clubId?: number;
-  name: string;
-  formationName: string;
-  players: Player[];
-  ovr: number;
-  price: number;
-  age: number;
-  pace: number;
-  defense: number;
-  attack: number;
-  clubCohesion: number;
-  stamina: number;
+interface MyClubProp {
+  setSnackbarOpen: (open: boolean) => void;
+  setSnackbarMessage: (message: string) => void;
+  setLoading: (open: boolean) => void;
 }
 
-const MyClub = () => {
-  const [userId] = useState(1); // 로그인된 유저 ID라고 가정
-  const [myClubs, setMyClubs] = useState<Club[]>([]);
-  const [newClubName, setNewClubName] = useState("");
-  const [editingClubId, setEditingClubId] = useState<number | null>(null);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+const MyClub: React.FC<MyClubProp> = ({
+  setSnackbarOpen,
+  setSnackbarMessage,
+  setLoading,
+}) => {
   const {
-    myTeamName,
+    myUserId,
+    myClubs,
     myFormation,
-    setMyFormation,
     dropPlayers,
-    setDropPlayers,
     myTeamOvr,
     myTeamSquadValue,
     myTeamAge,
     myTeamPace,
     myTeamDefense,
-    myTeamAttack,
     myTeamClubCohesion,
+    myTeamAttack,
     myTeamStamina,
+    setDropPlayers,
+    setMyTeamName,
     setMyTeamOvr,
+    isDropZoneSelected,
+    setIsDropZoneSelected,
     setMyTeamSquadValue,
     setMyTeamAge,
     setMyTeamPace,
@@ -51,193 +43,219 @@ const MyClub = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
+    setMyClubs,
+    setuserId,
+    setMyFormation,
   } = useSquadStore();
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [newClubName, setNewClubName] = useState("");
+  const handleSaveClub = (idx: number, club: Club | null) => {
+    const newOrUpdated = {
+      ...(club ?? {
+        clubId: undefined, // backend can generate this
+        formationName: "442",
+        players: [],
+        ovr: 0,
+        price: 0,
+        age: 0,
+        pace: 0,
+        defense: 0,
+        attack: 0,
+        clubCohesion: 0,
+        stamina: 0,
+      }),
+      name: newClubName,
+    };
 
-  const fetchMyClubProperties = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/users/${userId}/myclubs`
-      );
-      console.log("📦 fetchMyClubProperties:", response.data);
-      const clubs = Array.isArray(response.data)
-        ? response.data
-        : [response.data];
-
-    clubs.forEach((club: Club) => {
-        const newDropPlayers: { [idx: number]: Player | null } = {};
-        club.players.forEach((p, idx) => {
-          newDropPlayers[idx] = p;
+    if (!club) {
+      // If this is a new club, create it in the backend
+      createMyClub(
+        myUserId,
+        newClubName,
+        myFormation,
+        dropPlayers,
+        myTeamOvr,
+        myTeamSquadValue,
+        myTeamAge,
+        myTeamPace,
+        myTeamDefense,
+        myTeamClubCohesion,
+        myTeamAttack,
+        myTeamStamina
+      ).then((msg) => {
+        setSnackbarMessage(msg);
+        setSnackbarOpen(true);
+        fetchMyClubs(myUserId).then((clubs) => {
+          const paddedClubs: (Club | null)[] = Array(3).fill(null);
+          clubs.forEach((club, idx) => {
+            paddedClubs[idx] = club ?? null;
+          });
+          setMyClubs(paddedClubs);
         });
-        setDropPlayers(newDropPlayers);
-        setMyFormation(club.formationName);
-        setMyTeamOvr(club.ovr);
-        setMyTeamSquadValue(club.price);
-        setMyTeamAge(club.age);
-        setMyTeamPace(club.pace);
-        setMyTeamDefense(club.defense);
-        setMyTeamAttack(club.attack);
-        setMyTeamClubCohesion(club.clubCohesion);
-        setMyTeamStamina(club.stamina);
       });
-    } catch (error) {
-      console.error("❌ 클럽 속성 불러오기 실패:", error);
+    } else {
+      // Just update local state (or patch if needed)
+      const updated = [...myClubs];
+      updated[idx] = newOrUpdated;
+      setMyClubs([
+        ...updated,
+        ...Array(Math.max(0, 3 - updated.length)).fill(null),
+      ]);
     }
+
+    setEditingIndex(null);
   };
-
-  // ✅ 1. 클럽 목록 불러오기
-  const fetchMyClubs = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/users/${userId}/myclubs`
-      );
-      console.log("📦 fetchMyClubs:", response.data);
-      const clubs = Array.isArray(response.data)
-        ? response.data
-        : [response.data];
-      setMyClubs(clubs);      
-    } catch (error) {
-      console.error("❌ 클럽 목록 불러오기 실패:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMyClubs();
-  }, []);
-
-  useEffect(() => {
-    if (snackbarMessage) {
-      setSnackbarOpen(true);
-    }
-  }, [snackbarMessage]);
-
-  // ✅ 2. 클럽 저장
-  const saveMyClub = async () => {
-    if (!newClubName) return;
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/api/users/${userId}/myclubs`,
-        {
-          clubName: newClubName,
-          formation: myFormation,
-          players: Object.values(dropPlayers).map((player) => player?.id),
-          ovr: myTeamOvr,
-          price: myTeamSquadValue,
-          age: myTeamAge,
-          pace: myTeamPace,
-          defense: myTeamDefense,
-          clubCohesion: myTeamClubCohesion,
-          attack: myTeamAttack,
-          stamina: myTeamStamina,
-          formationName: myFormation,          
-        }
-      );
-      console.log("✔ 저장 완료", response.data);
-      setNewClubName("");
-      fetchMyClubs();
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 400) {
-        // ✅ 서버에서 내려준 에러 메시지를 스낵바로
-        setSnackbarMessage(error.response.data);
-      } else {
-        console.error("❌ 저장 실패:", error);
-        setSnackbarMessage("알 수 없는 오류가 발생했습니다.");
-      }
-    }
-  };
-
-  // ✅ 3. 클럽 수정
-  const updateMyClub = async (clubId: number) => {
-    try {
-      console.log("클럽 수정 요청", clubId, newClubName);
-      const response = await axios.put(
-        `http://localhost:8080/api/updatemyclub/${clubId}`,
-        {
-          name: newClubName,
-        }
-      );
-      console.log("✔ 수정 완료", response.data);
-      setEditingClubId(null);
-      setNewClubName("");
-      fetchMyClubs();
-    } catch (error) {
-      console.error("❌ 수정 실패:", error);
-    }
-  };
-
-  // ✅ 4. 클럽 삭제
-  const deleteMyClub = async (clubId: number) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/deletemyclub/${clubId}`);
-      console.log("✔ 삭제 완료");
-      fetchMyClubs();
-    } catch (error) {
-      console.error("❌ 삭제 실패:", error);
-    }
-  };
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>📂 나의 클럽 목록</h2>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        outline: "1px solid gray",
+        borderRadius: "8px",
+        width: "90%",
+        margin: "20px 0 0 0",
+      }}
+    >
+      <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+        My Club
+      </Typography>
+      {myClubs.map((club, idx) => {
+        const isEditing = editingIndex === idx;
 
-      <ul>
-        {myClubs.map((club, index) => {
-          //   console.log(club.clubId + ":" + club.name + ":" + index);
-          return (
-            <li key={index}>
-              {editingClubId === club.clubId ? (
-                <>
-                  <input
-                    type="text"
-                    value={newClubName}
-                    onChange={(e) => setNewClubName(e.target.value)}
-                  />
-                  <button
-                    onClick={() => club.clubId && updateMyClub(club.clubId)}
-                  >
-                    저장
-                  </button>
-                </>
-              ) : (
-                <>
-                  <strong>{club.name}</strong>
-                  <button
-                    onClick={() => {
-                      setEditingClubId(club.clubId!);
-                      setNewClubName(club.name);
-                    }}
-                  >
-                    ✏️ 수정
-                  </button>
-                  <button onClick={() => deleteMyClub(club.clubId!)}>
-                    🗑 삭제
-                  </button>
-                  <button onClick={() => fetchMyClubProperties()}>Set Team</button>
-                </>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+        return (
+          <>
+            <Divider sx={{ borderColor: "gray" }} />
+            <div
+              key={club?.clubId ?? `slot-${idx}`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                {/* ✅ Name or Editable Input */}
+                <div
+                  style={{
+                    flex: 3,
+                    // outline: "1px solid gray",
+                    padding: "4px",
+                  }}
+                >
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={newClubName}
+                      onChange={(e) => setNewClubName(e.target.value)}
+                      onBlur={() => handleSaveClub(idx, club)}
+                      autoFocus
+                      style={{ width: "100%" }}
+                    />
+                  ) : (
+                    <span
+                      onClick={() => {
+                        setEditingIndex(idx);
+                        setNewClubName(club?.name ?? "");
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        display: "block",
+                      }}
+                    >
+                      {club?.name ?? "(Click to add name)"}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  sx={{
+                    flex: 1,
+                    // outline: "1px solid gray",
+                    minWidth: 0,
+                    padding: 0,
+                  }}
+                  onClick={() => {
+                    fetchMyClubs(myUserId).then((clubs) => {
+                      const selectedClub = clubs.find(
+                        (c) => c.clubId === club?.clubId
+                      );
 
-      <div style={{ marginTop: "20px" }}>
-        <input
-          type="text"
-          placeholder="새 클럽 이름"
-          value={newClubName}
-          onChange={(e) => setNewClubName(e.target.value)}
-        />
-        <button onClick={saveMyClub}>➕ 클럽 추가</button>
-      </div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="warning">
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+                      if (!selectedClub) {
+                        setSnackbarMessage("❌ 클럽을 찾을 수 없습니다.");
+                        setSnackbarOpen(true);
+                        return;
+                      }
+
+                      const newDropPlayers: {
+                        [idx: number]: Player | null;
+                      } = {};
+
+                      selectedClub.players.forEach(
+                        (p: Player | null, idx: number) => {
+                          newDropPlayers[idx] = p;
+                        }
+                      );
+
+                      setDropPlayers(newDropPlayers);
+                      setMyFormation(selectedClub.formationName);
+                      setMyTeamOvr(selectedClub.ovr);
+                      setMyTeamSquadValue(selectedClub.price);
+                      setMyTeamAge(selectedClub.age);
+                      setMyTeamPace(selectedClub.pace);
+                      setMyTeamDefense(selectedClub.defense);
+                      setMyTeamAttack(selectedClub.attack);
+                      setMyTeamClubCohesion(selectedClub.clubCohesion);
+                      setMyTeamStamina(selectedClub.stamina);
+                    });
+                    setEditingIndex(null);
+                  }}
+                >
+                  <CheckIcon />
+                </Button>
+                {/* 🗑️ Delete Button (disabled if null) */}
+                <Button
+                  sx={{
+                    flex: 1,
+                    // outline: "1px solid gray",
+                    minWidth: 0,
+                    padding: 0,
+                    color: "white",
+                  }}
+                  disabled={!club}
+                  onClick={() => {
+                    setLoading(true);
+                    if (club?.clubId) {
+                      deleteMyClub(club.clubId)
+                        .then((msg) => {
+                          setSnackbarMessage(msg);
+                          setSnackbarOpen(true);
+                          fetchMyClubs(myUserId).then((clubs) => {
+                            const paddedClubs: (Club | null)[] =
+                              Array(3).fill(null);
+
+                            clubs.forEach((club, idx) => {
+                              paddedClubs[idx] = club ?? null;
+                            });
+                            setMyClubs(paddedClubs);
+                          });
+                        })
+                        .finally(() => setLoading(false));
+                    }
+                  }}
+                >
+                  <DeleteIcon />
+                </Button>
+              </div>
+            </div>
+          </>
+        );
+      })}
     </div>
   );
 };

@@ -3,9 +3,11 @@ import { create } from "zustand";
 import { Player } from "../types/Player";
 import { Match } from "../types/Match";
 import { TOTAL_DROP_ZONES } from "../data/formations";
+import { Club } from "../types/Club";
 export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {  
+  myUserId: number;
   myTeamName: string;
   myFormation: string;
   dropPlayers: DropPlayers;
@@ -22,7 +24,10 @@ type SquadStore = {
   // unused
   selectedDropZone: { index: number; pos: string };
   position: string;
+  myClubs: (Club | null)[];
 
+  setuserId: (userId: number) => void;
+  setMyClubs: (clubs: (Club | null)[]) => void;
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
   setMyTeamName: (f: string) => void;
   setMyFormation: (f: string) => void;
@@ -53,6 +58,7 @@ type SquadStore = {
 };
 
 export const useSquadStore = create<SquadStore>((set) => ({
+  myUserId: -1,
   myTeamName: "N/A",
   myFormation: "442",
   dropPlayers: Object.fromEntries(
@@ -70,7 +76,9 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myTeamClubCohesion: 0,
   myTeamStamina: 0,
   myTeamOvr: 0,
-
+  myClubs: Array(3).fill(null),
+  setuserId: (userId: number) => set({ myUserId: userId }),
+  setMyClubs: (clubs: (Club | null)[]) => set({ myClubs: clubs }),
   setMyTeamOvr: (ovr: number) => set({ myTeamOvr: ovr }),
   setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),

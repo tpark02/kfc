@@ -51,16 +51,7 @@ const NavBar: React.FC = () => {
         }}
       >
         League
-      </Button>
-      <Button
-        className="nav-menu-button"
-        onClick={() => {
-          setIsDropZoneSelected(false);
-          navigate("/MyClub");
-        }}
-      >
-        My Club
-      </Button>
+      </Button>      
     </div>
   );
 };
