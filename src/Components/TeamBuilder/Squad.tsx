@@ -130,8 +130,6 @@ const Squad: React.FC = () => {
           newDropPlayers[idx] = p;
         });
 
-        // setBenchPlayers(response.data.benchPlayers);
-        setMyTeamName(response.data.myTeamName);
         setDropPlayers(newDropPlayers);
         setMyTeamOvr(response.data.myTeamOvr);
         setMyTeamSquadValue(response.data.myTeamSquadValue);

@@ -18,8 +18,8 @@ export const fetchMyClubs = async (userId: number): Promise<Club[]> => {
   }
 };
 
-export const createMyClub = async (
-  userId: number,
+export const updateMyClub = async (
+  clubId: number,
   newClubName: string,
   myFormation: string,
   dropPlayers: { [index: number]: Player | null },
@@ -37,7 +37,7 @@ export const createMyClub = async (
       { length: 26 },
       (_, i) => dropPlayers[i]?.id ?? null
     );
-
+  
     console.log("🛰 보내는 데이터:", {
       clubName: newClubName,
       formationName: myFormation,
@@ -52,8 +52,8 @@ export const createMyClub = async (
       stamina: myTeamStamina,
     });
 
-    const response = await axios.post(
-      `http://localhost:8080/api/users/${userId}/myclubs`,
+    const response = await axios.put(
+      `http://localhost:8080/api/updatemyclub/${clubId}`,
       {
         clubName: newClubName,
         formationName: myFormation, // ✅ 정확한 이름만 보내기
@@ -67,9 +67,8 @@ export const createMyClub = async (
         attack: myTeamAttack,
         stamina: myTeamStamina,
       }
-    );
-    console.log("✔ 저장 완료", response.data);
-    return "클럽 저장 성공";
+    );    
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
       console.error("❌ 400 오류 응답:", error.response.data);

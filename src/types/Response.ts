@@ -25,7 +25,6 @@ export type ResponseRandomSquad = {
   content: Player[];
   myTeamOvr: number;
   chemistry: number;
-  myTeamName: string;
   myTeamSquadValue: number;
   myTeamAge: number;
   myTeamPace: number;
