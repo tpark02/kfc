@@ -1,12 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import {
-  Snackbar,
-  Alert,
-  Button,
-  Typography,
-  IconButton,  
-} from "@mui/material";
+import { Snackbar, Alert, Button, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useSquadStore } from "../../store/useSquadStore";
@@ -14,9 +8,7 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { Player } from "../../types/Player";
 import { Team } from "../../types/Team";
 import { League } from "../../types/League";
-import {
-  ResponseRandomSquad,
-} from "../../types/Response";
+import { ResponseRandomSquad } from "../../types/Response";
 import { Club } from "../../types/Club"; // ✅ Add this import
 import { Country } from "../../types/Country";
 import { formations } from "../../data/formations";
@@ -112,7 +104,7 @@ const Squad: React.FC = () => {
       .catch((error) => {
         console.error("❌ 클럽 설정 실패:", error);
       });
-  }, [myUserId]);  
+  }, [myUserId]);
 
   const loadRandomSquad = () => {
     console.log("start");
@@ -167,7 +159,7 @@ const Squad: React.FC = () => {
         console.log("finish");
         setLoading(false);
       });
-  }; 
+  };
 
   return (
     <>
@@ -198,7 +190,9 @@ const Squad: React.FC = () => {
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-              {snackbarMessage}
+              {typeof snackbarMessage === "string"
+                ? snackbarMessage
+                : JSON.stringify(snackbarMessage)}
             </Alert>
           </Snackbar>
         </div>
@@ -318,7 +312,7 @@ const Squad: React.FC = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",              
+              alignItems: "center",
             }}
           >
             <MyClub

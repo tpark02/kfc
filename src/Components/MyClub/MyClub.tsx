@@ -82,7 +82,12 @@ const MyClub: React.FC<MyClubProp> = ({
           });
         })
         .catch((err) => {
-          setSnackbarMessage(err);
+          const msg =
+            typeof err === "string"
+              ? err
+              : err?.response?.data?.message ||
+                JSON.stringify(err?.response?.data ?? err, null, 2);
+          setSnackbarMessage(msg);
           setSnackbarOpen(true);
         })
         .finally(() => {
@@ -248,7 +253,7 @@ const MyClub: React.FC<MyClubProp> = ({
                         if (club?.clubId !== undefined) {
                           handleUpdateClub(idx, club?.clubId);
                           setMyClubs(updated);
-                        }                        
+                        }
                       }
                     }}
                     autoFocus
