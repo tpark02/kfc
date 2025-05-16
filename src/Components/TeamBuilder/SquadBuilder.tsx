@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { Player } from "../../types/Player";
 import CroppedAvatar from "./CroppedAvatar";
 import "../../style/SquadBuilder.css";
 import { useSquadStore } from "../../store/useSquadStore";
+import { getTeamAvr } from "./SquadBuilderUtil";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
@@ -32,12 +33,32 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   searchPlayerRef,
   selectedDropZone,
 }) => {
-  const { setDropPlayers } = useSquadStore();
+  const {
+    setDropPlayers,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
+  } = useSquadStore();
 
   useEffect(() => {
-    console.log("dropPlayers", dropPlayers);
+    const teamData = getTeamAvr(dropPlayers);
+
+    setMyTeamOvr(teamData.ovr);
+    setMyTeamPace(teamData.spd);
+    setMyTeamAttack(teamData.atk);
+    setMyTeamDefense(teamData.def);
+    setMyTeamStamina(teamData.sta);
+    setMyTeamClubCohesion(teamData.tc);
+    setMyTeamSquadValue(teamData.squadVal);
+
     setDropPlayers(dropPlayers);
   }, [dropPlayers, setDropPlayers]);
+
+  // const [isLoaded, setIsLoaded] = useState(true);
 
   return (
     <>
@@ -60,6 +81,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   if (searchPlayerRef.current) {
                     searchPlayerRef.current.scrollTop = 0;
                   }
+                  setIsLoaded(false);
                 }}
                 style={{
                   position: "absolute",
@@ -71,6 +93,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   <CroppedAvatar
                     src={player?.img ?? ""}
                     selected={selectedDropZone.index === idx}
+                    // isLoaded={isLoaded}
+                    // setIsLoaded={setIsLoaded}
                   />
                 </div>
               </Button>
@@ -102,6 +126,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   <CroppedAvatar
                     src={bench?.img ?? ""}
                     selected={selectedDropZone.index === actualIndex}
+                    // isLoaded={isLoaded}
+                    // setIsLoaded={setIsLoaded}
                   />
                 </div>
               );

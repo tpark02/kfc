@@ -48,7 +48,9 @@ const SquadMetrics: React.FC = () => {
         >
           <Typography>OVR</Typography>
           <Typography variant="subtitle1" fontWeight="bold">
-            {myTeamOvr}
+            {typeof myTeamOvr === "number" && !isNaN(myTeamOvr)
+              ? myTeamOvr
+              : "N/A"}
           </Typography>
         </div>
         <div className="squad-metrics-section">
@@ -56,7 +58,9 @@ const SquadMetrics: React.FC = () => {
             Total Value
           </Typography>
           <Typography variant="subtitle1" fontWeight="bold">
-            {"$" + myTeamSquadValue?.toLocaleString()}
+            {typeof myTeamSquadValue === "number" && !isNaN(myTeamSquadValue)
+              ? "$" + myTeamSquadValue.toLocaleString()
+              : "$0"}
           </Typography>
         </div>
         <div className="squad-metrics-section">

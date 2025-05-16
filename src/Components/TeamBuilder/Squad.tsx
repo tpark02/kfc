@@ -33,7 +33,6 @@ const Squad: React.FC = () => {
     myFormation,
     dropPlayers,
     setDropPlayers,
-    setMyTeamName,
     setMyTeamOvr,
     isDropZoneSelected,
     setIsDropZoneSelected,
@@ -167,12 +166,8 @@ const Squad: React.FC = () => {
       <div className="squad-container">
         <SquadMetrics />
         <div className="squad-formation" ref={squadSelectRef}>
-          {/* <Typography variant="h6" gutterBottom>
-              Formation
-            </Typography> */}
           {myFormation && (
             <SquadBuilder
-              // benchPlayers={benchPlayers}
               selectedFormation={myFormation as keyof typeof formations}
               dropPlayers={dropPlayers}
               setSelectedDropZone={setSelectedDropZone}

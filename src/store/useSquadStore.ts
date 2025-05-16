@@ -6,7 +6,7 @@ import { TOTAL_DROP_ZONES } from "../data/formations";
 import { Club } from "../types/Club";
 export type DropPlayers = { [index: number]: Player | null };
 
-type SquadStore = {  
+type SquadStore = {
   myUserId: number;
   myTeamName: string;
   myFormation: string;
@@ -79,7 +79,9 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myClubs: Array(3).fill(null),
   setuserId: (userId: number) => set({ myUserId: userId }),
   setMyClubs: (clubs: (Club | null)[]) => set({ myClubs: clubs }),
-  setMyTeamOvr: (ovr: number) => set({ myTeamOvr: ovr }),
+  setMyTeamOvr: (ovr: number) => {
+    set({ myTeamOvr: ovr });
+  },
   setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),
   updateDropPlayer: (idx: number, player: Player | null) =>
