@@ -303,19 +303,23 @@ const Squad: React.FC = () => {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <MyClub
-              setSnackbarOpen={setSnackbarOpen}
-              setSnackbarMessage={setSnackbarMessage}
-              setLoading={setLoading}
-            />
-          </div>
+          {!isDropZoneSelected ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <MyClub
+                setSnackbarOpen={setSnackbarOpen}
+                setSnackbarMessage={setSnackbarMessage}
+                setLoading={setLoading}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

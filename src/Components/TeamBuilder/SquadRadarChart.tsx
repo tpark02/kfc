@@ -55,12 +55,15 @@ const SquadBarChart: React.FC = () => {
     );
   }
 
+  const safeMetric = (val: number | undefined) =>
+    typeof val === "number" && Number.isFinite(val) ? val : 0;
+
   const metrics = {
-    SPD: myTeamPace,
-    ATK: myTeamAttack,
-    DEF: myTeamDefense,
-    STA: myTeamStamina,
-    TC: myTeamClubCohesion,
+    SPD: safeMetric(myTeamPace),
+    ATK: safeMetric(myTeamAttack),
+    DEF: safeMetric(myTeamDefense),
+    STA: safeMetric(myTeamStamina),
+    TC: safeMetric(myTeamClubCohesion),
   };
 
   const data = Object.entries(metrics).map(([name, value]) => ({
