@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { Player } from "../../types/Player";
@@ -58,8 +58,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     setDropPlayers(dropPlayers);
   }, [dropPlayers, setDropPlayers]);
 
-  // const [isLoaded, setIsLoaded] = useState(true);
-
   return (
     <>
       <div className="squad-group">
@@ -81,7 +79,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   if (searchPlayerRef.current) {
                     searchPlayerRef.current.scrollTop = 0;
                   }
-                  setIsLoaded(false);
                 }}
                 style={{
                   position: "absolute",
@@ -93,8 +90,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   <CroppedAvatar
                     src={player?.img ?? ""}
                     selected={selectedDropZone.index === idx}
-                    // isLoaded={isLoaded}
-                    // setIsLoaded={setIsLoaded}
                   />
                 </div>
               </Button>
@@ -126,8 +121,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   <CroppedAvatar
                     src={bench?.img ?? ""}
                     selected={selectedDropZone.index === actualIndex}
-                    // isLoaded={isLoaded}
-                    // setIsLoaded={setIsLoaded}
                   />
                 </div>
               );
