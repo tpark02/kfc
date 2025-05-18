@@ -72,6 +72,7 @@ const MyClub: React.FC<MyClubProp> = ({
         .then((msg) => {
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
+          // 이부분을 이제 myplayer로 fill 해야한다.
           fetchMyClubs(myUserId).then((clubs) => {
             const paddedClubs: (Club | null)[] = Array(3).fill(null);
             clubs.forEach((club, idx) => {
@@ -143,14 +144,6 @@ const MyClub: React.FC<MyClubProp> = ({
     }
 
     const updated = [...myClubs];
-
-    <ConfirmDialog
-      open={confirmOpen}
-      title="Confirm Club Update"
-      message="⚠️ If you proceed, it will erase the previous club. Do you want to continue?"
-      onConfirm={handleConfirm}
-      onCancel={handleCancel}
-    />;
 
     if (updated[idx]!) {
       updated[idx] = {
