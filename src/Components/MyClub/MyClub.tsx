@@ -4,18 +4,21 @@ import { fetchMyClubs, updateMyClub, deleteMyClub } from "./MyClubUtil";
 import { Club } from "../../types/Club";
 import { Button, Typography, Divider } from "@mui/material";
 import { Player } from "../../types/Player";
-
+import ConfirmDialog from "../ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
+import { Snackbar } from "@mui/material";
 
 interface MyClubProp {
+  snackbarOpen: boolean;
   setSnackbarOpen: (open: boolean) => void;
   setSnackbarMessage: (message: string) => void;
   setLoading: (open: boolean) => void;
 }
 
 const MyClub: React.FC<MyClubProp> = ({
+  snackbarOpen,
   setSnackbarOpen,
   setSnackbarMessage,
   setLoading,
@@ -34,10 +37,7 @@ const MyClub: React.FC<MyClubProp> = ({
     myTeamAttack,
     myTeamStamina,
     setDropPlayers,
-    setMyTeamName,
     setMyTeamOvr,
-    isDropZoneSelected,
-    setIsDropZoneSelected,
     setMyTeamSquadValue,
     setMyTeamAge,
     setMyTeamPace,
@@ -46,7 +46,6 @@ const MyClub: React.FC<MyClubProp> = ({
     setMyTeamClubCohesion,
     setMyTeamStamina,
     setMyClubs,
-    setuserId,
     setMyFormation,
   } = useSquadStore();
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -98,6 +97,88 @@ const MyClub: React.FC<MyClubProp> = ({
     setLoading(false);
     setEditingIndex(null);
   };
+
+  const [snackbarMessage, _] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingUpdate, setPendingUpdate] = useState<{
+    idx: number;
+    clubId: number;
+    newName: string;
+  } | null>(null);
+
+  const handleConfirm = () => {
+    if (!pendingUpdate) return;
+
+    const updated = [...myClubs];
+    const { idx, newName, clubId } = pendingUpdate;
+
+    if (updated[idx]) {
+      updated[idx] = {
+        ...updated[idx],
+        name: newName,
+        formationName: updated[idx].formationName || "",
+      };
+    }
+
+    handleUpdateClub(idx, clubId);
+    setMyClubs(updated);
+
+    setConfirmOpen(false);
+    setEditingIndex(null);
+    setPendingUpdate(null);
+  };
+
+  const handleCancel = () => {
+    setConfirmOpen(false);
+    setEditingIndex(null);
+    setPendingUpdate(null);
+  };
+
+  const handleBlur = (club: Club, idx: number) => {
+    if (!newClubName.trim()) {
+      setSnackbarMessage("Club name is empty");
+      setSnackbarOpen(true);
+      setEditingIndex(null);
+      return;
+    }
+
+    const updated = [...myClubs];
+
+    <ConfirmDialog
+      open={confirmOpen}
+      title="Confirm Club Update"
+      message="⚠️ If you proceed, it will erase the previous club. Do you want to continue?"
+      onConfirm={handleConfirm}
+      onCancel={handleCancel}
+    />;
+
+    if (updated[idx]!) {
+      updated[idx] = {
+        ...updated[idx],
+        name: newClubName,
+        formationName: updated[idx]?.formationName || "",
+      };
+    }
+    const hasEmptyPlayer = Object.values(dropPlayers).some((d) => d === null);
+
+    if (hasEmptyPlayer) {
+      setSnackbarMessage("The number of players must be 26");
+      setSnackbarOpen(true);
+      setLoading(false);
+      setEditingIndex(null);
+      return;
+    }
+    if (club?.clubId !== undefined) {
+      setPendingUpdate({
+        idx,
+        clubId: club.clubId,
+        newName: newClubName.trim(),
+      });
+      // Delay dialog open to avoid aria-focus conflict
+      setTimeout(() => setConfirmOpen(true), 0);
+    }
+  };
+
   return (
     <div
       style={{
@@ -201,60 +282,8 @@ const MyClub: React.FC<MyClubProp> = ({
                     type="text"
                     value={newClubName}
                     onChange={(e) => setNewClubName(e.target.value)}
-                    // onBlur={() => handleSaveClub(idx, club)}
                     onBlur={() => {
-                      if (newClubName === null || newClubName === "") {
-                        setSnackbarMessage("club name is empty");
-                        setSnackbarOpen(true);
-                        setEditingIndex(null);
-                        return;
-                      }
-
-                      const updated = [...myClubs];
-
-                      if (updated[idx]!) {
-                        updated[idx] = {
-                          ...updated[idx],
-                          name: newClubName,
-                          formationName: updated[idx]?.formationName || "",
-                        };
-                        const hasEmptyPlayer = Object.values(dropPlayers).some(
-                          (d) => d === null
-                        );
-
-                        if (hasEmptyPlayer) {
-                          setSnackbarMessage(
-                            "The number of players must be 26"
-                          );
-                          setSnackbarOpen(true);
-                          setLoading(false);
-                          setEditingIndex(null);
-                          return;
-                        }
-
-                        if (club?.clubId !== undefined) {
-                          handleUpdateClub(idx, club.clubId);
-                        }
-                        setMyClubs(updated);
-                      } else {
-                        const hasEmptyPlayer = Object.values(dropPlayers).some(
-                          (d) => d === null
-                        );
-
-                        if (hasEmptyPlayer) {
-                          setSnackbarMessage(
-                            "The number of players must be 26"
-                          );
-                          setSnackbarOpen(true);
-                          setLoading(false);
-                          setEditingIndex(null);
-                          return;
-                        }
-                        if (club?.clubId !== undefined) {
-                          handleUpdateClub(idx, club?.clubId);
-                          setMyClubs(updated);
-                        }
-                      }
+                      handleBlur(club!, idx);
                     }}
                     autoFocus
                     style={{ width: "100%" }}
@@ -323,6 +352,22 @@ const MyClub: React.FC<MyClubProp> = ({
           </div>
         );
       })}
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Confirm Club Update"
+        message="⚠️ If you proceed, it will erase the previous club. Do you want to continue?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+
+      {/* Snackbar for validation messages */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </div>
   );
 };

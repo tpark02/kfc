@@ -106,8 +106,8 @@ const Squad: React.FC = () => {
   }, [myUserId]);
 
   const loadRandomSquad = () => {
-    console.log("start");
     setLoading(true);
+
     axios
       .post<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {
         name: myFormation,
@@ -312,6 +312,7 @@ const Squad: React.FC = () => {
               }}
             >
               <MyClub
+                snackbarOpen={snackbarOpen}
                 setSnackbarOpen={setSnackbarOpen}
                 setSnackbarMessage={setSnackbarMessage}
                 setLoading={setLoading}
