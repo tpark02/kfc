@@ -180,7 +180,7 @@ const MyClub: React.FC<MyClubProp> = ({
         outline: "1px solid gray",
         borderRadius: "8px",
         width: "90%",
-        margin: "20px 0 0 0",
+        margin: "20px",
       }}
     >
       <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>

@@ -44,6 +44,7 @@ const SquadMetrics: React.FC = () => {
             outline: "1px solid gray",
             borderRadius: "8px",
             width: "100%",
+            margin: "0 0 10px 0",
           }}
         >
           <Typography>OVR</Typography>
@@ -74,7 +75,7 @@ const SquadMetrics: React.FC = () => {
             display="flex"
             flexWrap="wrap"
             gap={1}
-            sx={{ padding: "0 0 0 7px" }}
+            sx={{ padding: "15px" }}
           >
             {Array.from(nationalSpread).length > 0 ? (
               Array.from(nationalSpread).map(
@@ -94,7 +95,7 @@ const SquadMetrics: React.FC = () => {
             display="flex"
             flexWrap="wrap"
             gap={1}
-            sx={{ padding: "0 0 0 7px" }}
+            sx={{ padding: "15px" }}
           >
             {leagueSpread.size > 0 ? (
               Array.from(leagueSpread).map(
