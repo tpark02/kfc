@@ -19,6 +19,7 @@ export const fetchMyClubs = async (userId: number): Promise<Club[]> => {
 };
 
 export const updateMyClub = async (
+  userId: number,
   clubId: number,
   newClubName: string,
   myFormation: string,
@@ -53,7 +54,7 @@ export const updateMyClub = async (
     });
 
     const response = await axios.put(
-      `http://localhost:8080/api/updatemyclub/${clubId}`,
+      `http://localhost:8080/api/updatemyclub/${userId}/${clubId}`,
       {
         clubName: newClubName,
         formationName: myFormation, // ✅ 정확한 이름만 보내기
@@ -80,9 +81,9 @@ export const updateMyClub = async (
   }
 };
 
-export const deleteMyClub = async (clubId: number): Promise<string> => {
+export const deleteMyClub = async (userId: number, clubId: number): Promise<string> => {
   try {
-    await axios.delete(`http://localhost:8080/api/deletemyclub/${clubId}`);
+    await axios.delete(`http://localhost:8080/api/deletemyclub/${userId}/${clubId}`);
     console.log("✔ 삭제 완료");
     return "삭제 완료";
   } catch (error) {

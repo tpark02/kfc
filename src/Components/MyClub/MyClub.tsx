@@ -56,6 +56,7 @@ const MyClub: React.FC<MyClubProp> = ({
 
     if (newClubName.length > 0) {
       updateMyClub(
+        myUserId,
         clubId,
         newClubName,
         myFormation,
@@ -321,7 +322,7 @@ const MyClub: React.FC<MyClubProp> = ({
                 onClick={() => {
                   setLoading(true);
                   if (club?.clubId) {
-                    deleteMyClub(club.clubId)
+                    deleteMyClub(myUserId, club.clubId)
                       .then((msg) => {
                         setSnackbarMessage(msg);
                         setSnackbarOpen(true);
