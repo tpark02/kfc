@@ -1,10 +1,10 @@
-import { Player } from './Player';
+import { MyPlayer } from './Player';
 
-export type Club = {
+export type MyClubData = {
   clubId?: number;
   name: string;
   formationName: string;
-  players: Player[];
+  players: MyPlayer[];
   ovr: number;
   price: number;
   age: number;

@@ -9,7 +9,7 @@ import { Player } from "../../types/Player";
 import { Team } from "../../types/Team";
 import { League } from "../../types/League";
 import { ResponseRandomSquad } from "../../types/Response";
-import { Club } from "../../types/Club"; // ✅ Add this import
+import { MyClubData } from "../../types/Club"; // ✅ Add this import
 import { Country } from "../../types/Country";
 import { formations } from "../../data/formations";
 import SquadMetrics from "./SquadMetrics";
@@ -93,7 +93,7 @@ const Squad: React.FC = () => {
     console.log("userId:", myUserId);
     fetchMyClubs(myUserId)
       .then((clubs) => {
-        const paddedClubs: (Club | null)[] = Array(3).fill(null);
+        const paddedClubs: (MyClubData | null)[] = Array(3).fill(null);
         clubs.forEach((club, idx) => {
           paddedClubs[idx] = club ?? null;
         });

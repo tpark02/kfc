@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
 import { fetchMyClubs, updateMyClub, deleteMyClub } from "./MyClubUtil";
-import { Club } from "../../types/Club";
+import { MyClubData } from "../../types/Club";
 import { Button, Typography, Divider } from "@mui/material";
 import { Player } from "../../types/Player";
 import ConfirmDialog from "../ConfirmDialog";
@@ -75,7 +75,7 @@ const MyClub: React.FC<MyClubProp> = ({
           setSnackbarOpen(true);
           // 이부분을 이제 myplayer로 fill 해야한다.
           fetchMyClubs(myUserId).then((clubs) => {
-            const paddedClubs: (Club | null)[] = Array(3).fill(null);
+            const paddedClubs: (MyClubData | null)[] = Array(3).fill(null);
             clubs.forEach((club, idx) => {
               paddedClubs[idx] = club ?? null;
             });
@@ -136,7 +136,7 @@ const MyClub: React.FC<MyClubProp> = ({
     setPendingUpdate(null);
   };
 
-  const handleBlur = (club: Club, idx: number) => {
+  const handleBlur = (club: MyClubData, idx: number) => {
     if (!newClubName.trim()) {
       setSnackbarMessage("Club name is empty");
       setSnackbarOpen(true);
@@ -327,7 +327,7 @@ const MyClub: React.FC<MyClubProp> = ({
                         setSnackbarMessage(msg);
                         setSnackbarOpen(true);
                         fetchMyClubs(myUserId).then((clubs) => {
-                          const paddedClubs: (Club | null)[] =
+                          const paddedClubs: (MyClubData | null)[] =
                             Array(3).fill(null);
 
                           clubs.forEach((club, idx) => {

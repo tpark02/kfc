@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Club } from "../../types/Club";
+import { MyClubData } from "../../types/Club";
 import { Player } from "../../types/Player";
 
-export const fetchMyClubs = async (userId: number): Promise<Club[]> => {
+export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
     console.log("📦 fetchMyClubs:", userId);
     const response = await axios.get(
