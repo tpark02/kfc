@@ -36,7 +36,7 @@ const PlayerSpec: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get<TeamPage>("http://localhost:8080/api/teams", {})
+      .get<TeamPage>("http://localhost:8080/teams", {})
       .then((response) => {
         console.log(response.data.content);
         setTeams(response.data.content);

@@ -50,7 +50,7 @@ export const Players: React.FC = () => {
     selectedPosition: PlayerPos[] = []
   ) => {
     axios
-      .post<ResponsePlayerPage>("http://localhost:8080/api/players", {
+      .post<ResponsePlayerPage>("http://localhost:8080/players", {
         page,
         size: pageInfo.size || 10,
         search: searchTerm,

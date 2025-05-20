@@ -8,7 +8,7 @@ const LeagueOpponentTeam: React.FC = () => {
   // const fetchSchedule = async () => {
   //   try {
   //     const response = await axios.post<Match[]>(
-  //       "http://localhost:8080/api/simulate/generate-schedule",
+  //       "http://localhost:8080/simulate/generate-schedule",
   //       {
   //         myTeamName: myTeamName,
   //         myTeamMembers: Object.values(dropPlayers).filter(

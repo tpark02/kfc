@@ -63,7 +63,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
         try {
           setLoading(true);
           const response = await axios.post<ResponseSearch>(
-            "http://localhost:8080/api/squadsearch",
+            "http://localhost:8080/squadsearch",
             {
               page: pageNumber,
               name: q.trim().length >= 2 ? q : "",

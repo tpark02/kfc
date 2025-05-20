@@ -5,7 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useSquadStore } from "../../store/useSquadStore";
 // 타입
-import { Player } from "../../types/Player";
+// import { Player } from "../../types/Player";
 import { Team } from "../../types/Team";
 import { League } from "../../types/League";
 import { ResponseRandomSquad } from "../../types/Response";
@@ -109,19 +109,19 @@ const Squad: React.FC = () => {
     setLoading(true);
 
     axios
-      .post<ResponseRandomSquad>("http://localhost:8080/api/randomteam", {
+      .post<ResponseRandomSquad>("http://localhost:8080/randomteam", {
         name: myFormation,
         countries: selectedCountries,
         leagues: selectedLeagues,
         clubs: selectedClubs,
       })
       .then((response) => {
-        const newDropPlayers: { [idx: number]: Player | null } = {};
-        response.data.content.forEach((p, idx) => {
-          newDropPlayers[idx] = p;
-        });
+        // const newDropPlayers: { [idx: number]: Player | null } = {};
+        // response.data.content.forEach((p, idx) => {
+        //   newDropPlayers[idx] = p;
+        // });
 
-        setDropPlayers(newDropPlayers);
+        setDropPlayers(response.data.content);
         setMyTeamOvr(response.data.myTeamOvr);
         setMyTeamSquadValue(response.data.myTeamSquadValue);
         setMyTeamAge(response.data.myTeamAge);
@@ -169,7 +169,7 @@ const Squad: React.FC = () => {
           {myFormation && (
             <SquadBuilder
               selectedFormation={myFormation as keyof typeof formations}
-              dropPlayers={dropPlayers}
+              // squadPlayers={dropPlayers}
               setSelectedDropZone={setSelectedDropZone}
               setIsDropZoneSelected={setIsDropZoneSelected}
               setPosition={selectedPosition}

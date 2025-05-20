@@ -43,7 +43,7 @@ function estimateValue(player: Player) {
   return Math.round(baseValue * multiplier);
 }
 
-export const getTeamAvr = (players: { [index: number]: Player | null }) => {
+export const getTeamAvr = (players: Player[]) => {
   let totalCount = 0;
   Object.values(players).map((p) => {
     totalCount += p !== null ? 1 : 0;
@@ -58,7 +58,7 @@ export const getTeamAvr = (players: { [index: number]: Player | null }) => {
     squadVal = 0;
 
   for (let i = 0; i < Object.values(players).length; i++) {
-    if (players[i] === null) continue;
+    if (players[i] === undefined) continue;
     ovr += players[i]?.ovr ?? 0;
     spd += players[i]?.pac ?? 0;
     atk += players[i]?.sho ?? 0;

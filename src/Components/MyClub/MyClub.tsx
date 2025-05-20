@@ -3,12 +3,12 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { fetchMyClubs, updateMyClub, deleteMyClub } from "./MyClubUtil";
 import { MyClubData } from "../../types/Club";
 import { Button, Typography, Divider } from "@mui/material";
-import { Player } from "../../types/Player";
 import ConfirmDialog from "../ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
+import { Player, myPlayerToPlayer } from "../../types/Player";
 
 interface MyClubProp {
   snackbarOpen: boolean;
@@ -36,6 +36,7 @@ const MyClub: React.FC<MyClubProp> = ({
     myTeamClubCohesion,
     myTeamAttack,
     myTeamStamina,
+    setSelectedMyPlayers,
     setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -229,17 +230,13 @@ const MyClub: React.FC<MyClubProp> = ({
                         return;
                       }
 
-                      const newDropPlayers: {
-                        [idx: number]: Player | null;
-                      } = {};
+                      setSelectedMyPlayers(selectedClub.players);
 
-                      selectedClub.players.forEach(
-                        (p: Player | null, idx: number) => {
-                          newDropPlayers[idx] = p;
-                        }
-                      );
+                      const playerList: Player[] =
+                        selectedClub.players.map(myPlayerToPlayer);
 
-                      setDropPlayers(newDropPlayers);
+                      setDropPlayers([...playerList]);
+
                       setMyFormation(selectedClub.formationName);
                       setMyTeamOvr(selectedClub.ovr);
                       setMyTeamSquadValue(selectedClub.price);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 interface CroppedAvatarProps {
@@ -23,28 +23,27 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   selected = false,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [useFallback, setUseFallback] = useState(false);
+  const [finalSrc, setFinalSrc] = useState<string>("");
 
-  const finalSrc = useFallback || !src ? fallbackSrc : src;
-  // console.log(
-  //   "🧪 finalSrc:",
-  //   finalSrc,
-  //   "| isLoaded:",
-  //   isLoaded,
-  //   "| useFallback:",
-  //   useFallback
-  // );
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!isLoaded) {
-        console.warn("Image load timeout, using fallback.");
-        setUseFallback(true);
-        setIsLoaded(true);
-      }
-    }, 2000); // 3 seconds max load time
+    setIsLoaded(false); // 새로운 이미지 로딩 시작
 
-    return () => clearTimeout(timer);
-  }, [isLoaded]);
+    const rawSrc = src && src.trim() !== "" ? src : fallbackSrc;
+    const cacheBustedSrc = `${rawSrc}?v=${Date.now()}`; // 캐시 무효화
+
+    const img = new Image();
+    img.src = cacheBustedSrc;
+
+    img.onload = () => {
+      setFinalSrc(cacheBustedSrc);
+      setIsLoaded(true);
+    };
+
+    img.onerror = () => {
+      setFinalSrc(`${fallbackSrc}?v=${Date.now()}`);
+      setIsLoaded(true);
+    };
+  }, [src]);
 
   return (
     <div
@@ -64,24 +63,16 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
       {!isLoaded && (
         <CircularProgress
           size={24}
-          style={{
-            position: "absolute",
-            zIndex: 1,
-          }}
+          style={{ position: "absolute", zIndex: 1 }}
         />
       )}
 
-      {finalSrc && (
+      {isLoaded && finalSrc && (
         <img
+          key={finalSrc}
           src={finalSrc}
-          onLoad={() => setIsLoaded(true)}
-          onError={() => {
-            if (!useFallback) setUseFallback(true);
-            else setIsLoaded(true);
-          }}
           alt="avatar"
           style={{
-            display: isLoaded ? "block" : "none",
             position: "absolute",
             top: `-${offsetY}px`,
             left: `-${offsetX}px`,

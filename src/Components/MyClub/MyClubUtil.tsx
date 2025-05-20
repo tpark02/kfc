@@ -4,9 +4,10 @@ import { Player } from "../../types/Player";
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
-    console.log("📦 fetchMyClubs:", userId);
+    console.log(`📦 fetchMyClubs: userId=${userId}`);
+
     const response = await axios.get(
-      `http://localhost:8080/api/users/${userId}/myclubs`
+      `http://localhost:8080/users/${userId}/myclubs`
     );
     const clubs = Array.isArray(response.data)
       ? response.data
@@ -38,7 +39,7 @@ export const updateMyClub = async (
       { length: 26 },
       (_, i) => dropPlayers[i]?.id ?? null
     );
-  
+
     console.log("🛰 보내는 데이터:", {
       clubName: newClubName,
       formationName: myFormation,
@@ -54,7 +55,7 @@ export const updateMyClub = async (
     });
 
     const response = await axios.put(
-      `http://localhost:8080/api/updatemyclub/${userId}/${clubId}`,
+      `http://localhost:8080/updatemyclub/${userId}/${clubId}`,
       {
         clubName: newClubName,
         formationName: myFormation, // ✅ 정확한 이름만 보내기
@@ -68,7 +69,7 @@ export const updateMyClub = async (
         attack: myTeamAttack,
         stamina: myTeamStamina,
       }
-    );    
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
@@ -81,9 +82,14 @@ export const updateMyClub = async (
   }
 };
 
-export const deleteMyClub = async (userId: number, clubId: number): Promise<string> => {
+export const deleteMyClub = async (
+  userId: number,
+  clubId: number
+): Promise<string> => {
   try {
-    await axios.delete(`http://localhost:8080/api/deletemyclub/${userId}/${clubId}`);
+    await axios.delete(
+      `http://localhost:8080/deletemyclub/${userId}/${clubId}`
+    );
     console.log("✔ 삭제 완료");
     return "삭제 완료";
   } catch (error) {

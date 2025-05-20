@@ -9,7 +9,7 @@ import { getTeamAvr } from "./SquadBuilderUtil";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
-  dropPlayers: { [idx: number]: Player | null };
+  //squadPlayers: Player[];
   // benchPlayers: Player[];
   setSelectedDropZone: React.Dispatch<
     React.SetStateAction<{ index: number; pos: string }>
@@ -25,7 +25,7 @@ interface SquadBuilderProp {
 
 const SquadBuilder: React.FC<SquadBuilderProp> = ({
   selectedFormation,
-  dropPlayers,
+  //squadPlayers,
   // benchPlayers,
   setSelectedDropZone,
   setIsDropZoneSelected,
@@ -34,6 +34,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   selectedDropZone,
 }) => {
   const {
+    dropPlayers,
     setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,

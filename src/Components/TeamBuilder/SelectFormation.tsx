@@ -3,6 +3,7 @@ import { Select, MenuItem, Box } from "@mui/material";
 import { baseFormations } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
 import { TOTAL_DROP_ZONES } from "../../data/formations";
+import { defaultPlayer } from "../../types/Player";
 
 const SelectFormation: React.FC = () => {
   const {
@@ -25,11 +26,8 @@ const SelectFormation: React.FC = () => {
         value={myFormation}
         onChange={(e) => {
           setMyFormation(e.target.value);
-          setDropPlayers(
-            Object.fromEntries(
-              Array.from({ length: TOTAL_DROP_ZONES }, (_, i) => [i, null])
-            )
-          );
+          setDropPlayers(Array.from({ length: TOTAL_DROP_ZONES }, () => defaultPlayer));
+
           setIsDropZoneSelected(false);
           resetSquadMetric();
         }}

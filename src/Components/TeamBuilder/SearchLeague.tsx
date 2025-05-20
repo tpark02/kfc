@@ -52,7 +52,7 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
     if (open && leagues.length === 0) {
       setLoading(true);
       axios
-        .get<LeaguePage>("http://localhost:8080/api/leagues")
+        .get<LeaguePage>("http://localhost:8080/leagues")
         .then((response) => {
           setLeagues(response.data.content);
         })

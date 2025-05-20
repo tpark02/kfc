@@ -1,7 +1,7 @@
 import { useSquadStore } from "../../store/useSquadStore";
 
 const LeagueMyTeam = () => {
-  const { myTeamName, dropPlayers, myTeamOvr, myFormation, myTeamSquadValue } =
+  const { myTeamName, myClubs, myTeamOvr, myFormation, myTeamSquadValue, selectedMyPlayers } =
     useSquadStore();
 
   return (
@@ -33,8 +33,8 @@ const LeagueMyTeam = () => {
               height: "100%",
             }}
           >
-            {dropPlayers ? (
-              Object.values(dropPlayers).map((player, idx) => (
+            {selectedMyPlayers ? (
+              Object.values(selectedMyPlayers).map((player, idx) => (
                 <div
                   key={idx}
                   style={{

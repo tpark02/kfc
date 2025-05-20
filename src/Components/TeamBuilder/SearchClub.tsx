@@ -50,7 +50,7 @@ const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
     if (open && teams.length === 0) {
       setLoading(true);
       axios
-        .get<TeamPage>("http://localhost:8080/api/teams")
+        .get<TeamPage>("http://localhost:8080/teams")
         .then((response) => {
           setTeams(response.data.content);
         })
