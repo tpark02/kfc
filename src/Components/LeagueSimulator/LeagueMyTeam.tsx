@@ -1,7 +1,7 @@
 import { useSquadStore } from "../../store/useSquadStore";
 
 const LeagueMyTeam = () => {
-  const { myTeamName, myClubs, myTeamOvr, myFormation, myTeamSquadValue, selectedMyPlayers } =
+  const { myTeamName, myTeamOvr, myFormation, myTeamSquadValue, selectedMyPlayers } =
     useSquadStore();
 
   return (

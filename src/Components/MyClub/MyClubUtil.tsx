@@ -24,7 +24,7 @@ export const updateMyClub = async (
   clubId: number,
   newClubName: string,
   myFormation: string,
-  dropPlayers: { [index: number]: Player | null },
+  dropPlayers: Player[],
   myTeamOvr: number,
   myTeamSquadValue: number,
   myTeamAge: number,
@@ -35,12 +35,13 @@ export const updateMyClub = async (
   myTeamStamina: number
 ): Promise<string> => {
   try {
+    console.log(dropPlayers);
     const players = Array.from(
       { length: 26 },
       (_, i) => dropPlayers[i]?.id ?? null
     );
 
-    console.log("🛰 보내는 데이터:", {
+    console.log("🛰 request data:", {
       clubName: newClubName,
       formationName: myFormation,
       players,
@@ -73,11 +74,11 @@ export const updateMyClub = async (
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 400) {
-      console.error("❌ 400 오류 응답:", error.response.data);
+      console.error("❌ 400 response error:", error.response.data);
       return error.response.data as string;
     } else {
       console.error("❌ 저장 실패:", error);
-      return "알 수 없는 오류가 발생했습니다.";
+      return "unknown error occurred";
     }
   }
 };
@@ -87,13 +88,15 @@ export const deleteMyClub = async (
   clubId: number
 ): Promise<string> => {
   try {
-    await axios.delete(
+    const response = await axios.delete(
       `http://localhost:8080/deletemyclub/${userId}/${clubId}`
-    );
-    console.log("✔ 삭제 완료");
-    return "삭제 완료";
+    );    
+    return response.data;
   } catch (error) {
     console.error("❌ 삭제 실패:", error);
-    return "삭제 실패";
+    if (axios.isAxiosError(error)) {
+      return error.response?.data || "club deletion failed";
+    }
+    return "club deletion failed";
   }
 };

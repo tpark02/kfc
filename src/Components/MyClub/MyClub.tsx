@@ -36,6 +36,7 @@ const MyClub: React.FC<MyClubProp> = ({
     myTeamClubCohesion,
     myTeamAttack,
     myTeamStamina,
+    setMySelectedClubId,
     setSelectedMyPlayers,
     setDropPlayers,
     setMyTeamOvr,
@@ -224,6 +225,10 @@ const MyClub: React.FC<MyClubProp> = ({
                         (c) => c.clubId === club?.clubId
                       );
 
+                      if (club?.clubId !== undefined) {
+                        setMySelectedClubId(club.clubId);
+                      }
+
                       if (!selectedClub) {
                         setSnackbarMessage("The club not found");
                         setSnackbarOpen(true);
@@ -236,7 +241,6 @@ const MyClub: React.FC<MyClubProp> = ({
                         selectedClub.players.map(myPlayerToPlayer);
 
                       setDropPlayers([...playerList]);
-
                       setMyFormation(selectedClub.formationName);
                       setMyTeamOvr(selectedClub.ovr);
                       setMyTeamSquadValue(selectedClub.price);
@@ -300,6 +304,7 @@ const MyClub: React.FC<MyClubProp> = ({
                   color: "white",
                 }}
                 onClick={() => {
+                  console.log("click edit");
                   setEditingIndex(idx);
                   setNewClubName(club?.name ?? "");
                 }}

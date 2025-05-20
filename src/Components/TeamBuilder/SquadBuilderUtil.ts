@@ -36,9 +36,9 @@ function estimateValue(player: Player) {
   const multiplier =
     POSITION_MULTIPLIER[player.pos as keyof typeof POSITION_MULTIPLIER] || 1.0;
 
-  console.log(
-    `estimating: ${player.name} / pos=${player.pos} / ovr=${player.ovr}`
-  );
+  // console.log(
+  //   `estimating: ${player.name} / pos=${player.pos} / ovr=${player.ovr}`
+  // );
 
   return Math.round(baseValue * multiplier);
 }

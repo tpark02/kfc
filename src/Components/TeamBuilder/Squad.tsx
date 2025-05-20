@@ -31,7 +31,6 @@ const Squad: React.FC = () => {
   const {
     myUserId,
     myFormation,
-    dropPlayers,
     setDropPlayers,
     setMyTeamOvr,
     isDropZoneSelected,

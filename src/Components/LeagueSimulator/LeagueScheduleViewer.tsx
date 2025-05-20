@@ -1,17 +1,18 @@
 import axios from "axios";
 import { useEffect, useRef } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { Player } from "../../types/Player";
 import { Match } from "../../types/Match";
 
 const LeagueScheduleViewer = () => {
   const didRun = useRef(false);
   const {
+    myUserId,
+    mySelectedClubId,
+    selectedMyPlayers,
     matches,
-    setMatches,
     myTeamName,
-    dropPlayers,
     myTeamOvr,
+    setMatches,
     setHoveredMatchIndex,
   } = useSquadStore();
 
@@ -21,9 +22,8 @@ const LeagueScheduleViewer = () => {
         "http://localhost:8080/simulate/generate-schedule",
         {
           myTeamName: myTeamName,
-          myTeamMembers: Object.values(dropPlayers).filter(
-            (p): p is Player => p !== null
-          ),
+          userId: myUserId,
+          clubId: mySelectedClubId,
         }
       );
       setMatches(response.data);
@@ -34,9 +34,7 @@ const LeagueScheduleViewer = () => {
 
   useEffect(() => {
     if (!didRun.current) {
-      const players = Object.values(dropPlayers).filter(
-        (p): p is Player => p !== null
-      );
+      const players = selectedMyPlayers;
 
       if (players.length === 0) {
         console.log("선수가 없습니다.");
@@ -46,7 +44,7 @@ const LeagueScheduleViewer = () => {
       fetchSchedule(); // 이 시점에 보내면 서버에도 올바른 선수 전달됨
       didRun.current = true;
     }
-  }, [dropPlayers]);
+  }, [selectedMyPlayers]);
 
   return (
     <div

@@ -8,6 +8,7 @@ export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
   myUserId: number;
+  mySelectedClubId: number;
   myTeamName: string;
   myFormation: string;
   dropPlayers: Player[];
@@ -28,6 +29,7 @@ type SquadStore = {
 
   selectedMyPlayers: MyPlayer[];
 
+  setMySelectedClubId: (n: number) => void;
   setSelectedMyPlayers: (players: MyPlayer[]) => void;
   setuserId: (userId: number) => void;
   setMyClubs: (clubs: (MyClubData | null)[]) => void;
@@ -62,6 +64,7 @@ type SquadStore = {
 
 export const useSquadStore = create<SquadStore>((set) => ({
   myUserId: -1,
+  mySelectedClubId: -1,
   myTeamName: "N/A",
   myFormation: "442",
   dropPlayers: [],
@@ -83,6 +86,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myClubs: Array(3).fill(null),
   selectedMyPlayers: [],
 
+  setMySelectedClubId: (n: number)=>{set({mySelectedClubId: n})},
   setSelectedMyPlayers: (players: MyPlayer[]) =>
     set({ selectedMyPlayers: players }),
   setuserId: (userId: number) => set({ myUserId: userId }),

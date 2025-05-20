@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
-import { Player } from "../../types/Player";
 import CroppedAvatar from "./CroppedAvatar";
 import "../../style/SquadBuilder.css";
 import { useSquadStore } from "../../store/useSquadStore";
