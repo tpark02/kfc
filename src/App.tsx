@@ -12,6 +12,7 @@ import NavBar from "./components/NavBar"; // 💡 make sure the path is correct
 import "./App.css";
 import "./style/Player.css";
 import LeagueSimulator from "./components/LeagueSimulator/LeagueSimulator";
+import SeasonPage from "./components/SeasonSimulator/SeasonPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             />
             <Route path="/squad" element={<Squad />} />
             <Route path="/league" element={<LeagueSimulator />} />
+            <Route path="/season/:seasonId" element={<SeasonPage />} />
           </Routes>
         </Router>
       </DndProvider>

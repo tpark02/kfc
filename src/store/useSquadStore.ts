@@ -8,6 +8,8 @@ export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
   myUserId: number;
+  myUserEmail: string;
+  myUserName: string;
   mySelectedClubId: number;
   myTeamName: string;
   myFormation: string;
@@ -29,6 +31,8 @@ type SquadStore = {
 
   selectedMyPlayers: MyPlayer[];
 
+  setUserEmail: (s: string) => void;
+  setUserName: (s: string) => void;
   setMySelectedClubId: (n: number) => void;
   setSelectedMyPlayers: (players: MyPlayer[]) => void;
   setuserId: (userId: number) => void;
@@ -63,6 +67,8 @@ type SquadStore = {
 };
 
 export const useSquadStore = create<SquadStore>((set) => ({
+  myUserEmail: "",
+  myUserName: "",
   myUserId: -1,
   mySelectedClubId: -1,
   myTeamName: "N/A",
@@ -86,7 +92,15 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myClubs: Array(3).fill(null),
   selectedMyPlayers: [],
 
-  setMySelectedClubId: (n: number)=>{set({mySelectedClubId: n})},
+  setUserEmail: (s: string) => {
+    set({ myUserEmail: s });
+  },
+  setUserName: (s: string) => {
+    set({ myUserName: s });
+  },
+  setMySelectedClubId: (n: number) => {
+    set({ mySelectedClubId: n });
+  },
   setSelectedMyPlayers: (players: MyPlayer[]) =>
     set({ selectedMyPlayers: players }),
   setuserId: (userId: number) => set({ myUserId: userId }),
@@ -97,11 +111,11 @@ export const useSquadStore = create<SquadStore>((set) => ({
   setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),
   updateDropPlayer: (idx: number, player: Player) =>
-  set((state) => {
-    const updatedPlayers = [...state.dropPlayers];
-    updatedPlayers[idx] = player;
-    return { dropPlayers: updatedPlayers };
-  }),
+    set((state) => {
+      const updatedPlayers = [...state.dropPlayers];
+      updatedPlayers[idx] = player;
+      return { dropPlayers: updatedPlayers };
+    }),
   setDropPlayers: (players: Player[]) => set({ dropPlayers: players }),
   // setBenchPlayers: (players: Player[]) => set({ benchPlayers: players }),
   setMyTeamSquadValue: (value: number) => set({ myTeamSquadValue: value }),
