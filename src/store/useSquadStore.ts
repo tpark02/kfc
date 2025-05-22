@@ -7,6 +7,8 @@ import { MyClubData } from "../types/Club";
 export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
+  joinedSeasonId: number;
+  setJoinedSeasonId: (n: number)=>void;
   myUserId: number;
   myUserEmail: string;
   myUserName: string;
@@ -67,6 +69,8 @@ type SquadStore = {
 };
 
 export const useSquadStore = create<SquadStore>((set) => ({
+  joinedSeasonId: -1,
+  setJoinedSeasonId: (n: number)=>(set({joinedSeasonId: n})),
   myUserEmail: "",
   myUserName: "",
   myUserId: -1,

@@ -26,7 +26,7 @@ export default function CreateSeasonForm({ onCreated }: { onCreated: () => void 
         onClick={handleCreate}
         className="bg-blue-500 text-white px-4 py-1 rounded"
       >
-        시즌 만들기
+        Create
       </button>
     </div>
   );

@@ -20,7 +20,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
 
   useEffect(() => {
     if (!seasonId || isNaN(Number(seasonId))) {
-      console.warn("잘못된 seasonId:", seasonId);
+      console.warn("Invalid seasonId:", seasonId);
       return;
     }
 
@@ -33,7 +33,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
         const data: MatchDto[] = res.data;
 
         if (!Array.isArray(data) || data.length === 0) {
-          console.warn("매치 데이터 없음");
+          console.warn("No match data available");
           setGames([]);
           return;
         }
@@ -85,7 +85,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
           gamesList.push(game);
         });
 
-        // 연결 설정
+        // Set up sourceGame links
         for (const game of gamesList) {
           const { round, sides } = game;
           const homeName = sides.home.team.name;
@@ -115,19 +115,18 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
 
         setGames([finalGame]);
         setIsLoading(false);
-
-        fetchMatches();
       } catch (error) {
-        console.error("❌ 매치 불러오기 실패:", error);
+        console.error("❌ Failed to load matches:", error);
         setGames([]);
       }
     };
+
     fetchMatches();
   }, [seasonId]);
 
-  if (isLoading) return <div>⏳ 로딩 중...</div>;
+  if (isLoading) return <div>⏳ Loading...</div>;
 
-  if (games.length === 0) return <div>📭 경기 데이터가 없습니다.</div>;
+  if (games.length === 0) return <div>📭 No match data available.</div>;
 
   return (
     <div

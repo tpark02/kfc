@@ -13,6 +13,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
+import { useSquadStore } from "../../store/useSquadStore";
 
 interface Season {
   id: number;
@@ -25,7 +26,7 @@ export default function SeasonLobby() {
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
-    console.log("시즌 응답:", res.data);
+    console.log("Season response:", res.data);
     setSeasons(res.data);
   };
 
@@ -33,10 +34,15 @@ export default function SeasonLobby() {
     fetchSeasons();
   }, []);
 
+  const { joinedSeasonId } = useSquadStore();
+
   return (
     <Box p={4}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
-        시즌 목록
+        {joinedSeasonId}
+      </Typography>
+      <Typography variant="h5" fontWeight="bold" gutterBottom>
+        League List
       </Typography>
 
       <Box mb={3}>

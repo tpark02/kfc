@@ -8,15 +8,21 @@ import {
   Button,
   Typography,
   CircularProgress,
-  Alert,
 } from "@mui/material";
+import { useSquadStore } from "../../store/useSquadStore";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogContentText } from "@mui/material";
 
 export default function SeasonPage() {
   const { seasonId } = useParams<{ seasonId: string }>();
   const [joined, setJoined] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false); // 버튼 클릭 중 상태
-  const userId = 1; // TODO: 로그인 사용자 ID로 대체
+  const [processing, setProcessing] = useState(false); // button click state
+  const userId = 1; // TODO: replace with logged-in user ID
+  const { joinedSeasonId, setJoinedSeasonId } = useSquadStore();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackBarMsg] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkIfJoined = async () => {
@@ -27,7 +33,7 @@ export default function SeasonPage() {
         const alreadyJoined = res.data.some((p: any) => p.id === userId);
         setJoined(alreadyJoined);
       } catch (err) {
-        console.error("❌ 참가자 확인 실패:", err);
+        console.error("❌ Failed to check participation:", err);
       } finally {
         setLoading(false);
       }
@@ -36,27 +42,56 @@ export default function SeasonPage() {
     if (seasonId) checkIfJoined();
   }, [seasonId]);
 
-  if (!seasonId) return <Alert severity="error">❌ 잘못된 시즌 ID입니다.</Alert>;
+  console.log("joined season id:", joinedSeasonId);
+
+  useEffect(() => {
+    if (!seasonId) {
+      setSnackbarOpen(true);
+      setSnackBarMsg("❌ Invalid season ID. Returning...");
+      setTimeout(() => {
+        navigate("/league"); // 👈 navigate directly to /league
+      }, 2000); // wait 2s before redirect
+    }
+  }, [seasonId, navigate]);
+
+  useEffect(() => {
+    if (!seasonId) return;
+    if (joinedSeasonId === parseInt(seasonId)) return;
+    if (joinedSeasonId > -1) {
+      setSnackbarOpen(true);
+      setSnackBarMsg(`You are already joined in ${joinedSeasonId}`);
+      setTimeout(() => {
+        navigate("/league"); // 👈 navigate directly to /league
+      }, 2000); // wait 2s before redirect
+    }
+  }, [joinedSeasonId, seasonId, navigate]);
 
   const toggleJoin = async () => {
     setProcessing(true);
     try {
       if (joined) {
-        await axios.delete(`http://localhost:8080/season/${seasonId}/leave`, {
-          params: { userId },
-        });
-        console.log("🚪 탈퇴 완료");
+        await axios.put(
+          `http://localhost:8080/season/${seasonId}/leave`,
+          null,
+          {
+            params: { userId },
+          }
+        );
+        setJoinedSeasonId(-1);
+        console.log("🚪 Successfully left");
       } else {
-        await axios.post(
+        const res = await axios.post(
           `http://localhost:8080/season/${seasonId}/join`,
           null,
           { params: { userId } }
         );
-        console.log("✅ 참가 완료");
+        const { seasonId: returnedId, message } = res.data;
+        setJoinedSeasonId(returnedId);
+        console.log(`✅ ${message} (Season ID: ${returnedId})`);
       }
-      setJoined(!joined); // 토글 상태 반전
+      setJoined(!joined); // toggle state
     } catch (err) {
-      console.error("❌ 참가/탈퇴 실패:", err);
+      console.error("❌ Failed to join/leave:", err);
     } finally {
       setProcessing(false);
     }
@@ -65,7 +100,7 @@ export default function SeasonPage() {
   return (
     <Box p={4}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
-        🏆 시즌 {seasonId} 브래킷
+        🏆 Season {seasonId} Bracket
       </Typography>
 
       {loading ? (
@@ -78,16 +113,24 @@ export default function SeasonPage() {
           disabled={processing}
           sx={{ mb: 3 }}
         >
-          {joined ? "탈퇴하기" : "참가하기"}
+          {joined ? "Leave" : "Join"}
         </Button>
       )}
-
       <SeasonParticipantsList
-        seasonId={parseInt(seasonId)}
+        seasonId={seasonId ? parseInt(seasonId) : -1}
         refreshKey={joined}
       />
 
-      <ChampionsBracket seasonId={parseInt(seasonId)} />
+      <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
+      <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
+
+      <Dialog open={snackbarOpen} onClose={() => setSnackbarOpen(false)}>
+        <DialogContent>
+          <DialogContentText sx={{ textAlign: "center", fontSize: "1.1rem" }}>
+            {snackbarMsg}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

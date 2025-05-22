@@ -7,9 +7,10 @@ interface Participant {
   rank: number;
   ovr: number;
 }
+
 interface Props {
   seasonId: number;
-  refreshKey?: any; // 값이 바뀌면 useEffect가 다시 실행됨
+  refreshKey?: any; // Triggers useEffect re-run when this changes
 }
 
 export default function SeasonParticipantsList({ seasonId, refreshKey }: Props) {
@@ -24,18 +25,18 @@ export default function SeasonParticipantsList({ seasonId, refreshKey }: Props) 
         setParticipants(res.data);
       })
       .catch((err) => {
-        console.error("❌ 참가자 불러오기 실패:", err);
+        console.error("❌ Failed to load participants:", err);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [seasonId, refreshKey]); // ✅ refreshKey가 바뀔 때마다 리로드
+  }, [seasonId, refreshKey]); // ✅ Reloads when refreshKey changes
 
-  if (loading) return <div>⏳ 참가자 목록 불러오는 중...</div>;
+  if (loading) return <div>⏳ Loading participants...</div>;
 
   return (
     <div className="mb-6">
-      <h3 className="text-lg font-semibold mb-2">👥 참가자 명단</h3>
+      <h3 className="text-lg font-semibold mb-2">👥 Participants</h3>
       <ul className="list-disc list-inside space-y-1">
         {participants.map((p) => (
           <li key={p.id}>
