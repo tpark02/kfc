@@ -1,14 +1,11 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import ChampionsBracket from "./MatchList";
 import SeasonParticipantsList from "./SeasonParticipantsList";
-import {
-  Box,
-  Button,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import SeasonTimer from "./SeasonTimer";
+
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogContentText } from "@mui/material";
@@ -23,6 +20,9 @@ export default function SeasonPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMsg, setSnackBarMsg] = useState("");
   const navigate = useNavigate();
+  const [seasonStarted, setSeasonStarted] = useState(false); // ✅ 추가
+
+  console.log("joined season id:", joinedSeasonId);
 
   useEffect(() => {
     const checkIfJoined = async () => {
@@ -39,10 +39,44 @@ export default function SeasonPage() {
       }
     };
 
-    if (seasonId) checkIfJoined();
+    if (seasonId) {
+      checkIfJoined();
+      fetchSeasonInfo();
+    }
   }, [seasonId]);
 
-  console.log("joined season id:", joinedSeasonId);
+  const fetchSeasonInfo = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
+      setRemainingSeconds(res.data.remainingSeconds);
+      setSeasonStarted(res.data.started); // ✅ started 정보 저장
+    } catch (err) {
+      console.error("❌ Failed to load season info:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (!seasonId) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
+        const started = res.data.started;
+        if (started) {
+          setSeasonStarted(true);
+          setSnackbarOpen(true);
+          setSnackBarMsg(
+            "🚫 This match has already started. Entry is not allowed."
+          );
+          setTimeout(() => navigate("/league"), 2500);
+        }
+      } catch (err) {
+        console.error("❌ Failed to refresh season state:", err);
+      }
+    }, 3000); // ⏱️ 3초마다 체크
+
+    return () => clearInterval(interval); // cleanup
+  }, [seasonId, navigate]);
 
   useEffect(() => {
     if (!seasonId) {
@@ -65,6 +99,20 @@ export default function SeasonPage() {
       }, 2000); // wait 2s before redirect
     }
   }, [joinedSeasonId, seasonId, navigate]);
+
+  useEffect(() => {
+    if (seasonStarted) {
+      setSnackbarOpen(true);
+      setSnackBarMsg(
+        "🚫 This match has already started. Entry is not allowed."
+      );
+      setTimeout(() => {
+        navigate("/league");
+      }, 2500);
+    }
+  }, [seasonStarted, navigate]);
+
+  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
 
   const toggleJoin = async () => {
     setProcessing(true);
@@ -102,7 +150,12 @@ export default function SeasonPage() {
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         🏆 Season {seasonId} Bracket
       </Typography>
-
+      {remainingSeconds !== null && seasonId && (
+        <SeasonTimer
+          initialRemaining={remainingSeconds}
+          seasonId={parseInt(seasonId)}
+        />
+      )}
       {loading ? (
         <CircularProgress />
       ) : (
@@ -110,7 +163,7 @@ export default function SeasonPage() {
           variant="contained"
           color={joined ? "error" : "primary"}
           onClick={toggleJoin}
-          disabled={processing}
+          disabled={processing || seasonStarted}
           sx={{ mb: 3 }}
         >
           {joined ? "Leave" : "Join"}

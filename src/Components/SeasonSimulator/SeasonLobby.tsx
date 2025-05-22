@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import CreateSeasonForm from "./CreateSeasonForm";
+import SeasonTimerLobby from "./SeasonTimerLobby"; // ✅ 실시간 타이머 컴포넌트 추가
 
 import {
   Box,
@@ -19,22 +20,22 @@ interface Season {
   id: number;
   name: string;
   started: boolean;
+  createdAt: string;
 }
 
 export default function SeasonLobby() {
   const [seasons, setSeasons] = useState<Season[]>([]);
+  const { joinedSeasonId } = useSquadStore();
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
-    console.log("Season response:", res.data);
-    setSeasons(res.data);
+    const data: Season[] = res.data;
+    setSeasons(data);
   };
 
   useEffect(() => {
     fetchSeasons();
   }, []);
-
-  const { joinedSeasonId } = useSquadStore();
 
   return (
     <Box p={4}>
@@ -53,7 +54,15 @@ export default function SeasonLobby() {
         <List>
           {seasons.map((season) => (
             <ListItem key={season.id} divider>
-              <ListItemText primary={season.name} />
+              <ListItemText
+                primary={season.name}
+                secondary={
+                  <SeasonTimerLobby
+                    createdAt={season.createdAt}
+                    started={season.started}
+                  />
+                }
+              />
               <ListItemSecondaryAction>
                 <Button
                   variant="outlined"
