@@ -124,7 +124,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
     fetchMatches();
   }, [seasonId]);
 
-  if (isLoading) return <div>⏳ Loading...</div>;
+  // if (isLoading) return <div>⏳ Loading...</div>;
 
   if (games.length === 0) return <div>📭 No match data available.</div>;
 

@@ -64,11 +64,11 @@ export default function SeasonPage() {
         const started = res.data.started;
         if (started) {
           setSeasonStarted(true);
-          setSnackbarOpen(true);
-          setSnackBarMsg(
-            "🚫 This match has already started. Entry is not allowed."
-          );
-          setTimeout(() => navigate("/league"), 2500);
+          // setSnackbarOpen(true);
+          // setSnackBarMsg(
+          //   "🚫 This match has already started. Entry is not allowed."
+          // );
+          // setTimeout(() => navigate("/league"), 2500);
         }
       } catch (err) {
         console.error("❌ Failed to refresh season state:", err);
@@ -101,16 +101,25 @@ export default function SeasonPage() {
   }, [joinedSeasonId, seasonId, navigate]);
 
   useEffect(() => {
-    if (seasonStarted) {
-      setSnackbarOpen(true);
-      setSnackBarMsg(
-        "🚫 This match has already started. Entry is not allowed."
-      );
-      setTimeout(() => {
-        navigate("/league");
-      }, 2500);
-    }
-  }, [seasonStarted, navigate]);
+    if (!seasonId) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
+        const started = res.data.started;
+        setRemainingSeconds(res.data.remainingSeconds);
+        if (started && !seasonStarted) {
+          setSeasonStarted(true); // this triggers re-render and shows bracket
+          setSnackbarOpen(true);
+          setSnackBarMsg("🚨 Match has started!");
+        }
+      } catch (err) {
+        console.error("❌ Failed to poll season info:", err);
+      }
+    }, 3000); // every 3s
+
+    return () => clearInterval(interval);
+  }, [seasonId, seasonStarted]);
 
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
 
@@ -174,8 +183,13 @@ export default function SeasonPage() {
         refreshKey={joined}
       />
 
-      <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
-      <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
+      {seasonStarted ? (
+        <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
+      ) : (
+        <Typography color="gray" mt={2}>
+          🕒 Waiting for match to start...
+        </Typography>
+      )}
 
       <Dialog open={snackbarOpen} onClose={() => setSnackbarOpen(false)}>
         <DialogContent>

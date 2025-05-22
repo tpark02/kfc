@@ -13,7 +13,10 @@ interface Props {
   refreshKey?: any; // Triggers useEffect re-run when this changes
 }
 
-export default function SeasonParticipantsList({ seasonId, refreshKey }: Props) {
+export default function SeasonParticipantsList({
+  seasonId,
+  refreshKey,
+}: Props) {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,8 +41,8 @@ export default function SeasonParticipantsList({ seasonId, refreshKey }: Props) 
     <div className="mb-6">
       <h3 className="text-lg font-semibold mb-2">👥 Participants</h3>
       <ul className="list-disc list-inside space-y-1">
-        {participants.map((p) => (
-          <li key={p.id}>
+        {participants.map((p, index) => (
+          <li key={`${p.id}-${index}`}>
             #{p.rank} {p.name} (OVR: {p.ovr})
           </li>
         ))}

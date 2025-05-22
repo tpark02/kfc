@@ -13,3 +13,6 @@ export const getPosColor = (pos: string) => {
   else if (pos.includes("G")) c = "orange";
   return c;
 };
+
+export const matchTimer = 1000 * 60 * 3;
+export const redirectTimer = 2000;
