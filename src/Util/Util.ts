@@ -14,5 +14,6 @@ export const getPosColor = (pos: string) => {
   return c;
 };
 
+export const devMatchTimer = 3000;
 export const matchTimer = 1000 * 60 * 3;
 export const redirectTimer = 2000;

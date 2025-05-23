@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { devMatchTimer } from "../../util/Util";
 
 interface Props {
   createdAt: string;
@@ -12,7 +13,7 @@ export default function SeasonTimerLobby({ createdAt }: Props) {
     const interval = setInterval(() => {
       const now = dayjs();
       //const deadline = dayjs(createdAt).add(5, "minute"); // 5분 후 시작
-      const deadline = dayjs(createdAt).add(5, "second"); // 3초 후 시작      
+      const deadline = dayjs(createdAt).add(devMatchTimer / 1000, "second"); // 초 후 시작      
       const diff = deadline.diff(now, "second");
       setRemaining(diff > 0 ? diff : 0);
     }, 1000);

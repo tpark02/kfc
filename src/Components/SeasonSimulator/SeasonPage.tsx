@@ -8,19 +8,29 @@ import { useEffect, useState } from "react";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogContentText } from "@mui/material";
+// import { Dialog, DialogContent, DialogContentText } from "@mui/material";
+import { devMatchTimer } from "../../util/Util";
+
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  IconButton,
+} from "@mui/material";
 
 export default function SeasonPage() {
   const { seasonId } = useParams<{ seasonId: string }>();
   const [joined, setJoined] = useState(false);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false); // button click state
-  const userId = 1; // TODO: replace with logged-in user ID
   const { joinedSeasonId, setJoinedSeasonId } = useSquadStore();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMsg, setSnackBarMsg] = useState("");
-  const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMsg, setDialogMsg] = useState("");
   const [seasonStarted, setSeasonStarted] = useState(false); // ✅ 추가
+  const userId = 1; // TODO: replace with logged-in user ID
+  const navigate = useNavigate();
 
   console.log("joined season id:", joinedSeasonId);
 
@@ -80,8 +90,8 @@ export default function SeasonPage() {
 
   useEffect(() => {
     if (!seasonId) {
-      setSnackbarOpen(true);
-      setSnackBarMsg("❌ Invalid season ID. Returning...");
+      setDialogOpen(true);
+      setDialogMsg("❌ Invalid season ID. Returning...");
       setTimeout(() => {
         navigate("/league"); // 👈 navigate directly to /league
       }, 2000); // wait 2s before redirect
@@ -92,11 +102,11 @@ export default function SeasonPage() {
     if (!seasonId) return;
     if (joinedSeasonId === parseInt(seasonId)) return;
     if (joinedSeasonId > -1) {
-      setSnackbarOpen(true);
-      setSnackBarMsg(`You are already joined in ${joinedSeasonId}`);
-      setTimeout(() => {
-        navigate("/league"); // 👈 navigate directly to /league
-      }, 2000); // wait 2s before redirect
+      setDialogOpen(true);
+      setDialogMsg(`You are already joined in ${joinedSeasonId}`);
+      // setTimeout(() => {
+      //   navigate("/league"); // 👈 navigate directly to /league
+      // }, 2000); // wait 2s before redirect
     }
   }, [joinedSeasonId, seasonId, navigate]);
 
@@ -110,13 +120,13 @@ export default function SeasonPage() {
         setRemainingSeconds(res.data.remainingSeconds);
         if (started && !seasonStarted) {
           setSeasonStarted(true); // this triggers re-render and shows bracket
-          setSnackbarOpen(true);
-          setSnackBarMsg("🚨 Match has started!");
+          setDialogOpen(true);
+          setDialogMsg("🚨 Match has started!");
         }
       } catch (err) {
         console.error("❌ Failed to poll season info:", err);
       }
-    }, 3000); // every 3s
+    }, devMatchTimer);
 
     return () => clearInterval(interval);
   }, [seasonId, seasonStarted]);
@@ -191,10 +201,25 @@ export default function SeasonPage() {
         </Typography>
       )}
 
-      <Dialog open={snackbarOpen} onClose={() => setSnackbarOpen(false)}>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle sx={{ m: 0, p: 2 }}>
+          {/* Optional title text */}
+          <IconButton
+            aria-label="close"
+            onClick={() => setDialogOpen(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ textAlign: "center", fontSize: "1.1rem" }}>
-            {snackbarMsg}
+            {dialogMsg}
           </DialogContentText>
         </DialogContent>
       </Dialog>

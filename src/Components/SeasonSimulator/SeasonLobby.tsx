@@ -59,7 +59,6 @@ export default function SeasonLobby() {
                 secondary={
                   <SeasonTimerLobby
                     createdAt={season.createdAt}
-                    started={season.started}
                   />
                 }
               />
