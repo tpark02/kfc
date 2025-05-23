@@ -21,7 +21,7 @@ export default function SeasonTimer({ initialRemaining, seasonId }: Props) {
     if (!seasonId) return;
 
     const fetchSeason = async () => {
-      const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
+      const res = await axios.get(`http://localhost:8080/season/getSeason/${seasonId}`);
       setRemaining(res.data.remainingSeconds);
     };
     fetchSeason();

@@ -61,6 +61,7 @@ export default function SeasonLobby() {
                     createdAt={season.createdAt}
                   />
                 }
+                secondaryTypographyProps={{ component: "div" }} // ✅ 핵심 해결
               />
               <ListItemSecondaryAction>
                 <Button

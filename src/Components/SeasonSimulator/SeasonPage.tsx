@@ -1,127 +1,90 @@
 import axios from "axios";
-import ChampionsBracket from "./ChampionsBracket";
-import SeasonParticipantsList from "./SeasonParticipantsList";
-import SeasonTimer from "./SeasonTimer";
-
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Box, Button, Typography, CircularProgress } from "@mui/material";
-import { useSquadStore } from "../../store/useSquadStore";
-import { useNavigate } from "react-router-dom";
-// import { Dialog, DialogContent, DialogContentText } from "@mui/material";
-import { devMatchTimer } from "../../util/Util";
-
-import CloseIcon from "@mui/icons-material/Close";
 import {
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
+import { devMatchTimer } from "../../util/Util";
+import ChampionsBracket from "./ChampionsBracket";
+import SeasonParticipantsList from "./SeasonParticipantsList";
+import SeasonTimer from "./SeasonTimer";
+import { useSquadStore } from "../../store/useSquadStore";
+
+interface SeasonDto {
+  id: number;
+  name: string;
+  started: boolean;
+  createdAt: string;
+  finishedAt: string | null;
+  participantNames: string[];
+  remainingSeconds: number;
+}
 
 export default function SeasonPage() {
   const { seasonId } = useParams<{ seasonId: string }>();
-  const [joined, setJoined] = useState(false);
+  const [season, setSeason] = useState<SeasonDto | null>(null);
   const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false); // button click state
-  const { joinedSeasonId, setJoinedSeasonId } = useSquadStore();
+  const [processing, setProcessing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMsg, setDialogMsg] = useState("");
-  const [seasonStarted, setSeasonStarted] = useState(false); // ✅ 추가
-  const userId = 1; // TODO: replace with logged-in user ID
+  const { joinedSeasonId, setJoinedSeasonId } = useSquadStore();
   const navigate = useNavigate();
-
-  console.log("joined season id:", joinedSeasonId);
+  const userId = 1; // TODO: replace with actual logged-in user
 
   useEffect(() => {
-    const checkIfJoined = async () => {
+    if (!seasonId) {
+      setDialogMsg("❌ Invalid season ID. Returning...");
+      setDialogOpen(true);
+      setTimeout(() => navigate("/league"), 2000);
+      return;
+    }
+
+    const fetchSeasonInfo = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8080/season/${seasonId}/participants`
-        );
-        const alreadyJoined = res.data.some((p: any) => p.id === userId);
-        setJoined(alreadyJoined);
+        const res = await axios.get<SeasonDto>(`http://localhost:8080/season/getSeason/${seasonId}`);
+        setSeason(res.data);
       } catch (err) {
-        console.error("❌ Failed to check participation:", err);
+        console.error("❌ Failed to load season info:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (seasonId) {
-      checkIfJoined();
-      fetchSeasonInfo();
-    }
-  }, [seasonId]);
-
-  const fetchSeasonInfo = async () => {
-    try {
-      const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
-      setRemainingSeconds(res.data.remainingSeconds);
-      setSeasonStarted(res.data.started); // ✅ started 정보 저장
-    } catch (err) {
-      console.error("❌ Failed to load season info:", err);
-    }
-  };
-
-  useEffect(() => {
-    if (!seasonId) return;
-
-    const interval = setInterval(async () => {
-      try {
-        const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
-        const started = res.data.started;
-        if (started) {
-          setSeasonStarted(true);
-          // setSnackbarOpen(true);
-          // setSnackBarMsg(
-          //   "🚫 This match has already started. Entry is not allowed."
-          // );
-          // setTimeout(() => navigate("/league"), 2500);
-        }
-      } catch (err) {
-        console.error("❌ Failed to refresh season state:", err);
-      }
-    }, 3000); // ⏱️ 3초마다 체크
-
-    return () => clearInterval(interval); // cleanup
+    fetchSeasonInfo();
   }, [seasonId, navigate]);
 
   useEffect(() => {
-    if (!seasonId) {
-      setDialogOpen(true);
-      setDialogMsg("❌ Invalid season ID. Returning...");
-      setTimeout(() => {
-        navigate("/league"); // 👈 navigate directly to /league
-      }, 2000); // wait 2s before redirect
-    }
-  }, [seasonId, navigate]);
-
-  useEffect(() => {
-    if (!seasonId) return;
-    if (joinedSeasonId === parseInt(seasonId)) return;
+    if (!seasonId || joinedSeasonId === parseInt(seasonId)) return;
     if (joinedSeasonId > -1) {
-      setDialogOpen(true);
       setDialogMsg(`You are already joined in ${joinedSeasonId}`);
-      // setTimeout(() => {
-      //   navigate("/league"); // 👈 navigate directly to /league
-      // }, 2000); // wait 2s before redirect
+      setDialogOpen(true);
     }
-  }, [joinedSeasonId, seasonId, navigate]);
+  }, [joinedSeasonId, seasonId]);
 
   useEffect(() => {
     if (!seasonId) return;
 
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/season/${seasonId}`);
-        const started = res.data.started;
-        setRemainingSeconds(res.data.remainingSeconds);
-        if (started && !seasonStarted) {
-          setSeasonStarted(true); // this triggers re-render and shows bracket
+        const res = await axios.get<SeasonDto>(`http://localhost:8080/season/getSeason/${seasonId}`);
+        setSeason(res.data);
+
+        if (res.data.finishedAt) {
+          console.log("🎯 finishedAt detected, stopping polling");
+          setJoinedSeasonId(-1);
+          setDialogMsg("Match is finished");
           setDialogOpen(true);
-          setDialogMsg("🚨 Match has started!");
+          clearInterval(interval);
         }
       } catch (err) {
         console.error("❌ Failed to poll season info:", err);
@@ -129,34 +92,20 @@ export default function SeasonPage() {
     }, devMatchTimer);
 
     return () => clearInterval(interval);
-  }, [seasonId, seasonStarted]);
-
-  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
+  }, [seasonId, setJoinedSeasonId]);
 
   const toggleJoin = async () => {
     setProcessing(true);
     try {
-      if (joined) {
-        await axios.put(
-          `http://localhost:8080/season/${seasonId}/leave`,
-          null,
-          {
-            params: { userId },
-          }
-        );
+      if (joinedSeasonId !== -1) {
+        await axios.put(`http://localhost:8080/season/${seasonId}/leave`, null, { params: { userId } });
         setJoinedSeasonId(-1);
         console.log("🚪 Successfully left");
       } else {
-        const res = await axios.post(
-          `http://localhost:8080/season/${seasonId}/join`,
-          null,
-          { params: { userId } }
-        );
-        const { seasonId: returnedId, message } = res.data;
-        setJoinedSeasonId(returnedId);
-        console.log(`✅ ${message} (Season ID: ${returnedId})`);
+        const res = await axios.post(`http://localhost:8080/season/${seasonId}/join`, null, { params: { userId } });
+        setJoinedSeasonId(res.data.seasonId);
+        console.log(`✅ ${res.data.message} (Season ID: ${res.data.seasonId})`);
       }
-      setJoined(!joined); // toggle state
     } catch (err) {
       console.error("❌ Failed to join/leave:", err);
     } finally {
@@ -166,34 +115,40 @@ export default function SeasonPage() {
 
   return (
     <Box p={4}>
+      {season?.finishedAt && (
+        <Typography variant="body1" sx={{ mb: 1 }}>
+          🏁 Match Finished At: {new Date(season.finishedAt).toLocaleString()}
+        </Typography>
+      )}
+
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         🏆 Season {seasonId} Bracket
       </Typography>
-      {remainingSeconds !== null && seasonId && (
-        <SeasonTimer
-          initialRemaining={remainingSeconds}
-          seasonId={parseInt(seasonId)}
-        />
+
+      {season?.remainingSeconds !== null && seasonId && (
+        <SeasonTimer initialRemaining={season?.remainingSeconds ?? 0} seasonId={parseInt(seasonId)} />
       )}
+
       {loading ? (
         <CircularProgress />
       ) : (
         <Button
           variant="contained"
-          color={joined ? "error" : "primary"}
+          color={joinedSeasonId !== -1 ? "error" : "primary"}
           onClick={toggleJoin}
-          disabled={processing || seasonStarted}
+          disabled={processing || season?.started || (joinedSeasonId !== -1 && joinedSeasonId !== parseInt(seasonId ?? "-1"))}
           sx={{ mb: 3 }}
         >
-          {joined ? "Leave" : "Join"}
+          {joinedSeasonId !== -1 ? "Leave" : "Join"}
         </Button>
       )}
+
       <SeasonParticipantsList
         seasonId={seasonId ? parseInt(seasonId) : -1}
-        refreshKey={joined}
+        refreshKey={joinedSeasonId !== -1}
       />
 
-      {seasonStarted ? (
+      {season?.started ? (
         <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
       ) : (
         <Typography color="gray" mt={2}>
@@ -203,16 +158,10 @@ export default function SeasonPage() {
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          {/* Optional title text */}
           <IconButton
             aria-label="close"
             onClick={() => setDialogOpen(false)}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
+            sx={{ position: "absolute", right: 8, top: 8, color: (theme) => theme.palette.grey[500] }}
           >
             <CloseIcon />
           </IconButton>
