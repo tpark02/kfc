@@ -1,5 +1,5 @@
 import axios from "axios";
-import ChampionsBracket from "./MatchList";
+import ChampionsBracket from "./ChampionsBracket";
 import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 
