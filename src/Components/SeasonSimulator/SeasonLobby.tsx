@@ -25,7 +25,7 @@ interface Season {
 
 export default function SeasonLobby() {
   const [seasons, setSeasons] = useState<Season[]>([]);
-  const { joinedSeasonId } = useSquadStore();
+  const { joinedSeasonId, setuserId } = useSquadStore();
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
@@ -34,6 +34,7 @@ export default function SeasonLobby() {
   };
 
   useEffect(() => {
+    setuserId(1); // 임시 user id
     fetchSeasons();
   }, []);
 
@@ -56,11 +57,7 @@ export default function SeasonLobby() {
             <ListItem key={season.id} divider>
               <ListItemText
                 primary={season.name}
-                secondary={
-                  <SeasonTimerLobby
-                    createdAt={season.createdAt}
-                  />
-                }
+                secondary={<SeasonTimerLobby createdAt={season.createdAt} />}
                 secondaryTypographyProps={{ component: "div" }} // ✅ 핵심 해결
               />
               <ListItemSecondaryAction>

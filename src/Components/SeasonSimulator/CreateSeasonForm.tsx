@@ -9,7 +9,7 @@ export default function CreateSeasonForm({
   onCreated: () => void;
 }) {
   const [name, setName] = useState("");
-  const { myUserId } = useSquadStore();
+  const { myUserId, setJoinedSeasonId } = useSquadStore();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -22,11 +22,14 @@ export default function CreateSeasonForm({
       })
       .then((response) => {
         console.log(response.data);
-        setSnackbarMessage(response.data.msg);
-        setSnackbarOpen(true);
         if (!response.data?.error) {
           onCreated(); // 성공 시 콜백
+          setJoinedSeasonId(response.data.id);
+          setSnackbarMessage(response.data.msg);
+        } else {
+          setSnackbarMessage(response.data.error);
         }
+        setSnackbarOpen(true);
       })
       .catch((error) => {
         setSnackbarMessage("요청 실패: " + error.message);
