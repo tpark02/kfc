@@ -14,7 +14,7 @@ const MyClubSelect: React.FC<MyClubSelectProp> = ({ selectedIdx, setIdx }) => {
     <Select
       variant="outlined"
       style={{
-        width: "90%",
+        width: "100%",
         borderRadius: "8px",
       }}
       labelId="formation-label"
@@ -49,6 +49,7 @@ const MyClubSelect: React.FC<MyClubSelectProp> = ({ selectedIdx, setIdx }) => {
     >
       {Object.values(myClubs).map((myClub, idx) => {
         console.log("my club : ", myClub?.clubId);
+        console.log("my club list : ", myClub);
         if (!myClub) return null;
         return (
           <MenuItem

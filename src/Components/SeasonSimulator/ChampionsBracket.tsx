@@ -118,7 +118,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
 
   return (
     <div className="bracket-container">
-      <h1>Tournament Bracket</h1>
+      {/* <h1>Tournament Bracket</h1> */}
       <div className="tournament-bracket tournament-bracket--rounded">
         {sortedRounds.map(([round, matches]) => (
           <TournamentRound key={round} title={`Round ${round}`} matches={matches} />
