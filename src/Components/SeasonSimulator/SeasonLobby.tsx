@@ -136,12 +136,13 @@ export default function SeasonLobby() {
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         League List
       </Typography>
-
       <Box mb={3}>
         <CreateSeasonForm onCreated={fetchSeasons} />
       </Box>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <Paper elevation={3}>
+      <Box style={{ display: "flex", flexDirection: "row", gap: "16px" }}>
+        {" "}
+        <Paper elevation={3} sx={{ width: "60%" }}>
+          {" "}
           <List>
             {seasons.map((season) => (
               <ListItem key={season.id} divider>
@@ -152,8 +153,7 @@ export default function SeasonLobby() {
                       createdAt={season.createdAt}
                       finishedAt={season.finishedAt}
                     />
-                  }
-                  secondaryTypographyProps={{ component: "div" }} // ✅ 핵심 해결
+                  }                  
                 />
                 <ListItemSecondaryAction>
                   <Button
@@ -168,18 +168,21 @@ export default function SeasonLobby() {
             ))}
           </List>
         </Paper>
-        <Paper>
+        <Paper elevation={3} sx={{ width: "40%" }}>
+          {" "}
           {selectedMyPlayers.map((p) => {
             return (
-              <div style={{ display: "flex", flexDirection: "row", gap: "12px" }}>
-                <div>{p.pos}</div>
-                <div>{p.name}</div>
-                <div>{p.ovr}</div>
-              </div>
+              <Box
+                style={{ display: "flex", flexDirection: "row", gap: "12px" }}
+              >
+                <Box>{p.pos}</Box>
+                <Box>{p.name}</Box>
+                <Box>{p.ovr}</Box>
+              </Box>
             );
           })}
         </Paper>
-      </div>
+      </Box>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
