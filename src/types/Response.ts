@@ -34,3 +34,13 @@ export type ResponseRandomSquad = {
   myTeamStamina: number;
   benchPlayers: Player[];
 };
+
+export type SeasonResponse = {
+  id: number;
+  name: string;
+  started: boolean;
+  createdAt: string;
+  finishedAt: string | null;
+  participantNames: string[];
+  remainingSeconds: number;
+}

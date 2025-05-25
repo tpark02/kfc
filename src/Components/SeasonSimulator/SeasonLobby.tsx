@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { SeasonResponse } from "../../types/Response";
+import { devMatchTimer } from "../../util/Util";
+import { Snackbar } from "@mui/material";
+
 import axios from "axios";
 import CreateSeasonForm from "./CreateSeasonForm";
 import SeasonTimerLobby from "./SeasonTimerLobby"; // ✅ 실시간 타이머 컴포넌트 추가
@@ -21,11 +25,14 @@ interface Season {
   name: string;
   started: boolean;
   createdAt: string;
+  finishedAt: string;
 }
 
 export default function SeasonLobby() {
   const [seasons, setSeasons] = useState<Season[]>([]);
-  const { joinedSeasonId, setuserId } = useSquadStore();
+  const { joinedSeasonId, setuserId, setJoinedSeasonId } = useSquadStore();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
@@ -37,6 +44,31 @@ export default function SeasonLobby() {
     setuserId(1); // 임시 user id
     fetchSeasons();
   }, []);
+
+  useEffect(() => {
+    if (joinedSeasonId === -1) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get<SeasonResponse>(
+          `http://localhost:8080/season/getSeason/${joinedSeasonId}`
+        );
+
+        if (res.data.finishedAt) {
+          console.log("🎯 finishedAt detected, stopping polling");
+          setJoinedSeasonId(-1);
+          setSnackbarMessage("Match is finished");
+          setSnackbarOpen(true);
+          fetchSeasons();   // refresh all matches in the lobby
+          clearInterval(interval);          
+        }
+      } catch (err) {
+        console.error("❌ Failed to poll season info:", err);
+      }
+    }, devMatchTimer);
+
+    return () => clearInterval(interval);
+  }, [joinedSeasonId, setJoinedSeasonId]);
 
   return (
     <Box p={4}>
@@ -57,7 +89,12 @@ export default function SeasonLobby() {
             <ListItem key={season.id} divider>
               <ListItemText
                 primary={season.name}
-                secondary={<SeasonTimerLobby createdAt={season.createdAt} />}
+                secondary={
+                  <SeasonTimerLobby
+                    createdAt={season.createdAt}
+                    finishedAt={season.finishedAt}
+                  />
+                }
                 secondaryTypographyProps={{ component: "div" }} // ✅ 핵심 해결
               />
               <ListItemSecondaryAction>
@@ -73,6 +110,13 @@ export default function SeasonLobby() {
           ))}
         </List>
       </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </Box>
   );
 }

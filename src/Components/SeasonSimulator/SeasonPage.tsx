@@ -19,20 +19,11 @@ import ChampionsBracket from "./ChampionsBracket";
 import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
-
-interface SeasonDto {
-  id: number;
-  name: string;
-  started: boolean;
-  createdAt: string;
-  finishedAt: string | null;
-  participantNames: string[];
-  remainingSeconds: number;
-}
+import { SeasonResponse } from "../../types/Response";
 
 export default function SeasonPage() {
   const { seasonId } = useParams<{ seasonId: string }>();
-  const [season, setSeason] = useState<SeasonDto | null>(null);
+  const [season, setSeason] = useState<SeasonResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -51,7 +42,7 @@ export default function SeasonPage() {
 
     const fetchSeasonInfo = async () => {
       try {
-        const res = await axios.get<SeasonDto>(`http://localhost:8080/season/getSeason/${seasonId}`);
+        const res = await axios.get<SeasonResponse>(`http://localhost:8080/season/getSeason/${seasonId}`);
         setSeason(res.data);
       } catch (err) {
         console.error("❌ Failed to load season info:", err);
@@ -72,11 +63,11 @@ export default function SeasonPage() {
   }, [joinedSeasonId, seasonId]);
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (joinedSeasonId === -1) return;
 
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get<SeasonDto>(`http://localhost:8080/season/getSeason/${seasonId}`);
+        const res = await axios.get<SeasonResponse>(`http://localhost:8080/season/getSeason/${joinedSeasonId}`);
         setSeason(res.data);
 
         if (res.data.finishedAt) {
@@ -92,7 +83,7 @@ export default function SeasonPage() {
     }, devMatchTimer);
 
     return () => clearInterval(interval);
-  }, [seasonId, setJoinedSeasonId]);
+  }, [joinedSeasonId, setJoinedSeasonId]);
 
   const toggleJoin = async () => {
     setProcessing(true);

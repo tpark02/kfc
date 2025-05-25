@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
 import { Snackbar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateSeasonForm({
   onCreated,
@@ -12,31 +13,33 @@ export default function CreateSeasonForm({
   const { myUserId, setJoinedSeasonId } = useSquadStore();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleCreate = async () => {
     if (!name) return;
-    await axios
-      .post("http://localhost:8080/season/create", {
+    try {
+      const response = await axios.post("http://localhost:8080/season/create", {
         name,
         userId: myUserId,
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (!response.data?.error) {
-          onCreated(); // 성공 시 콜백
-          setJoinedSeasonId(response.data.id);
-          setSnackbarMessage(response.data.msg);
-        } else {
-          setSnackbarMessage(response.data.error);
-        }
-        setSnackbarOpen(true);
-      })
-      .catch((error) => {
-        setSnackbarMessage("요청 실패: " + error.message);
-        setSnackbarOpen(true);
       });
+
+      if (!response.data?.error) {
+        onCreated();
+        setJoinedSeasonId(response.data.id);
+        setSnackbarMessage(response.data.msg);
+        setSnackbarOpen(true);
+
+        // ✅ 성공한 시즌으로 이동
+        navigate(`/season/${response.data.id}`);
+      } else {
+        setSnackbarMessage(response.data.error);
+        setSnackbarOpen(true);
+      }
+    } catch (error: any) {
+      setSnackbarMessage("요청 실패: " + error.message);
+      setSnackbarOpen(true);
+    }
     setName("");
-    onCreated(); // 생성 후 새로고침 or 목록 업데이트
   };
 
   return (
