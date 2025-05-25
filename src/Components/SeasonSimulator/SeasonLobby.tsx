@@ -7,6 +7,7 @@ import { Snackbar } from "@mui/material";
 import axios from "axios";
 import CreateSeasonForm from "./CreateSeasonForm";
 import SeasonTimerLobby from "./SeasonTimerLobby"; // ✅ 실시간 타이머 컴포넌트 추가
+import { Player, myPlayerToPlayer } from "../../types/Player";
 
 import {
   Box,
@@ -19,6 +20,8 @@ import {
   Paper,
 } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
+import MyClubSelect from "./MyClubSelect";
+import { fetchMyClubs } from "../MyClub/MyClubUtil";
 
 interface Season {
   id: number;
@@ -30,9 +33,27 @@ interface Season {
 
 export default function SeasonLobby() {
   const [seasons, setSeasons] = useState<Season[]>([]);
-  const { joinedSeasonId, setuserId, setJoinedSeasonId } = useSquadStore();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [selectedMyClubIdx, setIdx] = useState(0);
+  const {
+    joinedSeasonId,
+    setuserId,
+    setJoinedSeasonId,
+    myUserId,
+    selectedMyPlayers,
+    setSelectedMyPlayers,
+    setDropPlayers,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
+    setMyFormation,
+  } = useSquadStore();
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
@@ -59,8 +80,8 @@ export default function SeasonLobby() {
           setJoinedSeasonId(-1);
           setSnackbarMessage("Match is finished");
           setSnackbarOpen(true);
-          fetchSeasons();   // refresh all matches in the lobby
-          clearInterval(interval);          
+          fetchSeasons(); // refresh all matches in the lobby
+          clearInterval(interval);
         }
       } catch (err) {
         console.error("❌ Failed to poll season info:", err);
@@ -70,8 +91,45 @@ export default function SeasonLobby() {
     return () => clearInterval(interval);
   }, [joinedSeasonId, setJoinedSeasonId]);
 
+  useEffect(() => {
+    fetchMyClubs(myUserId)
+      .then((clubs) => {
+        // const selectedClub = clubs.find((c) => c.clubId === club?.clubId);
+        const selectedClub = clubs[selectedMyClubIdx] ?? undefined;
+
+        // if (selectedClub === undefined) return;
+
+        if (selectedClub === undefined) {
+          setSnackbarMessage("The club not found");
+          setSnackbarOpen(true);
+          return;
+        }
+
+        // if (club?.clubId !== undefined) {
+        //   setMySelectedClubId(club.clubId);
+        // }
+
+        setSelectedMyPlayers(selectedClub.players);
+
+        const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
+
+        setDropPlayers([...playerList]);
+        setMyFormation(selectedClub.formationName);
+        setMyTeamOvr(selectedClub.ovr);
+        setMyTeamSquadValue(selectedClub.price);
+        setMyTeamAge(selectedClub.age);
+        setMyTeamPace(selectedClub.pace);
+        setMyTeamDefense(selectedClub.defense);
+        setMyTeamAttack(selectedClub.attack);
+        setMyTeamClubCohesion(selectedClub.clubCohesion);
+        setMyTeamStamina(selectedClub.stamina);
+      })
+      .finally(() => {});
+  }, [selectedMyClubIdx]);
+
   return (
     <Box p={4}>
+      <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} />
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         {joinedSeasonId}
       </Typography>
@@ -82,34 +140,46 @@ export default function SeasonLobby() {
       <Box mb={3}>
         <CreateSeasonForm onCreated={fetchSeasons} />
       </Box>
-
-      <Paper elevation={3}>
-        <List>
-          {seasons.map((season) => (
-            <ListItem key={season.id} divider>
-              <ListItemText
-                primary={season.name}
-                secondary={
-                  <SeasonTimerLobby
-                    createdAt={season.createdAt}
-                    finishedAt={season.finishedAt}
-                  />
-                }
-                secondaryTypographyProps={{ component: "div" }} // ✅ 핵심 해결
-              />
-              <ListItemSecondaryAction>
-                <Button
-                  variant="outlined"
-                  component={Link}
-                  to={`/season/${season.id}`}
-                >
-                  Enter
-                </Button>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <Paper elevation={3}>
+          <List>
+            {seasons.map((season) => (
+              <ListItem key={season.id} divider>
+                <ListItemText
+                  primary={season.name}
+                  secondary={
+                    <SeasonTimerLobby
+                      createdAt={season.createdAt}
+                      finishedAt={season.finishedAt}
+                    />
+                  }
+                  secondaryTypographyProps={{ component: "div" }} // ✅ 핵심 해결
+                />
+                <ListItemSecondaryAction>
+                  <Button
+                    variant="outlined"
+                    component={Link}
+                    to={`/season/${season.id}`}
+                  >
+                    Enter
+                  </Button>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+        <Paper>
+          {selectedMyPlayers.map((p) => {
+            return (
+              <div style={{ display: "flex", flexDirection: "row", gap: "12px" }}>
+                <div>{p.pos}</div>
+                <div>{p.name}</div>
+                <div>{p.ovr}</div>
+              </div>
+            );
+          })}
+        </Paper>
+      </div>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

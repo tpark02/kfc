@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { playerPosData } from "../data/playerPosData";
+import { playerPosData } from "../../data/playerPosData";
 import { FormControl, InputLabel, Select, MenuItem, Box } from "@mui/material";
 
 interface SearchPositionProp {
