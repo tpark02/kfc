@@ -227,6 +227,9 @@ const MyClub: React.FC<MyClubProp> = ({
                       );
 
                       if (club?.clubId !== undefined) {
+                        console.log(
+                          "Setting selected club ID:", club.clubId
+                        );
                         setMySelectedClubId(club.clubId);
                       }
 
