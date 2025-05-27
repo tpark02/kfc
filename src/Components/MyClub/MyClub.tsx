@@ -124,9 +124,10 @@ const MyClub: React.FC<MyClubProp> = ({
       };
     }
 
+    console.log("club id to update:", clubId);
     handleUpdateClub(idx, clubId);
     setMyClubs(updated);
-
+    setMySelectedClubId(clubId);
     setConfirmOpen(false);
     setEditingIndex(null);
     setPendingUpdate(null);

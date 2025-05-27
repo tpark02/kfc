@@ -26,7 +26,7 @@ const SelectFormation: React.FC = () => {
         value={myFormation}
         onChange={(e) => {
           setMyFormation(e.target.value);
-          setDropPlayers(Array.from({ length: TOTAL_DROP_ZONES }, () => defaultPlayer));
+          //setDropPlayers(Array.from({ length: TOTAL_DROP_ZONES }, () => defaultPlayer));
 
           setIsDropZoneSelected(false);
           resetSquadMetric();

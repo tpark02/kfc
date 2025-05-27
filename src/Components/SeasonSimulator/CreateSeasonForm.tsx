@@ -10,7 +10,7 @@ export default function CreateSeasonForm({
   onCreated: () => void;
 }) {
   const [name, setName] = useState("");
-  const { myUserId, setJoinedSeasonId } = useSquadStore();
+  const { myUserId, mySelectedClubId, setJoinedSeasonId } = useSquadStore();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
@@ -21,11 +21,13 @@ export default function CreateSeasonForm({
       const response = await axios.post("http://localhost:8080/season/create", {
         name,
         userId: myUserId,
+        clubId: mySelectedClubId,
       });
 
       if (!response.data?.error) {
         onCreated();
         setJoinedSeasonId(response.data.id);
+        
         setSnackbarMessage(response.data.msg);
         setSnackbarOpen(true);
 

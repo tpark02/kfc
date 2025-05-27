@@ -36,11 +36,12 @@ export default function SeasonPage() {
   const navigate = useNavigate();
   const userId = 1; // TODO: replace with actual logged-in user
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const {
+  const {    
+    mySelectedClubId,
     joinedSeasonId,
-    setJoinedSeasonId,
     myUserId,
     selectedMyPlayers,
+    setJoinedSeasonId,
     setSelectedMyPlayers,
     setDropPlayers,
     setMyTeamOvr,
@@ -128,7 +129,7 @@ export default function SeasonPage() {
         const res = await axios.post(
           `http://localhost:8080/season/${seasonId}/join`,
           null,
-          { params: { userId } }
+          { params: { userId, mySelectedClubId } }
         );
         setJoinedSeasonId(res.data.seasonId);
         console.log(`✅ ${res.data.message} (Season ID: ${res.data.seasonId})`);
