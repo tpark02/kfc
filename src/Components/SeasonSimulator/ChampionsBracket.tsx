@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TournamentRound from "./TournamentRound";
-import "../../style/bracket.less";
+import "../../style/bracket.css";
 
 interface MatchDto {
   id: number;

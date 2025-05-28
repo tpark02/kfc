@@ -17,7 +17,7 @@ interface Props {
 export default function TournamentRound({ title, matches }: Props) {
   return (
     <div className="tournament-bracket__round">
-      <h3 className="tournament-bracket__round-title">{title}</h3>
+      <h2 className="tournament-bracket__round-title">{title}</h2>
       <ul className="tournament-bracket__list">
         {matches.map((match) => (
           <li key={match.id} className="tournament-bracket__item">

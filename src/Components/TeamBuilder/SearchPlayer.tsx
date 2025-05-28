@@ -52,6 +52,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
+
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
         console.log("🔥 fetchPlayers called with query:", q);
@@ -70,7 +71,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
               country,
               league,
               club,
-              pos: localPos,
+              //pos: localPos,
             }
           );
 
@@ -263,6 +264,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                   key={player.id}
                   onMouseEnter={() => setHoveredPlayer(player)}
                   onMouseLeave={() => setHoveredPlayer(null)}
+                  disabled={Object.values(dropPlayers).some(d => d && d.id === player.id)} // ✅ 개별 판단
                   onClick={() => {
                     console.log(
                       "🔥 선택된 dropzone index:",
@@ -270,11 +272,11 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                     );
                     console.log("🔥 넣을 player:", player);
                     console.log("dropPlayers", dropPlayers);
-                    const repeatedPlayer = Object.values(dropPlayers).some(
+                    const alreadySelectedPlayer = Object.values(dropPlayers).some(
                       (d) => d && d.id === player.id
-                    );
-
-                    if (repeatedPlayer) {
+                    );                    
+                    
+                    if (alreadySelectedPlayer) {
                       setSnackbarMessage("You already selected " + player.name);
                       setSnackbarOpen(true);
                       return;
