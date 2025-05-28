@@ -56,10 +56,10 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
         console.log("🔥 fetchPlayers called with query:", q);
-        let localPos = "";
-        if (q.trim().length < 2) {
-          localPos = pos;
-        }
+        // let localPos = "";
+        // if (q.trim().length < 2) {
+        //   /localPos = pos;
+        // }
 
         try {
           setLoading(true);
