@@ -69,25 +69,33 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   console.log("len : ", len);
 
                   if (len < 1) {
+                    setSelectedDropZone({
+                      index: idx,
+                      pos: pos ?? "",
+                    });
                     setDropZoneList(dropZoneList, {
                       index: idx,
                       pos: pos ?? "",
                     });
+                    setPosition(pos ?? "");
+                    setIsDropZoneSelected(true);
                   } else {
-                      const tempPlayers = [...dropPlayers]; // copy to avoid mutation
-                      const i = dropZoneList[0].index;
+                    const tempPlayers = [...dropPlayers]; // copy to avoid mutation
+                    const i = dropZoneList[0].index;
 
-                      [tempPlayers[i], tempPlayers[idx]] = [
-                        tempPlayers[idx],
-                        tempPlayers[i],
-                      ];
+                    [tempPlayers[i], tempPlayers[idx]] = [
+                      tempPlayers[idx],
+                      tempPlayers[i],
+                    ];
 
-                      setDropPlayers(tempPlayers);
-                      resetDropZoneList();
-                    }
+                    setSelectedDropZone({
+                      index: -1,
+                      pos: "",
+                    });
+                    setDropPlayers(tempPlayers);
+                    resetDropZoneList();
+                  }
 
-                  setPosition(pos ?? "");
-                  setIsDropZoneSelected(true);
                   if (searchPlayerRef.current) {
                     searchPlayerRef.current.scrollTop = 0;
                   }
@@ -113,16 +121,24 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             .slice(11)
             .map((bench, idx) => {
               const actualIndex = idx + 11;
+              // console.log("bench", bench);
               return (
                 <div
+                  // className="bench-player"
                   key={`drop-${actualIndex}`}
                   onClick={() => {
                     const len = dropZoneList.length;
                     if (len < 1) {
+                      setSelectedDropZone({
+                        index: actualIndex,
+                        pos: "",
+                      });
                       setDropZoneList(dropZoneList, {
                         index: actualIndex,
                         pos: "",
                       });
+                      setPosition("");
+                      setIsDropZoneSelected(true);
                     } else {
                       const tempPlayers = [...dropPlayers]; // copy to avoid mutation
                       const i = dropZoneList[0].index;
@@ -133,11 +149,14 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                         tempPlayers[i],
                       ];
 
+                      setSelectedDropZone({
+                        index: -1,
+                        pos: "",
+                      });
                       setDropPlayers(tempPlayers);
                       resetDropZoneList();
                     }
-                    setPosition("");
-                    setIsDropZoneSelected(true);
+
                     if (searchPlayerRef.current) {
                       searchPlayerRef.current.scrollTop = 0;
                     }
