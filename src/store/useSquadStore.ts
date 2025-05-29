@@ -2,13 +2,13 @@
 import { create } from "zustand";
 import { MyPlayer, Player } from "../types/Player";
 import { Match } from "../types/Match";
-import { TOTAL_DROP_ZONES } from "../data/formations";
+// import { TOTAL_DROP_ZONES } from "../data/formations";
 import { MyClubData } from "../types/Club";
+import { DropZone } from "../types/DropZone";
 export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
   joinedSeasonId: number;
-  setJoinedSeasonId: (n: number)=>void;
   myUserId: number;
   myUserEmail: string;
   myUserName: string;
@@ -30,9 +30,10 @@ type SquadStore = {
   selectedDropZone: { index: number; pos: string };
   position: string;
   myClubs: (MyClubData | null)[];
-
+  dropZoneList: DropZone[];
   selectedMyPlayers: MyPlayer[];
 
+  setJoinedSeasonId: (n: number) => void;
   setUserEmail: (s: string) => void;
   setUserName: (s: string) => void;
   setMySelectedClubId: (n: number) => void;
@@ -46,7 +47,6 @@ type SquadStore = {
   setDropPlayers: (players: Player[]) => void;
   // setBenchPlayers: (players: Player[]) => void;
   setIsDropZoneSelected: (val: boolean) => void;
-
   setMyTeamSquadValue: (value: number) => void;
   setMyTeamAge: (age: number) => void;
   setMyTeamPace: (pace: number) => void;
@@ -55,11 +55,12 @@ type SquadStore = {
   setMyTeamClubCohesion: (cohesion: number) => void;
   setMyTeamStamina: (stamina: number) => void;
   resetSquadMetric: () => void;
-
+  setDropZoneList: (lst: DropZone[], d: DropZone) => void;
+  resetDropZoneList: () => void;
   // unused
-  setSelectedDropZone: (info: { index: number; pos: string }) => void;
-  setPosition: (p: string) => void;
-  resetSquad: () => void;
+  // setSelectedDropZone: (info: { index: number; pos: string }) => void;
+  // setPosition: (p: string) => void;
+  // resetSquad: () => void;
 
   // league simulator
   hoveredMatchIndex: number | null;
@@ -69,8 +70,9 @@ type SquadStore = {
 };
 
 export const useSquadStore = create<SquadStore>((set) => ({
+  dropZoneList: [],
   joinedSeasonId: -1,
-  setJoinedSeasonId: (n: number)=>(set({joinedSeasonId: n})),
+  setJoinedSeasonId: (n: number) => set({ joinedSeasonId: n }),
   myUserEmail: "",
   myUserName: "",
   myUserId: -1,
@@ -141,19 +143,25 @@ export const useSquadStore = create<SquadStore>((set) => ({
       myTeamStamina: 0,
       myTeamOvr: 0,
     }),
-  // unused
-  setSelectedDropZone: (info) => set({ selectedDropZone: info }),
   setIsDropZoneSelected: (val) => set({ isDropZoneSelected: val }),
-  setPosition: (p) => set({ position: p }),
-  resetSquad: () =>
+
+  setDropZoneList: (lst, d) =>
     set({
-      myFormation: "442",
-      dropPlayers: Array(TOTAL_DROP_ZONES).fill(null),
-      // benchPlayers: Array(15).fill(null),
-      selectedDropZone: { index: -1, pos: "" },
-      isDropZoneSelected: false,
-      position: "",
+      dropZoneList: [...lst, d],
     }),
+  resetDropZoneList: () => set({ dropZoneList: [] }),
+  // unused
+  // setSelectedDropZone: (info) => set({ selectedDropZone: info }),
+  // setPosition: (p) => set({ position: p }),
+  // resetSquad: () =>
+  //   set({
+  //     myFormation: "442",
+  //     dropPlayers: Array(TOTAL_DROP_ZONES).fill(null),
+  //     // benchPlayers: Array(15).fill(null),
+  //     selectedDropZone: { index: -1, pos: "" },
+  //     isDropZoneSelected: false,
+  //     position: "",
+  //   }),
   // league simulator
   hoveredMatchIndex: null,
   setHoveredMatchIndex: (index) => set({ hoveredMatchIndex: index }),

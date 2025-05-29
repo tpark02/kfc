@@ -5,7 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useSquadStore } from "../../store/useSquadStore";
 // 타입
-// import { Player } from "../../types/Player";
+import { DropZone } from "../../types/DropZone";
 import { Team } from "../../types/Team";
 import { League } from "../../types/League";
 import { ResponseRandomSquad } from "../../types/Response";
@@ -31,9 +31,9 @@ const Squad: React.FC = () => {
   const {
     myUserId,
     myFormation,
+    isDropZoneSelected,
     setDropPlayers,
     setMyTeamOvr,
-    isDropZoneSelected,
     setIsDropZoneSelected,
     setMyTeamSquadValue,
     setMyTeamAge,
@@ -52,32 +52,23 @@ const Squad: React.FC = () => {
   const [selectedLeagues, setLeague] = useState<League[]>([]);
   const [selectedClubs, setClub] = useState<Team[]>([]);
   const [selectedPos, selectedPosition] = useState("");
-  // const [selectedMyClubName, setSelectedMyClubName] = useState(""); // ✅ 빈 문자열로 시작
-  // const [selectedMyClubIdx, setSelectedMyClubIdx] = useState(-1);
-  // const [newClubName, setNewClubName] = useState("");
-  // const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   // 📦 스낵바 상태 하나로 통일
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // 📌 UI 제어
-  const [selectedDropZone, setSelectedDropZone] = useState<{
-    index: number;
-    pos: string;
-  }>({
+  const [selectedDropZone, setSelectedDropZone] = useState<DropZone>({
     index: -1,
     pos: "",
   });
-  // const [isDropZoneSelected, setIsDropZoneSelected] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [openAddDialog, setOpenAddDialog] = useState(false);
 
   // 📏 높이 측정용 ref
   const squadSelectRef = useRef<HTMLDivElement>(null);
 
   // 🔍 DropZone 클릭 감지용
-  const searchPlayerRef = useRef<HTMLDivElement | null>(null);
+  // const searchPlayerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -168,7 +159,6 @@ const Squad: React.FC = () => {
           {myFormation && (
             <SquadBuilder
               selectedFormation={myFormation as keyof typeof formations}
-              // squadPlayers={dropPlayers}
               setSelectedDropZone={setSelectedDropZone}
               setIsDropZoneSelected={setIsDropZoneSelected}
               setPosition={selectedPosition}
@@ -217,7 +207,7 @@ const Squad: React.FC = () => {
                   alignItems: "flex-end",
                 }}
               >
-                {isDropZoneSelected && (
+                {/* {isDropZoneSelected && (
                   <IconButton
                     onClick={() => {
                       setIsDropZoneSelected(!isDropZoneSelected);
@@ -237,10 +227,10 @@ const Squad: React.FC = () => {
                   >
                     <CloseIcon />
                   </IconButton>
-                )}
+                )} */}
               </div>
               <div>
-                {isDropZoneSelected ? (
+                {/* {isDropZoneSelected ? (
                   <SearchPlayer
                     ref={searchPlayerRef}
                     listRef={listRef}
@@ -252,9 +242,9 @@ const Squad: React.FC = () => {
                     setSnackbarMessage={setSnackbarMessage}
                     setSnackbarOpen={setSnackbarOpen}
                   />
-                ) : (
+                ) : ( */}
                   <>
-                    <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                    {/* <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
                       Filters
                     </Typography>
                     <SearchCountry
@@ -286,7 +276,7 @@ const Squad: React.FC = () => {
                         console.log(`Fetching page ${page}`)
                       }
                       setSelectedPosition={() => {}}
-                    />
+                    /> */}
                     <Button
                       variant="contained"
                       color="secondary"
@@ -298,11 +288,11 @@ const Squad: React.FC = () => {
                       Create Squad
                     </Button>
                   </>
-                )}
+                {/* )} */}
               </div>
             </div>
           </div>
-          {!isDropZoneSelected ? (
+          {/* {!isDropZoneSelected ? ( */}
             <div
               style={{
                 display: "flex",
@@ -317,9 +307,9 @@ const Squad: React.FC = () => {
                 setLoading={setLoading}
               />
             </div>
-          ) : (
+          {/* ) : (
             <></>
-          )}
+          )} */}
         </div>
       </div>
     </>

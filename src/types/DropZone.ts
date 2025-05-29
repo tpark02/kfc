@@ -1,0 +1,1 @@
+export type  DropZone = { index: number; pos: string}

@@ -18,7 +18,7 @@ interface SearchPlayerProp {
   pos: string;
   listRef: React.RefObject<HTMLDivElement | null>;
   // dropPlayers: { [idx: number]: Player | null };
-  selectedDropZone: { index: number; pos: string };
+  selectedDropZone: { index: number };
   // setDropPlayers: React.Dispatch<
   //   React.SetStateAction<{
   //     [idx: number]: Player | null;

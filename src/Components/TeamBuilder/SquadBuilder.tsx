@@ -5,35 +5,29 @@ import CroppedAvatar from "./CroppedAvatar";
 import "../../style/SquadBuilder.css";
 import { useSquadStore } from "../../store/useSquadStore";
 import { getTeamAvr } from "./SquadBuilderUtil";
+import { DropZone } from "../../types/DropZone";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
-  //squadPlayers: Player[];
-  // benchPlayers: Player[];
-  setSelectedDropZone: React.Dispatch<
-    React.SetStateAction<{ index: number; pos: string }>
-  >;
+  setSelectedDropZone: React.Dispatch<React.SetStateAction<DropZone>>;
   setIsDropZoneSelected: (b: boolean) => void;
   setPosition: React.Dispatch<React.SetStateAction<string>>;
   searchPlayerRef: React.RefObject<HTMLDivElement | null>;
-  selectedDropZone: {
-    index: number;
-    pos: string;
-  };
+  selectedDropZone: DropZone;
 }
 
 const SquadBuilder: React.FC<SquadBuilderProp> = ({
+  searchPlayerRef,
+  selectedDropZone,
   selectedFormation,
-  //squadPlayers,
-  // benchPlayers,
   setSelectedDropZone,
   setIsDropZoneSelected,
   setPosition,
-  searchPlayerRef,
-  selectedDropZone,
 }) => {
   const {
+    dropZoneList,
     dropPlayers,
+    setDropZoneList,
     setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -42,6 +36,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
+    resetDropZoneList,
   } = useSquadStore();
 
   useEffect(() => {
@@ -70,10 +65,31 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               <Button
                 key={`drop-${idx}`}
                 onClick={() => {
-                  setSelectedDropZone({
-                    index: idx,
-                    pos: pos ?? "",
-                  });
+                  const len = dropZoneList.length;
+                  console.log("len : ", len);
+
+                  if (len < 1) {
+                    setDropZoneList(dropZoneList, {
+                      index: idx,
+                      pos: pos ?? "",
+                    });
+                  } else {
+                      const tempPlayers = [...dropPlayers]; // copy to avoid mutation
+                      const i = dropZoneList[0].index;
+
+                      [tempPlayers[i], tempPlayers[idx]] = [
+                        tempPlayers[idx],
+                        tempPlayers[i],
+                      ];
+
+                      setDropPlayers(tempPlayers);
+                      resetDropZoneList();
+                    }
+                  // setSelectedDropZone({
+                  //   index: idx,
+                  //   pos: pos ?? "",
+                  // });
+
                   setPosition(pos ?? "");
                   setIsDropZoneSelected(true);
                   if (searchPlayerRef.current) {
@@ -107,10 +123,28 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   // className="bench-player"
                   key={`drop-${actualIndex}`}
                   onClick={() => {
-                    setSelectedDropZone({
-                      index: actualIndex,
-                      pos: "",
-                    });
+                    // setSelectedDropZone({
+                    //   index: actualIndex,
+                    //   pos: "",
+                    // });
+                    const len = dropZoneList.length;
+                    if (len < 1) {
+                      setDropZoneList(dropZoneList, {
+                        index: idx,
+                        pos: "",
+                      });
+                    } else {
+                      const tempPlayers = [...dropPlayers]; // copy to avoid mutation
+                      const i = dropZoneList[0].index;
+
+                      [tempPlayers[i], tempPlayers[actualIndex]] = [
+                        tempPlayers[actualIndex],
+                        tempPlayers[i],
+                      ];
+
+                      setDropPlayers(tempPlayers);
+                      resetDropZoneList();
+                    }
                     setPosition("");
                     setIsDropZoneSelected(true);
                     if (searchPlayerRef.current) {
