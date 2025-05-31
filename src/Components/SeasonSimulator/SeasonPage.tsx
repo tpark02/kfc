@@ -36,7 +36,7 @@ export default function SeasonPage() {
   const navigate = useNavigate();
   const userId = 1; // TODO: replace with actual logged-in user
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const {    
+  const {
     mySelectedClubId,
     joinedSeasonId,
     myUserId,
@@ -53,9 +53,17 @@ export default function SeasonPage() {
     setMyTeamClubCohesion,
     setMyTeamStamina,
     setMyFormation,
+    setMySelectedClubId,
   } = useSquadStore();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
+    fetchMyClubs(myUserId).then((clubs) => {
+      const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
+      setIdx(idx);
+    });
+  }, []);
 
   useEffect(() => {
     if (!seasonId) {
@@ -140,6 +148,13 @@ export default function SeasonPage() {
       setProcessing(false);
     }
   };
+  
+  useEffect(() => {
+    fetchMyClubs(myUserId).then((clubs) => {
+      const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
+      setIdx(idx);
+    });
+  }, []);
 
   useEffect(() => {
     fetchMyClubs(myUserId)
@@ -173,48 +188,55 @@ export default function SeasonPage() {
         setMyTeamAttack(selectedClub.attack);
         setMyTeamClubCohesion(selectedClub.clubCohesion);
         setMyTeamStamina(selectedClub.stamina);
+        setMySelectedClubId(selectedClub.clubId ?? 0);
       })
       .finally(() => {});
   }, [selectedMyClubIdx]);
 
   return (
     <>
-    <Box p={4}>
-      {season?.finishedAt && (
-        <Typography variant="body1" sx={{ mb: 1 }}>
-          🏁 Match Finished At: {new Date(season.finishedAt).toLocaleString()}
+      <Box p={4}>
+        {season?.finishedAt && (
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            🏁 Match Finished At: {new Date(season.finishedAt).toLocaleString()}
+          </Typography>
+        )}
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          🏆 Season {seasonId} Bracket
         </Typography>
-      )}
-      <Typography variant="h5" fontWeight="bold" gutterBottom>
-        🏆 Season {seasonId} Bracket
-      </Typography>
 
-      {season?.remainingSeconds !== null && seasonId && (
-        <SeasonTimer
-          initialRemaining={season?.remainingSeconds ?? 0}
-          seasonId={parseInt(seasonId)}
-        />
-      )}
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Button
-          variant="contained"
-          color={joinedSeasonId !== -1 ? "error" : "primary"}
-          onClick={toggleJoin}
-          disabled={
-            processing ||
-            season?.started ||
-            (joinedSeasonId !== -1 &&
-              joinedSeasonId !== parseInt(seasonId ?? "-1"))
-          }
-          sx={{ mb: 3, border: "1px solid red" }}
-        >
-          {joinedSeasonId !== -1 ? "Leave" : "Join"}
-        </Button>
-      )}
+        {season?.remainingSeconds !== null && seasonId && (
+          <SeasonTimer
+            initialRemaining={season?.remainingSeconds ?? 0}
+            seasonId={parseInt(seasonId)}
+          />
+        )}
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Button
+            variant="contained"
+            color={joinedSeasonId !== -1 ? "error" : "primary"}
+            onClick={toggleJoin}
+            disabled={
+              processing ||
+              season?.started ||
+              (joinedSeasonId !== -1 &&
+                joinedSeasonId !== parseInt(seasonId ?? "-1"))
+            }
+            sx={{ mb: 3, border: "1px solid red" }}
+          >
+            {joinedSeasonId !== -1 ? "Leave" : "Join"}
+          </Button>
+        )}
       </Box>
-      <Box p={0} display="flex" flexDirection="row" width="100%"   flexWrap="wrap">
+      <Box
+        p={0}
+        display="flex"
+        flexDirection="row"
+        width="100%"
+        flexWrap="wrap"
+      >
         <Box flex={1} border="1px solid red" padding={0}>
           {" "}
           <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} />

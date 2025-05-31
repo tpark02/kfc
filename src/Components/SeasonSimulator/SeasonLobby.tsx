@@ -37,11 +37,12 @@ export default function SeasonLobby() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedMyClubIdx, setIdx] = useState(0);
   const {
+    myUserId,
+    mySelectedClubId,
+    selectedMyPlayers,
     joinedSeasonId,
     setuserId,
     setJoinedSeasonId,
-    myUserId,
-    selectedMyPlayers,
     setSelectedMyPlayers,
     setDropPlayers,
     setMyTeamOvr,
@@ -53,6 +54,7 @@ export default function SeasonLobby() {
     setMyTeamClubCohesion,
     setMyTeamStamina,
     setMyFormation,
+    setMySelectedClubId,
   } = useSquadStore();
 
   const fetchSeasons = async () => {
@@ -92,6 +94,13 @@ export default function SeasonLobby() {
   }, [joinedSeasonId, setJoinedSeasonId]);
 
   useEffect(() => {
+    fetchMyClubs(myUserId).then((clubs) => {
+      const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
+      setIdx(idx);
+    });
+  }, []);
+
+  useEffect(() => {
     fetchMyClubs(myUserId)
       .then((clubs) => {
         // const selectedClub = clubs.find((c) => c.clubId === club?.clubId);
@@ -123,6 +132,7 @@ export default function SeasonLobby() {
         setMyTeamAttack(selectedClub.attack);
         setMyTeamClubCohesion(selectedClub.clubCohesion);
         setMyTeamStamina(selectedClub.stamina);
+        setMySelectedClubId(selectedClub.clubId ?? 0);
       })
       .finally(() => {});
   }, [selectedMyClubIdx]);
@@ -153,7 +163,7 @@ export default function SeasonLobby() {
                       createdAt={season.createdAt}
                       finishedAt={season.finishedAt}
                     />
-                  }                  
+                  }
                 />
                 <ListItemSecondaryAction>
                   <Button
