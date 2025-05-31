@@ -4,3 +4,5 @@
   name: string;
   url: string;
 };
+
+export const totalNumberOfPlayers = 16;

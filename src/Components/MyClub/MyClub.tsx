@@ -9,6 +9,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
+import { totalNumberOfPlayers } from "../../types/Team";
 
 interface MyClubProp {
   snackbarOpen: boolean;
@@ -159,7 +160,9 @@ const MyClub: React.FC<MyClubProp> = ({
     const hasEmptyPlayer = Object.values(dropPlayers).some((d) => d === null);
 
     if (hasEmptyPlayer) {
-      setSnackbarMessage("The number of players must be 26");
+      setSnackbarMessage(
+        `The number of players must be ${totalNumberOfPlayers}`
+      );
       setSnackbarOpen(true);
       setLoading(false);
       setEditingIndex(null);
@@ -227,9 +230,7 @@ const MyClub: React.FC<MyClubProp> = ({
                       );
 
                       if (club?.clubId !== undefined) {
-                        console.log(
-                          "Setting selected club ID:", club.clubId
-                        );
+                        console.log("Setting selected club ID:", club.clubId);
                         setMySelectedClubId(club.clubId);
                       }
 
@@ -263,7 +264,7 @@ const MyClub: React.FC<MyClubProp> = ({
                 disabled={
                   club?.name === null ||
                   club?.name === "" ||
-                  (club?.players?.length ?? 0) < 26
+                  (club?.players?.length ?? 0) < totalNumberOfPlayers
                 }
               >
                 <CheckIcon sx={{ color: club?.name ? "green" : "red" }} />

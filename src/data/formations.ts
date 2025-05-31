@@ -1,3 +1,5 @@
+import { totalNumberOfPlayers } from "../types/Team";
+
 export const baseFormations = {
   "442": [
     { pos: "GK", top: 90, left: 50 },
@@ -247,4 +249,4 @@ export const positionMultiplier: { [key: string]: number } = {
   CF: 1.25,
 };
 
-export const TOTAL_DROP_ZONES = 26;
+export const TOTAL_DROP_ZONES = totalNumberOfPlayers;

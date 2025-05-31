@@ -1,6 +1,7 @@
 import axios from "axios";
 import { MyClubData } from "../../types/Club";
 import { Player } from "../../types/Player";
+import { totalNumberOfPlayers } from "../../types/Team";
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
@@ -37,7 +38,7 @@ export const updateMyClub = async (
   try {
     console.log(dropPlayers);
     const players = Array.from(
-      { length: 26 },
+      { length: totalNumberOfPlayers },
       (_, i) => dropPlayers[i]?.id ?? null
     );
 
@@ -60,7 +61,7 @@ export const updateMyClub = async (
       {
         clubName: newClubName,
         formationName: myFormation, // ✅ 정확한 이름만 보내기
-        players, // ✅ 반드시 26개 (null 포함 가능)
+        players, // ✅ 반드시 16개 (null 포함 가능)
         ovr: myTeamOvr,
         price: myTeamSquadValue,
         age: myTeamAge,
