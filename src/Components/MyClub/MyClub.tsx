@@ -3,7 +3,7 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { fetchMyClubs, updateMyClub, deleteMyClub } from "./MyClubUtil";
 import { MyClubData } from "../../types/Club";
 import { Button, Typography, Divider } from "@mui/material";
-import ConfirmDialog from "../ConfirmDialog";
+import ConfirmDialog from "../../Components/ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
@@ -50,11 +50,12 @@ const MyClub: React.FC<MyClubProp> = ({
     setMyTeamStamina,
     setMyClubs,
     setMyFormation,
+    resetDropZoneList,
   } = useSquadStore();
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newClubName, setNewClubName] = useState("");
 
-  const handleUpdateClub = (idx: number, clubId: number) => {
+  const handleUpdateClub = (idx: number, clubId: number, players: Player[]) => {
     setLoading(true);
 
     if (newClubName.length > 0) {
@@ -63,7 +64,7 @@ const MyClub: React.FC<MyClubProp> = ({
         clubId,
         newClubName,
         myFormation,
-        dropPlayers,
+        players,
         myTeamOvr,
         myTeamSquadValue,
         myTeamAge,
@@ -76,13 +77,24 @@ const MyClub: React.FC<MyClubProp> = ({
         .then((msg) => {
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
-          // 이부분을 이제 myplayer로 fill 해야한다.
           fetchMyClubs(myUserId).then((clubs) => {
             const paddedClubs: (MyClubData | null)[] = Array(3).fill(null);
             clubs.forEach((club, idx) => {
               paddedClubs[idx] = club ?? null;
             });
             setMyClubs(paddedClubs);
+
+            // Find the updated club and map its players to Player[]
+            const updatedClub = paddedClubs.find(
+              (c) => c && c.clubId === clubId
+            );
+            const playerList: Player[] =
+              updatedClub && updatedClub.players
+                ? updatedClub.players.map(myPlayerToPlayer)
+                : [];
+
+            setDropPlayers([...playerList]);
+            console.log("myclub.tsx drop players - ", dropPlayers);
           });
         })
         .catch((err) => {
@@ -126,8 +138,11 @@ const MyClub: React.FC<MyClubProp> = ({
     }
 
     console.log("club id to update:", clubId);
-    handleUpdateClub(idx, clubId);
-    setMyClubs(updated);
+
+    const playersSnapshot = [...dropPlayers]; // ✅ 복사하여 안전하게 사용
+
+    handleUpdateClub(idx, clubId, playersSnapshot);
+    //setMyClubs(updated);
     setMySelectedClubId(clubId);
     setConfirmOpen(false);
     setEditingIndex(null);
@@ -240,6 +255,11 @@ const MyClub: React.FC<MyClubProp> = ({
                         return;
                       }
 
+                      console.log(
+                        "my club.tsx selected Club - ",
+                        selectedClub.players
+                      );
+                      console.log("my club.tsx drop players - ", dropPlayers);
                       setSelectedMyPlayers(selectedClub.players);
 
                       const playerList: Player[] =
@@ -255,6 +275,7 @@ const MyClub: React.FC<MyClubProp> = ({
                       setMyTeamAttack(selectedClub.attack);
                       setMyTeamClubCohesion(selectedClub.clubCohesion);
                       setMyTeamStamina(selectedClub.stamina);
+                      resetDropZoneList();
                     })
                     .finally(() => {
                       setLoading(false);

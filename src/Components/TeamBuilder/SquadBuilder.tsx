@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
-import CroppedAvatar from "./CroppedAvatar";
-import "../../style/SquadBuilder.css";
 import { useSquadStore } from "../../store/useSquadStore";
-import { getTeamAvr } from "./SquadBuilderUtil";
 import { DropZone } from "../../types/DropZone";
+import { getTeamAvr } from "../../Components/TeamBuilder/SquadBuilderUtil";
+import { Player } from "../../types/Player";
+// import Snackbar from "@mui/material/Snackbar";
+import CroppedAvatar from "./CroppedAvatar";
+// import axios from "axios";
+import "../../style/SquadBuilder.css";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
@@ -25,6 +28,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   setPosition,
 }) => {
   const {
+    // myUserId,
+    // mySelectedClubId,
     dropZoneList,
     dropPlayers,
     setDropZoneList,
@@ -38,6 +43,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     setMyTeamStamina,
     resetDropZoneList,
   } = useSquadStore();
+
+  // const [snackbarOpen, setSnackbarOpen] = useState(false);
+  // const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     const teamData = getTeamAvr(dropPlayers);
@@ -53,46 +61,68 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     setDropPlayers(dropPlayers);
   }, [dropPlayers, setDropPlayers]);
 
+  // const updateRoster = async (players = dropPlayers) => {
+  //   try {
+  //     const rosterMap = Object.fromEntries(players.map((p) => [p.id, p.idx]));
+
+  //     const response = await axios.post(
+  //       "http://localhost:8080/myclub/updateroster",
+  //       {
+  //         userId: myUserId,
+  //         clubId: mySelectedClubId,
+  //         rosterMap: rosterMap,
+  //       }
+  //     );
+  //     setSnackbarOpen(true);
+  //     setSnackbarMessage(
+  //       response.data?.message || "Roster updated successfully!"
+  //     );
+  //   } catch (error) {
+  //     console.error("🔥 Error:", error);
+  //     setSnackbarOpen(true);
+  //     setSnackbarMessage(
+  //       error instanceof Error ? error.message : String(error)
+  //     );
+  //   }
+  // };
+
   return (
     <>
       <div className="squad-group">
         <div className="squad-field">
           {formations[selectedFormation].map((position, idx) => {
             const pos = position.pos.replace(/[0-9]/g, "");
-            const player = dropPlayers[idx];
+            const player = dropPlayers.find((p) => p.idx === idx); // ✅ 정확한 선수 찾기
 
             return (
               <Button
                 key={`drop-${idx}`}
                 onClick={() => {
                   const len = dropZoneList.length;
-                  console.log("len : ", len);
 
                   if (len < 1) {
-                    setSelectedDropZone({
-                      index: idx,
-                      pos: pos ?? "",
-                    });
-                    setDropZoneList(dropZoneList, {
-                      index: idx,
-                      pos: pos ?? "",
-                    });
-                    setPosition(pos ?? "");
+                    setSelectedDropZone({ index: idx, pos });
+                    setDropZoneList(dropZoneList, { index: idx, pos });
+                    setPosition(pos);
                     setIsDropZoneSelected(true);
                   } else {
-                    const tempPlayers = [...dropPlayers]; // copy to avoid mutation
+                    const tempPlayers = [...dropPlayers];
                     const i = dropZoneList[0].index;
 
-                    [tempPlayers[i], tempPlayers[idx]] = [
-                      tempPlayers[idx],
-                      tempPlayers[i],
-                    ];
+                    const a = tempPlayers.find((p) => p.idx === i);
+                    const b = tempPlayers.find((p) => p.idx === idx);
 
-                    setSelectedDropZone({
-                      index: -1,
-                      pos: "",
+                    if (!a || !b) return;
+
+                    const updatedPlayers = tempPlayers.map((p) => {
+                      if (p.id === a.id) return { ...p, idx: b.idx };
+                      if (p.id === b.id) return { ...p, idx: a.idx };
+                      return p;
                     });
-                    setDropPlayers(tempPlayers);
+
+                    setDropPlayers(updatedPlayers);
+                    setSelectedDropZone({ index: -1, pos: "" });
+                    // updateRoster(updatedPlayers);
                     resetDropZoneList();
                   }
 
@@ -118,6 +148,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
         </div>
         <div className="squad-bench">
           {Object.values(dropPlayers)
+            .filter((p): p is Player => !!p)
+            .sort((a, b) => a.idx - b.idx)
             .slice(11)
             .map((bench, idx) => {
               const actualIndex = idx + 11;
@@ -140,20 +172,29 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       setPosition("");
                       setIsDropZoneSelected(true);
                     } else {
-                      const tempPlayers = [...dropPlayers]; // copy to avoid mutation
-                      const i = dropZoneList[0].index;
-                      console.log("from : ", i);
-                      console.log("to : ", actualIndex);
-                      [tempPlayers[i], tempPlayers[actualIndex]] = [
-                        tempPlayers[actualIndex],
-                        tempPlayers[i],
-                      ];
+                      //const tempPlayers = [...dropPlayers]; // copy to avoid mutation
+                      const tempPlayersArray = Object.values(
+                        dropPlayers
+                      ).filter((p): p is Player => !!p); // null 제거
 
-                      setSelectedDropZone({
-                        index: -1,
-                        pos: "",
+                      const i = dropZoneList[0].index;
+
+                      const a = tempPlayersArray.find((p) => p.idx === i);
+                      const b = tempPlayersArray.find(
+                        (p) => p.idx === actualIndex
+                      );
+
+                      if (!a || !b) return;
+
+                      const updatedPlayers = tempPlayersArray.map((p) => {
+                        if (p.id === a.id) return { ...p, idx: b.idx };
+                        if (p.id === b.id) return { ...p, idx: a.idx };
+                        return p;
                       });
-                      setDropPlayers(tempPlayers);
+
+                      setDropPlayers(updatedPlayers);
+                      // updateRoster(updatedPlayers);
+                      setSelectedDropZone({ index: -1, pos: "" });
                       resetDropZoneList();
                     }
 
@@ -171,6 +212,13 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             })}
         </div>
       </div>
+      {/* Snackbar for validation messages */}
+      {/* <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      /> */}
     </>
   );
 };

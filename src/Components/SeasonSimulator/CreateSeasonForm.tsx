@@ -10,7 +10,7 @@ export default function CreateSeasonForm({
   onCreated: () => void;
 }) {
   const [name, setName] = useState("");
-  const { myUserId, mySelectedClubId, setJoinedSeasonId } = useSquadStore();
+  const { myUserId, mySelectedClubId,  selectedMyPlayers, setJoinedSeasonId } = useSquadStore();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function CreateSeasonForm({
       if (!response.data?.error) {
         onCreated();
         setJoinedSeasonId(response.data.id);
-        
+
         setSnackbarMessage(response.data.msg);
         setSnackbarOpen(true);
 
@@ -44,6 +44,8 @@ export default function CreateSeasonForm({
     setName("");
   };
 
+  const isdRedCard = selectedMyPlayers.slice(0, 12).some((p) => p.redCard > 0);
+
   return (
     <div className="flex gap-2 my-4">
       <input
@@ -56,6 +58,7 @@ export default function CreateSeasonForm({
       <button
         onClick={handleCreate}
         className="bg-blue-500 text-white px-4 py-1 rounded"
+        disabled={isdRedCard}
       >
         Create
       </button>

@@ -5,4 +5,4 @@
   url: string;
 };
 
-export const totalNumberOfPlayers = 16;
+export const totalNumberOfPlayers = 17;

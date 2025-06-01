@@ -31,6 +31,7 @@ const Squad: React.FC = () => {
   const {
     myUserId,
     myFormation,
+    dropPlayers,
     isDropZoneSelected,
     setDropPlayers,
     setMyTeamOvr,
@@ -106,10 +107,7 @@ const Squad: React.FC = () => {
         clubs: selectedClubs,
       })
       .then((response) => {
-        // const newDropPlayers: { [idx: number]: Player | null } = {};
-        // response.data.content.forEach((p, idx) => {
-        //   newDropPlayers[idx] = p;
-        // });
+        console.log("create random team - ", response.data.content);
 
         setDropPlayers(response.data.content);
         setMyTeamOvr(response.data.myTeamOvr);
@@ -243,8 +241,8 @@ const Squad: React.FC = () => {
                     setSnackbarOpen={setSnackbarOpen}
                   />
                 ) : ( */}
-                  <>
-                    {/* <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                <>
+                  {/* <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
                       Filters
                     </Typography>
                     <SearchCountry
@@ -277,36 +275,36 @@ const Squad: React.FC = () => {
                       }
                       setSelectedPosition={() => {}}
                     /> */}
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        loadRandomSquad();
-                      }}
-                      sx={{ margin: "10px" }}
-                    >
-                      Create Squad
-                    </Button>
-                  </>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      loadRandomSquad();
+                    }}
+                    sx={{ margin: "10px" }}
+                  >
+                    Create Squad
+                  </Button>
+                </>
                 {/* )} */}
               </div>
             </div>
           </div>
           {/* {!isDropZoneSelected ? ( */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <MyClub
-                snackbarOpen={snackbarOpen}
-                setSnackbarOpen={setSnackbarOpen}
-                setSnackbarMessage={setSnackbarMessage}
-                setLoading={setLoading}
-              />
-            </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <MyClub
+              snackbarOpen={snackbarOpen}
+              setSnackbarOpen={setSnackbarOpen}
+              setSnackbarMessage={setSnackbarMessage}
+              setLoading={setLoading}
+            />
+          </div>
           {/* ) : (
             <></>
           )} */}

@@ -2,6 +2,7 @@ import axios from "axios";
 
 export type Player = {
   id: number;
+  idx: number;
   rank: number;
   name: string;
   ovr: number;
@@ -63,6 +64,7 @@ export type Player = {
 
 export const defaultPlayer: Player = {
   id: 0,
+  idx: -1,
   rank: 0,
   name: "",
   ovr: 0,
@@ -129,6 +131,7 @@ export type MyPlayer = {
   clubId: number;
   yellowCard: number;
   redCard: number;
+  idx: number;
   rank: number;
   name: string;
   ovr: number;
@@ -210,6 +213,7 @@ export const fetchPlayers = async (
 
 export const myPlayerToPlayer = (myPlayer: MyPlayer): Player => ({
   id: myPlayer.playerId, // MyPlayer에는 playerId가 따로 존재
+  idx: myPlayer.idx,
   rank: myPlayer.rank,
   name: myPlayer.name,
   ovr: myPlayer.ovr,

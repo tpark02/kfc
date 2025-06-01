@@ -37,10 +37,11 @@ export const updateMyClub = async (
 ): Promise<string> => {
   try {
     console.log(dropPlayers);
-    const players = Array.from(
-      { length: totalNumberOfPlayers },
-      (_, i) => dropPlayers[i]?.id ?? null
-    );
+    const players: (number | null)[] = Array(totalNumberOfPlayers).fill(null);
+
+    Object.values(dropPlayers).forEach((player) => {
+      if (player) players[player.idx] = player.id;
+    });
 
     console.log("🛰 request data:", {
       clubName: newClubName,
@@ -91,7 +92,7 @@ export const deleteMyClub = async (
   try {
     const response = await axios.delete(
       `http://localhost:8080/deletemyclub/${userId}/${clubId}`
-    );    
+    );
     return response.data;
   } catch (error) {
     console.error("❌ 삭제 실패:", error);

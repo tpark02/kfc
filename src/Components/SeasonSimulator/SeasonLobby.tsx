@@ -137,6 +137,17 @@ export default function SeasonLobby() {
       .finally(() => {});
   }, [selectedMyClubIdx]);
 
+  const isdRedCard = selectedMyPlayers.slice(0, 12).some((p) => p.redCard > 0);
+   
+  useEffect(() => {
+    if (isdRedCard) {
+      setSnackbarMessage(
+        "You cannot have a red carded player in the starting member"
+      );
+      setSnackbarOpen(true);
+    }
+  }, [isdRedCard]);
+
   return (
     <Box p={4}>
       <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} />
@@ -170,6 +181,7 @@ export default function SeasonLobby() {
                     variant="outlined"
                     component={Link}
                     to={`/season/${season.id}`}
+                    disabled={isdRedCard}
                   >
                     Enter
                   </Button>
