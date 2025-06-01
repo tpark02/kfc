@@ -36,26 +36,27 @@ export default function SeasonLobby() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedMyClubIdx, setIdx] = useState(0);
-  const {
-    myUserId,
-    mySelectedClubId,
-    selectedMyPlayers,
-    joinedSeasonId,
-    setuserId,
-    setJoinedSeasonId,
-    setSelectedMyPlayers,
-    setDropPlayers,
-    setMyTeamOvr,
-    setMyTeamSquadValue,
-    setMyTeamAge,
-    setMyTeamPace,
-    setMyTeamDefense,
-    setMyTeamAttack,
-    setMyTeamClubCohesion,
-    setMyTeamStamina,
-    setMyFormation,
-    setMySelectedClubId,
-  } = useSquadStore();
+
+  const HasRedCard = useSquadStore((s) => s.HasRedCard);
+  const myUserId = useSquadStore((s) => s.myUserId);
+  const mySelectedClubId = useSquadStore((s) => s.mySelectedClubId);
+  const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
+  const joinedSeasonId = useSquadStore((s) => s.joinedSeasonId);
+
+  const setuserId = useSquadStore((s) => s.setuserId);
+  const setJoinedSeasonId = useSquadStore((s) => s.setJoinedSeasonId);
+  const setSelectedMyPlayers = useSquadStore((s) => s.setSelectedMyPlayers);
+  const setDropPlayers = useSquadStore((s) => s.setDropPlayers);
+  const setMyTeamOvr = useSquadStore((s) => s.setMyTeamOvr);
+  const setMyTeamSquadValue = useSquadStore((s) => s.setMyTeamSquadValue);
+  const setMyTeamAge = useSquadStore((s) => s.setMyTeamAge);
+  const setMyTeamPace = useSquadStore((s) => s.setMyTeamPace);
+  const setMyTeamDefense = useSquadStore((s) => s.setMyTeamDefense);
+  const setMyTeamAttack = useSquadStore((s) => s.setMyTeamAttack);
+  const setMyTeamClubCohesion = useSquadStore((s) => s.setMyTeamClubCohesion);
+  const setMyTeamStamina = useSquadStore((s) => s.setMyTeamStamina);
+  const setMyFormation = useSquadStore((s) => s.setMyFormation);
+  const setMySelectedClubId = useSquadStore((s) => s.setMySelectedClubId);
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
@@ -137,16 +138,16 @@ export default function SeasonLobby() {
       .finally(() => {});
   }, [selectedMyClubIdx]);
 
-  const isdRedCard = selectedMyPlayers.slice(0, 12).some((p) => p.redCard > 0);
-   
+  // const isdRedCard = selectedMyPlayers.slice(0, 10).some((p) => p.redCard > 0);
+
   useEffect(() => {
-    if (isdRedCard) {
+    if (HasRedCard) {
       setSnackbarMessage(
         "You cannot have a red carded player in the starting member"
       );
       setSnackbarOpen(true);
     }
-  }, [isdRedCard]);
+  }, [HasRedCard]);
 
   return (
     <Box p={4}>
@@ -181,7 +182,7 @@ export default function SeasonLobby() {
                     variant="outlined"
                     component={Link}
                     to={`/season/${season.id}`}
-                    disabled={isdRedCard}
+                    disabled={HasRedCard}
                   >
                     Enter
                   </Button>

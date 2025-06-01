@@ -32,6 +32,7 @@ type SquadStore = {
   myClubs: (MyClubData | null)[];
   dropZoneList: DropZone[];
   selectedMyPlayers: MyPlayer[];
+  HasRedCard: boolean;
 
   setJoinedSeasonId: (n: number) => void;
   setUserEmail: (s: string) => void;
@@ -97,7 +98,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myTeamOvr: 0,
   myClubs: Array(3).fill(null),
   selectedMyPlayers: [],
-
+  HasRedCard: false,
   setUserEmail: (s: string) => {
     set({ myUserEmail: s });
   },
@@ -108,7 +109,10 @@ export const useSquadStore = create<SquadStore>((set) => ({
     set({ mySelectedClubId: n });
   },
   setSelectedMyPlayers: (players: MyPlayer[]) =>
-    set({ selectedMyPlayers: players }),
+    set({
+      selectedMyPlayers: players,      
+      HasRedCard: players.sort((a, b) => a.idx - b.idx).slice(0, 11).some((p) => p.redCard > 0),
+    }),
   setuserId: (userId: number) => set({ myUserId: userId }),
   setMyClubs: (clubs: (MyClubData | null)[]) => set({ myClubs: clubs }),
   setMyTeamOvr: (ovr: number) => {
