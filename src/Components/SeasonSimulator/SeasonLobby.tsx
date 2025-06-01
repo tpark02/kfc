@@ -191,7 +191,7 @@ export default function SeasonLobby() {
             ))}
           </List>
         </Paper>
-        <Paper elevation={3} sx={{ width: "40%" }}>
+        {/* <Paper elevation={3} sx={{ width: "40%" }}>
           {" "}
           {selectedMyPlayers.map((p) => {
             return (
@@ -204,7 +204,7 @@ export default function SeasonLobby() {
               </Box>
             );
           })}
-        </Paper>
+        </Paper> */}
       </Box>
       <Snackbar
         open={snackbarOpen}
