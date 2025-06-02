@@ -26,7 +26,7 @@ function App() {
               element={<PlayerSpec />} // Example: Pass the first player as a prop
             />
             <Route path="/squad" element={<Squad />} />
-            <Route path="/league" element={<LeagueSimulator />} />
+            <Route path="/tournament" element={<LeagueSimulator />} />
             <Route path="/season/:seasonId" element={<SeasonPage />} />
           </Routes>
         </Router>
