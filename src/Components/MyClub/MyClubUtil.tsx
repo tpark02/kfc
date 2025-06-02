@@ -54,7 +54,7 @@ export const updateMyClub = async (
   myTeamStamina: number
 ): Promise<string> => {
   try {
-    console.log(dropPlayers);
+    //console.log(dropPlayers);
     // const players: (number | null)[] = Array(totalNumberOfPlayers).fill(null);
     const players: (MyPlayer | null)[] = Array(totalNumberOfPlayers).fill(null);
 
