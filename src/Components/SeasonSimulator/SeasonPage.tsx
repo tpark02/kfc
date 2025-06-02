@@ -15,7 +15,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import { devMatchTimer } from "../../util/Util";
-import ChampionsBracket from "./ChampionsBracket";
+import ChampionsBracket from "./ChampionsBracket"
 import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
@@ -24,7 +24,8 @@ import { SeasonResponse } from "../../types/Response";
 import { fetchMyClubs, fetchSeasonInfo } from "../MyClub/MyClubUtil";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
-
+import { getOvrIndicator, getTeamOvrIndicator } from "../MyClub/MyClubUtil";
+import { totalNumberOfPlayers } from "../../types/Team";
 import "../../style/SeasonPage.css";
 
 export default function SeasonPage() {
@@ -44,6 +45,7 @@ export default function SeasonPage() {
     joinedSeasonId,
     myUserId,
     selectedMyPlayers,
+    myTeamOvr,
     setJoinedSeasonId,
     setSelectedMyPlayers,
     setDropPlayers,
@@ -174,35 +176,11 @@ export default function SeasonPage() {
     loadMyClub();
   }, [mySelectedClubId]);
 
-  // useEffect(() => {
-  //   fetchMyClubs(myUserId)
-  //     .then((clubs) => {
-  //       const selectedClub = clubs.find((c) => c.clubId === mySelectedClubId);
-  //       console.log("my selected club id - ", mySelectedClubId);
-
-  //       if (selectedClub === undefined) {
-  //         setSnackbarMessage("The club not found");
-  //         setSnackbarOpen(true);
-  //         return;
-  //       }
-
-  //       const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
-
-  //       setDropPlayers([...playerList]);
-  //       setSelectedMyPlayers(selectedClub.players);
-  //       setMyFormation(selectedClub.formationName);
-  //       setMyTeamOvr(selectedClub.ovr);
-  //       setMyTeamSquadValue(selectedClub.price);
-  //       setMyTeamAge(selectedClub.age);
-  //       setMyTeamPace(selectedClub.pace);
-  //       setMyTeamDefense(selectedClub.defense);
-  //       setMyTeamAttack(selectedClub.attack);
-  //       setMyTeamClubCohesion(selectedClub.clubCohesion);
-  //       setMyTeamStamina(selectedClub.stamina);
-  //       setMySelectedClubId(selectedClub.clubId ?? 0);
-  //     })
-  //     .finally(() => {});
-  // }, [mySelectedClubId]);
+  const adjustedTeamOvr = Math.floor(
+    selectedMyPlayers
+      .map((p) => p.ovr - p.yellowCard * 5 - p.redCard * 10)
+      .reduce((acc, curr) => acc + curr, 0) / totalNumberOfPlayers
+  );
 
   return (
     <>
@@ -242,6 +220,7 @@ export default function SeasonPage() {
           </Button>
         )}
       </Box>
+
       <Box
         p={0}
         display="flex"
@@ -250,27 +229,37 @@ export default function SeasonPage() {
         flexWrap="wrap"
       >
         <Box flex={1} border="1px solid red" padding={0}>
-          {" "}
-          {/* <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} /> */}
-          {selectedMyPlayers.map((p) => {
-            return (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  gap: "12px",
-                  outline: "1px solid red",
-                }}
-              >
-                <div className="player-item">{p.pos}</div>
-                <div className="player-item">{p.name}</div>
-                <div className="player-item">{p.ovr}</div>
-                <div className="player-item">{p.redCard}</div>
-                <div className="player-item">{p.yellowCard}</div>
-              </div>
-            );
-          })}
+          <Box>
+            {adjustedTeamOvr}
+            {getTeamOvrIndicator(adjustedTeamOvr, myTeamOvr)}
+          </Box>
+          <Box>
+            {selectedMyPlayers.map((p) => {
+              const adjustOvr = p.ovr - p.yellowCard * 5 - p.redCard * 10;
+              return (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    gap: "12px",
+                    outline: "1px solid red",
+                  }}
+                >
+                  <div className="player-item">{p.pos}</div>
+                  <div className="player-item">{p.name}</div>
+                  <div className="player-item">{p.ovr}</div>
+                  <div className="player-item">{"->"}</div>
+                  <div className="player-item">{adjustOvr}</div>
+                  <div className="player-item">
+                    {getOvrIndicator(p.ovr, p.yellowCard, p.redCard)}
+                  </div>
+                  <div className="player-item">{p.redCard}</div>
+                  <div className="player-item">{p.yellowCard}</div>
+                </div>
+              );
+            })}
+          </Box>
         </Box>
         <Box flex={2} border="1px solid red" padding={0}>
           {season?.started ? (

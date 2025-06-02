@@ -135,3 +135,14 @@ export const deleteMyClub = async (
     return "club deletion failed";
   }
 };
+
+export const getOvrIndicator = (ovr: number, yellow: number, red: number): string => {
+  const adjusted = ovr - yellow * 5 - red * 10;
+  if (ovr === adjusted) return "⚪";
+  return ovr > adjusted ? "🔴🔻" : "🟢🔺";
+};
+
+export const getTeamOvrIndicator = (a: number, b: number): string => {
+  if (a === b) return "⚪";
+  return a < b ? "🔴🔻" : "🟢🔺";
+}
