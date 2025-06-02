@@ -20,7 +20,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
-import MyClubSelect from "./MyClubSelect";
+// import MyClubSelect from "./MyClubSelect";
 import { fetchMyClubs } from "../MyClub/MyClubUtil";
 
 interface Season {
@@ -40,7 +40,7 @@ export default function SeasonLobby() {
   const HasRedCard = useSquadStore((s) => s.HasRedCard);
   const myUserId = useSquadStore((s) => s.myUserId);
   const mySelectedClubId = useSquadStore((s) => s.mySelectedClubId);
-  const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
+  // const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
   const joinedSeasonId = useSquadStore((s) => s.joinedSeasonId);
 
   const setuserId = useSquadStore((s) => s.setuserId);
@@ -136,7 +136,22 @@ export default function SeasonLobby() {
         setMySelectedClubId(selectedClub.clubId ?? 0);
       })
       .finally(() => {});
-  }, [selectedMyClubIdx]);
+  }, [
+    selectedMyClubIdx,
+    myUserId,
+    setSelectedMyPlayers,
+    setDropPlayers,
+    setMyFormation,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
+    setMySelectedClubId,
+  ]);
 
   // const isdRedCard = selectedMyPlayers.slice(0, 10).some((p) => p.redCard > 0);
 
@@ -151,7 +166,7 @@ export default function SeasonLobby() {
 
   return (
     <Box p={4}>
-      <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} />
+      {/* <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} /> */}
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         {joinedSeasonId}
       </Typography>

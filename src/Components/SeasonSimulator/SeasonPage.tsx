@@ -20,10 +20,12 @@ import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/Response";
-import MyClubSelect from "./MyClubSelect";
-import { fetchMyClubs } from "../MyClub/MyClubUtil";
+// import MyClubSelect from "./MyClubSelect";
+import { fetchMyClubs, fetchSeasonInfo } from "../MyClub/MyClubUtil";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
+
+import "../../style/SeasonPage.css";
 
 export default function SeasonPage() {
   const { seasonId } = useParams<{ seasonId: string }>();
@@ -32,7 +34,8 @@ export default function SeasonPage() {
   const [processing, setProcessing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMsg, setDialogMsg] = useState("");
-  const [selectedMyClubIdx, setIdx] = useState(0);
+  // const [selectedMyClubIdx, setIdx] = useState(0);
+  // const [selectedMyClubIdx] = useState(0);
   const navigate = useNavigate();
   const userId = 1; // TODO: replace with actual logged-in user
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -58,12 +61,12 @@ export default function SeasonPage() {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  useEffect(() => {
-    fetchMyClubs(myUserId).then((clubs) => {
-      const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
-      setIdx(idx);
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchMyClubs(myUserId).then((clubs) => {
+  //     const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
+  //     setIdx(idx);
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (!seasonId) {
@@ -73,20 +76,13 @@ export default function SeasonPage() {
       return;
     }
 
-    const fetchSeasonInfo = async () => {
-      try {
-        const res = await axios.get<SeasonResponse>(
-          `http://localhost:8080/season/getSeason/${seasonId}`
-        );
-        setSeason(res.data);
-      } catch (err) {
-        console.error("❌ Failed to load season info:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    (async () => {
+      const res: SeasonResponse | null = await fetchSeasonInfo(seasonId);
 
-    fetchSeasonInfo();
+      if (res !== null) setSeason(res);
+
+      setLoading(false);
+    })();
   }, [seasonId, navigate]);
 
   useEffect(() => {
@@ -113,6 +109,7 @@ export default function SeasonPage() {
           setDialogMsg("Match is finished");
           setDialogOpen(true);
           clearInterval(interval);
+          loadMyClub();
         }
       } catch (err) {
         console.error("❌ Failed to poll season info:", err);
@@ -148,50 +145,64 @@ export default function SeasonPage() {
       setProcessing(false);
     }
   };
-  
-  useEffect(() => {
-    fetchMyClubs(myUserId).then((clubs) => {
-      const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
-      setIdx(idx);
-    });
-  }, []);
+
+  const loadMyClub = async () => {
+    const clubs = await fetchMyClubs(myUserId);
+    const selectedClub = clubs.find((c) => c.clubId === mySelectedClubId);
+    if (!selectedClub) {
+      setSnackbarMessage("The club not found");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
+    setDropPlayers([...playerList]);
+    setSelectedMyPlayers(selectedClub.players);
+    setMyFormation(selectedClub.formationName);
+    setMyTeamOvr(selectedClub.ovr);
+    setMyTeamSquadValue(selectedClub.price);
+    setMyTeamAge(selectedClub.age);
+    setMyTeamPace(selectedClub.pace);
+    setMyTeamDefense(selectedClub.defense);
+    setMyTeamAttack(selectedClub.attack);
+    setMyTeamClubCohesion(selectedClub.clubCohesion);
+    setMyTeamStamina(selectedClub.stamina);
+    setMySelectedClubId(selectedClub.clubId ?? 0);
+  };
 
   useEffect(() => {
-    fetchMyClubs(myUserId)
-      .then((clubs) => {
-        // const selectedClub = clubs.find((c) => c.clubId === club?.clubId);
-        const selectedClub = clubs[selectedMyClubIdx] ?? undefined;
+    loadMyClub();
+  }, [mySelectedClubId]);
 
-        // if (selectedClub === undefined) return;
+  // useEffect(() => {
+  //   fetchMyClubs(myUserId)
+  //     .then((clubs) => {
+  //       const selectedClub = clubs.find((c) => c.clubId === mySelectedClubId);
+  //       console.log("my selected club id - ", mySelectedClubId);
 
-        if (selectedClub === undefined) {
-          setSnackbarMessage("The club not found");
-          setSnackbarOpen(true);
-          return;
-        }
+  //       if (selectedClub === undefined) {
+  //         setSnackbarMessage("The club not found");
+  //         setSnackbarOpen(true);
+  //         return;
+  //       }
 
-        // if (club?.clubId !== undefined) {
-        //   setMySelectedClubId(club.clubId);
-        // }
+  //       const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
 
-        setSelectedMyPlayers(selectedClub.players);
-
-        const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
-
-        setDropPlayers([...playerList]);
-        setMyFormation(selectedClub.formationName);
-        setMyTeamOvr(selectedClub.ovr);
-        setMyTeamSquadValue(selectedClub.price);
-        setMyTeamAge(selectedClub.age);
-        setMyTeamPace(selectedClub.pace);
-        setMyTeamDefense(selectedClub.defense);
-        setMyTeamAttack(selectedClub.attack);
-        setMyTeamClubCohesion(selectedClub.clubCohesion);
-        setMyTeamStamina(selectedClub.stamina);
-        setMySelectedClubId(selectedClub.clubId ?? 0);
-      })
-      .finally(() => {});
-  }, [selectedMyClubIdx]);
+  //       setDropPlayers([...playerList]);
+  //       setSelectedMyPlayers(selectedClub.players);
+  //       setMyFormation(selectedClub.formationName);
+  //       setMyTeamOvr(selectedClub.ovr);
+  //       setMyTeamSquadValue(selectedClub.price);
+  //       setMyTeamAge(selectedClub.age);
+  //       setMyTeamPace(selectedClub.pace);
+  //       setMyTeamDefense(selectedClub.defense);
+  //       setMyTeamAttack(selectedClub.attack);
+  //       setMyTeamClubCohesion(selectedClub.clubCohesion);
+  //       setMyTeamStamina(selectedClub.stamina);
+  //       setMySelectedClubId(selectedClub.clubId ?? 0);
+  //     })
+  //     .finally(() => {});
+  // }, [mySelectedClubId]);
 
   return (
     <>
@@ -209,6 +220,7 @@ export default function SeasonPage() {
           <SeasonTimer
             initialRemaining={season?.remainingSeconds ?? 0}
             seasonId={parseInt(seasonId)}
+            setSeason={setSeason}
           />
         )}
         {loading ? (
@@ -239,15 +251,23 @@ export default function SeasonPage() {
       >
         <Box flex={1} border="1px solid red" padding={0}>
           {" "}
-          <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} />
+          {/* <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} /> */}
           {selectedMyPlayers.map((p) => {
             return (
               <div
-                style={{ display: "flex", flexDirection: "row", gap: "12px" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  gap: "12px",
+                  outline: "1px solid red",
+                }}
               >
-                <div>{p.pos}</div>
-                <div>{p.name}</div>
-                <div>{p.ovr}</div>
+                <div className="player-item">{p.pos}</div>
+                <div className="player-item">{p.name}</div>
+                <div className="player-item">{p.ovr}</div>
+                <div className="player-item">{p.redCard}</div>
+                <div className="player-item">{p.yellowCard}</div>
               </div>
             );
           })}

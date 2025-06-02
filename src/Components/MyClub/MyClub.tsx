@@ -3,13 +3,14 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { fetchMyClubs, updateMyClub, deleteMyClub } from "./MyClubUtil";
 import { MyClubData } from "../../types/Club";
 import { Button, Typography, Divider } from "@mui/material";
-import ConfirmDialog from "../../Components/ConfirmDialog";
+import ConfirmDialog from "../ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { totalNumberOfPlayers } from "../../types/Team";
+import { shallow } from "zustand/shallow";
 
 interface MyClubProp {
   snackbarOpen: boolean;
@@ -24,19 +25,24 @@ const MyClub: React.FC<MyClubProp> = ({
   setSnackbarMessage,
   setLoading,
 }) => {
+  // 🎯 상태 개별로 분리 호출
+  const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
+  const myUserId = useSquadStore((s) => s.myUserId);
+  const myClubs = useSquadStore((s) => s.myClubs);
+  const myFormation = useSquadStore((s) => s.myFormation);
+  const dropPlayers = useSquadStore((s) => s.dropPlayers);
+
+  const myTeamOvr = useSquadStore((s) => s.myTeamOvr);
+  const myTeamSquadValue = useSquadStore((s) => s.myTeamSquadValue);
+  const myTeamAge = useSquadStore((s) => s.myTeamAge);
+  const myTeamPace = useSquadStore((s) => s.myTeamPace);
+  const myTeamDefense = useSquadStore((s) => s.myTeamDefense);
+  const myTeamClubCohesion = useSquadStore((s) => s.myTeamClubCohesion);
+  const myTeamAttack = useSquadStore((s) => s.myTeamAttack);
+  const myTeamStamina = useSquadStore((s) => s.myTeamStamina);
+
+  // 🛠 setter 함수들은 묶어서 한 번에
   const {
-    myUserId,
-    myClubs,
-    myFormation,
-    dropPlayers,
-    myTeamOvr,
-    myTeamSquadValue,
-    myTeamAge,
-    myTeamPace,
-    myTeamDefense,
-    myTeamClubCohesion,
-    myTeamAttack,
-    myTeamStamina,
     setMySelectedClubId,
     setSelectedMyPlayers,
     setDropPlayers,
@@ -52,6 +58,7 @@ const MyClub: React.FC<MyClubProp> = ({
     setMyFormation,
     resetDropZoneList,
   } = useSquadStore();
+
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newClubName, setNewClubName] = useState("");
 
@@ -60,6 +67,7 @@ const MyClub: React.FC<MyClubProp> = ({
 
     if (newClubName.length > 0) {
       updateMyClub(
+        selectedMyPlayers,
         myUserId,
         clubId,
         newClubName,
@@ -93,8 +101,13 @@ const MyClub: React.FC<MyClubProp> = ({
                 ? updatedClub.players.map(myPlayerToPlayer)
                 : [];
 
-            setDropPlayers([...playerList]);
             console.log("myclub.tsx drop players - ", dropPlayers);
+            setDropPlayers([...playerList]);
+
+            console.log("my club.tsx selected players - ", dropPlayers);
+            if (updatedClub && updatedClub.players) {
+              setSelectedMyPlayers(updatedClub.players);
+            }
           });
         })
         .catch((err) => {
@@ -259,7 +272,11 @@ const MyClub: React.FC<MyClubProp> = ({
                         "my club.tsx selected Club - ",
                         selectedClub.players
                       );
-                      console.log("my club.tsx drop players - ", dropPlayers);
+
+                      console.log(
+                        "my club.tsx selected players - ",
+                        dropPlayers
+                      );
                       setSelectedMyPlayers(selectedClub.players);
 
                       const playerList: Player[] =

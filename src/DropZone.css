@@ -27,4 +27,10 @@
     transition: border-color 0.3s ease;
 }
 
-.dropzone-button {}
+.dropzone-button {
+    background-color: white;
+    display: flex;
+    flex-direction: column;    
+    height: 120px;
+    outline: 1px solid red;
+}

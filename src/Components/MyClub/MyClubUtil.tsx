@@ -1,7 +1,24 @@
 import axios from "axios";
 import { MyClubData } from "../../types/Club";
-import { Player } from "../../types/Player";
+import { MyPlayer, Player } from "../../types/Player";
 import { totalNumberOfPlayers } from "../../types/Team";
+import { SeasonResponse } from "../../types/Response";
+import { playerToMyPlayer } from "../../types/Player";
+
+export const fetchSeasonInfo = async (seasonId: string) => {
+  try {
+    const res = await axios.get<SeasonResponse>(
+      `http://localhost:8080/season/getSeason/${seasonId}`
+    );
+    // setSeason(res.data
+    return res.data;
+  } catch (err) {
+    console.error("❌ Failed to load season info:", err);
+    return null;
+  } finally {
+    // setLoading(false);
+  }
+};
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
@@ -21,6 +38,7 @@ export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
 };
 
 export const updateMyClub = async (
+  selectedMyPlayers: MyPlayer[],
   userId: number,
   clubId: number,
   newClubName: string,
@@ -37,10 +55,25 @@ export const updateMyClub = async (
 ): Promise<string> => {
   try {
     console.log(dropPlayers);
-    const players: (number | null)[] = Array(totalNumberOfPlayers).fill(null);
+    // const players: (number | null)[] = Array(totalNumberOfPlayers).fill(null);
+    const players: (MyPlayer | null)[] = Array(totalNumberOfPlayers).fill(null);
 
     Object.values(dropPlayers).forEach((player) => {
-      if (player) players[player.idx] = player.id;
+      console.log("player id - ", player.id, " - ", player.idx);
+      if (player) {
+        const mPlayer = selectedMyPlayers.find((p) => p.playerId === player.id);
+
+        const myPlayer: MyPlayer = playerToMyPlayer(
+          player,
+          userId,
+          clubId,
+          mPlayer?.yellowCard ?? 0,
+          mPlayer?.redCard ?? 0,
+          mPlayer?.id ?? 0 // id가 필요 없으면 별도 처리하거나 -1 등 기본값 설정
+        );
+
+        players[player.idx] = myPlayer;
+      }
     });
 
     console.log("🛰 request data:", {

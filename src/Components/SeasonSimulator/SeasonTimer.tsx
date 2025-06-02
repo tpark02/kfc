@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { SeasonResponse } from "../../types/Response";
+import { fetchSeasonInfo } from "../../components/MyClub/MyClubUtil";
 
-interface Props {
-  initialRemaining: number; // 서버에서 전달받은 초
-  seasonId?: number; // optional
+interface SeasonTimerProps {
+  initialRemaining: number;
+  seasonId?: number;
+  setSeason: (s: SeasonResponse | null) => void;
 }
 
-export default function SeasonTimer({ initialRemaining, seasonId }: Props) {
+export default function SeasonTimer({
+  initialRemaining,
+  seasonId,
+  setSeason,
+}: SeasonTimerProps) {
   const [remaining, setRemaining] = useState(initialRemaining);
 
   useEffect(() => {
@@ -20,11 +26,24 @@ export default function SeasonTimer({ initialRemaining, seasonId }: Props) {
   useEffect(() => {
     if (!seasonId) return;
 
-    const fetchSeason = async () => {
-      const res = await axios.get(`http://localhost:8080/season/getSeason/${seasonId}`);
-      setRemaining(res.data.remainingSeconds);
-    };
-    fetchSeason();
+    // const fetchSeason = async () => {
+    //   const res = await axios.get(`http://localhost:8080/season/getSeason/${seasonId}`);
+    //   setRemaining(res.data.remainingSeconds);
+    // };
+    // fetchSeason();
+
+    (async () => {
+      const res: SeasonResponse | null = await fetchSeasonInfo(
+        seasonId.toString()
+      );
+      if (res !== null && typeof res.remainingSeconds === "number") {
+        setRemaining(res.remainingSeconds);
+        setSeason(res);
+        console.log("Season Timer ended");
+      } else {
+        setRemaining(0);
+      }
+    })();
   }, [seasonId]);
 
   if (remaining <= 0) return <div>✅ Match Started</div>;

@@ -3,12 +3,13 @@ import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 import { DropZone } from "../../types/DropZone";
-import { getTeamAvr } from "../../Components/TeamBuilder/SquadBuilderUtil";
+import { getTeamAvr } from "./SquadBuilderUtil";
 import { Player } from "../../types/Player";
 // import Snackbar from "@mui/material/Snackbar";
 import CroppedAvatar from "./CroppedAvatar";
 // import axios from "axios";
 import "../../style/SquadBuilder.css";
+import "../../DropZone.css";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
@@ -30,6 +31,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   const {
     // myUserId,
     // mySelectedClubId,
+    selectedMyPlayers,
     dropZoneList,
     dropPlayers,
     setDropZoneList,
@@ -93,6 +95,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
           {formations[selectedFormation].map((position, idx) => {
             const pos = position.pos.replace(/[0-9]/g, "");
             const player = dropPlayers.find((p) => p.idx === idx); // ✅ 정확한 선수 찾기
+            const myPlayer = selectedMyPlayers.find(
+              (p) => p.playerId === player?.id
+            );
 
             return (
               <Button
@@ -122,7 +127,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
 
                     setDropPlayers(updatedPlayers);
                     setSelectedDropZone({ index: -1, pos: "" });
-                    // updateRoster(updatedPlayers);
                     resetDropZoneList();
                   }
 
@@ -131,6 +135,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   }
                 }}
                 style={{
+                  color: "red", // font color for red card yellow card myplayer
                   position: "absolute",
                   top: `${position.top}%`,
                   left: `${position.left}%`,
@@ -141,6 +146,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     src={player?.img ?? ""}
                     selected={selectedDropZone.index === idx}
                   />
+                  <div>{myPlayer?.redCard ?? 0}</div>
+                  <div>{myPlayer?.yellowCard ?? 0}</div>
                 </div>
               </Button>
             );
@@ -151,12 +158,14 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             .filter((p): p is Player => !!p)
             .sort((a, b) => a.idx - b.idx)
             .slice(11)
-            .map((bench, idx) => {
+            .map((benchPlayer, idx) => {
               const actualIndex = idx + 11;
-              // console.log("bench", bench);
+              const myBenchPlayer = selectedMyPlayers.find(
+                (p) => p.playerId === benchPlayer.id
+              );
+              console.log("bench player red card - ", myBenchPlayer?.redCard);
               return (
                 <div
-                  // className="bench-player"
                   key={`drop-${actualIndex}`}
                   onClick={() => {
                     const len = dropZoneList.length;
@@ -193,7 +202,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       });
 
                       setDropPlayers(updatedPlayers);
-                      // updateRoster(updatedPlayers);
                       setSelectedDropZone({ index: -1, pos: "" });
                       resetDropZoneList();
                     }
@@ -203,10 +211,14 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     }
                   }}
                 >
-                  <CroppedAvatar
-                    src={bench?.img ?? ""}
-                    selected={selectedDropZone.index === actualIndex}
-                  />
+                  <div className="dropzone-button">
+                    <CroppedAvatar
+                      src={benchPlayer?.img ?? ""}
+                      selected={selectedDropZone.index === actualIndex}
+                    />
+                    <div>{myBenchPlayer?.redCard ?? 0}</div>
+                    <div>{myBenchPlayer?.yellowCard ?? 0}</div>
+                  </div>
                 </div>
               );
             })}

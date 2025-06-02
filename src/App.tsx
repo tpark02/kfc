@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Players } from "./components/Players/Players"; // 💡 make sure the path is correct
-
+import { Players } from "./components/Players/Players";
 // 타입
 import PlayerSpec from "./components/Players/PlayerSpec";
 import Squad from "./components/TeamBuilder/Squad"; // 💡 make sure the path is correct
