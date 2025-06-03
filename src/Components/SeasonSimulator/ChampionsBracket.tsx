@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { MyPlayer } from "../../types/Player";
+import { useEffect, useState } from "react";
 import TournamentRound from "./TournamentRound";
 import "../../style/bracket.css";
-import { MyPlayer } from "../../types/Player";
 
 interface MatchDto {
   id: number;
@@ -16,9 +16,15 @@ interface MatchDto {
 
 interface MatchListProps {
   seasonId: number;
+  onMatchClick?: (match: MatchDto) => void;
+  setIsMatchClicked: (b: boolean) => void;
 }
 
-export default function ChampionsBracket({ seasonId }: MatchListProps) {
+export default function ChampionsBracket({
+  seasonId,
+  onMatchClick,
+  setIsMatchClicked,
+}: MatchListProps) {
   const [finalGame, setFinalGame] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,7 +48,6 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
 
         const gamesList: any[] = [];
         data.forEach((match) => {
-
           console.log("my player list 1 ", match.myPlayerList1);
           console.log("my player list 2 ", match.myPlayerList2);
 
@@ -62,6 +67,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
                   sourceGame: null,
                   sourcePool: {},
                 },
+                myPlayerList: match.myPlayerList1, // ✅ 추가
               },
               visitor: {
                 team: { id: `${match.id}-2`, name: match.player2Name },
@@ -74,6 +80,7 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
                   sourceGame: null,
                   sourcePool: {},
                 },
+                myPlayerList: match.myPlayerList2, // ✅ 추가
               },
             },
             round: match.round,
@@ -131,6 +138,8 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
         game.sides.home.score.score > game.sides.visitor.score.score
           ? game.sides.home.team.name
           : game.sides.visitor.team.name,
+      myPlayerList1: game.sides.home.myPlayerList || [],
+      myPlayerList2: game.sides.visitor.myPlayerList || [],
     };
     if (!roundMap.has(game.round)) roundMap.set(game.round, []);
     roundMap.get(game.round)!.push(match);
@@ -152,6 +161,8 @@ export default function ChampionsBracket({ seasonId }: MatchListProps) {
             key={round}
             title={`Round ${round}`}
             matches={matches}
+            onMatchClick={onMatchClick}
+            setIsMatchClicked={setIsMatchClicked}
           />
         ))}
       </div>

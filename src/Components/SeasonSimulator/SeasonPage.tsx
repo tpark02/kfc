@@ -15,8 +15,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import { devMatchTimer } from "../../util/Util";
-import ChampionsBracket from "./ChampionsBracket"
-import SeasonParticipantsList from "./SeasonParticipantsList";
+import ChampionsBracket from "./ChampionsBracket";
+// import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/Response";
@@ -26,6 +26,7 @@ import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { getOvrIndicator, getTeamOvrIndicator } from "../MyClub/MyClubUtil";
 import { totalNumberOfPlayers } from "../../types/Team";
+import { MatchDto } from "../../types/MatchDto";
 import "../../style/SeasonPage.css";
 
 export default function SeasonPage() {
@@ -182,6 +183,15 @@ export default function SeasonPage() {
       .reduce((acc, curr) => acc + curr, 0) / totalNumberOfPlayers
   );
 
+  const [selectedMatch, setSelectedMatch] = useState<MatchDto | null>(null);
+  const [isMatchClicked, setIsMatchClicked] = useState(false);
+  // const [showMatchDialog, setShowMatchDialog] = useState(false);
+
+  const handleMatchClick = (match: MatchDto) => {
+    setSelectedMatch(match);
+    // setShowMatchDialog(true);
+  };
+
   return (
     <>
       <Box p={4}>
@@ -228,54 +238,92 @@ export default function SeasonPage() {
         width="100%"
         flexWrap="wrap"
       >
-        <Box flex={1} border="1px solid red" padding={0}>
-          <Box>
-            {adjustedTeamOvr}
-            {getTeamOvrIndicator(adjustedTeamOvr, myTeamOvr)}
+        {isMatchClicked ? (
+          <Box flex={1} border="1px solid red" padding={0}>
+            <Typography fontWeight="bold">
+              {selectedMatch?.player1Name} 선수 명단
+            </Typography>
+            {selectedMatch?.myPlayerList1?.map((p, i) => (
+              <div key={i}>
+                {p.pos} - {p.name} ({p.ovr})
+              </div>
+            ))}
           </Box>
-          <Box>
-            {selectedMyPlayers.map((p) => {
-              const adjustOvr = p.ovr - p.yellowCard * 5 - p.redCard * 10;
-              return (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    gap: "12px",
-                    outline: "1px solid red",
-                  }}
-                >
-                  <div className="player-item">{p.pos}</div>
-                  <div className="player-item">{p.name}</div>
-                  <div className="player-item">{p.ovr}</div>
-                  <div className="player-item">{"->"}</div>
-                  <div className="player-item">{adjustOvr}</div>
-                  <div className="player-item">
-                    {getOvrIndicator(p.ovr, p.yellowCard, p.redCard)}
+        ) : (
+          <Box flex={1} border="1px solid red" padding={0}>
+            <Box>
+              {adjustedTeamOvr}
+              {getTeamOvrIndicator(adjustedTeamOvr, myTeamOvr)}
+            </Box>
+            <Box>
+              {selectedMyPlayers.map((p) => {
+                const adjustOvr = p.ovr - p.yellowCard * 5 - p.redCard * 10;
+                return (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      gap: "12px",
+                      outline: "1px solid red",
+                    }}
+                  >
+                    <div className="player-item">{p.pos}</div>
+                    <div className="player-item">{p.name}</div>
+                    <div className="player-item">{p.ovr}</div>
+                    <div className="player-item">{"->"}</div>
+                    <div className="player-item">{adjustOvr}</div>
+                    <div className="player-item">
+                      {getOvrIndicator(p.ovr, p.yellowCard, p.redCard)}
+                    </div>
+                    <div className="player-item">{p.redCard}</div>
+                    <div className="player-item">{p.yellowCard}</div>
                   </div>
-                  <div className="player-item">{p.redCard}</div>
-                  <div className="player-item">{p.yellowCard}</div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </Box>
           </Box>
-        </Box>
+        )}
         <Box flex={2} border="1px solid red" padding={0}>
           {season?.started ? (
-            <ChampionsBracket seasonId={seasonId ? parseInt(seasonId) : -1} />
+            <ChampionsBracket
+              seasonId={seasonId ? parseInt(seasonId) : -1}
+              onMatchClick={handleMatchClick}
+              setIsMatchClicked={setIsMatchClicked}
+            />
           ) : (
             <Typography color="gray" mt={2}>
               🕒 Waiting for match to start...
             </Typography>
           )}
         </Box>
-        <Box flex={1} border="1px solid red" padding={0}>
+        {/* <Box flex={1} border="1px solid red" padding={0}>
           <SeasonParticipantsList
             seasonId={seasonId ? parseInt(seasonId) : -1}
             refreshKey={joinedSeasonId !== -1}
           />
-        </Box>
+        </Box> */}
+        {selectedMatch && (
+          <Box flex={1} border="1px solid red" padding={0}>
+            {/* <Typography fontWeight="bold">
+              {selectedMatch.player1Name} 선수 명단
+            </Typography>
+            {selectedMatch.myPlayerList1?.map((p, i) => (
+              <div key={i}>
+                {p.pos} - {p.name} ({p.ovr})
+              </div>
+            ))} */}
+
+            <Typography fontWeight="bold" mt={2}>
+              {selectedMatch.player2Name} 선수 명단
+            </Typography>
+            {selectedMatch.myPlayerList2?.map((p, i) => (
+              <div key={i}>
+                {p.pos} - {p.name} ({p.ovr})
+              </div>
+            ))}
+          </Box>
+        )}
       </Box>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle sx={{ m: 0, p: 2 }}>
