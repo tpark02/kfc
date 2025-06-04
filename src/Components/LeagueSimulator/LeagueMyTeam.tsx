@@ -1,9 +1,24 @@
 import { useSquadStore } from "../../store/useSquadStore";
 import { adjustTeamOvr, getTeamOvrIndicator } from "../myclub/MyClubUtil";
+import { shallow } from "zustand/shallow";
 
 const LeagueMyTeam = () => {
-  const { myTeamName, myFormation, myTeamOvr, myTeamSquadValue, mySelectedPlayers } =
-    useSquadStore();
+  const {
+    myTeamName,
+    myFormation,
+    myTeamOvr,
+    myTeamSquadValue,
+    mySelectedPlayers,
+  } = useSquadStore(
+    (s) => ({
+      myTeamName: s.myTeamName,
+      myFormation: s.myFormation,
+      myTeamOvr: s.myTeamOvr,
+      myTeamSquadValue: s.myTeamSquadValue,
+      mySelectedPlayers: s.mySelectedPlayers,
+    }),
+    shallow
+  );
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
 
   return (
@@ -12,10 +27,13 @@ const LeagueMyTeam = () => {
         <div
           style={{
             outline: "1px solid blue",
+            minWidth: "300px", // ✅ prevent items from becoming too small
+            flex: "1 1 30%", // ✅ flexible but constrained
+            maxWidth: "100%", // ✅ responsive on shrink
             display: "flex",
             flexDirection: "column",
             width: "100%",
-            height: "100%",
+            height: "auto",
           }}
         >
           <div>My Team</div>
@@ -35,9 +53,9 @@ const LeagueMyTeam = () => {
               outline: "1px solid red",
               display: "flex",
               flexDirection: "column",
-              flexWrap: "nowrap",
+              // flexWrap: "nowrap",
               width: "100%",
-              height: "100%",
+              height: "auto",
             }}
           >
             {mySelectedPlayers ? (
@@ -47,11 +65,11 @@ const LeagueMyTeam = () => {
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    flexWrap: "nowrap",
+                    // flexWrap: "nowrap",
                     justifyContent: "stretch",
                     alignItems: "center",
                     width: "100%",
-                    height: "100%",
+                    height: "auto",
                     outline: "1px solid red",
                   }}
                 >

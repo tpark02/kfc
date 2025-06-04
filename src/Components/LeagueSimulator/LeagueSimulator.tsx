@@ -80,11 +80,11 @@ const LeagueSimulator = () => {
           backgroundColor: "var(--background-color)",
           display: "flex",
           flexDirection: "row",
-          flexWrap: "nowrap",
+          flexWrap: "wrap",
           justifyContent: "center",
           alignContent: "stretch",
           width: "100%",
-          height: "100%",
+          height: "auto",
           outline: "1px solid red",
           margin: "50px 0 0 0",
         }}

@@ -5,29 +5,33 @@ interface LeagueScheduleViewerProps {
   matches: Match[];
 }
 
-const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({ matches }) => {
-  const {myTeamOvr, setHoveredMatchIndex} = useSquadStore();
+const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
+  matches,
+}) => {
+  const { setHoveredMatchIndex } = useSquadStore();
   return (
     <div
       style={{
         outline: "1px solid blue",
+        minWidth: "300px", // ✅ prevent items from becoming too small
+        flex: "1 1 30%", // ✅ flexible but constrained
+        maxWidth: "100%", // ✅ responsive on shrink
         display: "flex",
         flexDirection: "column",
         width: "100%",
-        height: "100%",
+        height: "auto",
       }}
     >
       <div>📅 리그 일정</div>
       <div>
-        
         <div
           style={{
             outline: "1px solid red",
             display: "flex",
             flexDirection: "column",
-            flexWrap: "nowrap",
+            // flexWrap: "nowrap",
             width: "100%",
-            height: "100%",
+            height: "auto",
           }}
         >
           {matches
@@ -37,11 +41,11 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({ matches }) 
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    flexWrap: "nowrap",
+                    // flexWrap: "nowrap",
                     justifyContent: "stretch",
                     alignItems: "center",
                     width: "100%",
-                    height: "100%",
+                    height: "auto",
                     outline: "1px solid red",
                   }}
                   onMouseEnter={() => setHoveredMatchIndex(idx)}

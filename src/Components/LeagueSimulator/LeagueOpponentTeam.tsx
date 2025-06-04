@@ -11,10 +11,13 @@ const LeagueOpponentTeam: React.FC = () => {
       <div
         style={{
           outline: "1px solid blue",
+          minWidth: "300px", // ✅ prevent items from becoming too small
+          flex: "1 1 30%", // ✅ flexible but constrained
+          maxWidth: "100%", // ✅ responsive on shrink
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          height: "100%",
+          height: "auto",
         }}
       >
         <div>Opponent Team</div>
@@ -28,9 +31,9 @@ const LeagueOpponentTeam: React.FC = () => {
             outline: "1px solid red",
             display: "flex",
             flexDirection: "column",
-            flexWrap: "nowrap",
+            // flexWrap: "nowrap",
             width: "100%",
-            height: "100%",
+            height: "auto",
           }}
         >
           {hoveredMatch?.members ? (
@@ -40,11 +43,11 @@ const LeagueOpponentTeam: React.FC = () => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  flexWrap: "nowrap",
+                  // flexWrap: "nowrap",
                   justifyContent: "stretch",
                   alignItems: "center",
                   width: "100%",
-                  height: "100%",
+                  height: "auto",
                   outline: "1px solid red",
                 }}
               >
