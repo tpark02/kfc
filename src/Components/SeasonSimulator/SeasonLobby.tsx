@@ -43,7 +43,7 @@ export default function SeasonLobby() {
   // const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
   const joinedSeasonId = useSquadStore((s) => s.joinedSeasonId);
 
-  const setuserId = useSquadStore((s) => s.setuserId);
+  const setMyUserId = useSquadStore((s) => s.setMyUserId);
   const setJoinedSeasonId = useSquadStore((s) => s.setJoinedSeasonId);
   const setSelectedMyPlayers = useSquadStore((s) => s.setSelectedMyPlayers);
   const setDropPlayers = useSquadStore((s) => s.setDropPlayers);
@@ -65,7 +65,7 @@ export default function SeasonLobby() {
   };
 
   useEffect(() => {
-    setuserId(1); // 임시 user id
+    setMyUserId(1); // 임시 user id
     fetchSeasons();
   }, []);
 

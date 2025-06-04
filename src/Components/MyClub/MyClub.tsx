@@ -43,6 +43,7 @@ const MyClub: React.FC<MyClubProp> = ({
 
   // 🛠 setter 함수들은 묶어서 한 번에
   const {
+    setMyTeamName,
     setMySelectedClubId,
     setSelectedMyPlayers,
     setDropPlayers,
@@ -282,6 +283,9 @@ const MyClub: React.FC<MyClubProp> = ({
                       const playerList: Player[] =
                         selectedClub.players.map(myPlayerToPlayer);
 
+                      //set club name
+                      setMyTeamName(selectedClub?.name);
+                      
                       setDropPlayers([...playerList]);
                       setMyFormation(selectedClub.formationName);
                       setMyTeamOvr(selectedClub.ovr);

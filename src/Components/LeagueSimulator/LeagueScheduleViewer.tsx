@@ -17,6 +17,7 @@ const LeagueScheduleViewer = () => {
   } = useSquadStore();
 
   const fetchSchedule = async () => {
+    console.log("my team name - ", myTeamName);
     try {
       const response = await axios.post<Match[]>(
         "http://localhost:8080/simulate/generate-schedule",

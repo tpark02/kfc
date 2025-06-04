@@ -39,7 +39,7 @@ type SquadStore = {
   setUserName: (s: string) => void;
   setMySelectedClubId: (n: number) => void;
   setSelectedMyPlayers: (players: MyPlayer[]) => void;
-  setuserId: (userId: number) => void;
+  setMyUserId: (userId: number) => void;
   setMyClubs: (clubs: (MyClubData | null)[]) => void;
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
   setMyTeamName: (f: string) => void;
@@ -113,7 +113,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
       selectedMyPlayers: players,      
       HasRedCard: players.sort((a, b) => a.idx - b.idx).slice(0, 11).some((p) => p.redCard > 0),
     }),
-  setuserId: (userId: number) => set({ myUserId: userId }),
+  setMyUserId: (userId: number) => set({ myUserId: userId }),
   setMyClubs: (clubs: (MyClubData | null)[]) => set({ myClubs: clubs }),
   setMyTeamOvr: (ovr: number) => {
     set({ myTeamOvr: ovr });

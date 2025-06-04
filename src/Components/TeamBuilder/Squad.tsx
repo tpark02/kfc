@@ -44,7 +44,7 @@ const Squad: React.FC = () => {
     setMyTeamClubCohesion,
     setMyTeamStamina,
     setMyClubs,
-    setuserId,
+    setMyUserId,
   } = useSquadStore();
 
   // 📦 필터 상태
@@ -74,7 +74,7 @@ const Squad: React.FC = () => {
 
   useEffect(() => {
     console.log("setting user id:", myUserId);
-    setuserId(1); // 임시 user id
+    setMyUserId(1); // 임시 user id
   }, []);
 
   useEffect(() => {

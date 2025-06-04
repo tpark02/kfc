@@ -49,7 +49,9 @@ export type UserInfoResponse = {
   userId: number;
   userName: string;
   userEmail: string;
-  userPassWord: string;
-  userIsAi: string;
+  userPassWord: string;  
   userCoin: number;
+  tournamentToken: number;
+  leagueToken: number;
+  userIsAi: string;
 }
