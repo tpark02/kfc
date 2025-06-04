@@ -1,52 +1,12 @@
-import axios from "axios";
-import { useEffect, useRef } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
 import { Match } from "../../types/Match";
 
-const LeagueScheduleViewer = () => {
-  const didRun = useRef(false);
-  const {
-    myUserId,
-    mySelectedClubId,
-    selectedMyPlayers,
-    matches,
-    myTeamName,
-    myTeamOvr,
-    setMatches,
-    setHoveredMatchIndex,
-  } = useSquadStore();
+interface LeagueScheduleViewerProps {
+  matches: Match[];
+}
 
-  const fetchSchedule = async () => {
-    console.log("my team name - ", myTeamName);
-    try {
-      const response = await axios.post<Match[]>(
-        "http://localhost:8080/simulate/generate-schedule",
-        {
-          myTeamName: myTeamName,
-          userId: myUserId,
-          clubId: mySelectedClubId,
-        }
-      );
-      setMatches(response.data);
-    } catch (error) {
-      console.error("🔥 일정 생성 실패:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (!didRun.current) {
-      const players = selectedMyPlayers;
-
-      if (players.length === 0) {
-        console.log("선수가 없습니다.");
-        return; // 아무것도 없으면 계산 안 함
-      }
-
-      fetchSchedule(); // 이 시점에 보내면 서버에도 올바른 선수 전달됨
-      didRun.current = true;
-    }
-  }, [selectedMyPlayers]);
-
+const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({ matches }) => {
+  const {myTeamOvr, setHoveredMatchIndex} = useSquadStore();
   return (
     <div
       style={{

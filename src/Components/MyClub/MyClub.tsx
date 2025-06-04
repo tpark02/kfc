@@ -10,7 +10,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { totalNumberOfPlayers } from "../../types/Team";
-import { shallow } from "zustand/shallow";
 
 interface MyClubProp {
   snackbarOpen: boolean;
