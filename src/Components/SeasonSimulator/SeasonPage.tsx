@@ -21,7 +21,11 @@ import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/Response";
 // import MyClubSelect from "./MyClubSelect";
-import { fetchMyClubs, fetchSeasonInfo } from "../MyClub/MyClubUtil";
+import {
+  fetchMyClubs,
+  fetchSeasonInfo,
+  fetchUserInfo,
+} from "../MyClub/MyClubUtil";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { getOvrIndicator, getTeamOvrIndicator } from "../MyClub/MyClubUtil";
@@ -113,6 +117,7 @@ export default function SeasonPage() {
           setDialogOpen(true);
           clearInterval(interval);
           loadMyClub();
+          loadUserInfo(myUserId);
         }
       } catch (err) {
         console.error("❌ Failed to poll season info:", err);
@@ -173,9 +178,16 @@ export default function SeasonPage() {
     setMySelectedClubId(selectedClub.clubId ?? 0);
   };
 
+  const loadUserInfo = async (userId: number) => {
+    const info = await fetchUserInfo(userId);
+    console.log("fetched user info - ", info);    
+  };
+
   useEffect(() => {
     loadMyClub();
   }, [mySelectedClubId]);
+
+  console.log("selected my player size - ", selectedMyPlayers.length);
 
   const adjustedTeamOvr = Math.floor(
     selectedMyPlayers

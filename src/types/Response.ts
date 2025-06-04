@@ -44,3 +44,12 @@ export type SeasonResponse = {
   participantNames: string[];
   remainingSeconds: number;
 }
+
+export type UserInfoResponse = {
+  userId: number;
+  userName: string;
+  userEmail: string;
+  userPassWord: string;
+  userIsAi: string;
+  userCoin: number;
+}

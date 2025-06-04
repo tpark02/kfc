@@ -2,22 +2,33 @@ import axios from "axios";
 import { MyClubData } from "../../types/Club";
 import { MyPlayer, Player } from "../../types/Player";
 import { totalNumberOfPlayers } from "../../types/Team";
-import { SeasonResponse } from "../../types/Response";
+import { UserInfoResponse, SeasonResponse } from "../../types/Response";
 import { playerToMyPlayer } from "../../types/Player";
+
+export const fetchUserInfo = async (userId: number) => {
+  try {
+    const response = await axios.post<UserInfoResponse>(
+      "http://localhost:8080/userInfo/", {
+        userId: userId,
+      }      
+    ); 
+    return response;  
+  } catch (err) {
+    console.log("❌ failed to load user info", err);    
+    return null;
+  }
+};
 
 export const fetchSeasonInfo = async (seasonId: string) => {
   try {
     const res = await axios.get<SeasonResponse>(
       `http://localhost:8080/season/getSeason/${seasonId}`
-    );
-    // setSeason(res.data
+    );    
     return res.data;
   } catch (err) {
     console.error("❌ Failed to load season info:", err);
     return null;
-  } finally {
-    // setLoading(false);
-  }
+  } 
 };
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
@@ -136,7 +147,11 @@ export const deleteMyClub = async (
   }
 };
 
-export const getOvrIndicator = (ovr: number, yellow: number, red: number): string => {
+export const getOvrIndicator = (
+  ovr: number,
+  yellow: number,
+  red: number
+): string => {
   const adjusted = ovr - yellow * 5 - red * 10;
   if (ovr === adjusted) return "⚪";
   return ovr > adjusted ? "🔴🔻" : "🟢🔺";
@@ -145,4 +160,4 @@ export const getOvrIndicator = (ovr: number, yellow: number, red: number): strin
 export const getTeamOvrIndicator = (a: number, b: number): string => {
   if (a === b) return "⚪";
   return a < b ? "🔴🔻" : "🟢🔺";
-}
+};
