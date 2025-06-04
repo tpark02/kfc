@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { Player } from "../../types/Player";
 import { getStatDisplay } from "../../style/PlayerStyle";
-import CroppedAvatar from "../TeamBuilder/CroppedAvatar";
+import CroppedAvatar from "../teambuilder/CroppedAvatar";
 import "../../style/Player.css";
 
 interface PlayerListProps {

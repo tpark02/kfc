@@ -21,15 +21,17 @@ import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/Response";
 // import MyClubSelect from "./MyClubSelect";
+import { Snackbar } from "@mui/material";
+import { Player, myPlayerToPlayer } from "../../types/Player";
 import {
+  getOvrIndicator,
+  getTeamOvrIndicator,
   fetchMyClubs,
   fetchSeasonInfo,
   fetchUserInfo,
-} from "../MyClub/MyClubUtil";
-import { Snackbar } from "@mui/material";
-import { Player, myPlayerToPlayer } from "../../types/Player";
-import { getOvrIndicator, getTeamOvrIndicator } from "../MyClub/MyClubUtil";
-import { totalNumberOfPlayers } from "../../types/Team";
+  adjustTeamOvr
+} from "../myclub/MyClubUtil";
+// import { totalNumberOfPlayers } from "../../types/Team";
 import { MatchDto } from "../../types/MatchDto";
 import "../../style/SeasonPage.css";
 
@@ -49,10 +51,10 @@ export default function SeasonPage() {
     mySelectedClubId,
     joinedSeasonId,
     myUserId,
-    selectedMyPlayers,
+    mySelectedPlayers,
     myTeamOvr,
     setJoinedSeasonId,
-    setSelectedMyPlayers,
+    setMySelectedPlayers,
     setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -67,7 +69,7 @@ export default function SeasonPage() {
   } = useSquadStore();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
+  const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
   // useEffect(() => {
   //   fetchMyClubs(myUserId).then((clubs) => {
   //     const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
@@ -165,7 +167,7 @@ export default function SeasonPage() {
 
     const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
     setDropPlayers([...playerList]);
-    setSelectedMyPlayers(selectedClub.players);
+    setMySelectedPlayers(selectedClub.players);
     setMyFormation(selectedClub.formationName);
     setMyTeamOvr(selectedClub.ovr);
     setMyTeamSquadValue(selectedClub.price);
@@ -180,20 +182,14 @@ export default function SeasonPage() {
 
   const loadUserInfo = async (userId: number) => {
     const info = await fetchUserInfo(userId);
-    console.log("fetched user info - ", info);    
+    console.log("fetched user info - ", info);
   };
 
   useEffect(() => {
     loadMyClub();
   }, [mySelectedClubId]);
 
-  console.log("selected my player size - ", selectedMyPlayers.length);
-
-  const adjustedTeamOvr = Math.floor(
-    selectedMyPlayers
-      .map((p) => p.ovr - p.yellowCard * 5 - p.redCard * 10)
-      .reduce((acc, curr) => acc + curr, 0) / totalNumberOfPlayers
-  );
+  console.log("selected my player size - ", mySelectedPlayers.length);
 
   const [selectedMatch, setSelectedMatch] = useState<MatchDto | null>(null);
   const [isMatchClicked, setIsMatchClicked] = useState(false);
@@ -264,11 +260,13 @@ export default function SeasonPage() {
         ) : (
           <Box flex={1} border="1px solid red" padding={0}>
             <Box>
+              {myTeamOvr}
+              <span>{"->"}</span>
               {adjustedTeamOvr}
               {getTeamOvrIndicator(adjustedTeamOvr, myTeamOvr)}
             </Box>
             <Box>
-              {selectedMyPlayers.map((p) => {
+              {mySelectedPlayers.map((p) => {
                 const adjustOvr = p.ovr - p.yellowCard * 5 - p.redCard * 10;
                 return (
                   <div

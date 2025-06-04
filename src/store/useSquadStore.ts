@@ -5,6 +5,8 @@ import { Match } from "../types/Match";
 // import { TOTAL_DROP_ZONES } from "../data/formations";
 import { MyClubData } from "../types/Club";
 import { DropZone } from "../types/DropZone";
+import { createWithEqualityFn } from 'zustand/traditional';
+
 export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
@@ -31,14 +33,14 @@ type SquadStore = {
   position: string;
   myClubs: (MyClubData | null)[];
   dropZoneList: DropZone[];
-  selectedMyPlayers: MyPlayer[];
+  mySelectedPlayers: MyPlayer[];
   HasRedCard: boolean;
 
   setJoinedSeasonId: (n: number) => void;
   setUserEmail: (s: string) => void;
   setUserName: (s: string) => void;
   setMySelectedClubId: (n: number) => void;
-  setSelectedMyPlayers: (players: MyPlayer[]) => void;
+  setMySelectedPlayers: (players: MyPlayer[]) => void;
   setMyUserId: (userId: number) => void;
   setMyClubs: (clubs: (MyClubData | null)[]) => void;
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
@@ -70,8 +72,7 @@ type SquadStore = {
   setMatches: (matches: Match[]) => void;
 };
 
-export const useSquadStore = create<SquadStore>((set) => ({
-  dropZoneList: [],
+export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dropZoneList: [],
   joinedSeasonId: -1,
   setJoinedSeasonId: (n: number) => set({ joinedSeasonId: n }),
   myUserEmail: "",
@@ -97,7 +98,7 @@ export const useSquadStore = create<SquadStore>((set) => ({
   myTeamStamina: 0,
   myTeamOvr: 0,
   myClubs: Array(3).fill(null),
-  selectedMyPlayers: [],
+  mySelectedPlayers: [],
   HasRedCard: false,
   setUserEmail: (s: string) => {
     set({ myUserEmail: s });
@@ -108,9 +109,9 @@ export const useSquadStore = create<SquadStore>((set) => ({
   setMySelectedClubId: (n: number) => {
     set({ mySelectedClubId: n });
   },
-  setSelectedMyPlayers: (players: MyPlayer[]) =>
+  setMySelectedPlayers: (players: MyPlayer[]) =>
     set({
-      selectedMyPlayers: players,      
+      mySelectedPlayers: players,      
       HasRedCard: players.sort((a, b) => a.idx - b.idx).slice(0, 11).some((p) => p.redCard > 0),
     }),
   setMyUserId: (userId: number) => set({ myUserId: userId }),

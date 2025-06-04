@@ -19,7 +19,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({ matches }) 
     >
       <div>📅 리그 일정</div>
       <div>
-        My Team Ovr : {myTeamOvr}
+        
         <div
           style={{
             outline: "1px solid red",

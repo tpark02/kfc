@@ -14,7 +14,7 @@ import { Player } from "../../types/Player";
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
 import { getOvrColor } from "../../util/Util";
-import CroppedAvatar from "../TeamBuilder/CroppedAvatar";
+import CroppedAvatar from "../teambuilder/CroppedAvatar";
 
 // ✅ Data
 import { countryData } from "../../data/countryData";

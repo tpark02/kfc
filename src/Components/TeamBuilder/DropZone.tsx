@@ -1,7 +1,7 @@
 import React, { forwardRef, MouseEventHandler } from "react";
 import { useDrop } from "react-dnd";
-import CroppedAvatar from "./TeamBuilder/CroppedAvatar";
-import { Player } from "../types/Player";
+import CroppedAvatar from "./CroppedAvatar";
+import { Player } from "../../types/Player";
 import "../DropZone.css";
 
 interface DropZoneProp {

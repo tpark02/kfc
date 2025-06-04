@@ -25,7 +25,7 @@ const MyClub: React.FC<MyClubProp> = ({
   setLoading,
 }) => {
   // 🎯 상태 개별로 분리 호출
-  const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
+  const mySelectedPlayers = useSquadStore((s) => s.mySelectedPlayers);
   const myUserId = useSquadStore((s) => s.myUserId);
   const myClubs = useSquadStore((s) => s.myClubs);
   const myFormation = useSquadStore((s) => s.myFormation);
@@ -44,7 +44,7 @@ const MyClub: React.FC<MyClubProp> = ({
   const {
     setMyTeamName,
     setMySelectedClubId,
-    setSelectedMyPlayers,
+    setMySelectedPlayers,
     setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -67,7 +67,7 @@ const MyClub: React.FC<MyClubProp> = ({
 
     if (newClubName.length > 0) {
       updateMyClub(
-        selectedMyPlayers,
+        mySelectedPlayers,
         myUserId,
         clubId,
         newClubName,
@@ -106,7 +106,7 @@ const MyClub: React.FC<MyClubProp> = ({
 
             console.log("my club.tsx selected players - ", dropPlayers);
             if (updatedClub && updatedClub.players) {
-              setSelectedMyPlayers(updatedClub.players);
+              setMySelectedPlayers(updatedClub.players);
             }
           });
         })
@@ -277,7 +277,7 @@ const MyClub: React.FC<MyClubProp> = ({
                         "my club.tsx selected players - ",
                         dropPlayers
                       );
-                      setSelectedMyPlayers(selectedClub.players);
+                      setMySelectedPlayers(selectedClub.players);
 
                       const playerList: Player[] =
                         selectedClub.players.map(myPlayerToPlayer);

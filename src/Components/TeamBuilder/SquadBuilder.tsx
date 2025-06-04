@@ -3,10 +3,10 @@ import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 import { DropZone } from "../../types/DropZone";
-import { getTeamAvr } from "./SquadBuilderUtil";
+import { getTeamAvr } from "../teambuilder/SquadBuilderUtil";
 import { Player } from "../../types/Player";
 // import Snackbar from "@mui/material/Snackbar";
-import CroppedAvatar from "./CroppedAvatar";
+import CroppedAvatar from "../teambuilder/CroppedAvatar";
 // import axios from "axios";
 import "../../style/SquadBuilder.css";
 import "../../DropZone.css";
@@ -31,7 +31,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   const {
     // myUserId,
     // mySelectedClubId,
-    selectedMyPlayers,
+    mySelectedPlayers,
     dropZoneList,
     dropPlayers,
     setDropZoneList,
@@ -95,7 +95,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
           {formations[selectedFormation].map((position, idx) => {
             const pos = position.pos.replace(/[0-9]/g, "");
             const player = dropPlayers.find((p) => p.idx === idx); // ✅ 정확한 선수 찾기
-            const myPlayer = selectedMyPlayers.find(
+            const myPlayer = mySelectedPlayers.find(
               (p) => p.playerId === player?.id
             );
 
@@ -160,7 +160,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             .slice(11)
             .map((benchPlayer, idx) => {
               const actualIndex = idx + 11;
-              const myBenchPlayer = selectedMyPlayers.find(
+              const myBenchPlayer = mySelectedPlayers.find(
                 (p) => p.playerId === benchPlayer.id
               );
               console.log("bench player red card - ", myBenchPlayer?.redCard);

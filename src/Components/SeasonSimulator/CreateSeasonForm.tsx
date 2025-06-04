@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
 import { Snackbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { shallow } from 'zustand/shallow';
 
 export default function CreateSeasonForm({
   onCreated,
@@ -11,10 +12,16 @@ export default function CreateSeasonForm({
 }) {
   const [name, setName] = useState("");
 
-  const HasRedCard = useSquadStore((s) => s.HasRedCard);
-  const myUserId = useSquadStore((s) => s.myUserId);
-  const mySelectedClubId = useSquadStore((s) => s.mySelectedClubId);
-  const setJoinedSeasonId = useSquadStore((s) => s.setJoinedSeasonId);
+  const { HasRedCard, myUserId, mySelectedClubId, setJoinedSeasonId } =
+    useSquadStore(
+      (s) => ({
+        HasRedCard: s.HasRedCard,
+        myUserId: s.myUserId,
+        mySelectedClubId: s.mySelectedClubId,
+        setJoinedSeasonId: s.setJoinedSeasonId,
+      }),
+      shallow
+    );
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");

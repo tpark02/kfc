@@ -8,7 +8,7 @@ import axios from "axios";
 import CreateSeasonForm from "./CreateSeasonForm";
 import SeasonTimerLobby from "./SeasonTimerLobby"; // ✅ 실시간 타이머 컴포넌트 추가
 import { Player, myPlayerToPlayer } from "../../types/Player";
-
+import { shallow } from "zustand/shallow";
 import {
   Box,
   Typography,
@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 // import MyClubSelect from "./MyClubSelect";
-import { fetchMyClubs } from "../MyClub/MyClubUtil";
+import { fetchMyClubs } from "../myclub/MyClubUtil";
 
 interface Season {
   id: number;
@@ -37,26 +37,48 @@ export default function SeasonLobby() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedMyClubIdx, setIdx] = useState(0);
 
-  const HasRedCard = useSquadStore((s) => s.HasRedCard);
-  const myUserId = useSquadStore((s) => s.myUserId);
-  const mySelectedClubId = useSquadStore((s) => s.mySelectedClubId);
-  // const selectedMyPlayers = useSquadStore((s) => s.selectedMyPlayers);
-  const joinedSeasonId = useSquadStore((s) => s.joinedSeasonId);
-
-  const setMyUserId = useSquadStore((s) => s.setMyUserId);
-  const setJoinedSeasonId = useSquadStore((s) => s.setJoinedSeasonId);
-  const setSelectedMyPlayers = useSquadStore((s) => s.setSelectedMyPlayers);
-  const setDropPlayers = useSquadStore((s) => s.setDropPlayers);
-  const setMyTeamOvr = useSquadStore((s) => s.setMyTeamOvr);
-  const setMyTeamSquadValue = useSquadStore((s) => s.setMyTeamSquadValue);
-  const setMyTeamAge = useSquadStore((s) => s.setMyTeamAge);
-  const setMyTeamPace = useSquadStore((s) => s.setMyTeamPace);
-  const setMyTeamDefense = useSquadStore((s) => s.setMyTeamDefense);
-  const setMyTeamAttack = useSquadStore((s) => s.setMyTeamAttack);
-  const setMyTeamClubCohesion = useSquadStore((s) => s.setMyTeamClubCohesion);
-  const setMyTeamStamina = useSquadStore((s) => s.setMyTeamStamina);
-  const setMyFormation = useSquadStore((s) => s.setMyFormation);
-  const setMySelectedClubId = useSquadStore((s) => s.setMySelectedClubId);
+  const {
+    HasRedCard,
+    myUserId,
+    mySelectedClubId,
+    joinedSeasonId,
+    setMyUserId,
+    setJoinedSeasonId,
+    setMySelectedPlayers,
+    setDropPlayers,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
+    setMyFormation,
+    setMySelectedClubId,
+  } = useSquadStore(
+    (s) => ({
+      HasRedCard: s.HasRedCard,
+      myUserId: s.myUserId,
+      mySelectedClubId: s.mySelectedClubId,
+      joinedSeasonId: s.joinedSeasonId,
+      setMyUserId: s.setMyUserId,
+      setJoinedSeasonId: s.setJoinedSeasonId,
+      setMySelectedPlayers: s.setMySelectedPlayers,
+      setDropPlayers: s.setDropPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamAge: s.setMyTeamAge,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      setMyFormation: s.setMyFormation,
+      setMySelectedClubId: s.setMySelectedClubId,
+    }),
+    shallow
+  );
 
   const fetchSeasons = async () => {
     const res = await axios.get("http://localhost:8080/season/all");
@@ -119,7 +141,7 @@ export default function SeasonLobby() {
         //   setMySelectedClubId(club.clubId);
         // }
 
-        setSelectedMyPlayers(selectedClub.players);
+        setMySelectedPlayers(selectedClub.players);
 
         const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
 
@@ -139,7 +161,7 @@ export default function SeasonLobby() {
   }, [
     selectedMyClubIdx,
     myUserId,
-    setSelectedMyPlayers,
+    setMySelectedPlayers,
     setDropPlayers,
     setMyFormation,
     setMyTeamOvr,

@@ -1,23 +1,49 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LeagueScheduleViewer from "./LeagueScheduleViewer";
 import LeagueMyTeam from "./LeagueMyTeam";
 import LeagueOpponentTeam from "./LeagueOpponentTeam";
 import { Button } from "@mui/material";
 import { fetchSchedule } from "../../util/LeagueUtil";
 import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
+import { Snackbar } from "@mui/material";
 
 const LeagueSimulator = () => {
   const {
+    HasRedCard,
     myUserId,
     mySelectedClubId,
-    selectedMyPlayers,
+    mySelectedPlayers,
     matches,
     myTeamName,
     setMatches,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      HasRedCard: s.HasRedCard,
+      myUserId: s.myUserId,
+      mySelectedClubId: s.mySelectedClubId,
+      mySelectedPlayers: s.mySelectedPlayers,
+      matches: s.matches,
+      myTeamName: s.myTeamName,
+      setMatches: s.setMatches,
+    }),
+    shallow
+  );
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(() => {
+    if (HasRedCard) {
+      setSnackbarMessage(
+        "You cannot have a red carded player in the starting member"
+      );
+      setSnackbarOpen(true);
+    }
+  }, [HasRedCard]);
 
   const fetchData = async () => {
-    const players = selectedMyPlayers;
+    const players = mySelectedPlayers;
 
     if (players.length === 0) {
       console.log("선수가 없습니다.");
@@ -44,6 +70,7 @@ const LeagueSimulator = () => {
         onClick={() => {
           fetchData();
         }}
+        disabled={HasRedCard}
         sx={{ margin: "10px" }}
       >
         START
@@ -66,6 +93,13 @@ const LeagueSimulator = () => {
         <LeagueScheduleViewer matches={matches} />
         <LeagueOpponentTeam />
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </div>
   );
 };

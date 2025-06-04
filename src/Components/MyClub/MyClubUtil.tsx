@@ -8,13 +8,14 @@ import { playerToMyPlayer } from "../../types/Player";
 export const fetchUserInfo = async (userId: number) => {
   try {
     const response = await axios.post<UserInfoResponse>(
-      "http://localhost:8080/userInfo/", {
+      "http://localhost:8080/userInfo/",
+      {
         userId: userId,
-      }      
-    ); 
-    return response;  
+      }
+    );
+    return response;
   } catch (err) {
-    console.log("❌ failed to load user info", err);    
+    console.log("❌ failed to load user info", err);
     return null;
   }
 };
@@ -23,12 +24,12 @@ export const fetchSeasonInfo = async (seasonId: string) => {
   try {
     const res = await axios.get<SeasonResponse>(
       `http://localhost:8080/season/getSeason/${seasonId}`
-    );    
+    );
     return res.data;
   } catch (err) {
     console.error("❌ Failed to load season info:", err);
     return null;
-  } 
+  }
 };
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
@@ -49,7 +50,7 @@ export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
 };
 
 export const updateMyClub = async (
-  selectedMyPlayers: MyPlayer[],
+  mySelectedPlayers: MyPlayer[],
   userId: number,
   clubId: number,
   newClubName: string,
@@ -72,7 +73,7 @@ export const updateMyClub = async (
     Object.values(dropPlayers).forEach((player) => {
       console.log("player id - ", player.id, " - ", player.idx);
       if (player) {
-        const mPlayer = selectedMyPlayers.find((p) => p.playerId === player.id);
+        const mPlayer = mySelectedPlayers.find((p) => p.playerId === player.id);
 
         const myPlayer: MyPlayer = playerToMyPlayer(
           player,
@@ -145,6 +146,14 @@ export const deleteMyClub = async (
     }
     return "club deletion failed";
   }
+};
+
+export const adjustTeamOvr = (myPlayer: MyPlayer[]): number => {
+  return Math.floor(
+    myPlayer
+      .map((p) => p.ovr - p.yellowCard * 5 - p.redCard * 10)
+      .reduce((acc, curr) => acc + curr, 0) / totalNumberOfPlayers
+  );
 };
 
 export const getOvrIndicator = (

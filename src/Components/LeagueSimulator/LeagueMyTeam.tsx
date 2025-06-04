@@ -1,8 +1,10 @@
 import { useSquadStore } from "../../store/useSquadStore";
+import { adjustTeamOvr, getTeamOvrIndicator } from "../myclub/MyClubUtil";
 
 const LeagueMyTeam = () => {
-  const { myTeamName, myTeamOvr, myFormation, myTeamSquadValue, selectedMyPlayers } =
+  const { myTeamName, myFormation, myTeamOvr, myTeamSquadValue, mySelectedPlayers } =
     useSquadStore();
+  const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
 
   return (
     <>
@@ -20,7 +22,12 @@ const LeagueMyTeam = () => {
           <div>Formation:{myFormation}</div>
           <div>Team Name: {myTeamName}</div>
           <div>Squad Value: {myTeamSquadValue}</div>
-          <div>OVR: {myTeamOvr}</div>
+          <div>
+            OVR: {myTeamOvr}
+            <span>{"->"}</span>
+            {adjustedTeamOvr}
+            {getTeamOvrIndicator(adjustedTeamOvr, myTeamOvr)}
+          </div>
           <div>Players:</div>
 
           <div
@@ -33,8 +40,8 @@ const LeagueMyTeam = () => {
               height: "100%",
             }}
           >
-            {selectedMyPlayers ? (
-              Object.values(selectedMyPlayers).map((player, idx) => (
+            {mySelectedPlayers ? (
+              Object.values(mySelectedPlayers).map((player, idx) => (
                 <div
                   key={idx}
                   style={{

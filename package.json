@@ -30,6 +30,7 @@
     "react-tournament-brackets": "^1.0.41",
     "react-use": "^17.6.0",
     "recharts": "^2.15.2",
+    "use-sync-external-store": "^1.5.0",
     "zustand": "^5.0.4"
   },
   "devDependencies": {

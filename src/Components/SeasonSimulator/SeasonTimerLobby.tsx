@@ -22,15 +22,15 @@ export default function SeasonTimerLobby({ createdAt, finishedAt }: Props) {
     return () => clearInterval(interval);
   }, [createdAt]);
 
-  if (finishedAt !== null) return <div>Finished</div>;
-  if (remaining <= 0) return <div>in progress...</div>;
+  if (finishedAt !== null) return <span>Finished</span>;
+  if (remaining <= 0) return <span>in progress...</span>;
 
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;
 
   return (
-    <div style={{ marginBottom: "0.5rem", fontSize: "0.9rem", color: "#666" }}>
+    <span style={{ marginBottom: "0.5rem", fontSize: "0.9rem", color: "#666" }}>
       ⏳ Starts in: {minutes}:{seconds.toString().padStart(2, "0")}
-    </div>
+    </span>
   );
 }
