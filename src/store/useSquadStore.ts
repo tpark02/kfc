@@ -15,7 +15,7 @@ type SquadStore = {
   myUserEmail: string;
   myUserName: string;
   mySelectedClubId: number;
-  myTeamName: string;
+  // myTeamName: string;
   myFormation: string;
   dropPlayers: Player[];
   // benchPlayers: Player[];
@@ -44,7 +44,7 @@ type SquadStore = {
   setMyUserId: (userId: number) => void;
   setMyClubs: (clubs: (MyClubData | null)[]) => void;
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
-  setMyTeamName: (f: string) => void;
+  // setMyTeamName: (f: string) => void;
   setMyFormation: (f: string) => void;
   updateDropPlayer: (idx: number, player: Player) => void;
   setDropPlayers: (players: Player[]) => void;
@@ -79,7 +79,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   myUserName: "",
   myUserId: -1,
   mySelectedClubId: -1,
-  myTeamName: "N/A",
+  // myTeamName: "N/A",
   myFormation: "442",
   dropPlayers: [],
   // dropPlayers: Object.fromEntries(
@@ -119,7 +119,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   setMyTeamOvr: (ovr: number) => {
     set({ myTeamOvr: ovr });
   },
-  setMyTeamName: (s: string) => set({ myTeamName: s }),
+  // setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),
   updateDropPlayer: (idx: number, player: Player) =>
     set((state) => {

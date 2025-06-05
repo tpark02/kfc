@@ -15,7 +15,7 @@ const LeagueSimulator = () => {
     mySelectedClubId,
     mySelectedPlayers,
     matches,
-    myTeamName,
+    // myTeamName,
     setMatches,
   } = useSquadStore(
     (s) => ({
@@ -24,7 +24,7 @@ const LeagueSimulator = () => {
       mySelectedClubId: s.mySelectedClubId,
       mySelectedPlayers: s.mySelectedPlayers,
       matches: s.matches,
-      myTeamName: s.myTeamName,
+      // myTeamName: s.myTeamName,
       setMatches: s.setMatches,
     }),
     shallow
@@ -52,7 +52,7 @@ const LeagueSimulator = () => {
 
     try {
       const response = await fetchSchedule(
-        myTeamName,
+        // myTeamName,
         myUserId,
         mySelectedClubId
       );

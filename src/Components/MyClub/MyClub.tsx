@@ -41,7 +41,7 @@ const MyClub: React.FC<MyClubProp> = ({
     myTeamAttack,
     myTeamStamina,
 
-    setMyTeamName,
+    // setMyTeamName,
     setMySelectedClubId,
     setMySelectedPlayers,
     setDropPlayers,
@@ -72,7 +72,7 @@ const MyClub: React.FC<MyClubProp> = ({
       myTeamAttack: s.myTeamAttack,
       myTeamStamina: s.myTeamStamina,
 
-      setMyTeamName: s.setMyTeamName,
+      // setMyTeamName: s.setMyTeamName,
       setMySelectedClubId: s.setMySelectedClubId,
       setMySelectedPlayers: s.setMySelectedPlayers,
       setDropPlayers: s.setDropPlayers,
@@ -91,17 +91,17 @@ const MyClub: React.FC<MyClubProp> = ({
     shallow
   );
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newClubName, setNewClubName] = useState("");
+  const [newTeamName, setNewTeamName] = useState("");
 
   const handleUpdateClub = (idx: number, clubId: number, players: Player[]) => {
     setLoading(true);
 
-    if (newClubName.length > 0) {
+    if (newTeamName.length > 0) {
       updateMyClub(
         mySelectedPlayers,
         myUserId,
         clubId,
-        newClubName,
+        newTeamName,
         myFormation,
         players,
         myTeamOvr,
@@ -132,13 +132,13 @@ const MyClub: React.FC<MyClubProp> = ({
                 ? updatedClub.players.map(myPlayerToPlayer)
                 : [];
 
-            console.log("myclub.tsx drop players - ", dropPlayers);
             setDropPlayers([...playerList]);
+            console.log("myclub.tsx drop players - ", dropPlayers);
 
-            console.log("my club.tsx selected players - ", dropPlayers);
             if (updatedClub && updatedClub.players) {
               setMySelectedPlayers(updatedClub.players);
             }
+            console.log("my club.tsx selected players - ", mySelectedPlayers);
           });
         })
         .catch((err) => {
@@ -200,7 +200,7 @@ const MyClub: React.FC<MyClubProp> = ({
   };
 
   const handleBlur = (club: MyClubData, idx: number) => {
-    if (!newClubName.trim()) {
+    if (!newTeamName.trim()) {
       setSnackbarMessage("Club name is empty");
       setSnackbarOpen(true);
       setEditingIndex(null);
@@ -212,7 +212,7 @@ const MyClub: React.FC<MyClubProp> = ({
     if (updated[idx]!) {
       updated[idx] = {
         ...updated[idx],
-        name: newClubName,
+        name: newTeamName,
         formationName: updated[idx]?.formationName || "",
       };
     }
@@ -231,7 +231,7 @@ const MyClub: React.FC<MyClubProp> = ({
       setPendingUpdate({
         idx,
         clubId: club.clubId,
-        newName: newClubName.trim(),
+        newName: newTeamName.trim(),
       });
       // Delay dialog open to avoid aria-focus conflict
       setTimeout(() => setConfirmOpen(true), 0);
@@ -306,7 +306,7 @@ const MyClub: React.FC<MyClubProp> = ({
                       setMySelectedPlayers(selectedClub.players);
 
                       //set club name
-                      setMyTeamName(selectedClub?.name);
+                      // setMyTeamName(selectedClub?.name);
                       const playerList: Player[] =
                         selectedClub.players.map(myPlayerToPlayer);
                       console.log("my club.tsx drop players - ", dropPlayers);
@@ -346,8 +346,8 @@ const MyClub: React.FC<MyClubProp> = ({
                 {isEditing ? (
                   <input
                     type="text"
-                    value={newClubName}
-                    onChange={(e) => setNewClubName(e.target.value)}
+                    value={newTeamName}
+                    onChange={(e) => setNewTeamName(e.target.value)}
                     onBlur={() => {
                       handleBlur(club!, idx);
                     }}
@@ -377,7 +377,7 @@ const MyClub: React.FC<MyClubProp> = ({
                 onClick={() => {
                   console.log("click edit");
                   setEditingIndex(idx);
-                  setNewClubName(club?.name ?? "");
+                  setNewTeamName(club?.name ?? "");
                 }}
               >
                 <EditIcon />

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { MyClubData } from "../../types/Club";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { Snackbar } from "@mui/material";
+import MyClub from "../myclub/MyClub";
 
 interface LeagueMyTeamProp {
   matches: Match[];
@@ -21,7 +22,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
   const {
     myUserId,
     mySelectedClubId,
-    myTeamName,
+    // myTeamName,
     myFormation,
     myTeamOvr,
     myTeamAge,
@@ -33,6 +34,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     myTeamSquadValue,
     mySelectedPlayers,
     dropPlayers,
+    myClubs,
     setMySelectedPlayers,
     setMyClubs,
     setDropPlayers,    
@@ -40,7 +42,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     (s) => ({
       myUserId: s.myUserId,
       mySelectedClubId: s.mySelectedClubId,
-      myTeamName: s.myTeamName,
+      // myTeamName: s.myTeamName,
       myFormation: s.myFormation,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
@@ -52,6 +54,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
       myTeamClubCohesion: s.myTeamClubCohesion,
       myTeamAttack: s.myTeamAttack,
       myTeamStamina: s.myTeamStamina,
+      myClubs: s.myClubs,
       setMySelectedPlayers: s.setMySelectedPlayers,
       setMyClubs: s.setMyClubs,
       setDropPlayers: s.setDropPlayers,      
@@ -73,6 +76,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
   );
 
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
+  const myTeamName = myClubs[mySelectedClubId]?.name ?? "N/A";
 
   useEffect(() => {
     setTotalAddStatPoints(
