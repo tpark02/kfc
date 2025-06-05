@@ -7,9 +7,10 @@ import { Player } from "../../types/Player";
 import { ResponseSearch } from "../../types/Response";
 import { getImgByCountryName } from "../../data/countryData";
 import { getOvrColor, getPosColor } from "../../util/Util";
-import RadarStatChart from "../Players/RadarStatsChart";
-import "../../style/SearchPlayer.css";
 import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
+import RadarStatChart from "../players/RadarStatsChart";
+import "../../style/SearchPlayer.css";
 
 interface SearchPlayerProp {
   country: string;
@@ -44,8 +45,13 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     },
     ref
   ) => {
-    const { dropPlayers, updateDropPlayer } = useSquadStore();
-
+    const { dropPlayers, updateDropPlayer } = useSquadStore(
+      (s) => ({
+        dropPlayers: s.dropPlayers,
+        updateDropPlayer: s.updateDropPlayer,
+      }),
+      shallow
+    );
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
     const [, setPage] = useState(0);
@@ -264,7 +270,9 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                   key={player.id}
                   onMouseEnter={() => setHoveredPlayer(player)}
                   onMouseLeave={() => setHoveredPlayer(null)}
-                  disabled={Object.values(dropPlayers).some(d => d && d.id === player.id)} // ✅ 개별 판단
+                  disabled={Object.values(dropPlayers).some(
+                    (d) => d && d.id === player.id
+                  )} // ✅ 개별 판단
                   onClick={() => {
                     console.log(
                       "🔥 선택된 dropzone index:",
@@ -272,10 +280,10 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                     );
                     console.log("🔥 넣을 player:", player);
                     console.log("dropPlayers", dropPlayers);
-                    const alreadySelectedPlayer = Object.values(dropPlayers).some(
-                      (d) => d && d.id === player.id
-                    );                    
-                    
+                    const alreadySelectedPlayer = Object.values(
+                      dropPlayers
+                    ).some((d) => d && d.id === player.id);
+
                     if (alreadySelectedPlayer) {
                       setSnackbarMessage("You already selected " + player.name);
                       setSnackbarOpen(true);

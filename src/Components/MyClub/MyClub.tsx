@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { totalNumberOfPlayers } from "../../types/Team";
+import { shallow } from "zustand/shallow";
 
 interface MyClubProp {
   snackbarOpen: boolean;
@@ -24,24 +25,22 @@ const MyClub: React.FC<MyClubProp> = ({
   setSnackbarMessage,
   setLoading,
 }) => {
-  // 🎯 상태 개별로 분리 호출
-  const mySelectedPlayers = useSquadStore((s) => s.mySelectedPlayers);
-  const myUserId = useSquadStore((s) => s.myUserId);
-  const myClubs = useSquadStore((s) => s.myClubs);
-  const myFormation = useSquadStore((s) => s.myFormation);
-  const dropPlayers = useSquadStore((s) => s.dropPlayers);
-
-  const myTeamOvr = useSquadStore((s) => s.myTeamOvr);
-  const myTeamSquadValue = useSquadStore((s) => s.myTeamSquadValue);
-  const myTeamAge = useSquadStore((s) => s.myTeamAge);
-  const myTeamPace = useSquadStore((s) => s.myTeamPace);
-  const myTeamDefense = useSquadStore((s) => s.myTeamDefense);
-  const myTeamClubCohesion = useSquadStore((s) => s.myTeamClubCohesion);
-  const myTeamAttack = useSquadStore((s) => s.myTeamAttack);
-  const myTeamStamina = useSquadStore((s) => s.myTeamStamina);
-
-  // 🛠 setter 함수들은 묶어서 한 번에
+  // 🎯 상태와 setter들을 묶어서 shallow 비교
   const {
+    mySelectedPlayers,
+    myUserId,
+    myClubs,
+    myFormation,
+    dropPlayers,
+    myTeamOvr,
+    myTeamSquadValue,
+    myTeamAge,
+    myTeamPace,
+    myTeamDefense,
+    myTeamClubCohesion,
+    myTeamAttack,
+    myTeamStamina,
+
     setMyTeamName,
     setMySelectedClubId,
     setMySelectedPlayers,
@@ -57,8 +56,40 @@ const MyClub: React.FC<MyClubProp> = ({
     setMyClubs,
     setMyFormation,
     resetDropZoneList,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      mySelectedPlayers: s.mySelectedPlayers,
+      myUserId: s.myUserId,
+      myClubs: s.myClubs,
+      myFormation: s.myFormation,
+      dropPlayers: s.dropPlayers,
+      myTeamOvr: s.myTeamOvr,
+      myTeamSquadValue: s.myTeamSquadValue,
+      myTeamAge: s.myTeamAge,
+      myTeamPace: s.myTeamPace,
+      myTeamDefense: s.myTeamDefense,
+      myTeamClubCohesion: s.myTeamClubCohesion,
+      myTeamAttack: s.myTeamAttack,
+      myTeamStamina: s.myTeamStamina,
 
+      setMyTeamName: s.setMyTeamName,
+      setMySelectedClubId: s.setMySelectedClubId,
+      setMySelectedPlayers: s.setMySelectedPlayers,
+      setDropPlayers: s.setDropPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamAge: s.setMyTeamAge,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      setMyClubs: s.setMyClubs,
+      setMyFormation: s.setMyFormation,
+      resetDropZoneList: s.resetDropZoneList,
+    }),
+    shallow
+  );
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newClubName, setNewClubName] = useState("");
 
@@ -272,19 +303,13 @@ const MyClub: React.FC<MyClubProp> = ({
                         "my club.tsx selected Club - ",
                         selectedClub.players
                       );
-
-                      console.log(
-                        "my club.tsx selected players - ",
-                        dropPlayers
-                      );
                       setMySelectedPlayers(selectedClub.players);
-
-                      const playerList: Player[] =
-                        selectedClub.players.map(myPlayerToPlayer);
 
                       //set club name
                       setMyTeamName(selectedClub?.name);
-                      
+                      const playerList: Player[] =
+                        selectedClub.players.map(myPlayerToPlayer);
+                      console.log("my club.tsx drop players - ", dropPlayers);
                       setDropPlayers([...playerList]);
                       setMyFormation(selectedClub.formationName);
                       setMyTeamOvr(selectedClub.ovr);

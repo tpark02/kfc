@@ -2,6 +2,7 @@ import React from "react";
 import { Select, MenuItem, Box } from "@mui/material";
 import { baseFormations } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
 
 const SelectFormation: React.FC = () => {
   const {
@@ -9,8 +10,15 @@ const SelectFormation: React.FC = () => {
     setIsDropZoneSelected,
     setMyFormation,
     resetSquadMetric,
-  } = useSquadStore();
-
+  } = useSquadStore(
+    (s) => ({
+      myFormation: s.myFormation,
+      setIsDropZoneSelected: s.setIsDropZoneSelected,
+      setMyFormation: s.setMyFormation,
+      resetSquadMetric: s.resetSquadMetric,
+    }),
+    shallow
+  );
   return (
     <>
       <Select

@@ -7,4 +7,5 @@ export type Match = {
   ovr: number;
   res: string;
   members: Player[];
+  addStats: number;
 };

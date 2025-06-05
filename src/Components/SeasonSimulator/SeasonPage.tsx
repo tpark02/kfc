@@ -29,10 +29,11 @@ import {
   fetchMyClubs,
   fetchSeasonInfo,
   fetchUserInfo,
-  adjustTeamOvr
+  adjustTeamOvr,
 } from "../myclub/MyClubUtil";
 // import { totalNumberOfPlayers } from "../../types/Team";
 import { MatchDto } from "../../types/MatchDto";
+import { shallow } from "zustand/shallow";
 import "../../style/SeasonPage.css";
 
 export default function SeasonPage() {
@@ -66,7 +67,29 @@ export default function SeasonPage() {
     setMyTeamStamina,
     setMyFormation,
     setMySelectedClubId,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      mySelectedClubId: s.mySelectedClubId,
+      joinedSeasonId: s.joinedSeasonId,
+      myUserId: s.myUserId,
+      mySelectedPlayers: s.mySelectedPlayers,
+      myTeamOvr: s.myTeamOvr,
+      setJoinedSeasonId: s.setJoinedSeasonId,
+      setMySelectedPlayers: s.setMySelectedPlayers,
+      setDropPlayers: s.setDropPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamAge: s.setMyTeamAge,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      setMyFormation: s.setMyFormation,
+      setMySelectedClubId: s.setMySelectedClubId,
+    }),
+    shallow
+  );
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);

@@ -10,6 +10,7 @@ import {
 
 import { type BarRectangleItem } from "recharts/types/cartesian/Bar";
 import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
 
 // interface SquadBarChartProps {
 //   players: Record<number, Player | null>;
@@ -22,7 +23,16 @@ const SquadBarChart: React.FC = () => {
     myTeamAttack,
     myTeamDefense,
     myTeamStamina,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      myTeamClubCohesion: s.myTeamClubCohesion,
+      myTeamPace: s.myTeamPace,
+      myTeamAttack: s.myTeamAttack,
+      myTeamDefense: s.myTeamDefense,
+      myTeamStamina: s.myTeamStamina,
+    }),
+    shallow
+  );
 
   function BarGradient(props: BarRectangleItem) {
     const id = useId();

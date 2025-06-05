@@ -280,7 +280,8 @@ export const playerToMyPlayer = (
   clubId: number,
   yellowCard: number = 0,
   redCard: number = 0,
-  id: number
+  id: number,
+  ovr: number,
 ): MyPlayer => ({
   id: id, // You may want to generate or assign a real id here
   userId,
@@ -291,7 +292,7 @@ export const playerToMyPlayer = (
   idx: player.idx,
   rank: player.rank,
   name: player.name,
-  ovr: player.ovr,
+  ovr: ovr,
   pac: player.pac,
   sho: player.sho,
   pas: player.pas,

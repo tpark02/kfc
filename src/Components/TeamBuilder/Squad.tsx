@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { Snackbar, Alert, Button, Typography, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-
 import { useSquadStore } from "../../store/useSquadStore";
 // 타입
 import { DropZone } from "../../types/DropZone";
@@ -14,6 +12,10 @@ import { Country } from "../../types/Country";
 import { formations } from "../../data/formations";
 import SquadMetrics from "./SquadMetrics";
 // 컴포넌트
+import MyClub from "../myclub/MyClub";
+import { fetchMyClubs } from "../myclub/MyClubUtil";
+import { shallow } from "zustand/shallow";
+import LoadingSpinner from "../LoadingSpinner";
 import SquadBuilder from "./SquadBuilder";
 import SelectFormation from "./SelectFormation";
 import SearchPlayer from "./SearchPlayer"; // ✅ default export
@@ -21,9 +23,7 @@ import SearchCountry from "./SearchCountry";
 import SearchLeague from "./SearchLeague";
 import SearchClub from "./SearchClub";
 import Filters from "../Players/Filter";
-import LoadingSpinner from "../LoadingSpinner";
-import { fetchMyClubs } from "../MyClub/MyClubUtil";
-import MyClub from "../MyClub/MyClub";
+
 // 스타일
 import "../../style/Squad.css";
 
@@ -31,8 +31,8 @@ const Squad: React.FC = () => {
   const {
     myUserId,
     myFormation,
-    dropPlayers,
-    isDropZoneSelected,
+    // dropPlayers,
+    // isDropZoneSelected,
     setDropPlayers,
     setMyTeamOvr,
     setIsDropZoneSelected,
@@ -45,7 +45,27 @@ const Squad: React.FC = () => {
     setMyTeamStamina,
     setMyClubs,
     setMyUserId,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      myUserId: s.myUserId,
+      myFormation: s.myFormation,
+      dropPlayers: s.dropPlayers,
+      isDropZoneSelected: s.isDropZoneSelected,
+      setDropPlayers: s.setDropPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setIsDropZoneSelected: s.setIsDropZoneSelected,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamAge: s.setMyTeamAge,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      setMyClubs: s.setMyClubs,
+      setMyUserId: s.setMyUserId,
+    }),
+    shallow
+  );
 
   // 📦 필터 상태
   //const [selectedFormation, setSelectedFormation] = useState("442");

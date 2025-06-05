@@ -1,5 +1,6 @@
 import { useSquadStore } from "../../store/useSquadStore";
 import { Match } from "../../types/Match";
+import { shallow } from "zustand/shallow";
 
 interface LeagueScheduleViewerProps {
   matches: Match[];
@@ -8,7 +9,12 @@ interface LeagueScheduleViewerProps {
 const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
   matches,
 }) => {
-  const { setHoveredMatchIndex } = useSquadStore();
+  const { setHoveredMatchIndex } = useSquadStore(
+    (s) => ({
+      setHoveredMatchIndex: s.setHoveredMatchIndex,
+    }),
+    shallow
+  );
   return (
     <div
       style={{

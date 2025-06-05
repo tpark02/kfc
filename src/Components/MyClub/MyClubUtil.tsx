@@ -71,17 +71,16 @@ export const updateMyClub = async (
     const players: (MyPlayer | null)[] = Array(totalNumberOfPlayers).fill(null);
 
     Object.values(dropPlayers).forEach((player) => {
-      console.log("player id - ", player.id, " - ", player.idx);
       if (player) {
         const mPlayer = mySelectedPlayers.find((p) => p.playerId === player.id);
-
         const myPlayer: MyPlayer = playerToMyPlayer(
           player,
           userId,
           clubId,
           mPlayer?.yellowCard ?? 0,
           mPlayer?.redCard ?? 0,
-          mPlayer?.id ?? 0 // id가 필요 없으면 별도 처리하거나 -1 등 기본값 설정
+          mPlayer?.id ?? 0, // id가 필요 없으면 별도 처리하거나 -1 등 기본값 설정
+          mPlayer?.ovr ?? player.ovr
         );
 
         players[player.idx] = myPlayer;

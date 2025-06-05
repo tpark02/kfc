@@ -5,6 +5,8 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { DropZone } from "../../types/DropZone";
 import { getTeamAvr } from "../teambuilder/SquadBuilderUtil";
 import { Player } from "../../types/Player";
+import { shallow } from "zustand/shallow";
+
 // import Snackbar from "@mui/material/Snackbar";
 import CroppedAvatar from "../teambuilder/CroppedAvatar";
 // import axios from "axios";
@@ -29,8 +31,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   setPosition,
 }) => {
   const {
-    // myUserId,
-    // mySelectedClubId,
     mySelectedPlayers,
     dropZoneList,
     dropPlayers,
@@ -44,7 +44,24 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     setMyTeamClubCohesion,
     setMyTeamStamina,
     resetDropZoneList,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      mySelectedPlayers: s.mySelectedPlayers,
+      dropZoneList: s.dropZoneList,
+      dropPlayers: s.dropPlayers,
+      setDropZoneList: s.setDropZoneList,
+      setDropPlayers: s.setDropPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      resetDropZoneList: s.resetDropZoneList,
+    }),
+    shallow
+  );
 
   // const [snackbarOpen, setSnackbarOpen] = useState(false);
   // const [snackbarMessage, setSnackbarMessage] = useState("");

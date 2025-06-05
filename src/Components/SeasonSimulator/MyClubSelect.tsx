@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
 
 interface MyClubSelectProp {
   selectedIdx: number;
@@ -9,7 +10,7 @@ interface MyClubSelectProp {
 }
 
 const MyClubSelect: React.FC<MyClubSelectProp> = ({ selectedIdx, setIdx }) => {
-  const { myClubs } = useSquadStore();
+  const { myClubs } = useSquadStore((s) => ({ myClubs: s.myClubs }), shallow);
   return (
     <Select
       variant="outlined"

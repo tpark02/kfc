@@ -56,7 +56,10 @@ const LeagueSimulator = () => {
         myUserId,
         mySelectedClubId
       );
-      if (response !== undefined) setMatches(response.data);
+      if (response !== undefined) {
+        console.log("League Simulator MatchDto - ", response.data);
+        setMatches(response.data);
+      }
     } catch (err) {
       console.error("❌ 경기 일정 불러오기 실패:", err);
     }
@@ -89,7 +92,7 @@ const LeagueSimulator = () => {
           margin: "50px 0 0 0",
         }}
       >
-        <LeagueMyTeam />
+        <LeagueMyTeam matches={matches} />
         <LeagueScheduleViewer matches={matches} />
         <LeagueOpponentTeam />
       </div>

@@ -2,11 +2,18 @@ import React from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSquadStore } from "../store/useSquadStore";
+import { shallow } from "zustand/shallow";
+
 import "../index.css";
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
-  const { setIsDropZoneSelected } = useSquadStore();
+  const { setIsDropZoneSelected } = useSquadStore(
+    (s) => ({
+      setIsDropZoneSelected: s.setIsDropZoneSelected,
+    }),
+    shallow
+  );
   return (
     <div
       className="tab-bar"
