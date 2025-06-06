@@ -26,6 +26,7 @@ import SelectFormation from "./SelectFormation";
 
 // 스타일
 import "../../style/Squad.css";
+import MyStore from "../mystore/mystore";
 
 const Squad: React.FC = () => {
   const {
@@ -92,7 +93,7 @@ const Squad: React.FC = () => {
   // const searchPlayerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {    
+  useEffect(() => {
     setMyUserId(1); // 임시 user id
     console.log("setting user id:", myUserId);
   }, []);
@@ -328,6 +329,7 @@ const Squad: React.FC = () => {
           {/* ) : (
             <></>
           )} */}
+          <div><MyStore></MyStore></div>
         </div>
       </div>
     </>
