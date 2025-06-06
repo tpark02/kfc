@@ -1,9 +1,9 @@
 import axios from "axios";
-import { MyClubData } from "../../types/Club";
-import { MyPlayer, Player } from "../../types/Player";
-import { totalNumberOfPlayers } from "../../types/Team";
-import { UserInfoResponse, SeasonResponse } from "../../types/Response";
-import { playerToMyPlayer } from "../../types/Player";
+import { MyClubData } from "../types/Club";
+import { MyPlayer, Player } from "../types/Player";
+import { totalNumberOfPlayers } from "../types/Team";
+import { UserInfoResponse, SeasonResponse } from "../types/Response";
+import { playerToMyPlayer } from "../types/Player";
 
 export const fetchUserInfo = async (userId: number) => {
   try {

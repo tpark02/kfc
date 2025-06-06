@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SeasonResponse } from "../../types/Response";
-import { fetchSeasonInfo } from "../../components/MyClub/MyClubUtil";
+import { fetchSeasonInfo } from "../../util/MyClubUtil"
 
 interface SeasonTimerProps {
   initialRemaining: number;

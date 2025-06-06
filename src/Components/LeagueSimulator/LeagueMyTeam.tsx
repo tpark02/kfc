@@ -4,7 +4,7 @@ import {
   getTeamOvrIndicator,
   updateMyClub,
   fetchMyClubs,  
-} from "../myclub/MyClubUtil";
+} from "../../util/MyClubUtil";
 import { Match } from "../../types/Match";
 import { shallow } from "zustand/shallow";
 import { Button } from "@mui/material";
@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { MyClubData } from "../../types/Club";
 import { Player, myPlayerToPlayer } from "../../types/Player";
 import { Snackbar } from "@mui/material";
-import MyClub from "../myclub/MyClub";
 
 interface LeagueMyTeamProp {
   matches: Match[];

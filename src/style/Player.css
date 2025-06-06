@@ -9,15 +9,15 @@
 .player-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-evenly; */
   flex-wrap: wrap;
-  /* outline: 1px solid white;       */
+  outline: 1px solid white;
 }
 
 .player-img {
   width: 100px;
-  overflow: 'hidden';
-  position: 'relative';
+  overflow: "hidden";
+  position: "relative";
   border-radius: 6px;
 }
 
@@ -28,15 +28,15 @@
   width: 100px;
   text-align: center;
   color: #fff;
-  /* outline: 1px solid white; */
+  outline: 1px solid white;
 }
 
 .player-cell {
   width: 60px;
   color: #fff;
   flex-wrap: wrap;
+  outline: 1px solid white;
 }
-
 
 .player-table {
   margin-top: 4px;
@@ -54,10 +54,10 @@
 }
 
 .player-crop {
-  position: 'absolute';
+  position: "absolute";
   top: -20px;
   left: -30px;
   width: 100px;
   height: auto;
-  object-fit: 'cover';
+  object-fit: "cover";
 }

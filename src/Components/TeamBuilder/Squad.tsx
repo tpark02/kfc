@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { Snackbar, Alert, Button, Typography, IconButton } from "@mui/material";
+import { Snackbar, Alert, Button } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 // 타입
 import { DropZone } from "../../types/DropZone";
@@ -13,16 +13,16 @@ import { formations } from "../../data/formations";
 import SquadMetrics from "./SquadMetrics";
 // 컴포넌트
 import MyClub from "../myclub/MyClub";
-import { fetchMyClubs } from "../myclub/MyClubUtil";
+import { fetchMyClubs } from "../../util/MyClubUtil";
 import { shallow } from "zustand/shallow";
 import LoadingSpinner from "../LoadingSpinner";
 import SquadBuilder from "./SquadBuilder";
 import SelectFormation from "./SelectFormation";
-import SearchPlayer from "./SearchPlayer"; // ✅ default export
-import SearchCountry from "./SearchCountry";
-import SearchLeague from "./SearchLeague";
-import SearchClub from "./SearchClub";
-import Filters from "../Players/Filter";
+// import SearchPlayer from "./SearchPlayer"; // ✅ default export
+// import SearchCountry from "./SearchCountry";
+// import SearchLeague from "./SearchLeague";
+// import SearchClub from "./SearchClub";
+// import Filters from "../Players/Filter";
 
 // 스타일
 import "../../style/Squad.css";
@@ -92,9 +92,9 @@ const Squad: React.FC = () => {
   // const searchPlayerRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    console.log("setting user id:", myUserId);
+  useEffect(() => {    
     setMyUserId(1); // 임시 user id
+    console.log("setting user id:", myUserId);
   }, []);
 
   useEffect(() => {

@@ -7,6 +7,9 @@ import { PlayerPos } from "../../types/PlayerPosition";
 import { Country } from "../../types/Country";
 import { ResponsePlayerPage } from "../../types/Response";
 import { League } from "../../types/League";
+import { shallow } from "zustand/shallow";
+import { useSquadStore } from "../../store/useSquadStore";
+
 import PlayerList from "./PlayerList";
 import Filters from "./Filter";
 import FilterModal from "../../modal/FilterModal";
@@ -27,6 +30,12 @@ export const Players: React.FC = () => {
       size: 20,
     }
   );
+
+  const { myUserId, setMyUserId } = useSquadStore(
+    (s) => ({ myUserId: s.myUserId, setMyUserId: s.setMyUserId }),
+    shallow
+  );
+
   const [searchTerm, setSearchTerm] = useState("");
   const [sortType, setSortType] = useState<
     "OVR_DESC" | "OVR_ASC" | "RANK_DESC" | "RANK_ASC" | "AGE_ASC" | "AGE_DESC"
@@ -38,6 +47,11 @@ export const Players: React.FC = () => {
 
   useEffect(() => {
     fetchPage(0, searchTerm, "OVR_DESC"); // 초기 첫 페이지
+  }, []);
+
+  useEffect(() => {
+    setMyUserId(1); // 임시 user id
+    console.log("setting user id:", myUserId);
   }, []);
 
   const fetchPage = (

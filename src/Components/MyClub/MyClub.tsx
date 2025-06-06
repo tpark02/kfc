@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { fetchMyClubs, updateMyClub, deleteMyClub } from "./MyClubUtil";
+import { fetchMyClubs, updateMyClub, deleteMyClub } from "../../util/MyClubUtil";
 import { MyClubData } from "../../types/Club";
 import { Button, Typography, Divider } from "@mui/material";
 import ConfirmDialog from "../ConfirmDialog";

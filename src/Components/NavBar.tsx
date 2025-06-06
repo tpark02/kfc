@@ -39,7 +39,7 @@ const NavBar: React.FC = () => {
           navigate("/");
         }}
       >
-        Players
+        Recruit
       </Button>
       <Button
         className="nav-menu-button"

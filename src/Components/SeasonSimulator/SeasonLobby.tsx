@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 // import MyClubSelect from "./MyClubSelect";
-import { fetchMyClubs } from "../myclub/MyClubUtil";
+import { fetchMyClubs } from "../../util/MyClubUtil";
 
 interface Season {
   id: number;
@@ -88,6 +88,10 @@ export default function SeasonLobby() {
 
   useEffect(() => {
     setMyUserId(1); // 임시 user id
+    console.log("setting user id:", myUserId);
+  }, []);
+
+  useEffect(() => {
     fetchSeasons();
   }, []);
 

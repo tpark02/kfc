@@ -30,7 +30,7 @@ import {
   fetchSeasonInfo,
   fetchUserInfo,
   adjustTeamOvr,
-} from "../myclub/MyClubUtil";
+} from "../../util/MyClubUtil";
 // import { totalNumberOfPlayers } from "../../types/Team";
 import { MatchDto } from "../../types/MatchDto";
 import { shallow } from "zustand/shallow";
