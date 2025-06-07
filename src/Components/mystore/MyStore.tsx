@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getMyStore } from "../../util/MyStoreUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
-import { MyStorePlayer } from "../../types/Player";
+import { MyPlayer } from "../../types/Player";
 
 const MyStore: React.FC = () => {
   const { myUserId } = useSquadStore(
@@ -12,11 +12,11 @@ const MyStore: React.FC = () => {
     shallow
   );
 
-  const [myStoreData, setMyStoreData] = useState<MyStorePlayer[] | undefined>();
+  const [myStoreData, setMyStoreData] = useState<MyPlayer[] | undefined>();
 
   useEffect(() => {
     const fetchData = async () => {
-      const storeData: MyStorePlayer[] = await getMyStore(myUserId);
+      const storeData: MyPlayer[] = await getMyStore(myUserId);
       // TODO: set state with storeData
       if (Object.values(storeData).length > 0) {
         console.log("my store data - ", storeData);

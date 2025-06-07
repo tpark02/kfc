@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MyStorePlayer } from "../types/Player";
+import { MyPlayer } from "../types/Player";
 
 export const buyPlayer = async (
   userId: number,
@@ -7,7 +7,7 @@ export const buyPlayer = async (
 ): Promise<string> => {
   try {
     const response = await axios.put<string>(
-      "http://localhost:8080/mystore/update/",
+      "http://localhost:8080/mystore/newplayer/",
       {
         userId: userId,
         playerId: playerId,
@@ -25,9 +25,9 @@ export const buyPlayer = async (
   }
 };
 
-export const getMyStore = async (userId: number): Promise<MyStorePlayer[]> => {
+export const getMyStore = async (userId: number): Promise<MyPlayer[]> => {
   try {
-    const response = await axios.get<MyStorePlayer[]>(
+    const response = await axios.get<MyPlayer[]>(
       `http://localhost:8080/mystore/getmystore/${userId}`
     );
     return response.data;
