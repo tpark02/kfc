@@ -32,11 +32,11 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     myTeamStamina,
     myTeamSquadValue,
     mySelectedPlayers,
-    dropPlayers,
+    // dropPlayers,
     myClubs,
     setMySelectedPlayers,
     setMyClubs,
-    setDropPlayers,    
+    // setDropPlayers,    
   } = useSquadStore(
     (s) => ({
       myUserId: s.myUserId,
@@ -46,7 +46,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
       mySelectedPlayers: s.mySelectedPlayers,
-      dropPlayers: s.dropPlayers,
+      // dropPlayers: s.dropPlayers,
       myTeamAge: s.myTeamAge,
       myTeamPace: s.myTeamPace,
       myTeamDefense: s.myTeamDefense,
@@ -56,7 +56,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
       myClubs: s.myClubs,
       setMySelectedPlayers: s.setMySelectedPlayers,
       setMyClubs: s.setMyClubs,
-      setDropPlayers: s.setDropPlayers,      
+      // setDropPlayers: s.setDropPlayers,      
       setMyTeamOvr: s.setMyTeamOvr,
     }),
     shallow
@@ -127,7 +127,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
                 mySelectedClubId,
                 myTeamName,
                 myFormation,
-                dropPlayers,
+                // dropPlayers,
                 adjustedTeamOvr,
                 myTeamSquadValue,
                 myTeamAge,
@@ -157,10 +157,10 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
                         ? updatedClub.players.map(myPlayerToPlayer)
                         : [];
 
-                    console.log("LeagueMyTeam.tsx drop players - ", dropPlayers);
+                    // console.log("LeagueMyTeam.tsx drop players - ", dropPlayers);
                     setDropPlayers([...playerList]);
 
-                    console.log("LeagueMyTeam.tsx selected players - ", dropPlayers);
+                    // console.log("LeagueMyTeam.tsx selected players - ", dropPlayers);
                     if (updatedClub && updatedClub.players) {
                       setMySelectedPlayers(updatedClub.players);
                     }

@@ -34,7 +34,9 @@ const Squad: React.FC = () => {
     myFormation,
     // dropPlayers,
     // isDropZoneSelected,
-    setDropPlayers,
+    // setDropPlayers,
+    mySelectedPlayers,
+    setMySelectedPlayers,
     setMyTeamOvr,
     setIsDropZoneSelected,
     setMyTeamSquadValue,
@@ -50,9 +52,9 @@ const Squad: React.FC = () => {
     (s) => ({
       myUserId: s.myUserId,
       myFormation: s.myFormation,
-      dropPlayers: s.dropPlayers,
-      isDropZoneSelected: s.isDropZoneSelected,
-      setDropPlayers: s.setDropPlayers,
+      // dropPlayers: s.dropPlayers,
+      // isDropZoneSelected: s.isDropZoneSelected,
+      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setIsDropZoneSelected: s.setIsDropZoneSelected,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
@@ -64,6 +66,7 @@ const Squad: React.FC = () => {
       setMyTeamStamina: s.setMyTeamStamina,
       setMyClubs: s.setMyClubs,
       setMyUserId: s.setMyUserId,
+      setMySelectedPlayers: s.setMySelectedPlayers
     }),
     shallow
   );
@@ -126,11 +129,13 @@ const Squad: React.FC = () => {
         countries: selectedCountries,
         leagues: selectedLeagues,
         clubs: selectedClubs,
+        userId: myUserId,
       })
       .then((response) => {
-        console.log("create random team - ", response.data.content);
+        console.log("create random team - ", response.data.myPlayerList);
 
-        setDropPlayers(response.data.content);
+        // setDropPlayers(response.data.content);
+        setMySelectedPlayers(response.data.myPlayerList);
         setMyTeamOvr(response.data.myTeamOvr);
         setMyTeamSquadValue(response.data.myTeamSquadValue);
         setMyTeamAge(response.data.myTeamAge);
@@ -140,7 +145,7 @@ const Squad: React.FC = () => {
         setMyTeamClubCohesion(response.data.myTeamClubCohesion);
         setMyTeamStamina(response.data.myTeamStamina);
         // 이미지 URL이 모두 로드될 때까지 대기
-        const imagePromises = response.data.content.map((player) => {
+        const imagePromises = response.data.myPlayerList.map((player) => {
           return new Promise<void>((resolve) => {
             const img = new Image();
             img.src = player.img; // ✅ 실제 이미지 경로

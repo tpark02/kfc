@@ -45,13 +45,13 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     },
     ref
   ) => {
-    const { dropPlayers, updateDropPlayer } = useSquadStore(
-      (s) => ({
-        dropPlayers: s.dropPlayers,
-        updateDropPlayer: s.updateDropPlayer,
-      }),
-      shallow
-    );
+    // const { dropPlayers, updateDropPlayer } = useSquadStore(
+    //   (s) => ({
+    //     dropPlayers: s.dropPlayers,
+    //     updateDropPlayer: s.updateDropPlayer,
+    //   }),
+    //   shallow
+    // );
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
     const [, setPage] = useState(0);
@@ -218,9 +218,9 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       <div className="search-player-root">
         <div className="search-player">
           {(() => {
-            const p = dropPlayers[selectedDropZone?.index]
-              ? dropPlayers[selectedDropZone.index]
-              : null;
+            // const p = dropPlayers[selectedDropZone?.index]
+            //   ? dropPlayers[selectedDropZone.index]
+            //   : null;
             return displayPlayerSpec(p);
           })()}
           <div style={{ padding: "10px" }}></div>
@@ -270,27 +270,27 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                   key={player.id}
                   onMouseEnter={() => setHoveredPlayer(player)}
                   onMouseLeave={() => setHoveredPlayer(null)}
-                  disabled={Object.values(dropPlayers).some(
-                    (d) => d && d.id === player.id
-                  )} // ✅ 개별 판단
+                  // disabled={Object.values(dropPlayers).some(
+                  //   (d) => d && d.id === player.id
+                  // )} // ✅ 개별 판단
                   onClick={() => {
                     console.log(
                       "🔥 선택된 dropzone index:",
                       selectedDropZone.index
                     );
                     console.log("🔥 넣을 player:", player);
-                    console.log("dropPlayers", dropPlayers);
-                    const alreadySelectedPlayer = Object.values(
-                      dropPlayers
-                    ).some((d) => d && d.id === player.id);
+                    // console.log("dropPlayers", dropPlayers);
+                    // const alreadySelectedPlayer = Object.values(
+                    //   dropPlayers
+                    // ).some((d) => d && d.id === player.id);
 
-                    if (alreadySelectedPlayer) {
-                      setSnackbarMessage("You already selected " + player.name);
-                      setSnackbarOpen(true);
-                      return;
-                    }
+                    // if (alreadySelectedPlayer) {
+                    //   setSnackbarMessage("You already selected " + player.name);
+                    //   setSnackbarOpen(true);
+                    //   return;
+                    // }
 
-                    updateDropPlayer(selectedDropZone.index, player);
+                    // updateDropPlayer(selectedDropZone.index, player);
                   }}
                   sx={{ color: "white" }}
                 >

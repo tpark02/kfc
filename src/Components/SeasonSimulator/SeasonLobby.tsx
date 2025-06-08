@@ -45,7 +45,7 @@ export default function SeasonLobby() {
     setMyUserId,
     setJoinedSeasonId,
     setMySelectedPlayers,
-    setDropPlayers,
+    // setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
     setMyTeamAge,
@@ -65,7 +65,7 @@ export default function SeasonLobby() {
       setMyUserId: s.setMyUserId,
       setJoinedSeasonId: s.setJoinedSeasonId,
       setMySelectedPlayers: s.setMySelectedPlayers,
-      setDropPlayers: s.setDropPlayers,
+      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
@@ -147,9 +147,9 @@ export default function SeasonLobby() {
 
         setMySelectedPlayers(selectedClub.players);
 
-        const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
+        // const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
 
-        setDropPlayers([...playerList]);
+        // setDropPlayers([...playerList]);
         setMyFormation(selectedClub.formationName);
         setMyTeamOvr(selectedClub.ovr);
         setMyTeamSquadValue(selectedClub.price);
@@ -166,7 +166,7 @@ export default function SeasonLobby() {
     selectedMyClubIdx,
     myUserId,
     setMySelectedPlayers,
-    setDropPlayers,
+    // setDropPlayers,
     setMyFormation,
     setMyTeamOvr,
     setMyTeamSquadValue,

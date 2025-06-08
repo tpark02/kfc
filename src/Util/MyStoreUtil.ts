@@ -7,7 +7,7 @@ export const buyPlayer = async (
 ): Promise<string> => {
   try {
     const response = await axios.put<string>(
-      "http://localhost:8080/mystore/newplayer/",
+      "http://localhost:8080/mystore/buyplayer/",
       {
         userId: userId,
         playerId: playerId,

@@ -22,7 +22,7 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/Response";
 // import MyClubSelect from "./MyClubSelect";
 import { Snackbar } from "@mui/material";
-import { Player, myPlayerToPlayer } from "../../types/Player";
+// import { Player, myPlayerToPlayer } from "../../types/Player";
 import {
   getOvrIndicator,
   getTeamOvrIndicator,
@@ -56,7 +56,7 @@ export default function SeasonPage() {
     myTeamOvr,
     setJoinedSeasonId,
     setMySelectedPlayers,
-    setDropPlayers,
+    // setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
     setMyTeamAge,
@@ -76,7 +76,7 @@ export default function SeasonPage() {
       myTeamOvr: s.myTeamOvr,
       setJoinedSeasonId: s.setJoinedSeasonId,
       setMySelectedPlayers: s.setMySelectedPlayers,
-      setDropPlayers: s.setDropPlayers,
+      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
@@ -188,8 +188,8 @@ export default function SeasonPage() {
       return;
     }
 
-    const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
-    setDropPlayers([...playerList]);
+    // const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
+    // setDropPlayers([...playerList]);
     setMySelectedPlayers(selectedClub.players);
     setMyFormation(selectedClub.formationName);
     setMyTeamOvr(selectedClub.ovr);

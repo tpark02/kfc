@@ -17,7 +17,7 @@ type SquadStore = {
   mySelectedClubId: number;
   // myTeamName: string;
   myFormation: string;
-  dropPlayers: Player[];
+  //dropPlayers: Player[];
   // benchPlayers: Player[];
   isDropZoneSelected: boolean;
   myTeamOvr: number;
@@ -46,8 +46,8 @@ type SquadStore = {
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
   // setMyTeamName: (f: string) => void;
   setMyFormation: (f: string) => void;
-  updateDropPlayer: (idx: number, player: Player) => void;
-  setDropPlayers: (players: Player[]) => void;
+  // updateDropPlayer: (idx: number, player: Player) => void;
+  // setDropPlayers: (players: Player[]) => void;
   // setBenchPlayers: (players: Player[]) => void;
   setIsDropZoneSelected: (val: boolean) => void;
   setMyTeamSquadValue: (value: number) => void;
@@ -81,7 +81,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   mySelectedClubId: -1,
   // myTeamName: "N/A",
   myFormation: "442",
-  dropPlayers: [],
+  // dropPlayers: [],
   // dropPlayers: Object.fromEntries(
   //   Array.from({ length: TOTAL_DROP_ZONES }, (_, i) => [i, null])
   // ),
@@ -121,13 +121,13 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   },
   // setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),
-  updateDropPlayer: (idx: number, player: Player) =>
-    set((state) => {
-      const updatedPlayers = [...state.dropPlayers];
-      updatedPlayers[idx] = player;
-      return { dropPlayers: updatedPlayers };
-    }),
-  setDropPlayers: (players: Player[]) => set({ dropPlayers: players }),
+  // updateDropPlayer: (idx: number, player: Player) =>
+  //   set((state) => {
+  //     const updatedPlayers = [...state.dropPlayers];
+  //     updatedPlayers[idx] = player;
+  //     return { dropPlayers: updatedPlayers };
+  //   }),
+  // setDropPlayers: (players: Player[]) => set({ dropPlayers: players }),
   // setBenchPlayers: (players: Player[]) => set({ benchPlayers: players }),
   setMyTeamSquadValue: (value: number) => set({ myTeamSquadValue: value }),
   setMyTeamAge: (age: number) => set({ myTeamAge: age }),

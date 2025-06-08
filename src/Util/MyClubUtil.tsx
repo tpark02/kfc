@@ -55,7 +55,7 @@ export const updateMyClub = async (
   clubId: number,
   newClubName: string,
   myFormation: string,
-  dropPlayers: Player[],
+  // dropPlayers: Player[],
   myTeamOvr: number,
   myTeamSquadValue: number,
   myTeamAge: number,
@@ -68,29 +68,29 @@ export const updateMyClub = async (
   try {
     //console.log(dropPlayers);
     // const players: (number | null)[] = Array(totalNumberOfPlayers).fill(null);
-    const players: (MyPlayer | null)[] = Array(totalNumberOfPlayers).fill(null);
+    // const players: (MyPlayer | null)[] = Array(totalNumberOfPlayers).fill(null);
 
-    Object.values(dropPlayers).forEach((player) => {
-      if (player) {
-        const mPlayer = mySelectedPlayers.find((p) => p.playerId === player.id);
-        const myPlayer: MyPlayer = playerToMyPlayer(
-          player,
-          userId,
-          clubId,
-          mPlayer?.yellowCard ?? 0,
-          mPlayer?.redCard ?? 0,
-          mPlayer?.id ?? 0, // id가 필요 없으면 별도 처리하거나 -1 등 기본값 설정
-          mPlayer?.ovr ?? player.ovr
-        );
+    // Object.values(dropPlayers).forEach((player) => {
+    //   if (player) {
+    //     const mPlayer = mySelectedPlayers.find((p) => p.playerId === player.id);
+    //     const myPlayer: MyPlayer = playerToMyPlayer(
+    //       player,
+    //       userId,
+    //       clubId,
+    //       mPlayer?.yellowCard ?? 0,
+    //       mPlayer?.redCard ?? 0,
+    //       mPlayer?.id ?? 0, // id가 필요 없으면 별도 처리하거나 -1 등 기본값 설정
+    //       mPlayer?.ovr ?? player.ovr
+    //     );
 
-        players[player.idx] = myPlayer;
-      }
-    });
+    //     players[player.idx] = myPlayer;
+    //   }
+    // });
 
     console.log("🛰 request data:", {
       clubName: newClubName,
       formationName: myFormation,
-      players,
+      mySelectedPlayers,
       ovr: myTeamOvr,
       price: myTeamSquadValue,
       age: myTeamAge,
@@ -99,6 +99,8 @@ export const updateMyClub = async (
       clubCohesion: myTeamClubCohesion,
       attack: myTeamAttack,
       stamina: myTeamStamina,
+      userId: userId,
+      clubId: clubId,
     });
 
     const response = await axios.put(
@@ -106,7 +108,7 @@ export const updateMyClub = async (
       {
         clubName: newClubName,
         formationName: myFormation, // ✅ 정확한 이름만 보내기
-        players, // ✅ 반드시 16개 (null 포함 가능)
+        players: mySelectedPlayers, // ✅ 반드시 16개 (null 포함 가능)
         ovr: myTeamOvr,
         price: myTeamSquadValue,
         age: myTeamAge,

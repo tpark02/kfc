@@ -1,4 +1,4 @@
-import { Player } from "./Player";
+import { MyPlayer, Player } from "./Player";
 
 export type ResponseSearch = { content: Player[] };
 
@@ -22,7 +22,7 @@ export type ResponseLoadSquad = {
 };
 
 export type ResponseRandomSquad = {
-  content: Player[];
+  myPlayerList: MyPlayer[];
   myTeamOvr: number;
   chemistry: number;
   myTeamSquadValue: number;

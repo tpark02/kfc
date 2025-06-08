@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
-import { Player, myPlayerToPlayer } from "../../types/Player";
+import { MyPlayer, Player, myPlayerToPlayer } from "../../types/Player";
 import { totalNumberOfPlayers } from "../../types/Team";
 import { shallow } from "zustand/shallow";
 
@@ -31,7 +31,7 @@ const MyClub: React.FC<MyClubProp> = ({
     myUserId,
     myClubs,
     myFormation,
-    dropPlayers,
+    // dropPlayers,
     myTeamOvr,
     myTeamSquadValue,
     myTeamAge,
@@ -44,7 +44,7 @@ const MyClub: React.FC<MyClubProp> = ({
     // setMyTeamName,
     setMySelectedClubId,
     setMySelectedPlayers,
-    setDropPlayers,
+    // setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
     setMyTeamAge,
@@ -62,7 +62,7 @@ const MyClub: React.FC<MyClubProp> = ({
       myUserId: s.myUserId,
       myClubs: s.myClubs,
       myFormation: s.myFormation,
-      dropPlayers: s.dropPlayers,
+      // dropPlayers: s.dropPlayers,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
       myTeamAge: s.myTeamAge,
@@ -75,7 +75,7 @@ const MyClub: React.FC<MyClubProp> = ({
       // setMyTeamName: s.setMyTeamName,
       setMySelectedClubId: s.setMySelectedClubId,
       setMySelectedPlayers: s.setMySelectedPlayers,
-      setDropPlayers: s.setDropPlayers,
+      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
@@ -93,17 +93,16 @@ const MyClub: React.FC<MyClubProp> = ({
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newTeamName, setNewTeamName] = useState("");
 
-  const handleUpdateClub = (idx: number, clubId: number, players: Player[]) => {
+  const handleUpdateClub = (clubId: number, players: MyPlayer[]) => {
     setLoading(true);
 
     if (newTeamName.length > 0) {
       updateMyClub(
-        mySelectedPlayers,
+        players,
         myUserId,
         clubId,
         newTeamName,
-        myFormation,
-        players,
+        myFormation,        
         myTeamOvr,
         myTeamSquadValue,
         myTeamAge,
@@ -127,13 +126,13 @@ const MyClub: React.FC<MyClubProp> = ({
             const updatedClub = paddedClubs.find(
               (c) => c && c.clubId === clubId
             );
-            const playerList: Player[] =
-              updatedClub && updatedClub.players
-                ? updatedClub.players.map(myPlayerToPlayer)
-                : [];
+            // const playerList: Player[] =
+            //   updatedClub && updatedClub.players
+            //     ? updatedClub.players.map(myPlayerToPlayer)
+            //     : [];
 
-            setDropPlayers([...playerList]);
-            console.log("myclub.tsx drop players - ", dropPlayers);
+            // setDropPlayers([...playerList]);
+            // console.log("myclub.tsx drop players - ", dropPlayers);
 
             if (updatedClub && updatedClub.players) {
               setMySelectedPlayers(updatedClub.players);
@@ -183,10 +182,10 @@ const MyClub: React.FC<MyClubProp> = ({
 
     console.log("club id to update:", clubId);
 
-    const playersSnapshot = [...dropPlayers]; // ✅ 복사하여 안전하게 사용
-
-    handleUpdateClub(idx, clubId, playersSnapshot);
-    //setMyClubs(updated);
+    const playersSnapshot = [...mySelectedPlayers]; // ✅ 복사하여 안전하게 사용
+    console.log("player snapshot", playersSnapshot);
+    handleUpdateClub(clubId, playersSnapshot);
+    setMyClubs(updated);
     setMySelectedClubId(clubId);
     setConfirmOpen(false);
     setEditingIndex(null);
@@ -216,17 +215,17 @@ const MyClub: React.FC<MyClubProp> = ({
         formationName: updated[idx]?.formationName || "",
       };
     }
-    const hasEmptyPlayer = Object.values(dropPlayers).some((d) => d === null);
+    // const hasEmptyPlayer = Object.values(dropPlayers).some((d) => d === null);
 
-    if (hasEmptyPlayer) {
-      setSnackbarMessage(
-        `The number of players must be ${totalNumberOfPlayers}`
-      );
-      setSnackbarOpen(true);
-      setLoading(false);
-      setEditingIndex(null);
-      return;
-    }
+    // if (hasEmptyPlayer) {
+    //   setSnackbarMessage(
+    //     `The number of players must be ${totalNumberOfPlayers}`
+    //   );
+    //   setSnackbarOpen(true);
+    //   setLoading(false);
+    //   setEditingIndex(null);
+    //   return;
+    // }
     if (club?.clubId !== undefined) {
       setPendingUpdate({
         idx,
@@ -307,10 +306,10 @@ const MyClub: React.FC<MyClubProp> = ({
 
                       //set club name
                       // setMyTeamName(selectedClub?.name);
-                      const playerList: Player[] =
-                        selectedClub.players.map(myPlayerToPlayer);
-                      console.log("my club.tsx drop players - ", dropPlayers);
-                      setDropPlayers([...playerList]);
+                      // const playerList: Player[] =
+                      //   selectedClub.players.map(myPlayerToPlayer);
+                      // console.log("my club.tsx drop players - ", dropPlayers);
+                      // setDropPlayers([...playerList]);
                       setMyFormation(selectedClub.formationName);
                       setMyTeamOvr(selectedClub.ovr);
                       setMyTeamSquadValue(selectedClub.price);

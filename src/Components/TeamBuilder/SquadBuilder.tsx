@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 import { DropZone } from "../../types/DropZone";
 import { getTeamAvr } from "../teambuilder/SquadBuilderUtil";
-import { Player } from "../../types/Player";
+import { MyPlayer, Player } from "../../types/Player";
 import { shallow } from "zustand/shallow";
 
 // import Snackbar from "@mui/material/Snackbar";
@@ -33,9 +33,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   const {
     mySelectedPlayers,
     dropZoneList,
-    dropPlayers,
+    // dropPlayers,
     setDropZoneList,
-    setDropPlayers,
+    // setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
     setMyTeamPace,
@@ -43,14 +43,15 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
+    setMySelectedPlayers,
     resetDropZoneList,
   } = useSquadStore(
     (s) => ({
       mySelectedPlayers: s.mySelectedPlayers,
       dropZoneList: s.dropZoneList,
-      dropPlayers: s.dropPlayers,
+      // dropPlayers: s.dropPlayers,
       setDropZoneList: s.setDropZoneList,
-      setDropPlayers: s.setDropPlayers,
+      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamPace: s.setMyTeamPace,
@@ -59,51 +60,10 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
       setMyTeamClubCohesion: s.setMyTeamClubCohesion,
       setMyTeamStamina: s.setMyTeamStamina,
       resetDropZoneList: s.resetDropZoneList,
+      setMySelectedPlayers: s.setMySelectedPlayers,
     }),
     shallow
   );
-
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  useEffect(() => {
-    const teamData = getTeamAvr(dropPlayers);
-
-    setMyTeamOvr(teamData.ovr);
-    setMyTeamPace(teamData.spd);
-    setMyTeamAttack(teamData.atk);
-    setMyTeamDefense(teamData.def);
-    setMyTeamStamina(teamData.sta);
-    setMyTeamClubCohesion(teamData.tc);
-    setMyTeamSquadValue(teamData.squadVal);
-
-    setDropPlayers(dropPlayers);
-  }, [dropPlayers, setDropPlayers]);
-
-  // const updateRoster = async (players = dropPlayers) => {
-  //   try {
-  //     const rosterMap = Object.fromEntries(players.map((p) => [p.id, p.idx]));
-
-  //     const response = await axios.post(
-  //       "http://localhost:8080/myclub/updateroster",
-  //       {
-  //         userId: myUserId,
-  //         clubId: mySelectedClubId,
-  //         rosterMap: rosterMap,
-  //       }
-  //     );
-  //     setSnackbarOpen(true);
-  //     setSnackbarMessage(
-  //       response.data?.message || "Roster updated successfully!"
-  //     );
-  //   } catch (error) {
-  //     console.error("🔥 Error:", error);
-  //     setSnackbarOpen(true);
-  //     setSnackbarMessage(
-  //       error instanceof Error ? error.message : String(error)
-  //     );
-  //   }
-  // };
 
   return (
     <>
@@ -111,7 +71,10 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
         <div className="squad-field">
           {formations[selectedFormation].map((position, idx) => {
             const pos = position.pos.replace(/[0-9]/g, "");
-            const player = dropPlayers.find((p) => p.idx === idx); // ✅ 정확한 선수 찾기
+            const player = mySelectedPlayers
+              .filter((p): p is MyPlayer => !!p)
+              .sort((a, b) => a.idx - b.idx)
+              .find((p) => p.idx === idx); // ✅ 정확한 선수 찾기
             const myPlayer = mySelectedPlayers.find(
               (p) => p.playerId === player?.id
             );
@@ -128,7 +91,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     setPosition(pos);
                     setIsDropZoneSelected(true);
                   } else {
-                    const tempPlayers = [...dropPlayers];
+                     const tempPlayers = [...mySelectedPlayers];
                     const i = dropZoneList[0].index;
 
                     const a = tempPlayers.find((p) => p.idx === i);
@@ -137,12 +100,14 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     if (!a || !b) return;
 
                     const updatedPlayers = tempPlayers.map((p) => {
-                      if (p.id === a.id) return { ...p, idx: b.idx };
-                      if (p.id === b.id) return { ...p, idx: a.idx };
+                      if (p.idx === a.idx) return { ...p, idx: b.idx };
+                      if (p.idx === b.idx) return { ...p, idx: a.idx };
                       return p;
                     });
 
-                    setDropPlayers(updatedPlayers);
+                    console.log("updated playes",updatedPlayers);
+                    
+                    setMySelectedPlayers(updatedPlayers);
                     setSelectedDropZone({ index: -1, pos: "" });
                     resetDropZoneList();
                   }
@@ -171,8 +136,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
           })}
         </div>
         <div className="squad-bench">
-          {Object.values(dropPlayers)
-            .filter((p): p is Player => !!p)
+          {Object.values(mySelectedPlayers)
+            .filter((p): p is MyPlayer => !!p)
             .sort((a, b) => a.idx - b.idx)
             .slice(11)
             .map((benchPlayer, idx) => {
@@ -180,7 +145,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               const myBenchPlayer = mySelectedPlayers.find(
                 (p) => p.playerId === benchPlayer.id
               );
-              console.log("bench player red card - ", myBenchPlayer?.redCard);
+              
               return (
                 <div
                   key={`drop-${actualIndex}`}
@@ -198,10 +163,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       setPosition("");
                       setIsDropZoneSelected(true);
                     } else {
-                      //const tempPlayers = [...dropPlayers]; // copy to avoid mutation
                       const tempPlayersArray = Object.values(
-                        dropPlayers
-                      ).filter((p): p is Player => !!p); // null 제거
+                        mySelectedPlayers
+                      ).filter((p): p is MyPlayer => !!p); // null 제거
 
                       const i = dropZoneList[0].index;
 
@@ -213,12 +177,13 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       if (!a || !b) return;
 
                       const updatedPlayers = tempPlayersArray.map((p) => {
-                        if (p.id === a.id) return { ...p, idx: b.idx };
-                        if (p.id === b.id) return { ...p, idx: a.idx };
+                        if (p.idx === a.idx) return { ...p, idx: b.idx };
+                        if (p.idx === b.idx) return { ...p, idx: a.idx };
                         return p;
                       });
 
-                      setDropPlayers(updatedPlayers);
+                      // setDropPlayers(updatedPlayers);
+                      setMySelectedPlayers(updatedPlayers);
                       setSelectedDropZone({ index: -1, pos: "" });
                       resetDropZoneList();
                     }

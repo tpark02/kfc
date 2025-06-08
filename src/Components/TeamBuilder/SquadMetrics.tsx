@@ -26,16 +26,19 @@ const getLeagueSpread = (players: Record<number, Player | null>) => {
 
 const SquadMetrics: React.FC = () => {
   // const metricsData = metrics(players);
-  const { dropPlayers, myTeamOvr, myTeamSquadValue } = useSquadStore(
+  const { 
+    // dropPlayers, 
+    myTeamOvr, 
+    myTeamSquadValue } = useSquadStore(
     (s) => ({
-      dropPlayers: s.dropPlayers,
+      // dropPlayers: s.dropPlayers,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
     }),
     shallow
   );
-  const nationalSpread = getNationalitySpread(dropPlayers);
-  const leagueSpread = getLeagueSpread(dropPlayers);
+  // const nationalSpread = getNationalitySpread(dropPlayers);
+  // const leagueSpread = getLeagueSpread(dropPlayers);
 
   return (
     <div className="squad-overview">
@@ -82,14 +85,14 @@ const SquadMetrics: React.FC = () => {
             Nations
           </Typography>
           <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}>
-            {Array.from(nationalSpread).length > 0 ? (
+            {/* {Array.from(nationalSpread).length > 0 ? (
               Array.from(nationalSpread).map(
                 (nation, idx) =>
                   nation && getImgByCountryName(nation ?? "", idx, 35, 25)
               )
             ) : (
               <div>&nbsp;</div>
-            )}
+            )} */}
           </Box>
         </div>
         <div className="squad-metrics-section">
@@ -97,7 +100,7 @@ const SquadMetrics: React.FC = () => {
             Leagues
           </Typography>
           <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}>
-            {leagueSpread.size > 0 ? (
+            {/* {leagueSpread.size > 0 ? (
               Array.from(leagueSpread).map(
                 (league, idx) =>
                   league && (
@@ -111,7 +114,7 @@ const SquadMetrics: React.FC = () => {
               )
             ) : (
               <div>&nbsp;</div>
-            )}
+            )} */}
           </Box>
         </div>
       </div>
