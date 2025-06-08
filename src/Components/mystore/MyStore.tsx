@@ -13,19 +13,6 @@ const MyStore: React.FC = () => {
   );
 
   const [myStoreData, setMyStoreData] = useState<MyPlayer[] | undefined>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const storeData: MyPlayer[] = await getMyStore(myUserId);
-      // TODO: set state with storeData
-      if (Object.values(storeData).length > 0) {
-        console.log("my store data - ", storeData);
-        setMyStoreData(storeData);
-      } else alert("No my store data found");
-    };
-    fetchData();
-  }, [myUserId]);
-
   return (
     <div
       style={{

@@ -333,8 +333,7 @@ const Squad: React.FC = () => {
           </div>
           {/* ) : (
             <></>
-          )} */}
-          <div><MyStore></MyStore></div>
+          )} */}          
         </div>
       </div>
     </>

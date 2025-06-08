@@ -25,13 +25,3 @@ export const buyPlayer = async (
   }
 };
 
-export const getMyStore = async (userId: number): Promise<MyPlayer[]> => {
-  try {
-    const response = await axios.get<MyPlayer[]>(
-      `http://localhost:8080/mystore/getmystore/${userId}`
-    );
-    return response.data;
-  } catch (err: any) {
-    return [];
-  }
-};

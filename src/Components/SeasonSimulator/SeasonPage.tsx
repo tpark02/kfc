@@ -293,6 +293,7 @@ export default function SeasonPage() {
                 const adjustOvr = p.ovr - p.yellowCard * 5 - p.redCard * 10;
                 return (
                   <div
+                    key={p.idx ?? `${p.name}-${p.pos}`} // idx가 없으면 fallback
                     style={{
                       display: "flex",
                       flexDirection: "row",
