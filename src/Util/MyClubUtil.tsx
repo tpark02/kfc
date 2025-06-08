@@ -34,11 +34,19 @@ export const fetchSeasonInfo = async (seasonId: string) => {
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
+    const token = localStorage.getItem("token");
+
     console.log(`📦 fetchMyClubs: userId=${userId}`);
 
     const response = await axios.get(
-      `http://localhost:8080/users/${userId}/myclubs`
+      `http://localhost:8080/users/${userId}/myclubs`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ 토큰을 반드시 포함해야 함
+        },
+      }
     );
+
     const clubs = Array.isArray(response.data)
       ? response.data
       : [response.data];
