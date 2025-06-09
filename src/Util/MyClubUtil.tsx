@@ -72,6 +72,21 @@ export const updateMyClub = async (
   myTeamStamina: number
 ): Promise<string> => {
   try {
+    console.log("Updating club with data:", {
+      userId,
+      clubId,
+      newClubName,
+      myFormation,
+      mySelectedPlayers,
+      myTeamOvr,
+      myTeamSquadValue,
+      myTeamAge,
+      myTeamPace,
+      myTeamDefense,
+      myTeamAttack,
+      myTeamClubCohesion,
+      myTeamStamina,
+    });
     const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
       clubName: newClubName,
       formationName: myFormation,

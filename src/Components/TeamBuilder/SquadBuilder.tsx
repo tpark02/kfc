@@ -63,9 +63,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               .filter((p): p is MyPlayer => !!p)
               .sort((a, b) => a.idx - b.idx)
               .find((p) => p.idx === idx); // ✅ 정확한 선수 찾기
-            const myPlayer = mySelectedPlayers.find(
-              (p) => p.playerId === player?.id
-            );
+            // const myPlayer = mySelectedPlayers.find(
+            //   (p) => p.playerId === player?.id
+            // );
 
             return (
               <Button
@@ -116,8 +116,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     src={player?.img ?? ""}
                     selected={selectedDropZone.index === idx}
                   />
-                  <div>{myPlayer?.redCard ?? 0}</div>
-                  <div>{myPlayer?.yellowCard ?? 0}</div>
+                  <div>{player?.redCard ?? 0}</div>
+                  <div>{player?.yellowCard ?? 0}</div>
                 </div>
               </Button>
             );
@@ -130,9 +130,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
             .slice(11)
             .map((benchPlayer, idx) => {
               const actualIndex = idx + 11;
-              const myBenchPlayer = mySelectedPlayers.find(
-                (p) => p.playerId === benchPlayer.id
-              );
+              // const myBenchPlayer = mySelectedPlayers.find(
+              //   (p) => p.playerId === benchPlayer.id
+              // );
               
               return (
                 <div
@@ -186,8 +186,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       src={benchPlayer?.img ?? ""}
                       selected={selectedDropZone.index === actualIndex}
                     />
-                    <div>{myBenchPlayer?.redCard ?? 0}</div>
-                    <div>{myBenchPlayer?.yellowCard ?? 0}</div>
+                    <div>{benchPlayer?.redCard ?? 0}</div>
+                    <div>{benchPlayer?.yellowCard ?? 0}</div>
                   </div>
                 </div>
               );

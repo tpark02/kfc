@@ -12,9 +12,9 @@ import { useSquadStore } from "../../store/useSquadStore";
 
 // Components
 import MyClub from "../myclub/MyClub";
-import SquadMetrics from "./squadMetrics";
-import SquadBuilder from "./squadBuilder";
-import SelectFormation from "./selectFormation";
+import SquadMetrics from "./SquadMetrics";
+import SquadBuilder from "./SquadBuilder";
+import SelectFormation from "./SelectFormation";
 import LoadingSpinner from "../LoadingSpinner";
 
 // Data
