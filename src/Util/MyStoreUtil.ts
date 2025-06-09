@@ -1,27 +1,36 @@
-import axios from "axios";
-import { MyPlayer } from "../types/Player";
+import axiosInstance from "../axiosInstance";
+import { isAxiosError } from "../axiosInstance";
 
 export const buyPlayer = async (
   userId: number,
   playerId: number
 ): Promise<string> => {
   try {
-    const response = await axios.put<string>(
-      "http://localhost:8080/mystore/buyplayer/",
+    const response = await axiosInstance.put<string>(
+      "/mystore/buyplayer/",
       {
-        userId: userId,
-        playerId: playerId,
+        userId,
+        playerId,
       }
     );
 
-    // 응답 메시지 확인 후 처리
     if (response.data.includes("✅")) {
       return "🟢 Player purchased successfully!";
     } else {
       return "⚠️ Purchase failed: " + response.data;
     }
-  } catch (err: any) {
-    return "❌ Failed to update store: " + (err?.message || "Unknown error");
+  } catch (err: unknown) {
+    if (isAxiosError(err)) {
+      return (
+        "❌ Failed to update store: " +
+        (typeof err.response?.data === "string"
+          ? err.response.data
+          : JSON.stringify(err.response?.data ?? err.message))
+      );
+    } else if (err instanceof Error) {
+      return "❌ Failed to update store: " + err.message;
+    } else {
+      return "❌ Failed to update store: Unknown error";
+    }
   }
 };
-

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
 export type Player = {
   id: number;
@@ -201,8 +201,8 @@ export const fetchPlayers = async (
 ): Promise<Player[]> => {
   try {
     console.log(`📦 fetchPlayers: userId=${userId}, clubId=${clubId}`);
-    const response = await axios.get(
-      `http://localhost:8080/players/${userId}/${clubId}`
+    const response = await axiosInstance.get(
+      `/players/${userId}/${clubId}`
     );
     return Array.isArray(response.data) ? response.data : [response.data];
   } catch (error) {

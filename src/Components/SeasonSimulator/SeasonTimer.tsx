@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { SeasonResponse } from "../../types/Response";
-import { fetchSeasonInfo } from "../../util/MyClubUtil"
+import { SeasonResponse } from "../../types/response";
+import { fetchSeasonInfo } from "../../util/myClubUtil"
 
 interface SeasonTimerProps {
   initialRemaining: number;
@@ -25,12 +25,6 @@ export default function SeasonTimer({
 
   useEffect(() => {
     if (!seasonId) return;
-
-    // const fetchSeason = async () => {
-    //   const res = await axios.get(`http://localhost:8080/season/getSeason/${seasonId}`);
-    //   setRemaining(res.data.remainingSeconds);
-    // };
-    // fetchSeason();
 
     (async () => {
       const res: SeasonResponse | null = await fetchSeasonInfo(

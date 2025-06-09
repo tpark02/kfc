@@ -1,4 +1,4 @@
-import { Player } from "../../types/Player";
+import { Player } from "../../types/player";
 
 function getMaxClubCount(players: { [index: number]: Player | null }) {
   const clubCount: { [key: string]: number } = {};

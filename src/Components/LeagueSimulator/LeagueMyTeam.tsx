@@ -4,13 +4,12 @@ import {
   getTeamOvrIndicator,
   updateMyClub,
   fetchMyClubs,  
-} from "../../util/MyClubUtil";
-import { Match } from "../../types/Match";
+} from "../../util/myClubUtil";
+import { Match } from "../../types/match";
 import { shallow } from "zustand/shallow";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MyClubData } from "../../types/Club";
-import { Player, myPlayerToPlayer } from "../../types/Player";
+import { MyClubData } from "../../types/club";
 import { Snackbar } from "@mui/material";
 
 interface LeagueMyTeamProp {
@@ -152,13 +151,13 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
                     const updatedClub = paddedClubs.find(
                       (c) => c && c.clubId === mySelectedClubId
                     );
-                    const playerList: Player[] =
-                      updatedClub && updatedClub.players
-                        ? updatedClub.players.map(myPlayerToPlayer)
-                        : [];
+                    // const playerList: Player[] =
+                    //   updatedClub && updatedClub.players
+                    //     ? updatedClub.players.map(myPlayerToPlayer)
+                    //     : [];
 
                     // console.log("LeagueMyTeam.tsx drop players - ", dropPlayers);
-                    setDropPlayers([...playerList]);
+                    // setDropPlayers([...playerList]);
 
                     // console.log("LeagueMyTeam.tsx selected players - ", dropPlayers);
                     if (updatedClub && updatedClub.players) {

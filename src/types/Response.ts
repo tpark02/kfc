@@ -1,4 +1,4 @@
-import { MyPlayer, Player } from "./Player";
+import { MyPlayer, Player } from "./player";
 
 export type ResponseSearch = { content: Player[] };
 

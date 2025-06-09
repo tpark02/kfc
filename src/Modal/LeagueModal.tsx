@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField } from "@mui/material";
-import { League } from "../types/League";
-import { LeaguePage } from "../types/LeaguePage";
-import axios from "axios";
+import { League } from "../types/league";
+import { LeaguePage } from "../types/leaguePage";
+import axiosInstance, { isAxiosError } from "../axiosInstance";
 
 interface LeagueModalProps {
   isOpen: boolean;
@@ -19,14 +19,20 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [leagues, setLeagues] = useState<League[]>([]);
+
   useEffect(() => {
-    axios
-      .get<LeaguePage>("http://localhost:8080/leagues", {})
+    axiosInstance
+      .get<LeaguePage>("/leagues")
       .then((response) => {
-        //console.log(response.data.content);
         setLeagues(response.data.content);
       })
-      .catch((err) => console.error(err));
+      .catch((err: unknown) => {
+        if (isAxiosError(err)) {
+          console.error("Axios error:", err.response?.data);
+        } else {
+          console.error("Unknown error:", err);
+        }
+      });
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;

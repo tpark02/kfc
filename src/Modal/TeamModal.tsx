@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField } from "@mui/material";
-import { Team } from "../types/Team";
-import { TeamPage } from "../types/TeamPage";
-import axios from "axios";
+import { Team } from "../types/team";
+import { TeamPage } from "../types/teamPage";
+import axiosInstance from "../axiosInstance";
 
 interface TeamModalProps {
   isOpen: boolean;
@@ -21,10 +21,9 @@ const TeamModal: React.FC<TeamModalProps> = ({
   const [teams, setTeams] = useState<Team[]>([]);
 
   useEffect(() => {
-    axios
-      .get<TeamPage>("http://localhost:8080/teams", {})
+    axiosInstance
+      .get<TeamPage>("/teams")
       .then((response) => {
-        //console.log(response.data.content);
         setTeams(response.data.content);
       })
       .catch((err) => console.error(err));

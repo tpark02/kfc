@@ -1,50 +1,30 @@
-// src/api/myClubUtil.ts
-import axiosInstance, { isAxiosError } from "../axiosInstance";
+// src/api/clubService.ts
+import axiosInstance from "../axiosInstance";
+import { handleApiError } from "./utils";
 import { MyClubData } from "../types/club";
 import { MyPlayer } from "../types/player";
-import { totalNumberOfPlayers } from "../types/team";
 import { UserInfoResponse, SeasonResponse } from "../types/response";
 
-// ✅ 공통 에러 처리 함수
-const handleApiError = (error: unknown, context: string): string => {
-  if (isAxiosError(error)) {
-    console.error(`🔥 Axios Error in ${context}:`, error.response?.data);
-    return typeof error.response?.data === "string"
-      ? error.response.data
-      : JSON.stringify(error.response?.data ?? `${context} failed`);
-  } else {
-    console.error(`🚨 Unknown Error in ${context}:`, error);
-    return `${context} failed`;
-  }
-};
-
-// ✅ 유저 정보
 export const fetchUserInfo = async (userId: number) => {
   try {
-    const res = await axiosInstance.post<UserInfoResponse>("/userInfo/", {
-      userId,
-    });
+    const res = await axiosInstance.post<UserInfoResponse>("/userInfo/", { userId });
     return res;
-  } catch (err) {
-    handleApiError(err, "fetchUserInfo");
+  } catch (error) {
+    handleApiError(error, "fetchUserInfo");
     return null;
   }
 };
 
-// ✅ 시즌 정보
 export const fetchSeasonInfo = async (seasonId: string) => {
   try {
-    const res = await axiosInstance.get<SeasonResponse>(
-      `/season/getSeason/${seasonId}`
-    );
+    const res = await axiosInstance.get<SeasonResponse>(`/season/getSeason/${seasonId}`);
     return res.data;
-  } catch (err) {
-    handleApiError(err, "fetchSeasonInfo");
+  } catch (error) {
+    handleApiError(error, "fetchSeasonInfo");
     return null;
   }
 };
 
-// ✅ 내 클럽 목록 불러오기
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
     const res = await axiosInstance.get(`/users/${userId}/myclubs`);
@@ -55,7 +35,6 @@ export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   }
 };
 
-// ✅ 클럽 업데이트
 export const updateMyClub = async (
   mySelectedPlayers: MyPlayer[],
   userId: number,
@@ -91,11 +70,7 @@ export const updateMyClub = async (
   }
 };
 
-// ✅ 클럽 삭제
-export const deleteMyClub = async (
-  userId: number,
-  clubId: number
-): Promise<string> => {
+export const deleteMyClub = async (userId: number, clubId: number): Promise<string> => {
   try {
     const res = await axiosInstance.delete(`/deletemyclub/${userId}/${clubId}`);
     return res.data;
@@ -103,24 +78,3 @@ export const deleteMyClub = async (
     return handleApiError(error, "deleteMyClub");
   }
 };
-
-// ✅ OVR 계산 유틸
-export const adjustTeamOvr = (myPlayer: MyPlayer[]): number =>
-  Math.floor(
-    myPlayer.reduce(
-      (acc, p) => acc + (p.ovr - p.yellowCard * 5 - p.redCard * 10),
-      0
-    ) / totalNumberOfPlayers
-  );
-
-export const getOvrIndicator = (
-  ovr: number,
-  yellow: number,
-  red: number
-): string => {
-  const adjusted = ovr - yellow * 5 - red * 10;
-  return ovr === adjusted ? "⚪" : ovr > adjusted ? "🔴🔻" : "🟢🔺";
-};
-
-export const getTeamOvrIndicator = (a: number, b: number): string =>
-  a === b ? "⚪" : a < b ? "🔴🔻" : "🟢🔺";

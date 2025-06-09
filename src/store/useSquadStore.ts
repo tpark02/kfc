@@ -1,10 +1,10 @@
 // src/store/useSquadStore.ts
 import { create } from "zustand";
-import { MyPlayer, Player } from "../types/Player";
-import { Match } from "../types/Match";
+import { MyPlayer, Player } from "../types/player";
+import { Match } from "../types/match";
 // import { TOTAL_DROP_ZONES } from "../data/formations";
-import { MyClubData } from "../types/Club";
-import { DropZone } from "../types/DropZone";
+import { MyClubData } from "../types/club";
+import { DropZone } from "../types/dropZone";
 import { createWithEqualityFn } from 'zustand/traditional';
 
 export type DropPlayers = { [index: number]: Player | null };

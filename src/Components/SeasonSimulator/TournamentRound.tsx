@@ -1,7 +1,4 @@
-// components/TournamentRound.tsx
-import React from "react";
-// import Tooltip from "@mui/material/Tooltip";
-import { MyPlayer } from "../../types/Player";
+import { MyPlayer } from "../../types/player";
 
 interface MatchDto {
   id: number;

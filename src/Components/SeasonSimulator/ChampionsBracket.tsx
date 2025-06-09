@@ -1,8 +1,8 @@
-import axios from "axios";
-import { MyPlayer } from "../../types/Player";
 import { useEffect, useState } from "react";
-import TournamentRound from "./TournamentRound";
+import TournamentRound from "../seasonSimulator/TournamentRound";
 import "../../style/bracket.css";
+import axiosInstance from "../../axiosInstance";
+import { MyPlayer } from "../../types/player";
 
 interface MatchDto {
   id: number;
@@ -12,6 +12,29 @@ interface MatchDto {
   winnerName: string;
   myPlayerList1: MyPlayer[];
   myPlayerList2: MyPlayer[];
+}
+
+interface Game {
+  id: string;
+  round: number;
+  name: string;
+  scheduled: number;
+  sides: {
+    home: Side;
+    visitor: Side;
+  };
+}
+
+interface Side {
+  team: { id: string; name: string };
+  score: { score: number };
+  seed: {
+    displayName: string;
+    rank: number;
+    sourceGame: Game | null;
+    sourcePool: object;
+  };
+  myPlayerList: MyPlayer[];
 }
 
 interface MatchListProps {
@@ -25,7 +48,7 @@ export default function ChampionsBracket({
   onMatchClick,
   setIsMatchClicked,
 }: MatchListProps) {
-  const [finalGame, setFinalGame] = useState<any | null>(null);
+  const [finalGame, setFinalGame] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -36,101 +59,96 @@ export default function ChampionsBracket({
 
     const fetchMatches = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8080/season/${seasonId}/matches`
-        );
+        const res = await axiosInstance.get(`/season/${seasonId}/matches`);
+        const matches: MatchDto[] = res.data;
 
-        const data: MatchDto[] = res.data;
-        if (!Array.isArray(data) || data.length === 0) {
+        if (!Array.isArray(matches) || matches.length === 0) {
           console.warn("No match data available");
           return;
         }
 
-        const gamesList: any[] = [];
-        data.forEach((match) => {
-          console.log("my player list 1 ", match.myPlayerList1);
-          console.log("my player list 2 ", match.myPlayerList2);
-
-          const game = {
-            id: String(match.id),
-            name: `Round ${match.round}`,
-            scheduled: Date.now(),
-            sides: {
-              home: {
-                team: { id: `${match.id}-1`, name: match.player1Name },
-                score: {
-                  score: match.winnerName === match.player1Name ? 1 : 0,
-                },
-                seed: {
-                  displayName: "A1",
-                  rank: 1,
-                  sourceGame: null,
-                  sourcePool: {},
-                },
-                myPlayerList: match.myPlayerList1, // ✅ 추가
+        const games: Game[] = matches.map((match) => ({
+          id: String(match.id),
+          round: match.round,
+          name: `Round ${match.round}`,
+          scheduled: Date.now(),
+          sides: {
+            home: {
+              team: { id: `${match.id}-1`, name: match.player1Name },
+              score: {
+                score: match.winnerName === match.player1Name ? 1 : 0,
               },
-              visitor: {
-                team: { id: `${match.id}-2`, name: match.player2Name },
-                score: {
-                  score: match.winnerName === match.player2Name ? 1 : 0,
-                },
-                seed: {
-                  displayName: "A2",
-                  rank: 1,
-                  sourceGame: null,
-                  sourcePool: {},
-                },
-                myPlayerList: match.myPlayerList2, // ✅ 추가
+              seed: {
+                displayName: "A1",
+                rank: 1,
+                sourceGame: null,
+                sourcePool: {},
               },
+              myPlayerList: match.myPlayerList1,
             },
-            round: match.round,
-          };
-          gamesList.push(game);
-        });
+            visitor: {
+              team: { id: `${match.id}-2`, name: match.player2Name },
+              score: {
+                score: match.winnerName === match.player2Name ? 1 : 0,
+              },
+              seed: {
+                displayName: "A2",
+                rank: 1,
+                sourceGame: null,
+                sourcePool: {},
+              },
+              myPlayerList: match.myPlayerList2,
+            },
+          },
+        }));
 
-        for (const game of gamesList) {
+        games.forEach((game) => {
           const { round, sides } = game;
           const homeName = sides.home.team.name;
           const visitorName = sides.visitor.team.name;
 
-          const sourceHome = gamesList.find(
+          const sourceHome = games.find(
             (g) =>
               g.round === round - 1 &&
               (g.sides.home.team.name === homeName ||
                 g.sides.visitor.team.name === homeName)
           );
-          const sourceVisitor = gamesList.find(
+
+          const sourceVisitor = games.find(
             (g) =>
               g.round === round - 1 &&
               (g.sides.home.team.name === visitorName ||
                 g.sides.visitor.team.name === visitorName)
           );
 
-          if (sourceHome) game.sides.home.seed.sourceGame = sourceHome;
-          if (sourceVisitor) game.sides.visitor.seed.sourceGame = sourceVisitor;
-        }
+          sides.home.seed.sourceGame = sourceHome ?? null;
+          sides.visitor.seed.sourceGame = sourceVisitor ?? null;
+        });
 
-        const final = gamesList.reduce((prev, curr) =>
+        const final = games.reduce((prev, curr) =>
           curr.round > prev.round ? curr : prev
         );
+
         setFinalGame(final);
-        setIsLoading(false);
       } catch (error) {
         console.error("❌ Failed to load matches:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchMatches();
   }, [seasonId]);
 
-  if (isLoading) return <div>⏳ Loading...</div>;
-  if (!finalGame) return <div>📭 No match data available.</div>;
-
   const roundMap = new Map<number, MatchDto[]>();
+  const visited = new Set<string>();
 
-  function extractRounds(game: any) {
+  const extractRounds = (game: Game) => {
+    if (visited.has(game.id)) return;
+    visited.add(game.id);
+
     const match: MatchDto = {
-      id: parseInt(game.id),
+      id: +game.id,
       round: game.round,
       player1Name: game.sides.home.team.name,
       player2Name: game.sides.visitor.team.name,
@@ -138,23 +156,27 @@ export default function ChampionsBracket({
         game.sides.home.score.score > game.sides.visitor.score.score
           ? game.sides.home.team.name
           : game.sides.visitor.team.name,
-      myPlayerList1: game.sides.home.myPlayerList || [],
-      myPlayerList2: game.sides.visitor.myPlayerList || [],
+      myPlayerList1: game.sides.home.myPlayerList,
+      myPlayerList2: game.sides.visitor.myPlayerList,
     };
+
     if (!roundMap.has(game.round)) roundMap.set(game.round, []);
     roundMap.get(game.round)!.push(match);
+
     if (game.sides.home.seed.sourceGame)
       extractRounds(game.sides.home.seed.sourceGame);
     if (game.sides.visitor.seed.sourceGame)
       extractRounds(game.sides.visitor.seed.sourceGame);
-  }
+  };
 
-  extractRounds(finalGame);
+  if (finalGame) extractRounds(finalGame);
   const sortedRounds = Array.from(roundMap.entries()).sort(([a], [b]) => a - b);
+
+  if (isLoading) return <div>⏳ Loading...</div>;
+  if (!finalGame) return <div>📫 No match data available.</div>;
 
   return (
     <div className="bracket-container">
-      {/* <h1>Tournament Bracket</h1> */}
       <div className="tournament-bracket tournament-bracket--rounded">
         {sortedRounds.map(([round, matches]) => (
           <TournamentRound

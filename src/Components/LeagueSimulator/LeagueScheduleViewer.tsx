@@ -1,5 +1,5 @@
 import { useSquadStore } from "../../store/useSquadStore";
-import { Match } from "../../types/Match";
+import { Match } from "../../types/match";
 import { shallow } from "zustand/shallow";
 
 interface LeagueScheduleViewerProps {

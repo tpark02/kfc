@@ -1,28 +1,15 @@
 import React from "react";
 
-import { Player } from "../../types/Player";
-import { getImgByCountryName } from "../../data/countryData";
+import { Player } from "../../types/player";
 import { useSquadStore } from "../../store/useSquadStore";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import SquadRadarChart from "./SquadRadarChart";
+import SquadRadarChart from "./squadRadarChart";
 
 import { shallow } from "zustand/shallow";
 
 import "../../style/Squad.css";
-
-const getNationalitySpread = (players: Record<number, Player | null>) => {
-  const nations = new Set(Object.values(players).map((p) => p?.nation));
-
-  return nations;
-};
-
-const getLeagueSpread = (players: Record<number, Player | null>) => {
-  const leagues = new Set(Object.values(players).map((p) => p?.league));
-  return leagues;
-};
 
 const SquadMetrics: React.FC = () => {
   // const metricsData = metrics(players);

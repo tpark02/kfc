@@ -1,13 +1,12 @@
+import axiosInstance from "../../axiosInstance"; // 👈 custom axios with interceptor
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { SeasonResponse } from "../../types/Response";
-import { devMatchTimer } from "../../util/Util";
+import { SeasonResponse } from "../../types/response";
+import { devMatchTimer } from "../../util/util";
 import { Snackbar } from "@mui/material";
 
-import axios from "axios";
 import CreateSeasonForm from "./CreateSeasonForm";
 import SeasonTimerLobby from "./SeasonTimerLobby"; // ✅ 실시간 타이머 컴포넌트 추가
-import { Player, myPlayerToPlayer } from "../../types/Player";
 import { shallow } from "zustand/shallow";
 import {
   Box,
@@ -21,7 +20,7 @@ import {
 } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 // import MyClubSelect from "./MyClubSelect";
-import { fetchMyClubs } from "../../util/MyClubUtil";
+import { fetchMyClubs } from "../../util/myClubUtil";
 
 interface Season {
   id: number;
@@ -81,7 +80,7 @@ export default function SeasonLobby() {
   );
 
   const fetchSeasons = async () => {
-    const res = await axios.get("http://localhost:8080/season/all");
+    const res = await axiosInstance.get("/season/all");
     const data: Season[] = res.data;
     setSeasons(data);
   };
@@ -100,8 +99,8 @@ export default function SeasonLobby() {
 
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get<SeasonResponse>(
-          `http://localhost:8080/season/getSeason/${joinedSeasonId}`
+        const res = await axiosInstance.get<SeasonResponse>(
+          `/season/getSeason/${joinedSeasonId}`
         );
 
         if (res.data.finishedAt) {

@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { isLoggedIn } from "../types/Auth"
+import { isLoggedIn } from "../types/auth"
 
 interface PrivateRouteProps {
   children: JSX.Element;

@@ -1,5 +1,5 @@
 import React from "react";
-import { getOvrColor } from "../util/Util";
+import { getOvrColor } from "../util/util";
 
 export const getStatDisplay = (label: string, value: number) => {
   return (

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import LeagueScheduleViewer from "./LeagueScheduleViewer";
+import LeagueScheduleViewer from "./LeagueScheduleViewer"
 import LeagueMyTeam from "./LeagueMyTeam";
 import LeagueOpponentTeam from "./LeagueOpponentTeam";
 import { Button } from "@mui/material";
-import { fetchSchedule } from "../../util/LeagueUtil";
+import { fetchSchedule } from "../../util/leagueUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { Snackbar } from "@mui/material";

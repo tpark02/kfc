@@ -1,7 +1,7 @@
-import React, { forwardRef, MouseEventHandler } from "react";
+import React, { forwardRef, MouseEventHandler, useEffect, Ref, MutableRefObject } from "react";
 import { useDrop } from "react-dnd";
+import { Player } from "../../types/player";
 import CroppedAvatar from "./CroppedAvatar";
-import { Player } from "../../types/Player";
 import "../DropZone.css";
 
 interface DropZoneProp {
@@ -29,16 +29,20 @@ const DropZone = forwardRef<HTMLDivElement, DropZoneProp>(
     // 내부 div에 두 개의 ref 연결: dropRef + 외부에서 받은 ref
     const divRef = React.useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
+    function setRef<T>(ref: Ref<T> | undefined, value: T) {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref && "current" in ref) {
+        // 타입 단언 대신 타입 가드
+        (ref as MutableRefObject<T>).current = value;
+      }
+    }
+
+    // 내부에서 사용
+    useEffect(() => {
       if (divRef.current) {
         dropRef(divRef);
-        if (ref) {
-          if (typeof ref === "function") {
-            ref(divRef.current);
-          } else {
-            (ref as React.RefObject<HTMLDivElement>).current = divRef.current;
-          }
-        }
+        setRef(ref, divRef.current);
       }
     }, [ref]);
 

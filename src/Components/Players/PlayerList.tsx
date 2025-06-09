@@ -1,9 +1,9 @@
 // src/components/PlayerList.tsx
 import { useNavigate } from "react-router-dom";
-import { Player } from "../../types/Player";
-import { getStatDisplay } from "../../style/PlayerStyle";
+import { Player } from "../../types/player";
+import { getStatDisplay } from "../../style/playerStyle";
 import { Button } from "@mui/material";
-import { buyPlayer } from "../../util/MyStoreUtil";
+import { buyPlayer } from "../../util/myStoreUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import CroppedAvatar from "../teambuilder/CroppedAvatar";

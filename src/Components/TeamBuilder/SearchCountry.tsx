@@ -7,7 +7,7 @@ import {
   Card,
 } from "@mui/material";
 import { countryData } from "../../data/countryData";
-import { Country } from "../../types/Country";
+import { Country } from "../../types/country";
 import Popper from "@mui/material/Popper";
 
 interface FilterCountryProp {

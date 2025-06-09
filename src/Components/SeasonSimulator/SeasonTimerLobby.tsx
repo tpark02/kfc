@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { devMatchTimer } from "../../util/Util";
+import { devMatchTimer } from "../../util/util";
 
 interface Props {
   createdAt: string;

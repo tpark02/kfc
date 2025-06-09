@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axiosInstance from "../../axiosInstance";
 
 interface Participant {
   id: number;
@@ -21,16 +21,16 @@ export default function SeasonParticipantsList({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/season/${seasonId}/participants`)
-      .then((res) => {
+      axiosInstance
+      .get<Participant[]>(`/season/${seasonId}/participants`)
+      .then((res: { data: Participant[] }) => {
         console.log("participants list:", res.data);
         setParticipants(res.data);
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error("❌ Failed to load participants:", err);
       })
-      .finally(() => {
+      .finally((): void => {
         setLoading(false);
       });
   }, [seasonId, refreshKey]); // ✅ Reloads when refreshKey changes

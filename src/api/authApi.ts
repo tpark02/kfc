@@ -1,0 +1,15 @@
+// api/authApi.ts
+import axiosInstance from "../axiosInstance"
+import { AuthRequest, AuthResponse } from "../types/auth";
+
+export const login = async (form: AuthRequest): Promise<AuthResponse> => {
+  const response = await axiosInstance.post<AuthResponse>("/api/login", form, {
+    headers: { "Content-Type": "application/json" }, // 필요 시
+  });
+  return response.data;
+};
+
+export const getProtectedData = async (): Promise<any> => {
+  const response = await axiosInstance.get("/api/protected");
+  return response.data;
+};

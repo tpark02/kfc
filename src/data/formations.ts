@@ -1,4 +1,4 @@
-import { totalNumberOfPlayers } from "../types/Team";
+import { totalNumberOfPlayers } from "../types/team";
 
 export const baseFormations = {
   "442": [

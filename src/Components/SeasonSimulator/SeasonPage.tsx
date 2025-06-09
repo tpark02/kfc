@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../../axiosInstance"
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -14,12 +14,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { devMatchTimer } from "../../util/Util";
+import { devMatchTimer } from "../../util/util";
 import ChampionsBracket from "./ChampionsBracket";
 // import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
-import { SeasonResponse } from "../../types/Response";
+import { SeasonResponse } from "../../types/response";
 // import MyClubSelect from "./MyClubSelect";
 import { Snackbar } from "@mui/material";
 // import { Player, myPlayerToPlayer } from "../../types/Player";
@@ -30,9 +30,9 @@ import {
   fetchSeasonInfo,
   fetchUserInfo,
   adjustTeamOvr,
-} from "../../util/MyClubUtil";
+} from "../../util/myClubUtil";
 // import { totalNumberOfPlayers } from "../../types/Team";
-import { MatchDto } from "../../types/MatchDto";
+import { MatchDto } from "../../types/matchDto";
 import { shallow } from "zustand/shallow";
 import "../../style/SeasonPage.css";
 
@@ -130,8 +130,8 @@ export default function SeasonPage() {
 
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get<SeasonResponse>(
-          `http://localhost:8080/season/getSeason/${joinedSeasonId}`
+        const res = await axiosInstance.get<SeasonResponse>(
+          `/season/getSeason/${joinedSeasonId}`
         );
         setSeason(res.data);
 
@@ -156,19 +156,15 @@ export default function SeasonPage() {
     setProcessing(true);
     try {
       if (joinedSeasonId !== -1) {
-        await axios.put(
-          `http://localhost:8080/season/${seasonId}/leave`,
-          null,
-          { params: { userId } }
-        );
+        await axiosInstance.put(`/season/${seasonId}/leave`, null, {
+          params: { userId },
+        });
         setJoinedSeasonId(-1);
         console.log("🚪 Successfully left");
       } else {
-        const res = await axios.post(
-          `http://localhost:8080/season/${seasonId}/join`,
-          null,
-          { params: { userId, mySelectedClubId } }
-        );
+        const res = await axiosInstance.post(`/season/${seasonId}/join`, null, {
+          params: { userId, mySelectedClubId },
+        });
         setJoinedSeasonId(res.data.seasonId);
         console.log(`✅ ${res.data.message} (Season ID: ${res.data.seasonId})`);
       }

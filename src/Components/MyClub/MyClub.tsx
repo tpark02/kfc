@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { fetchMyClubs, updateMyClub, deleteMyClub } from "../../util/MyClubUtil";
-import { MyClubData } from "../../types/Club";
+import { fetchMyClubs, updateMyClub, deleteMyClub } from "../../util/myClubUtil";
+import { MyClubData } from "../../types/club";
 import { Button, Typography, Divider } from "@mui/material";
 import ConfirmDialog from "../ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Snackbar } from "@mui/material";
-import { MyPlayer, Player, myPlayerToPlayer } from "../../types/Player";
-import { totalNumberOfPlayers } from "../../types/Team";
+import { MyPlayer } from "../../types/player";
+import { totalNumberOfPlayers } from "../../types/team";
 import { shallow } from "zustand/shallow";
 
 interface MyClubProp {

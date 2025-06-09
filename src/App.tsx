@@ -4,14 +4,13 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { Players } from "./components/players/Players";
 import PlayerSpec from "./components/players/PlayerSpec";
-import Squad from "./components/teambuilder/Squad";
-import Season from "./components/seasonsimulator/Season";
-import SeasonPage from "./components/seasonsimulator/SeasonPage";
+import Season from "./components/seasonSimulator/Season";
+import SeasonPage from "./components/seasonSimulator/SeasonPage";
 import LeagueSimulator from "./components/leagueSimulator/LeagueSimulator";
-import LoginForm from "./components/Login/LoginForm";
+import LoginForm from "./components/login/LoginForm";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoutes"; // ✅ 추가
-
+import Squad from "./components/teambuilder/Squad"
 import "./App.css";
 import "./style/Player.css";
 

@@ -3,17 +3,16 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // ✅ External Libraries
-import axios from "axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // ✅ Types
-import { Team } from "../../types/Team";
-import { TeamPage } from "../../types/TeamPage";
-import { Player } from "../../types/Player";
+import { Team } from "../../types/team";
+import { TeamPage } from "../../types/teamPage";
+import { Player } from "../../types/player";
 
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
-import { getOvrColor } from "../../util/Util";
+import { getOvrColor } from "../../util/util";
 import CroppedAvatar from "../teambuilder/CroppedAvatar";
 
 // ✅ Data
@@ -21,6 +20,7 @@ import { countryData } from "../../data/countryData";
 
 // ✅ Styles
 import "../../style/PlayerSpec.css";
+import axiosInstance from "../../axiosInstance";
 
 const PlayerSpec: React.FC = () => {
   const location = useLocation();
@@ -35,8 +35,8 @@ const PlayerSpec: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
 
   useEffect(() => {
-    axios
-      .get<TeamPage>("http://localhost:8080/teams", {})
+    axiosInstance
+      .get<TeamPage>("/teams") // 👈 baseURL 생략 가능
       .then((response) => {
         console.log(response.data.content);
         setTeams(response.data.content);
@@ -115,14 +115,14 @@ const PlayerSpec: React.FC = () => {
             />
             <div className="player-name-row">{player.name}</div>
           </div>
-            <RadarStatChart
-              pac={player.pac}
-              sho={player.sho}
-              pas={player.pas}
-              dri={player.dri}
-              def={player.def}
-              phy={player.phy}
-            />
+          <RadarStatChart
+            pac={player.pac}
+            sho={player.sho}
+            pas={player.pas}
+            dri={player.dri}
+            def={player.def}
+            phy={player.phy}
+          />
           <div className="player-info">
             {/* ✅ 국가 코드에 해당하는 flag 이미지 추가 */}
             <div className="player-info-cell-group">

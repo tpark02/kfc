@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback, forwardRef } from "react";
-import { TextField, InputAdornment, Button, Divider } from "@mui/material";
+import { TextField, InputAdornment, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 import _ from "lodash";
-import { Player } from "../../types/Player";
-import { ResponseSearch } from "../../types/Response";
+import { Player } from "../../types/player";
+import { ResponseSearch } from "../../types/response";
 import { getImgByCountryName } from "../../data/countryData";
-import { getOvrColor, getPosColor } from "../../util/Util";
-import { useSquadStore } from "../../store/useSquadStore";
-import { shallow } from "zustand/shallow";
+import { getOvrColor, getPosColor } from "../../util/util";
 import RadarStatChart from "../players/RadarStatsChart";
 import "../../style/SearchPlayer.css";
 
@@ -37,21 +35,11 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
       club,
       pos,
       listRef,
-      // dropPlayers,
       selectedDropZone,
-      // setDropPlayers,
-      setSnackbarMessage,
-      setSnackbarOpen,
     },
     ref
   ) => {
-    // const { dropPlayers, updateDropPlayer } = useSquadStore(
-    //   (s) => ({
-    //     dropPlayers: s.dropPlayers,
-    //     updateDropPlayer: s.updateDropPlayer,
-    //   }),
-    //   shallow
-    // );
+
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<Player[]>([]);
     const [, setPage] = useState(0);
@@ -62,15 +50,11 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const fetchPlayers = useCallback(
       async (q: string, pageNumber: number) => {
         console.log("🔥 fetchPlayers called with query:", q);
-        // let localPos = "";
-        // if (q.trim().length < 2) {
-        //   /localPos = pos;
-        // }
 
         try {
           setLoading(true);
-          const response = await axios.post<ResponseSearch>(
-            "http://localhost:8080/squadsearch",
+          const response = await axiosInstance.post<ResponseSearch>(
+            "/squadsearch",
             {
               page: pageNumber,
               name: q.trim().length >= 2 ? q : "",

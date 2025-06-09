@@ -2,16 +2,16 @@
 import React, { useEffect, useState } from "react";
 
 // 🗂️ 타입 정의
-import { PlayerPos } from "../types/PlayerPosition";
-import { League } from "../types/League";
-import { Team } from "../types/Team";
-import { Country } from "../types/Country";
+import { PlayerPos } from "../types/playerPosition";
+import { League } from "../types/league";
+import { Team } from "../types/team";
+import { Country } from "../types/country";
 
 // 🧩 내부 컴포넌트
-import PlayerPosModal from "./PlayerPosModal";
-import LeagueModal from "./LeagueModal";
-import TeamModal from "./TeamModal";
-import NationModal from "./NationModal";
+import PlayerPosModal from "./playerPosModal";
+import LeagueModal from "./leagueModal";
+import TeamModal from "./teamModal";
+import NationModal from "./nationModal";
 
 // 🎨 MUI 아이콘 & 컴포넌트
 import CloseIcon from "@mui/icons-material/Close";

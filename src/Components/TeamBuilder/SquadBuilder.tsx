@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { formations } from "../../data/formations";
 import { Button } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
-import { DropZone } from "../../types/DropZone";
-import { getTeamAvr } from "../teambuilder/SquadBuilderUtil";
-import { MyPlayer, Player } from "../../types/Player";
+import { DropZone } from "../../types/dropZone";
+import { MyPlayer } from "../../types/player";
 import { shallow } from "zustand/shallow";
 
 // import Snackbar from "@mui/material/Snackbar";
-import CroppedAvatar from "../teambuilder/CroppedAvatar";
+import CroppedAvatar from "./CroppedAvatar";
 // import axios from "axios";
 import "../../style/SquadBuilder.css";
 import "../../DropZone.css";
@@ -32,26 +31,15 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
 }) => {
   const {
     mySelectedPlayers,
-    dropZoneList,
-    // dropPlayers,
-    setDropZoneList,
-    // setDropPlayers,
-    setMyTeamOvr,
-    setMyTeamSquadValue,
-    setMyTeamPace,
-    setMyTeamDefense,
-    setMyTeamAttack,
-    setMyTeamClubCohesion,
-    setMyTeamStamina,
+    dropZoneList,    
+    setDropZoneList,    
     setMySelectedPlayers,
     resetDropZoneList,
   } = useSquadStore(
     (s) => ({
       mySelectedPlayers: s.mySelectedPlayers,
       dropZoneList: s.dropZoneList,
-      // dropPlayers: s.dropPlayers,
       setDropZoneList: s.setDropZoneList,
-      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamPace: s.setMyTeamPace,

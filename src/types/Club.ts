@@ -1,4 +1,4 @@
-import { MyPlayer } from './Player';
+import { MyPlayer } from './player';
 
 export type MyClubData = {
   clubId?: number;

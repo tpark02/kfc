@@ -1,9 +1,9 @@
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 import { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
 import { Snackbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { shallow } from 'zustand/shallow';
+import { shallow } from "zustand/shallow";
 
 export default function CreateSeasonForm({
   onCreated,
@@ -30,7 +30,7 @@ export default function CreateSeasonForm({
   const handleCreate = async () => {
     if (!name) return;
     try {
-      const response = await axios.post("http://localhost:8080/season/create", {
+      const response = await axiosInstance.post("/season/create", {
         name,
         userId: myUserId,
         clubId: mySelectedClubId,
@@ -49,10 +49,15 @@ export default function CreateSeasonForm({
         setSnackbarMessage(response.data.error);
         setSnackbarOpen(true);
       }
-    } catch (error: any) {
-      setSnackbarMessage("요청 실패: " + error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setSnackbarMessage("요청 실패: " + error.message);
+      } else {
+        setSnackbarMessage("알 수 없는 오류가 발생했습니다.");
+      }
       setSnackbarOpen(true);
     }
+
     setName("");
   };
 

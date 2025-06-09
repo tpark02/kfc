@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 
-import { Player } from "../../types/Player";
-import { Team } from "../../types/Team";
-import { PlayerPos } from "../../types/PlayerPosition";
-import { Country } from "../../types/Country";
-import { ResponsePlayerPage } from "../../types/Response";
-import { League } from "../../types/League";
+import { Player } from "../../types/player";
+import { Team } from "../../types/team";
+import { PlayerPos } from "../../types/playerPosition";
+import { Country } from "../../types/country";
+import { ResponsePlayerPage } from "../../types/response";
+import { League } from "../../types/league";
 import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
 
 import PlayerList from "./PlayerList";
 import Filters from "./Filter";
-import FilterModal from "../../modal/FilterModal";
+import FilterModal from "../../modal/filterModal";
+import { fetchPlayers } from "../../api/playerApi"; // 👈 새 유틸 추가
 
 export const Players: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -63,27 +63,28 @@ export const Players: React.FC = () => {
     selectedLeagues: League[] = [],
     selectedPosition: PlayerPos[] = []
   ) => {
-    axios
-      .post<ResponsePlayerPage>("http://localhost:8080/players", {
-        page,
-        size: pageInfo.size || 10,
-        search: searchTerm,
-        sortType: sortType,
-        countryFilter: selectedCountries,
-        teamFilter: selectedTeams,
-        leagueFilter: selectedLeagues,
-        playerPositionFilter: selectedPosition,
-      })
-      .then((response) => {
-        setPlayers(response.data.content);
+    fetchPlayers({
+      page,
+      size: pageInfo.size || 10,
+      search: searchTerm,
+      sortType,
+      countryFilter: selectedCountries,
+      teamFilter: selectedTeams,
+      leagueFilter: selectedLeagues,
+      playerPositionFilter: selectedPosition,
+    })
+      .then((data) => {
+        setPlayers(data.content);
         setPageInfo({
-          totalPages: response.data.totalPages,
-          totalElements: response.data.totalElements,
-          number: response.data.number,
-          size: response.data.size,
+          totalPages: data.totalPages,
+          totalElements: data.totalElements,
+          number: data.number,
+          size: data.size,
         });
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error("❌ 플레이어 불러오기 실패:", err);
+      });
   };
 
   const handleSearch = () => {

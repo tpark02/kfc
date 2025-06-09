@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Team } from "../../types/Team";
-import { TeamPage } from "../../types/TeamPage";
+import axiosInstance from "../../axiosInstance";
+import { Team } from "../../types/team";
+import { TeamPage } from "../../types/teamPage";
 import {
   Autocomplete,
   TextField,
@@ -49,13 +49,13 @@ const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
   useEffect(() => {
     if (open && teams.length === 0) {
       setLoading(true);
-      axios
-        .get<TeamPage>("http://localhost:8080/teams")
-        .then((response) => {
+      axiosInstance
+        .get<TeamPage>("/teams")
+        .then((response: { data: TeamPage }) => {
           setTeams(response.data.content);
         })
-        .catch((err) => console.error(err))
-        .finally(() => setLoading(false));
+        .catch((err: unknown) => console.error(err))
+        .finally((): void => setLoading(false));
     }
   }, [open]);
 
@@ -86,12 +86,9 @@ const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         renderOption={(props, option) => {
-          const { key, ...rest } = props;
-
           return (
             <li
-              key={option.id} // 🔥 key를 명시적으로 전달
-              {...rest}
+              {...props}
               style={{
                 backgroundColor: "#242424",
                 color: "white",

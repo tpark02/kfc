@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 import {
   Autocomplete,
   TextField,
@@ -7,8 +7,8 @@ import {
   InputAdornment,
   Card,
 } from "@mui/material";
-import { League } from "../../types/League";
-import { LeaguePage } from "../../types/LeaguePage"; // 필요하면 타입 만들어
+import { League } from "../../types/league";
+import { LeaguePage } from "../../types/leaguePage"; // 필요하면 타입 만들어
 import Popper from "@mui/material/Popper";
 import "../../style/Squad.css";
 
@@ -51,12 +51,12 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
   useEffect(() => {
     if (open && leagues.length === 0) {
       setLoading(true);
-      axios
-        .get<LeaguePage>("http://localhost:8080/leagues")
-        .then((response) => {
+      axiosInstance
+        .get<LeaguePage>("/leagues")
+        .then((response: { data: LeaguePage }) => {
           setLeagues(response.data.content);
         })
-        .catch((err) => console.error(err))
+        .catch((err: unknown) => console.error(err))
         .finally(() => setLoading(false));
     }
   }, [open]);
