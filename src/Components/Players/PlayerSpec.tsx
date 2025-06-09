@@ -110,8 +110,9 @@ const PlayerSpec: React.FC = () => {
               src={player.img}
               width={200}
               height={200}
-              offsetX={70}
-              offsetY={5}
+              offsetX={20}
+              offsetY={10}
+              scale={1.2}
             />
             <div className="player-name-row">{player.name}</div>
           </div>

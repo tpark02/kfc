@@ -9,6 +9,7 @@ interface CroppedAvatarProps {
   offsetY?: number;
   borderRadius?: string;
   selected?: boolean;
+  scale?: number; // 추가: 이미지 크기 조정 비율
 }
 
 const fallbackSrc = "/img/avatar.jpg";
@@ -17,10 +18,11 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   src,
   width = 80,
   height = 80,
-  offsetX = 30,
+  offsetX = 4,
   offsetY = 0,
   borderRadius = "8px",
   selected = false,
+  scale = 1.1, // default scaling
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [finalSrc, setFinalSrc] = useState<string>("");
@@ -76,8 +78,8 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
             position: "absolute",
             top: `-${offsetY}px`,
             left: `-${offsetX}px`,
-            width: width * 1.5,
-            height: height * 1.5,
+            width: width * scale,
+            height: height * scale,
             objectFit: "cover",
           }}
         />
