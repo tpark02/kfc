@@ -106,14 +106,14 @@ const PlayerSpec: React.FC = () => {
               src={player.img}
               alt={player.name}
             /> */}
-            <CroppedAvatar
+            {/* <CroppedAvatar
               src={player.img}
               width={200}
               height={200}
               offsetX={20}
               offsetY={10}
               scale={1.2}
-            />
+            /> */}
             <div className="player-name-row">{player.name}</div>
           </div>
           <RadarStatChart
@@ -159,11 +159,11 @@ const PlayerSpec: React.FC = () => {
                 </div>
               </div>
             </div>
-            {getValue("league", "League", false)}
+            {/* {getValue("league", "League", false)} */}
             {getValue("rank", "Rank", false)}
             {getValue("ovr", "OVR", false)}
             {/* {getValue("team", "Club", false)} */}
-            {
+            {/* {
               <div className="player-info-cell-group">
                 <div className="player-info-cell-label">Club</div>
                 <div
@@ -200,7 +200,7 @@ const PlayerSpec: React.FC = () => {
                   </div>
                 </div>
               </div>
-            }
+            } */}
             {getValue("pos", "Position", false)}
             {getValue("age", "Age", false)}
             {getValue("height", "Height", false)}

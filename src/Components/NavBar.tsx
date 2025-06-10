@@ -35,7 +35,7 @@ const NavBar: React.FC = () => {
         display: "flex",
         alignItems: "center",
         padding: "10px",
-        backgroundColor: "var(--background-color)",
+        backgroundColor: "var(--navbar-color)",
       }}
     >
       <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/"); }}>
@@ -50,7 +50,9 @@ const NavBar: React.FC = () => {
       <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/tournament"); }}>
         Tournament
       </Button>
-
+      <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/register"); }}>
+        Register
+      </Button>
       {/* 오른쪽 끝에 로그인/로그아웃 버튼 */}
       <div style={{ marginLeft: "auto" }}>
         {token ? (

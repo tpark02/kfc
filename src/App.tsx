@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -9,12 +15,14 @@ import SeasonPage from "./components/seasonSimulator/SeasonPage";
 import LeagueSimulator from "./components/leagueSimulator/LeagueSimulator";
 import LoginForm from "./components/login/LoginForm";
 import NavBar from "./components/NavBar";
-import PrivateRoute from "./components/PrivateRoutes"; // ✅ 추가
-import Squad from "./components/teambuilder/Squad"
+import PrivateRoute from "./components/PrivateRoutes";
+import Squad from "./components/teambuilder/Squad";
+import Register from "./components/register/Register";
 import "./App.css";
 import "./style/Player.css";
 
 function App() {
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Router>
@@ -72,7 +80,14 @@ function App() {
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="/register"
+            element={
+              <PrivateRoute>
+                <Register />
+              </PrivateRoute>
+            }
+          />
           {/* ✅ 그 외는 로그인 페이지로 리디렉션 */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

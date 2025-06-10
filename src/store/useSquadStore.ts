@@ -1,5 +1,4 @@
 // src/store/useSquadStore.ts
-import { create } from "zustand";
 import { MyPlayer, Player } from "../types/player";
 import { Match } from "../types/match";
 // import { TOTAL_DROP_ZONES } from "../data/formations";
@@ -97,7 +96,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   myTeamClubCohesion: 0,
   myTeamStamina: 0,
   myTeamOvr: 0,
-  myClubs: Array(3).fill(null),
+  myClubs: [],
   mySelectedPlayers: [],
   HasRedCard: false,
   setUserEmail: (s: string) => {

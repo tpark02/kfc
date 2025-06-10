@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { fetchMyClubs, updateMyClub, deleteMyClub } from "../../util/myClubUtil";
+import {
+  fetchMyClubs,
+  updateMyClub,
+  deleteMyClub,
+} from "../../util/myClubUtil";
 import { MyClubData } from "../../types/club";
 import { Button, Typography, Divider } from "@mui/material";
 import ConfirmDialog from "../ConfirmDialog";
@@ -102,7 +106,7 @@ const MyClub: React.FC<MyClubProp> = ({
         myUserId,
         clubId,
         newTeamName,
-        myFormation,        
+        myFormation,
         myTeamOvr,
         myTeamSquadValue,
         myTeamAge,
@@ -116,16 +120,16 @@ const MyClub: React.FC<MyClubProp> = ({
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
           fetchMyClubs(myUserId).then((clubs) => {
-            const paddedClubs: (MyClubData | null)[] = Array(3).fill(null);
-            clubs.forEach((club, idx) => {
-              paddedClubs[idx] = club ?? null;
-            });
-            setMyClubs(paddedClubs);
+            // const paddedClubs: (MyClubData | null)[] = Array(3).fill(null);
+            // clubs.forEach((club, idx) => {
+            //   paddedClubs[idx] = club ?? null;
+            // });
+            // setMyClubs(paddedClubs);
 
             // Find the updated club and map its players to Player[]
-            const updatedClub = paddedClubs.find(
-              (c) => c && c.clubId === clubId
-            );
+            // const updatedClub = paddedClubs.find(
+            //   (c) => c && c.clubId === clubId
+            // );
             // const playerList: Player[] =
             //   updatedClub && updatedClub.players
             //     ? updatedClub.players.map(myPlayerToPlayer)
@@ -133,7 +137,8 @@ const MyClub: React.FC<MyClubProp> = ({
 
             // setDropPlayers([...playerList]);
             // console.log("myclub.tsx drop players - ", dropPlayers);
-
+            console.log("my club.tsx updated clubs - ", clubs);
+            const updatedClub = clubs.find((c) => c.clubId === clubId);
             if (updatedClub && updatedClub.players) {
               setMySelectedPlayers(updatedClub.players);
             }
@@ -283,6 +288,8 @@ const MyClub: React.FC<MyClubProp> = ({
                   setLoading(true);
                   fetchMyClubs(myUserId)
                     .then((clubs) => {
+                      console.log("my club.tsx fetched clubs - ", clubs);
+
                       const selectedClub = clubs.find(
                         (c) => c.clubId === club?.clubId
                       );
@@ -399,13 +406,17 @@ const MyClub: React.FC<MyClubProp> = ({
                         setSnackbarMessage(msg);
                         setSnackbarOpen(true);
                         fetchMyClubs(myUserId).then((clubs) => {
-                          const paddedClubs: (MyClubData | null)[] =
-                            Array(3).fill(null);
+                          // const paddedClubs: (MyClubData | null)[] =
+                          //   Array(3).fill(null);
 
-                          clubs.forEach((club, idx) => {
-                            paddedClubs[idx] = club ?? null;
-                          });
-                          setMyClubs(paddedClubs);
+                          // clubs.forEach((club, idx) => {
+                          //   paddedClubs[idx] = club ?? null;
+                          // });
+                          console.log("my club.tsx updated clubs - ", clubs);
+                          const updatedClubs = clubs.filter(
+                            (c) => c.clubId !== club?.clubId
+                          );
+                          setMyClubs(updatedClubs);
                         });
                       })
                       .finally(() => setLoading(false));

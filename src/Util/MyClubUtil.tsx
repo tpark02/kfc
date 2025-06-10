@@ -44,11 +44,18 @@ export const fetchSeasonInfo = async (seasonId: string) => {
   }
 };
 
-// ✅ 내 클럽 목록 불러오기
 export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
   try {
     const res = await axiosInstance.get(`/users/${userId}/myclubs`);
-    return Array.isArray(res.data) ? res.data : [res.data];
+    const data = Array.isArray(res.data) ? res.data : [res.data];
+
+    // ✅ Log nation and teamLogoImg
+    data.forEach((club, index) => {
+      console.log(`Club ${index + 1} - Nation:`, club.nation);
+      console.log(`Club ${index + 1} - Team Logo Img:`, club.teamLogoImg);
+    });
+
+    return data;
   } catch (error) {
     handleApiError(error, "fetchMyClubs");
     return [];

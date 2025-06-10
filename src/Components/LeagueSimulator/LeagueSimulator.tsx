@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import LeagueScheduleViewer from "./LeagueScheduleViewer"
+import LeagueScheduleViewer from "./LeagueScheduleViewer";
 import LeagueMyTeam from "./LeagueMyTeam";
 import LeagueOpponentTeam from "./LeagueOpponentTeam";
 import { Button } from "@mui/material";
@@ -66,43 +66,47 @@ const LeagueSimulator = () => {
   };
 
   return (
-    <div>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          fetchData();
-        }}
-        disabled={HasRedCard}
-        sx={{ margin: "10px" }}
-      >
-        START
-      </Button>
+    <div className="app-container">
       <div
-        style={{
-          backgroundColor: "var(--background-color)",
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignContent: "stretch",
-          width: "100%",
-          height: "auto",
-          outline: "1px solid red",
-          margin: "50px 0 0 0",
-        }}
+        style={{ display: "flex", flexDirection:"column"}}
       >
-        <LeagueMyTeam matches={matches} />
-        <LeagueScheduleViewer matches={matches} />
-        <LeagueOpponentTeam />
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            fetchData();
+          }}
+          disabled={HasRedCard}
+          sx={{ margin: "10px" }}
+        >
+          START
+        </Button>
+        <div
+          style={{
+            backgroundColor: "var(--background-color)",
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            alignContent: "stretch",
+            width: "100%",
+            height: "auto",
+            outline: "1px solid red",
+            margin: "10px 0 0 0",
+          }}
+        >
+          <LeagueMyTeam matches={matches} />
+          <LeagueScheduleViewer matches={matches} />
+          <LeagueOpponentTeam />
+        </div>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          message={snackbarMessage}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        />
       </div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
     </div>
   );
 };

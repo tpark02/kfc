@@ -1,33 +1,36 @@
+
 .player-list {
   width: 100%;
   max-width: 900px;
-  margin: 20px auto;
+  margin: 10px auto;
   box-sizing: border-box;
   /* outline: 1px solid white; */
 }
 
+.player-table {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  outline: 1px solid blue;
+}
+
 .player-row {
   display: flex;
-  align-items: center;
-  /* justify-content: space-evenly; */
+  align-items: center;    
   flex-wrap: wrap;
-  outline: 1px solid white;
+  outline: 1px solid red;
 }
 
 .player-img {
   width: 100px;
-  overflow: "hidden";
-  position: "relative";
+  overflow: hidden;
+  position: relative;
   border-radius: 6px;
 }
 
-.player-name {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  text-align: center;
-  color: #fff;
+.player-name {  
+  width: 230px;      
   outline: 1px solid white;
 }
 
@@ -36,11 +39,6 @@
   color: #fff;
   flex-wrap: wrap;
   outline: 1px solid white;
-}
-
-.player-table {
-  margin-top: 4px;
-  margin-bottom: 12px;
 }
 
 .player-card:hover {
@@ -60,4 +58,73 @@
   width: 100px;
   height: auto;
   object-fit: "cover";
+}
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 12px;
+  outline: 1px solid white;
+}
+
+/* .left-group,
+.right-group {
+  display: flex;
+  align-items: center;  
+  flex-wrap: wrap;
+} */
+
+/* .search-bar .left-group input {
+  width: 200px;
+  flex: none;
+}
+
+.search-bar .left-group button,
+.search-bar .right-group select,
+.search-bar .right-group button {
+  width: 100px;
+  flex: none;
+} */
+
+/* --- Player Spec --- */
+.player-spec {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  color: white;
+}
+
+.player-spec-header {
+  margin-bottom: 16px;
+}
+
+.back-button {
+  padding: 6px 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.filter-box {
+  transition: all 0s;
+}
+
+.filter-box:hover {
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
+}
+
+.filter-button {
+  border-radius: 8px;
+  font-size: 12px !important;
+}
+
+.filter-button:hover {
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.035);
 }

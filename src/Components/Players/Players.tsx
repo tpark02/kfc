@@ -13,6 +13,7 @@ import PlayerList from "./PlayerList";
 import Filters from "./Filter";
 import FilterModal from "../../modal/filterModal";
 import { fetchPlayers } from "../../api/playerApi"; // 👈 새 유틸 추가
+import "../../style/Player.css";
 
 export const Players: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -103,7 +104,7 @@ export const Players: React.FC = () => {
       {/* <div className="card-wrapper"> */}
       <div className="player-list">
         <div className="search-bar">
-          <div className="left-group">
+          {/* <div className="left-group"> */}
             <input
               type="text"
               placeholder="name"
@@ -118,9 +119,9 @@ export const Players: React.FC = () => {
             <button onClick={handleSearch} style={{ padding: "6px 12px" }}>
               Search
             </button>
-          </div>
+          {/* </div> */}
 
-          <div className="right-group">
+          {/* <div className="right-group"> */}
             <select
               id="sortType"
               value={sortType}
@@ -154,7 +155,7 @@ export const Players: React.FC = () => {
             </select>
 
             <button onClick={() => setModalOpen(true)}>Filter</button>
-          </div>
+          {/* </div> */}
         </div>
 
         <FilterModal
@@ -231,7 +232,6 @@ export const Players: React.FC = () => {
           setSelectedLeagues={setSelectedLeagues}
           setSelectedPosition={setSelectedPosition}
         />
-
         {/* 🧾 Player Table */}
         <PlayerList players={players} />
 

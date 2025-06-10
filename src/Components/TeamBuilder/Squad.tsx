@@ -90,9 +90,9 @@ const Squad: React.FC = () => {
 
     fetchMyClubs(myUserId)
       .then((clubs) => {
-        const padded = Array(3).fill(null);
-        clubs.forEach((club, idx) => (padded[idx] = club ?? null));
-        setMyClubs(padded);
+        // const padded = Array(3).fill(null);
+        // clubs.forEach((club, idx) => (padded[idx] = club ?? null));
+        setMyClubs(clubs);
       })
       .catch((err) => console.error("❌ 클럽 설정 실패:", err));
   }, [myUserId]);
@@ -125,7 +125,7 @@ const Squad: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="app-container">
       {loading && <LoadingSpinner />}
       <div className="squad-container">
         <SquadMetrics />
@@ -178,7 +178,7 @@ const Squad: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

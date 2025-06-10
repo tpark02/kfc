@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 :root {
   font-family: system-ui, sans-serif;
-
 
   /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
@@ -10,14 +9,14 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  --background-color: #5A5A5A;
-  --squad-dropdown-text-color: #5A5A5A;
+  --navbar-color: #121212;
+  --background-color: #292828;
+  /* --squad-dropdown-text-color: #292929; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
 a {
@@ -39,7 +38,7 @@ a:hover {
   display: block; 
 } */
 
-body {      
+body {
   justify-content: center;
   min-height: 100vh;
   background-color: #121212;
@@ -119,85 +118,15 @@ td {
   box-shadow: none;
 }
 
-.filter-box {
-  transition: all 0.0s;
-}
-
-.filter-box:hover {
-  outline-offset: 2px;
-  background-color: rgba(255, 255, 255, 0.035);
-}
-
-.filter-button {
-  border-radius: 8px;
-  font-size: 12px !important;
-}
-
-.filter-button:hover {
-  outline-offset: 2px;
-  background-color: rgba(255, 255, 255, 0.035);
-}
-
 .app-container {
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
   margin: 50px 0 0 0;
-  border-radius: 8px;  
-  /* background-color: var(--background-color); */
-  /* outline: 1px solid white; */
-}
-
-.search-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  gap: 12px;
-  /* outline: 1px solid #b31818;      */
-}
-
-.left-group,
-.right-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.search-bar .left-group input {
-  width: 200px;
-  flex: none;
-}
-
-.search-bar .left-group button,
-.search-bar .right-group select,
-.search-bar .right-group button {
-  width: 100px;
-  flex: none;
-}
-
-/* --- Player Spec --- */
-.player-spec {
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  color: white;
-}
-
-.player-spec-header {
-  margin-bottom: 16px;
-}
-
-.back-button {
-  padding: 6px 12px;
-  background-color: #333;
-  color: white;
-  border: none;
   border-radius: 8px;
-  cursor: pointer;
+  background-color: var(--background-color);
+  /* outline: 1px solid white; */
 }
 
 .nav-menu-button {
