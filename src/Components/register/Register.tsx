@@ -76,7 +76,7 @@ const Register: React.FC = () => {
     shallow
   );
   const stepNames = [
-    "Enter your team name",
+    "Enter your club name",
     "Select your nationality",
     "Choose a team logo",
     "Build your squad",
@@ -171,23 +171,33 @@ const Register: React.FC = () => {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "row",
-                width: "100%",
-                maxWidth: 500,
-                mt: 4,
+                justifyContent: "center", // center horizontally
+                alignItems: "center", // center vertically
+                flexDirection: "row", // horizontal layout
               }}
             >
               <Input
-                placeholder="Team Name"
+                placeholder="Club Name"
                 value={teamName}
                 onChange={(e) => {
                   setTeamName(e.target.value);
                   setTeamNameError(""); // 입력 시 에러 초기화
                 }}
-                fullWidth
                 sx={{
-                  color: "#fff",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center", // vertically center Input + Button
+                  gap: 2,
+                  maxWidth: 500,
+                  width: "20%",
+                  color: "#fff", // ✅ input text color
                   borderBottom: "1px solid #888",
+                  "& input": {
+                    color: "#fff", // ✅ actual input field color
+                  },
+                  "&::placeholder": {
+                    color: "#ccc", // optional: placeholder color
+                  },
                 }}
               />
               {teamNameError && (
@@ -195,17 +205,6 @@ const Register: React.FC = () => {
                   {teamNameError}
                 </Typography>
               )}
-              <Button
-                variant="contained"
-                onClick={() => {
-                  if (currentStep === 0 && !validateTeamName()) return;
-                  setCurrentStep((prev) => Math.min(prev + 1, 4));
-                }}
-                sx={{ mt: 0, ml: 2 }} // ✅ add margin-left
-                disabled={currentStep >= 4}
-              >
-                Next
-              </Button>
             </Box>
           </Fade>
         );
@@ -239,22 +238,12 @@ const Register: React.FC = () => {
                   </MenuItem>
                 ))}
               </Select>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setCurrentStep((prev) => Math.min(prev + 1, 4));
-                }}
-                sx={{ mt: 0, ml: 2 }} // ✅ add margin-left
-                disabled={currentStep >= 4}
-              >
-                Next
-              </Button>
             </Box>
           </Fade>
         );
       case 2:
         return (
-          <>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <Box
               display="grid"
               gridTemplateColumns="repeat(5, 1fr)" // 5 columns
@@ -288,7 +277,7 @@ const Register: React.FC = () => {
                 </Box>
               ))}
             </Box>
-          </>
+          </Box>
         );
       case 3:
         return (
@@ -300,11 +289,9 @@ const Register: React.FC = () => {
                   <SquadMetrics />
                 </Grid>
                 {/* Center Panel */}
-                <Grid item xs={12} md={8}>
-                  <SelectFormation />
+                <Grid item xs={12} md={8}>                  
                   {myFormation && (
-                    <Box sx={{ mt: 1 }}>
-                      {" "}
+                    <Box>                    
                       {/* ✅ Adds spacing between components */}
                       <SquadBuilder
                         selectedFormation={
@@ -320,6 +307,7 @@ const Register: React.FC = () => {
                   )}
                 </Grid>
                 {/* Right Panel */}
+                
                 {mySelectedPlayers.length > 0 && (
                   <Grid
                     item
@@ -328,9 +316,11 @@ const Register: React.FC = () => {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      alignItems: "center",
-                    }} // ✅ key line
+                      alignItems: "center",                                                                
+                    }}
                   >
+                    <SelectFormation />
+                    <Box mb={1}></Box>
                     {/* 🟦 Starting XI */}
                     {mySelectedPlayers.slice(0, 11).map((player, index) => {
                       if (!player || player.name === "dummy") return null;
@@ -446,7 +436,7 @@ const Register: React.FC = () => {
                                 lineHeight: 1.2, // consistent vertical spacing
                               }}
                             >
-                              {getStatDisplay("OVR", player.ovr)}                              
+                              {getStatDisplay("OVR", player.ovr)}
                             </Typography>
                           </Box>
                         </CardContent>
@@ -554,6 +544,20 @@ const Register: React.FC = () => {
         </Box>
       </Box>
       {renderStep()}
+      {currentStep !== 3 && (
+        <Box mt={4}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (currentStep === 0 && !validateTeamName()) return;
+              setCurrentStep((prev) => Math.min(prev + 1, 4));
+            }}
+            disabled={currentStep >= 4}
+          >
+            Next
+          </Button>
+        </Box>
+      )}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}
