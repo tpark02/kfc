@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from '@mui/material';
 
 interface CroppedAvatarProps {
   src: string;
@@ -22,7 +23,7 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   offsetY = 0,
   borderRadius = "8px",
   selected = false,
-  scale = 1.1, // default scaling
+  scale = 1.0, // default scaling
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [finalSrc, setFinalSrc] = useState<string>("");
@@ -59,7 +60,7 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "gray",
       }}
     >
       {!isLoaded && (

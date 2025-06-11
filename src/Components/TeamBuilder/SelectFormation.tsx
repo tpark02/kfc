@@ -24,7 +24,7 @@ const SelectFormation: React.FC = () => {
       <Select
         variant="outlined"
         style={{
-          width: "90%",
+          width: "100%",
           borderRadius: "8px",
         }}
         labelId="formation-label"

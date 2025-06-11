@@ -37,7 +37,7 @@ export const countryData = [
   { code: "cw", name: "Curaçao" },
   { code: "cy", name: "Cyprus" },
   { code: "cz", name: "Czech Republic" },
-  { code: "ci", name: "Côte d'Ivoire" },
+  { code: "ci", name: "Cote dIvoire" },
   { code: "dk", name: "Denmark" },
   { code: "do", name: "Dominican Republic" },
   { code: "ec", name: "Ecuador" },
@@ -163,7 +163,6 @@ export const getImgByCountryName = (
 ) => {
   return (
     <img
-      key={name || `nation-${idx}`}
       src={`https://flagcdn.com/w40/${
         name ? getCodeByCountryName(name) : ""
       }.png`}

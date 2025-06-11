@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Button,
   Input,
@@ -6,11 +6,11 @@ import {
   MenuItem,
   Typography,
   Grid,
-  Card,
   CardContent,
   Snackbar,
   Alert,
   Box,
+  Divider,
 } from "@mui/material";
 import { countryData, getImgByCountryName } from "../../data/countryData";
 import axiosInstance from "../../axiosInstance";
@@ -18,11 +18,20 @@ import { fetchRandomSquad } from "../../api/squad";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { getStatDisplay } from "../../style/playerStyle";
+import { Fade } from "@mui/material";
+import SquadMetrics from "../teambuilder/SquadMetrics";
+import SquadBuilder from "../teambuilder/SquadBuilder";
+import { formations } from "../../data/formations";
+import { DropZone } from "../../types/dropZone";
+import { playerCardStyle, playerRowStyle } from "../../style/playerCardStyles";
+import SelectFormation from "../teambuilder/SelectFormation";
 
 const Register: React.FC = () => {
   const {
     myUserId,
-    myselectedPlayers,
+    mySelectedPlayers,
+    myFormation,
+    myLogoId,
     setMySelectedPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -33,10 +42,22 @@ const Register: React.FC = () => {
     setMyTeamClubCohesion,
     setMyTeamStamina,
     setMyUserId,
+    setIsDropZoneSelected,
+    setMyTeamName,
+    setMyNation,
+    setMyLogoId,
+    setMyLogoImgUrl,
+    setMyUniformImgUrl,
   } = useSquadStore(
     (s) => ({
+      myLogoId: s.myLogoId,
       myUserId: s.myUserId,
-      myselectedPlayers: s.mySelectedPlayers,
+      mySelectedPlayers: s.mySelectedPlayers,
+      myFormation: s.myFormation,
+      setMyUniformImgUrl: s.setMyUniformImgUrl,
+      setMyNation: s.setMyNation,
+      setMyTeamName: s.setMyTeamName,
+      setMyFormation: s.setMyFormation,
       setMySelectedPlayers: s.setMySelectedPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
@@ -48,9 +69,19 @@ const Register: React.FC = () => {
       setMyTeamStamina: s.setMyTeamStamina,
       setMyClubs: s.setMyClubs,
       setMyUserId: s.setMyUserId,
+      setIsDropZoneSelected: s.setIsDropZoneSelected,
+      setMyLogoId: s.setMyLogoId,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
     }),
     shallow
   );
+  const stepNames = [
+    "Enter your team name",
+    "Select your nationality",
+    "Choose a team logo",
+    "Build your squad",
+  ];
+
   const [teamName, setTeamName] = useState("");
   const [nationality, setNationality] = useState("");
 
@@ -59,6 +90,15 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedDropZone, setSelectedDropZone] = useState<DropZone>({
+    index: -1,
+    pos: "",
+  });
+  const [selectedPos, setSelectedPosition] = useState("");
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const squadSelectRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchLogos = async () => {
@@ -72,16 +112,17 @@ const Register: React.FC = () => {
     fetchLogos();
   }, []);
 
-  const loadRandomSquad = () => {
+  const loadRandomSquad = React.useCallback(() => {
     setLoading(true);
     fetchRandomSquad({
-      name: "442",
+      name: myFormation,
       countries: [],
       leagues: [],
       clubs: [],
       userId: myUserId,
     })
       .then((data) => {
+        console.log("Random Squad Data:", data.myPlayerList);
         setMySelectedPlayers(data.myPlayerList);
         setMyTeamOvr(data.myTeamOvr);
         setMyTeamSquadValue(data.myTeamSquadValue);
@@ -97,132 +138,143 @@ const Register: React.FC = () => {
         setSnackbarOpen(true);
       })
       .finally(() => setLoading(false));
-  };
+  }, [
+    myFormation,
+    myUserId,
+    setMySelectedPlayers,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
+    setSnackbarMessage,
+    setSnackbarOpen,
+    setLoading,
+  ]);
 
-  return (
-    <div className="app-container">
-      <div
-        style={{
-          padding: "2rem",
-          color: "#fff",
-          backgroundColor: "var(--background-color)",
-          minHeight: "100vh",
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Register Your Team
-        </Typography>
+  useEffect(() => {
+    if (currentStep === 3) {
+      loadRandomSquad(); // ✅ Trigger squad load as soon as step 3 is shown
+    }
+  }, [currentStep, loadRandomSquad]);
 
-        {/* Team Name */}
-        <Box
-          sx={{
-            border: "1px solid gray",
-            borderRadius: "8px",
-            padding: "1rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <Input
-            placeholder="Team Name"
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
-            style={{
-              marginBottom: "1rem",
-              display: "block",
-              color: "#fff",
-              borderBottom: "1px solid #888",
-            }}
-          />
-        </Box>
+  console.log("my formation - ", myFormation);
 
-        {/* Nationality Select */}
-        <Box
-          sx={{
-            border: "1px solid gray",
-            borderRadius: "8px",
-            padding: "1rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <Select
-            value={nationality}
-            onChange={(e) => setNationality(e.target.value)}
-            displayEmpty
-            style={{
-              marginBottom: "1rem",
-              minWidth: 240,
-              color: "#fff",
-              border: "1px solid #888",
-              backgroundColor: "#1e1e1e",
-            }}
-            inputProps={{ style: { color: "#fff" } }}
-          >
-            <MenuItem value="" disabled>
-              Select Nationality
-            </MenuItem>
-            {countryData.map((country, idx) => (
-              <MenuItem
-                key={country.code}
-                value={country.name}
-                style={{ display: "flex", alignItems: "center", gap: 8 }}
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <Fade in timeout={500} key={0}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                maxWidth: 500,
+                mt: 4,
+              }}
+            >
+              <Input
+                placeholder="Team Name"
+                value={teamName}
+                onChange={(e) => {
+                  setTeamName(e.target.value);
+                  setTeamNameError(""); // 입력 시 에러 초기화
+                }}
+                fullWidth
+                sx={{
+                  color: "#fff",
+                  borderBottom: "1px solid #888",
+                }}
+              />
+              {teamNameError && (
+                <Typography variant="body2" color="error" mt={1}>
+                  {teamNameError}
+                </Typography>
+              )}
+              <Button
+                variant="contained"
+                onClick={() => {
+                  if (currentStep === 0 && !validateTeamName()) return;
+                  setCurrentStep((prev) => Math.min(prev + 1, 4));
+                }}
+                sx={{ mt: 0, ml: 2 }} // ✅ add margin-left
+                disabled={currentStep >= 4}
               >
-                {getImgByCountryName(country.name, idx, 24, 16)}
-                {country.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-        {/* Formation Select */}
-        {/* <Select
-        value={selectedFormation}
-        onChange={(e) => setSelectedFormation(e.target.value)}
-        displayEmpty
-        style={{
-          marginBottom: "1rem",
-          minWidth: 240,
-          color: "#fff",
-          border: "1px solid #888",
-          backgroundColor: "#1e1e1e",
-        }}
-        inputProps={{ style: { color: "#fff" } }}
-      >
-        <MenuItem value="" disabled>
-          Select Formation
-        </MenuItem>
-        {Object.keys(formations).map((formation) => (
-          <MenuItem key={formation} value={formation}>
-            {formation}
-          </MenuItem>
-        ))}
-      </Select> */}
-        <div
-          style={{
-            marginBottom: "1rem",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          {/* Team Logo Picker */}
-          <Box
-            sx={{
-              border: "1px solid gray",
-              borderRadius: "8px",
-              padding: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
-            <Typography variant="subtitle1" gutterBottom>
-              Choose a Team Logo
-            </Typography>
-            <Grid container spacing={2} style={{ marginBottom: "1rem" }}>
+                Next
+              </Button>
+            </Box>
+          </Fade>
+        );
+      case 1:
+        return (
+          <Fade in timeout={500} key={1}>
+            <Box>
+              <Select
+                value={nationality}
+                onChange={(e) => setNationality(e.target.value)}
+                displayEmpty
+                style={{
+                  minWidth: 240,
+                  color: "#fff",
+                  border: "1px solid #888",
+                  backgroundColor: "#1e1e1e",
+                }}
+                inputProps={{ style: { color: "#fff" } }}
+              >
+                <MenuItem value="" disabled>
+                  Select Nationality
+                </MenuItem>
+                {countryData.map((country, idx) => (
+                  <MenuItem
+                    key={country.code}
+                    value={country.name}
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    {getImgByCountryName(country.name, idx, 24, 16)}
+                    {country.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setCurrentStep((prev) => Math.min(prev + 1, 4));
+                }}
+                sx={{ mt: 0, ml: 2 }} // ✅ add margin-left
+                disabled={currentStep >= 4}
+              >
+                Next
+              </Button>
+            </Box>
+          </Fade>
+        );
+      case 2:
+        return (
+          <>
+            <Box
+              display="grid"
+              gridTemplateColumns="repeat(5, 1fr)" // 5 columns
+              gap={2} // MUI spacing unit (theme.spacing(2) = 16px)
+            >
               {logos.map((logo) => (
-                <Grid item key={logo.id}>
+                <Box key={logo.id} display="flex" justifyContent="center">
                   <img
                     src={logo.logoImg}
                     alt={`logo-${logo.id}`}
                     width={67}
                     height={80}
-                    onClick={() => setSelectedLogoId(logo.id)}
+                    onClick={() => {
+                      setMyLogoId(logo.id);
+                      setMyLogoImgUrl(logo.logoImg);
+                      setMyUniformImgUrl(
+                        `https://jlzddfddozuowxamnreb.supabase.co/storage/v1/object/public/kfc//u${logo.id}-removebg-preview.png`
+                      );
+                      setCurrentStep((prev) => Math.min(prev + 1, 4));
+                    }}
                     style={{
                       border:
                         selectedLogoId === logo.id
@@ -233,102 +285,287 @@ const Register: React.FC = () => {
                       backgroundColor: "#333",
                     }}
                   />
-                </Grid>
+                </Box>
               ))}
-            </Grid>
-          </Box>
-          {/* Generate Random Roster */}
+            </Box>
+          </>
+        );
+      case 3:
+        return (
+          <Fade in timeout={500} key={3}>
+            <Box sx={{ width: "90%", margin: "0 auto" }}>
+              <Grid container spacing={2}>
+                {/* Left Panel */}
+                <Grid item xs={12} md={2}>
+                  <SquadMetrics />
+                </Grid>
+                {/* Center Panel */}
+                <Grid item xs={12} md={8}>
+                  <SelectFormation />
+                  {myFormation && (
+                    <Box sx={{ mt: 1 }}>
+                      {" "}
+                      {/* ✅ Adds spacing between components */}
+                      <SquadBuilder
+                        selectedFormation={
+                          myFormation as keyof typeof formations
+                        }
+                        setSelectedDropZone={setSelectedDropZone}
+                        setIsDropZoneSelected={setIsDropZoneSelected}
+                        setPosition={setSelectedPosition}
+                        searchPlayerRef={listRef}
+                        selectedDropZone={selectedDropZone}
+                      />
+                    </Box>
+                  )}
+                </Grid>
+                {/* Right Panel */}
+                {mySelectedPlayers.length > 0 && (
+                  <Grid
+                    item
+                    xs={12}
+                    md={2}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }} // ✅ key line
+                  >
+                    {/* 🟦 Starting XI */}
+                    {mySelectedPlayers.slice(0, 11).map((player, index) => {
+                      if (!player || player.name === "dummy") return null;
 
-          {/* Player List */}
-          <Box
-            sx={{
-              border: "1px solid gray",
-              borderRadius: "8px",
-              padding: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
+                      const safeKey = player.id
+                        ? `player-${player.id}`
+                        : `fallback-${index}`;
+                      return (
+                        <CardContent
+                          key={safeKey}
+                          sx={{
+                            ...playerCardStyle,
+                          }}
+                        >
+                          <Box sx={playerRowStyle}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                flex: "0 0 40px", // POS
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                lineHeight: 1.2, // consistent vertical spacing
+                              }}
+                            >
+                              {player.pos}
+                            </Typography>
+
+                            <Typography
+                              sx={{
+                                flex: 1, // takes all available space
+                                fontWeight: 600,
+                                textAlign: "center",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap", // ✅ stay on one line
+                                lineHeight: 1.2, // consistent vertical spacing
+                              }}
+                            >
+                              {player.name}
+                            </Typography>
+
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                flex: "0 0 50px", // OVR
+                                textAlign: "center",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                lineHeight: 1.2, // consistent vertical spacing
+                              }}
+                            >
+                              {getStatDisplay("OVR", player.ovr)}
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      );
+                    })}
+
+                    {/* 🟧 Bench */}
+                    <Divider
+                      sx={{
+                        width: "80%",
+                        mt: 2,
+                        mb: 2,
+                        borderColor: "#888", // customize divider color
+                      }}
+                    />
+                    {mySelectedPlayers.slice(11).map((player, index) => {
+                      if (!player || player.name === "dummy") return null;
+                      console.log("name - ", player.img);
+                      const safeKey = player.id
+                        ? `bench-player-${player.id}`
+                        : `bench-fallback-${index}`;
+                      return (
+                        <CardContent
+                          key={safeKey}
+                          sx={{
+                            ...playerCardStyle,
+                          }}
+                        >
+                          <Box sx={playerRowStyle}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                flex: "0 0 40px", // POS
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                lineHeight: 1.2, // consistent vertical spacing
+                              }}
+                            >
+                              {player.pos}
+                            </Typography>
+
+                            <Typography
+                              sx={{
+                                flex: 1, // takes all available space
+                                fontWeight: 600,
+                                textAlign: "center",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap", // ✅ stay on one line
+                                lineHeight: 1.2, // consistent vertical spacing
+                              }}
+                            >
+                              {player.name}
+                            </Typography>
+
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                flex: "0 0 50px", // OVR
+                                textAlign: "center",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                lineHeight: 1.2, // consistent vertical spacing
+                              }}
+                            >
+                              {getStatDisplay("OVR", player.ovr)}                              
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      );
+                    })}
+                  </Grid>
+                )}
+              </Grid>
+
+              {/* Snackbar should be outside Grid to avoid layout issues */}
+              <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={4000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              >
+                <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
+                  {typeof snackbarMessage === "string"
+                    ? snackbarMessage
+                    : JSON.stringify(snackbarMessage)}
+                </Alert>
+              </Snackbar>
+            </Box>
+          </Fade>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const [teamNameError, setTeamNameError] = useState(""); // validation 메시지
+
+  const validateTeamName = (): boolean => {
+    if (teamName.length === 0) {
+      setTeamNameError("Team name is required.");
+      return false;
+    }
+    if (teamName.length > 10) {
+      setTeamNameError("Team name must be 10 characters or less.");
+      return false;
+    }
+    if (!/^[A-Za-z0-9]+$/.test(teamName)) {
+      setTeamNameError("Team name must contain only letters and numbers.");
+      return false;
+    }
+    if (/^[0-9]+$/.test(teamName)) {
+      setTeamNameError("Team name cannot be numbers only.");
+      return false;
+    }
+    setTeamNameError(""); // ✅ 모든 조건 통과
+    setMyTeamName(teamName); // 팀 이름 저장
+    return true;
+  };
+
+  return (
+    <div className="app-container">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "94px", // ✅ Set minimum height so it doesn’t collapse
+        }}
+      >
+        <Box
+          mt={4}
+          sx={{
+            position: "relative",
+            outline: "1px solid gray",
+            display: "flex", // ✅ Add this
+            alignItems: "center", // ✅ Vertically align
+            justifyContent: "space-between", // Optional: space them out
+            gap: 2, // Optional: spacing between Typography & Button
+          }}
+        >
+          <Typography variant="h4">{stepNames[currentStep]}</Typography>
+
+          {currentStep === 3 && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                setCurrentStep((prev) => Math.min(prev + 1, 4));
+              }}
+              disabled={currentStep >= 4}
+            >
+              Next
+            </Button>
+          )}
+        </Box>
+
+        <Box mt={4}>
+          {currentStep === 3 && (
             <Button
               variant="contained"
               color="primary"
-              onClick={() => loadRandomSquad()}
+              onClick={loadRandomSquad}
               disabled={loading}
+              sx={{ marginBottom: 2 }}
             >
-              Generate Team
+              Random Team
             </Button>
-            {myselectedPlayers.length > 0 && (
-              <>
-                {/* <Typography variant="h6" style={{ marginTop: "2rem" }}>
-              Team Roster
-            </Typography> */}
-                <Grid container style={{ marginTop: "1rem" }}>
-                  {myselectedPlayers.map((player, idx) => {
-                    if (!player || !player.name) return null; // Skip if player data is missing
-                    if (player.name === "dummy") return null; // Skip placeholder player
-                    return (
-                      <Grid item key={idx}>
-                        <Card
-                          sx={{
-                            backgroundColor: "var(--card-background)",
-                            color: "var(--card-text)",
-                            boxShadow: "none",
-                            outline: "1px solid #555",
-                          }}
-                        >
-                          <CardContent
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "1rem",
-                            }}
-                          >
-                            <div className="player-name">{player.name}</div>
-                            <div className="player-cell">{player.age}</div>
-                            <div className="player-cell">{player.pos}</div>
-                            <div className="player-cell">
-                              {getStatDisplay("OVR", player.ovr)}
-                            </div>
-                            <div className="player-cell">
-                              {getStatDisplay("PAC", player.pac)}
-                            </div>
-                            <div className="player-cell">
-                              {getStatDisplay("SHO", player.sho)}
-                            </div>
-                            <div className="player-cell">
-                              {getStatDisplay("PAS", player.pas)}
-                            </div>
-                            <div className="player-cell">
-                              {getStatDisplay("DRI", player.dri)}
-                            </div>
-                            <div className="player-cell">
-                              {getStatDisplay("DEF", player.def)}
-                            </div>
-                            <div className="player-cell">
-                              {getStatDisplay("PHY", player.phy)}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </>
-            )}
-          </Box>
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={4000}
-            onClose={() => setSnackbarOpen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-              {typeof snackbarMessage === "string"
-                ? snackbarMessage
-                : JSON.stringify(snackbarMessage)}
-            </Alert>
-          </Snackbar>
-        </div>
-      </div>
+          )}
+        </Box>
+      </Box>
+      {renderStep()}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
+          {typeof snackbarMessage === "string"
+            ? snackbarMessage
+            : JSON.stringify(snackbarMessage)}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -30,13 +30,17 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   setPosition,
 }) => {
   const {
+    myUniformImgUrl,
+    myLogoImgUrl,
     mySelectedPlayers,
-    dropZoneList,    
-    setDropZoneList,    
+    dropZoneList,
+    setDropZoneList,
     setMySelectedPlayers,
     resetDropZoneList,
   } = useSquadStore(
     (s) => ({
+      myUniformImgUrl: s.myUniformImgUrl,
+      myLogoImgUrl: s.myLogoImgUrl,
       mySelectedPlayers: s.mySelectedPlayers,
       dropZoneList: s.dropZoneList,
       setDropZoneList: s.setDropZoneList,
@@ -55,7 +59,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
 
   return (
     <>
-      <div className="squad-group">
+      {/* <div className="squad-group"> */}
         <div className="squad-field">
           {formations[selectedFormation].map((position, idx) => {
             const pos = position.pos.replace(/[0-9]/g, "");
@@ -69,7 +73,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
 
             return (
               <Button
-                key={`drop-${idx}`}
+                key={`starting-${idx}`}
                 onClick={() => {
                   const len = dropZoneList.length;
 
@@ -79,7 +83,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     setPosition(pos);
                     setIsDropZoneSelected(true);
                   } else {
-                     const tempPlayers = [...mySelectedPlayers];
+                    const tempPlayers = [...mySelectedPlayers];
                     const i = dropZoneList[0].index;
 
                     const a = tempPlayers.find((p) => p.idx === i);
@@ -93,8 +97,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       return p;
                     });
 
-                    console.log("updated playes",updatedPlayers);
-                    
+                    console.log("updated playes", updatedPlayers);
+
                     setMySelectedPlayers(updatedPlayers);
                     setSelectedDropZone({ index: -1, pos: "" });
                     resetDropZoneList();
@@ -108,35 +112,40 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   color: "red", // font color for red card yellow card myplayer
                   position: "absolute",
                   top: `${position.top}%`,
-                  left: `${position.left}%`,
+                  left: `${position.left}%`,                  
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  flexWrap: "wrap",
                 }}
               >
-                <div className="dropzone-button">
-                  <CroppedAvatar
-                    src={player?.img ?? ""}
-                    selected={selectedDropZone.index === idx}
-                  />
-                  <div>{player?.redCard ?? 0}</div>
-                  <div>{player?.yellowCard ?? 0}</div>
-                </div>
+                <img
+                  src={
+                    player?.name !== "dummy" ? myLogoImgUrl : "/img/avatar.jpg"
+                  }
+                  alt={player?.name}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "8px",                    
+                  }}
+                />
+                {player?.name}
               </Button>
             );
           })}
         </div>
-        <div className="squad-bench">
+        {/* <div className="squad-bench">
           {Object.values(mySelectedPlayers)
             .filter((p): p is MyPlayer => !!p)
             .sort((a, b) => a.idx - b.idx)
             .slice(11)
             .map((benchPlayer, idx) => {
               const actualIndex = idx + 11;
-              // const myBenchPlayer = mySelectedPlayers.find(
-              //   (p) => p.playerId === benchPlayer.id
-              // );
-              
+
               return (
                 <div
-                  key={`drop-${actualIndex}`}
+                  key={`bench-${actualIndex}`}
                   onClick={() => {
                     const len = dropZoneList.length;
                     if (len < 1) {
@@ -180,20 +189,35 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                       searchPlayerRef.current.scrollTop = 0;
                     }
                   }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    color: "white",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
                 >
-                  <div className="dropzone-button">
-                    <CroppedAvatar
-                      src={benchPlayer?.img ?? ""}
-                      selected={selectedDropZone.index === actualIndex}
-                    />
-                    <div>{benchPlayer?.redCard ?? 0}</div>
-                    <div>{benchPlayer?.yellowCard ?? 0}</div>
-                  </div>
+                  <img
+                    src={
+                      benchPlayer?.name !== "dummy"
+                        ? myLogoImgUrl
+                        : "/img/avatar.jpg"
+                    }
+                    alt={benchPlayer?.name}
+                    style={{
+                      display:"flex",
+                      maxWidth: "50px",
+                      height: "50px",
+                      borderRadius: "8px",
+                      flexWrap: "wrap",
+                    }}
+                  />
+                  {benchPlayer?.name !== "dummy" ? benchPlayer?.name : "EMPTY"}
                 </div>
               );
             })}
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
       {/* Snackbar for validation messages */}
       {/* <Snackbar
         open={snackbarOpen}

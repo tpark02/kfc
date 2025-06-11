@@ -4,12 +4,12 @@
   justify-content: center;
   width: 100%;
   height: 900px;
-  border-radius: 8px;  
-  margin: 10px auto;  
+  border-radius: 8px;
+  /* margin: 10px auto; */
   background-color: var(--background-color);
 }
 
-.squad-formation {
+/* .squad-formation {
   flex: 1 1 50%;
   width: 60%;
   display: flex;
@@ -17,27 +17,39 @@
   justify-content: center;
   align-items: stretch;
   height: 900px;
-  /* outline: 1px solid blue; */
+} */
+
+.squad-formation {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
 }
 
-.squad-team,
+/* .squad-team,
 .squad-overview {
   flex: 1 1 25%;
   width: 90%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  /* overflow: auto; */
-  /* margin: 10px 0 0 0; */
-  /* outline: 1px solid red; */
-}
+}*/
 
-.button-group {
+/* .squad-overview {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+} */
+
+/* .button-group {
   margin-top: 10px;
   display: flex;
   justify-content: center;
   gap: 10px;
-}
+} */
 
 .squad-team-player {
   display: flex;
@@ -87,7 +99,18 @@
   outline: 1px solid gray;
   border-radius: 8px;
   width: 100%;
-  margin: 10px;
+  margin-bottom: 10px;
+}
+
+.squad-members {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: auto;  
+  outline: 1px solid gray;  
 }
 
 @media (max-width: 1000px) {

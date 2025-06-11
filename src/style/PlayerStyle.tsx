@@ -1,19 +1,22 @@
-import React from "react";
 import { getOvrColor } from "../util/util";
+import { Typography, Box } from "@mui/material";
+import { ReactNode } from "react";
+
+
 
 export const getStatDisplay = (label: string, value: number) => {
   return (
     <div style={{ textAlign: "center", lineHeight: 1.2 }}>
-      <div style={{ fontSize: 12, color: "#64625B" }}>
+      {/* <div style={{ fontSize: 12, color: "#64625B" }}>
         {label.toUpperCase()}
-      </div>
+      </div> */}
       <div
         style={{
           fontSize: 15,
           fontWeight: "bold",
           position: "relative",
-          display: "inline-block",
-          paddingBottom: "4px",
+          display: "inline-block",          
+          // paddingBottom: "4px",
           color: getOvrColor(value),
         }}
       >
@@ -31,4 +34,30 @@ export const getStatDisplay = (label: string, value: number) => {
       </div>
     </div>
   );
+};
+
+// export const StatBox = ({ label, value }: { label: string; value: number }) => (
+//   <Box sx={{ textAlign: "center", minWidth: 40 }}>
+//     <Typography variant="caption" color="gray">
+//       {label}
+//     </Typography>
+//     <Typography sx={{ fontWeight: 500 }}>{value}</Typography>
+//   </Box>
+// );
+
+export const StatBox = ({ label, value }: { label: string; value: ReactNode }) => (
+  <Box sx={{ textAlign: "center", minWidth: 40 }}>
+    <Typography variant="caption" color="gray">
+      {label}
+    </Typography>
+    <Box>{value}</Box>
+  </Box>
+);
+
+export const getPlayerRole = (pos: string) => {
+  if (pos.includes("ST")) return "Striker";
+  if (pos.includes("CB")) return "Defender";
+  if (pos.includes("CAM") || pos.includes("CM")) return "Midfielder";
+  if (pos.includes("LW") || pos.includes("RW")) return "Winger";
+  return "Player";
 };

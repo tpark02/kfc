@@ -4,17 +4,21 @@ import { Match } from "../types/match";
 // import { TOTAL_DROP_ZONES } from "../data/formations";
 import { MyClubData } from "../types/club";
 import { DropZone } from "../types/dropZone";
-import { createWithEqualityFn } from 'zustand/traditional';
+import { createWithEqualityFn } from "zustand/traditional";
 
 export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
+  myUniformImgUrl: string,
+  myLogoImgUrl: string;
+  myLogoId: number;
+  myNation: string;
   joinedSeasonId: number;
   myUserId: number;
   myUserEmail: string;
   myUserName: string;
   mySelectedClubId: number;
-  // myTeamName: string;
+  myTeamName: string;
   myFormation: string;
   //dropPlayers: Player[];
   // benchPlayers: Player[];
@@ -34,7 +38,10 @@ type SquadStore = {
   dropZoneList: DropZone[];
   mySelectedPlayers: MyPlayer[];
   HasRedCard: boolean;
-
+  setMyLogoImgUrl: (s: string) => void;
+  setMyLogoId: (n: number) => void;
+  setMyNation: (nation: string) => void;
+  setMyUniformImgUrl: (s: string) => void;
   setJoinedSeasonId: (n: number) => void;
   setUserEmail: (s: string) => void;
   setUserName: (s: string) => void;
@@ -43,7 +50,7 @@ type SquadStore = {
   setMyUserId: (userId: number) => void;
   setMyClubs: (clubs: (MyClubData | null)[]) => void;
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
-  // setMyTeamName: (f: string) => void;
+  setMyTeamName: (f: string) => void;
   setMyFormation: (f: string) => void;
   // updateDropPlayer: (idx: number, player: Player) => void;
   // setDropPlayers: (players: Player[]) => void;
@@ -71,20 +78,24 @@ type SquadStore = {
   setMatches: (matches: Match[]) => void;
 };
 
-export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dropZoneList: [],
+export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
+  dropZoneList: [],
+  myLogoId: -1,
+  myNation: "",
   joinedSeasonId: -1,
-  setJoinedSeasonId: (n: number) => set({ joinedSeasonId: n }),
+
   myUserEmail: "",
   myUserName: "",
   myUserId: -1,
   mySelectedClubId: -1,
-  // myTeamName: "N/A",
+  myTeamName: "",
   myFormation: "442",
   // dropPlayers: [],
   // dropPlayers: Object.fromEntries(
   //   Array.from({ length: TOTAL_DROP_ZONES }, (_, i) => [i, null])
   // ),
   // benchPlayers: Array(15).fill(null),
+  myLogoImgUrl: "",
   selectedDropZone: { index: -1, pos: "" },
   isDropZoneSelected: false,
   position: "",
@@ -99,6 +110,10 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   myClubs: [],
   mySelectedPlayers: [],
   HasRedCard: false,
+  myUniformImgUrl: "",
+  setMyLogoId: (n: number) => {
+    set({ myLogoId: n });
+  },
   setUserEmail: (s: string) => {
     set({ myUserEmail: s });
   },
@@ -110,15 +125,21 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   },
   setMySelectedPlayers: (players: MyPlayer[]) =>
     set({
-      mySelectedPlayers: players,      
-      HasRedCard: players.sort((a, b) => a.idx - b.idx).slice(0, 11).some((p) => p.redCard > 0),
+      mySelectedPlayers: players,
+      HasRedCard: players
+        .sort((a, b) => a.idx - b.idx)
+        .slice(0, 11)
+        .some((p) => p.redCard > 0),
     }),
   setMyUserId: (userId: number) => set({ myUserId: userId }),
   setMyClubs: (clubs: (MyClubData | null)[]) => set({ myClubs: clubs }),
   setMyTeamOvr: (ovr: number) => {
     set({ myTeamOvr: ovr });
   },
-  // setMyTeamName: (s: string) => set({ myTeamName: s }),
+  setMyUniformImgUrl: (s: string) => set({ myUniformImgUrl: s}),
+  setMyNation: (nation: string) => set({ myNation: nation }),
+  setJoinedSeasonId: (n: number) => set({ joinedSeasonId: n }),
+  setMyTeamName: (s: string) => set({ myTeamName: s }),
   setMyFormation: (f: string) => set({ myFormation: f }),
   // updateDropPlayer: (idx: number, player: Player) =>
   //   set((state) => {
@@ -136,6 +157,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({  dro
   setMyTeamClubCohesion: (cohesion: number) =>
     set({ myTeamClubCohesion: cohesion }),
   setMyTeamStamina: (stamina: number) => set({ myTeamStamina: stamina }),
+  setMyLogoImgUrl: (s: string) => set({ myLogoImgUrl: s }),
   resetSquadMetric: () =>
     set({
       myTeamSquadValue: 0,

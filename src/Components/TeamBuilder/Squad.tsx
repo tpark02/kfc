@@ -162,7 +162,7 @@ const Squad: React.FC = () => {
               variant="contained"
               color="secondary"
               onClick={loadRandomSquad}
-              sx={{ margin: "10px" }}
+              sx={{ margin: "1px" }}
             >
               Create Squad
             </Button>

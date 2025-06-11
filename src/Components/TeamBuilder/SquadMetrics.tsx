@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Player } from "../../types/player";
 import { useSquadStore } from "../../store/useSquadStore";
 
 import Typography from "@mui/material/Typography";
@@ -8,24 +7,33 @@ import Box from "@mui/material/Box";
 import SquadRadarChart from "./squadRadarChart";
 
 import { shallow } from "zustand/shallow";
-
+import { getImgByCountryName } from "../../data/countryData";
 import "../../style/Squad.css";
 
 const SquadMetrics: React.FC = () => {
   // const metricsData = metrics(players);
-  const { 
-    // dropPlayers, 
-    myTeamOvr, 
-    myTeamSquadValue } = useSquadStore(
+  const {
+    // dropPlayers,
+    mySelectedPlayers,
+    myTeamOvr,
+    myTeamSquadValue,
+  } = useSquadStore(
     (s) => ({
       // dropPlayers: s.dropPlayers,
+      mySelectedPlayers: s.mySelectedPlayers,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
     }),
     shallow
   );
-  // const nationalSpread = getNationalitySpread(dropPlayers);
-  // const leagueSpread = getLeagueSpread(dropPlayers);
+
+  const nationalSpread = Array.from(
+    new Set(
+      mySelectedPlayers
+        .map((player) => player.nation)
+        .filter((nation): nation is string => !!nation)
+    )
+  );
 
   return (
     <div className="squad-overview">
@@ -35,18 +43,11 @@ const SquadMetrics: React.FC = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "stretch",
-          width: "90%",
-          margin: "1px auto",
+          // width: "90%",
+          // margin: "1px auto",
         }}
       >
-        <div
-          style={{
-            outline: "1px solid gray",
-            borderRadius: "8px",
-            width: "100%",
-            margin: "0 0 10px 0",
-          }}
-        >
+        <div className="squad-metrics-section">
           <Typography>OVR</Typography>
           <Typography variant="subtitle1" fontWeight="bold">
             {typeof myTeamOvr === "number" && !isNaN(myTeamOvr)
@@ -72,22 +73,28 @@ const SquadMetrics: React.FC = () => {
             Nations
           </Typography>
           <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}>
-            {/* {Array.from(nationalSpread).length > 0 ? (
-              Array.from(nationalSpread).map(
-                (nation, idx) =>
-                  nation && getImgByCountryName(nation ?? "", idx, 35, 25)
-              )
+            {nationalSpread.length > 0 ? (
+              nationalSpread.map((nation, idx) => {
+                const safeKey = `${
+                  nation?.replace(/\s/g, "-") || "unknown"
+                }-${idx}`;
+                return (
+                  <React.Fragment key={safeKey}>
+                    {getImgByCountryName(nation ?? "", idx, 35, 25)}
+                  </React.Fragment>
+                );
+              })
             ) : (
               <div>&nbsp;</div>
-            )} */}
+            )}
           </Box>
         </div>
-        <div className="squad-metrics-section">
-          <Typography variant="subtitle2" gutterBottom>
+        {/* <div className="squad-metrics-section"> */}
+        {/* <Typography variant="subtitle2" gutterBottom>
             Leagues
-          </Typography>
-          <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}>
-            {/* {leagueSpread.size > 0 ? (
+          </Typography> */}
+        {/* <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}> */}
+        {/* {leagueSpread.size > 0 ? (
               Array.from(leagueSpread).map(
                 (league, idx) =>
                   league && (
@@ -102,8 +109,8 @@ const SquadMetrics: React.FC = () => {
             ) : (
               <div>&nbsp;</div>
             )} */}
-          </Box>
-        </div>
+        {/* </Box> */}
+        {/* </div> */}
       </div>
     </div>
     // </div>

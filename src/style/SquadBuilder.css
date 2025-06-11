@@ -8,18 +8,17 @@
   align-items: center;    
 } */
 
-.squad-group {
+/* .squad-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  height: 100%;    
-  /* margin: 10px 0 0 0; */
-}
+  width: 100%;
+  height: 90%;    
+} */
 
 .squad-field {
-  display: flex;
+  display: flex;    
   width: 100%;
-  height: 100%;
+  height: 900px;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -54,11 +53,11 @@
   flex-shrink: 0; /* prevent shrinking */
 }
 
-.player {
+/* .player {
   outline: 3px solid gray;
-}
+} */
 
-.player:hover {
+/* .player:hover {
   outline: 5px solid orange;
   cursor: pointer;
 }
@@ -66,4 +65,18 @@
 .player.selected {
   outline: 5px solid red;
   cursor: pointer;
+} */
+
+
+.player {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: black;
+  border: 3px solid yellow;
+}
+
+.goalkeeper {
+  background: green;
 }
