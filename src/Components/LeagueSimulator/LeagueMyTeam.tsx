@@ -18,6 +18,8 @@ interface LeagueMyTeamProp {
 
 const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
   const {
+    myNation,
+    myLogoId,
     myUserId,
     mySelectedClubId,
     // myTeamName,
@@ -38,6 +40,9 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     // setDropPlayers,    
   } = useSquadStore(
     (s) => ({
+      myNation: s.myNation,
+      myLogoId: s.myLogoId,
+      myTeamName: s.myTeamName,
       myUserId: s.myUserId,
       mySelectedClubId: s.mySelectedClubId,
       // myTeamName: s.myTeamName,
@@ -121,6 +126,8 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
             onClick={() => {
               setIsClicked(false);
               updateMyClub(
+                myNation,
+                myLogoId,
                 mySelectedPlayers,
                 myUserId,
                 mySelectedClubId,

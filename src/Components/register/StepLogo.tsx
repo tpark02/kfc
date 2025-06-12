@@ -2,7 +2,6 @@
 import React from "react";
 import {
   Box,
-  Typography,
 } from "@mui/material";
 import { Logo } from "../../types/Logo";
 
@@ -10,14 +9,12 @@ interface StepLogoProps {
   logos: Logo[];
   confirmedLogoId: number | null;
   onSelect: (logo: Logo) => void;
-  error: string;
 }
 
 const StepLogo: React.FC<StepLogoProps> = ({
   logos,
   confirmedLogoId,
   onSelect,
-  error,
 }) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 4 }}>
@@ -43,11 +40,6 @@ const StepLogo: React.FC<StepLogoProps> = ({
           </Box>
         ))}
       </Box>
-      {error && (
-        <Typography variant="body2" color="error" mt={2}>
-          {error}
-        </Typography>
-      )}
     </Box>
   );
 };

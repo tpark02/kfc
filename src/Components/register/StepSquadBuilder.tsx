@@ -7,33 +7,13 @@ import SelectFormation from "../teambuilder/SelectFormation";
 import { formations } from "../../data/formations";
 import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
-import { MyPlayer } from "../../types/player";
 import DraggableAndDroppablePlayerCard from "./DraggableAndDroppablePlayerCard";
 
-interface StepSquadBuilderProps {
-  myFormation: string;
-  //   mySelectedPlayers: MyPlayer[];
-  //   selectedDropZone: DropZone;
-  //   setSelectedDropZone: (drop: DropZone) => void;
-  //   setIsDropZoneSelected: (b: boolean) => void;
-  setSelectedPosition: (pos: string) => void;
-  //   setMySelectedPlayers: (players: MyPlayer[]) => void;
-  listRef: React.RefObject<HTMLDivElement>;
-}
 
-const StepSquadBuilder: React.FC<StepSquadBuilderProps> = ({
-  myFormation,
-  //   mySelectedPlayers,
-  //   setMySelectedPlayers,
-  //   selectedDropZone,
-  //   setSelectedDropZone,
-  //   setIsDropZoneSelected,
-  //   setSelectedPosition,
-  listRef,
-}) => {
-  // ✅ StepSquadBuilder.tsx 상단에서
-  const { mySelectedPlayers, setMySelectedPlayers } = useSquadStore(
+const StepSquadBuilder: React.FC = () => {
+  const { myFormation, mySelectedPlayers, setMySelectedPlayers } = useSquadStore(
     (s) => ({
+      myFormation: s.myFormation,
       mySelectedPlayers: s.mySelectedPlayers,
       setMySelectedPlayers: s.setMySelectedPlayers,
     }),
@@ -69,7 +49,7 @@ const StepSquadBuilder: React.FC<StepSquadBuilderProps> = ({
             // setSelectedDropZone={setSelectedDropZone}
             // setIsDropZoneSelected={setIsDropZoneSelected}
             // setPosition={setSelectedPosition}
-            searchPlayerRef={listRef}
+            // searchPlayerRef={listRef}
             // selectedDropZone={selectedDropZone}
           />
         </Grid>

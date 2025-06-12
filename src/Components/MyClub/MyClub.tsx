@@ -31,6 +31,8 @@ const MyClub: React.FC<MyClubProp> = ({
 }) => {
   // 🎯 상태와 setter들을 묶어서 shallow 비교
   const {
+    myNation,
+    myLogoId,
     mySelectedPlayers,
     myUserId,
     myClubs,
@@ -62,11 +64,12 @@ const MyClub: React.FC<MyClubProp> = ({
     resetDropZoneList,
   } = useSquadStore(
     (s) => ({
+      myNation: s.myNation,
+      myLogoId: s.myLogoId,
       mySelectedPlayers: s.mySelectedPlayers,
       myUserId: s.myUserId,
       myClubs: s.myClubs,
       myFormation: s.myFormation,
-      // dropPlayers: s.dropPlayers,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
       myTeamAge: s.myTeamAge,
@@ -102,9 +105,11 @@ const MyClub: React.FC<MyClubProp> = ({
 
     if (newTeamName.length > 0) {
       updateMyClub(
+        myNation,
+        myLogoId,
         players,
         myUserId,
-        clubId,
+        1,
         newTeamName,
         myFormation,
         myTeamOvr,
@@ -120,23 +125,6 @@ const MyClub: React.FC<MyClubProp> = ({
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
           fetchMyClubs(myUserId).then((clubs) => {
-            // const paddedClubs: (MyClubData | null)[] = Array(3).fill(null);
-            // clubs.forEach((club, idx) => {
-            //   paddedClubs[idx] = club ?? null;
-            // });
-            // setMyClubs(paddedClubs);
-
-            // Find the updated club and map its players to Player[]
-            // const updatedClub = paddedClubs.find(
-            //   (c) => c && c.clubId === clubId
-            // );
-            // const playerList: Player[] =
-            //   updatedClub && updatedClub.players
-            //     ? updatedClub.players.map(myPlayerToPlayer)
-            //     : [];
-
-            // setDropPlayers([...playerList]);
-            // console.log("myclub.tsx drop players - ", dropPlayers);
             console.log("my club.tsx updated clubs - ", clubs);
             const updatedClub = clubs.find((c) => c.clubId === clubId);
             if (updatedClub && updatedClub.players) {

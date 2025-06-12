@@ -1,17 +1,15 @@
 // ✅ Step 1: StepNationality.tsx
-import { Box, Select, MenuItem, Typography } from "@mui/material";
+import { Box, Select, MenuItem } from "@mui/material";
 import { countryData, getImgByCountryName } from "../../data/countryData";
 
 interface StepNationalityProps {
   nationality: string;
   setNationality: (val: string) => void;
-  error: string;
 }
 
 const StepNationality: React.FC<StepNationalityProps> = ({
   nationality,
   setNationality,
-  error,
 }) => {
   return (
     <Box
@@ -48,11 +46,6 @@ const StepNationality: React.FC<StepNationalityProps> = ({
           </MenuItem>
         ))}
       </Select>
-      {error && (
-        <Typography variant="body2" color="error" mt={1}>
-          {error}
-        </Typography>
-      )}
     </Box>
   );
 };

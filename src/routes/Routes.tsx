@@ -7,8 +7,8 @@ import Season from "../components/seasonSimulator/Season";
 import SeasonPage from "../components/seasonSimulator/SeasonPage";
 import LeagueSimulator from "../components/leagueSimulator/LeagueSimulator";
 import LoginForm from "../components/login/LoginForm";
-import Squad from "../components/teambuilder/Squad";
 import Register from "../components/register/RegisterPage";
+import StepSquadBuilder from "../components/register/StepSquadBuilder";
 import PrivateRoute from "../components/PrivateRoutes";
 import Layout from "../Layout";
 
@@ -40,7 +40,7 @@ const AppRoutes: React.FC = () => {
           path="/squad"
           element={
             <PrivateRoute>
-              <Squad />
+              <StepSquadBuilder />
             </PrivateRoute>
           }
         />

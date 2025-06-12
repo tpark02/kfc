@@ -22,18 +22,14 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 || error.response?.status === 403) {
       console.warn("🔒 인증 에러. 다시 로그인해야 합니다.");
       // Optionally redirect or logout
+      // window.location.href = "/login"; // 또는 navigate("/login")
     }
     return Promise.reject(error);
   }
 );
 
 export const isAxiosError = (error: unknown): error is AxiosError => {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "isAxiosError" in error
-  );
+  return typeof error === "object" && error !== null && "isAxiosError" in error;
 };
 
 export default instance;
-  

@@ -1,19 +1,15 @@
 // ✅ Step 0: StepClubName.tsx
 import React from "react";
-import { Box, Input, Typography } from "@mui/material";
+import { Box, Input } from "@mui/material";
 
 interface StepClubNameProps {
   teamName: string;
   setTeamName: (val: string) => void;
-  error: string;
-  clearError: () => void;
 }
 
 const StepClubName: React.FC<StepClubNameProps> = ({
   teamName,
   setTeamName,
-  error,
-  clearError,
 }) => {
   return (
     <Box
@@ -29,7 +25,6 @@ const StepClubName: React.FC<StepClubNameProps> = ({
         value={teamName}
         onChange={(e) => {
           setTeamName(e.target.value);
-          clearError();
         }}
         sx={{
           maxWidth: 500,
@@ -40,11 +35,6 @@ const StepClubName: React.FC<StepClubNameProps> = ({
           "&::placeholder": { color: "#ccc" },
         }}
       />
-      {error && (
-        <Typography variant="body2" color="error" mt={1}>
-          {error}
-        </Typography>
-      )}
     </Box>
   );
 };

@@ -63,55 +63,55 @@ export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
 };
 
 // ✅ 클럽 업데이트
-export const updateMyClub = async (
-  mySelectedPlayers: MyPlayer[],
-  userId: number,
-  clubId: number,
-  newClubName: string,
-  myFormation: string,
-  myTeamOvr: number,
-  myTeamSquadValue: number,
-  myTeamAge: number,
-  myTeamPace: number,
-  myTeamDefense: number,
-  myTeamAttack: number,
-  myTeamClubCohesion: number,
-  myTeamStamina: number
-): Promise<string> => {
-  try {
-    console.log("Updating club with data:", {
-      userId,
-      clubId,
-      newClubName,
-      myFormation,
-      mySelectedPlayers,
-      myTeamOvr,
-      myTeamSquadValue,
-      myTeamAge,
-      myTeamPace,
-      myTeamDefense,
-      myTeamAttack,
-      myTeamClubCohesion,
-      myTeamStamina,
-    });
-    const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
-      clubName: newClubName,
-      formationName: myFormation,
-      players: mySelectedPlayers,
-      ovr: myTeamOvr,
-      price: myTeamSquadValue,
-      age: myTeamAge,
-      pace: myTeamPace,
-      defense: myTeamDefense,
-      clubCohesion: myTeamClubCohesion,
-      attack: myTeamAttack,
-      stamina: myTeamStamina,
-    });
-    return res.data;
-  } catch (error) {
-    return handleApiError(error, "updateMyClub");
-  }
-};
+// export const updateMyClub = async (
+//   mySelectedPlayers: MyPlayer[],
+//   userId: number,
+//   clubId: number,
+//   newClubName: string,
+//   myFormation: string,
+//   myTeamOvr: number,
+//   myTeamSquadValue: number,
+//   myTeamAge: number,
+//   myTeamPace: number,
+//   myTeamDefense: number,
+//   myTeamAttack: number,
+//   myTeamClubCohesion: number,
+//   myTeamStamina: number
+// ): Promise<string> => {
+//   try {
+//     console.log("Updating club with data:", {
+//       userId,
+//       clubId,
+//       newClubName,
+//       myFormation,
+//       mySelectedPlayers,
+//       myTeamOvr,
+//       myTeamSquadValue,
+//       myTeamAge,
+//       myTeamPace,
+//       myTeamDefense,
+//       myTeamAttack,
+//       myTeamClubCohesion,
+//       myTeamStamina,
+//     });
+//     const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
+//       clubName: newClubName,
+//       formationName: myFormation,
+//       players: mySelectedPlayers,
+//       ovr: myTeamOvr,
+//       price: myTeamSquadValue,
+//       age: myTeamAge,
+//       pace: myTeamPace,
+//       defense: myTeamDefense,
+//       clubCohesion: myTeamClubCohesion,
+//       attack: myTeamAttack,
+//       stamina: myTeamStamina,
+//     });
+//     return res.data;
+//   } catch (error) {
+//     return handleApiError(error, "updateMyClub");
+//   }
+// };
 
 // ✅ 클럽 삭제
 export const deleteMyClub = async (
@@ -146,3 +146,62 @@ export const getOvrIndicator = (
 
 export const getTeamOvrIndicator = (a: number, b: number): string =>
   a === b ? "⚪" : a < b ? "🔴🔻" : "🟢🔺";
+
+
+
+// ✅ 클럽 업데이트
+export const updateMyClub = async (
+  myNation: string,
+  myLogoId: number,
+  mySelectedPlayers: MyPlayer[],
+  userId: number,
+  clubId: number,
+  newClubName: string,
+  myFormation: string,
+  myTeamOvr: number,
+  myTeamSquadValue: number,
+  myTeamAge: number,
+  myTeamPace: number,
+  myTeamDefense: number,
+  myTeamAttack: number,
+  myTeamClubCohesion: number,
+  myTeamStamina: number
+): Promise<string> => {
+  try {
+    console.log("registerMyInfo data:", {
+      myNation, 
+      myLogoId,
+      userId,
+      clubId,
+      newClubName,
+      myFormation,
+      mySelectedPlayers,
+      myTeamOvr,
+      myTeamSquadValue,
+      myTeamAge,
+      myTeamPace,
+      myTeamDefense,
+      myTeamAttack,
+      myTeamClubCohesion,
+      myTeamStamina,
+    });
+    const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
+      myNation: myNation,
+      myLogoId: myLogoId,
+      clubName: newClubName,
+      formationName: myFormation,
+      players: mySelectedPlayers,
+      ovr: myTeamOvr,
+      price: myTeamSquadValue,
+      age: myTeamAge,
+      pace: myTeamPace,
+      defense: myTeamDefense,
+      clubCohesion: myTeamClubCohesion,
+      attack: myTeamAttack,
+      stamina: myTeamStamina,
+    });
+    return res.data;
+  } catch (error) {
+    return handleApiError(error, "updatemyinfo");
+  }
+};

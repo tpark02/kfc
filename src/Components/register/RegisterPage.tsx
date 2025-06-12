@@ -1,21 +1,36 @@
 // Register.tsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Snackbar, Alert } from "@mui/material";
 import StepClubName from "../register/StepClubName";
 import StepNationality from "../register/StepNationality";
 import StepLogo from "../register/StepLogo";
 import StepSquadBuilder from "../register/StepSquadBuilder";
 import { useSquadStore } from "../../store/useSquadStore";
-import { DropZone } from "../../types/dropZone";
+// import { DropZone } from "../../types/dropZone";
 import { Logo } from "../../types/Logo";
 import axiosInstance from "../../axiosInstance";
 import { fetchRandomSquad } from "../../api/squad";
+import { shallow } from "zustand/shallow";
+import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
+import LoadingSpinner from "../LoadingSpinner";
 
 const Register: React.FC = () => {
   const {
     myFormation,
-    mySelectedPlayers,
     myUserId,
+    myTeamName,
+    myNation,
+    myLogoId,
+    mySelectedPlayers,
+    myTeamOvr,
+    myTeamSquadValue,
+    myTeamAge,
+    myTeamPace,
+    myTeamDefense,
+    myTeamClubCohesion,
+    myTeamAttack,
+    myTeamStamina,
+
     setMySelectedPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -30,27 +45,115 @@ const Register: React.FC = () => {
     setMyUniformImgUrl,
     setMyTeamName,
     setMyNation,
-    setIsDropZoneSelected,
-  } = useSquadStore();
+  } = useSquadStore(
+    (s) => ({
+      myFormation: s.myFormation,
+      mySelectedPlayers: s.mySelectedPlayers,
+      myUserId: s.myUserId,
+
+      myTeamName: s.myTeamName,
+      myNation: s.myNation,
+      myLogoId: s.myLogoId,
+      myTeamOvr: s.myTeamOvr,
+      myTeamSquadValue: s.myTeamSquadValue,
+      myTeamAge: s.myTeamAge,
+      myTeamPace: s.myTeamPace,
+      myTeamDefense: s.myTeamDefense,
+      myTeamClubCohesion: s.myTeamClubCohesion,
+      myTeamAttack: s.myTeamAttack,
+      myTeamStamina: s.myTeamStamina,
+
+      setMySelectedPlayers: s.setMySelectedPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamAge: s.setMyTeamAge,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      setMyLogoId: s.setMyLogoId,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
+      setMyUniformImgUrl: s.setMyUniformImgUrl,
+      setMyTeamName: s.setMyTeamName,
+      setMyNation: s.setMyNation,
+      // setIsDropZoneSelected: s.setIsDropZoneSelected,
+    }),
+    shallow
+  );
+
+  const handleUpdateMyInfo = () => {
+    setLoading(true);
+
+    if (myTeamName.length > 0) {
+      updateMyClub(
+        myNation,
+        myLogoId,
+        mySelectedPlayers,
+        myUserId,
+        1,
+        myTeamName,
+        myFormation,
+        myTeamOvr,
+        myTeamSquadValue,
+        myTeamAge,
+        myTeamPace,
+        myTeamDefense,
+        myTeamClubCohesion,
+        myTeamAttack,
+        myTeamStamina
+      )
+        .then((msg) => {
+          setSnackbarMessage(msg);
+          setSnackbarOpen(true);
+          fetchMyClubs(myUserId).then((clubs) => {
+            console.log("my club.tsx updated clubs - ", clubs);
+            const updatedClub = clubs.find((c) => c.clubId === 1);
+            if (updatedClub && updatedClub.players) {
+              setMySelectedPlayers(updatedClub.players);
+            }
+            console.log("my club.tsx selected players - ", mySelectedPlayers);
+          });
+        })
+        .catch((err) => {
+          const msg =
+            typeof err === "string"
+              ? err
+              : err?.response?.data?.message ||
+                JSON.stringify(err?.response?.data ?? err, null, 2);
+          setSnackbarMessage(msg);
+          setSnackbarOpen(true);
+          // ✅ 에러 발생 시 Step 1로 이동
+          setCurrentStep(1);
+        })
+        .finally(() => {
+          setLoading(false);
+          //   setEditingIndex(null);
+        });
+    }
+    // setLoading(false);
+    // setEditingIndex(null);
+  };
+  const [loading, setLoading] = useState(false);
 
   const [teamName, setTeamName] = useState("");
   const [nationality, setNationality] = useState("");
   const [logos, setLogos] = useState<Logo[]>([]);
-  const [selectedLogo, setSelectedLogo] = useState<Logo>({
-    id: -1,
-    logoImg: "",
-  });
+  // const [selectedLogo, setSelectedLogo] = uses<Logo>({
+  //   id: -1,
+  //   logoImg: "",
+  // });
   const [confirmedLogoId, setConfirmedLogoId] = useState<number | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  // const [dialogOpen, setDialogOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [teamNameError, setTeamNameError] = useState("");
+  // const [logoError, setLogoError] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [selectedDropZone, setSelectedDropZone] = useState<DropZone>({
-    index: -1,
-    pos: "",
-  });
-  const listRef = useRef<HTMLDivElement | null>(null);
+  // const [selectedDropZone, setSelectedDropZone] = useState<DropZone>({
+  //   index: -1,
+  //   pos: "",
+  // });
+  // const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     axiosInstance.get("/api/logos").then((res) => setLogos(res.data));
@@ -59,6 +162,9 @@ const Register: React.FC = () => {
   useEffect(() => {
     if (currentStep === 3) {
       loadRandomSquad();
+    }
+    if (currentStep === 4) {
+      handleUpdateMyInfo();
     }
   }, [currentStep]);
 
@@ -87,30 +193,52 @@ const Register: React.FC = () => {
   };
 
   const validateTeamName = () => {
-    if (!teamName) return setTeamNameError("Team name is required."), false;
-    if (teamName.length > 10)
-      return setTeamNameError("Max 10 characters."), false;
-    if (!/^[A-Za-z0-9]+$/.test(teamName))
-      return setTeamNameError("Only English letters and numbers."), false;
-    if (/^[0-9]+$/.test(teamName))
-      return setTeamNameError("Cannot be numbers only."), false;
+    if (!teamName) {
+      setSnackbarMessage("Team name is required.");
+      setSnackbarOpen(true);
+      return false;
+    }
+    if (teamName.length > 10) {
+      setSnackbarMessage("Max 10 characters.");
+      setSnackbarOpen(true);
+      return false;
+    }
+    if (!/^[A-Za-z0-9]+$/.test(teamName)) {
+      setSnackbarMessage("Only English letters and numbers.");
+      setSnackbarOpen(true);
+      return false;
+    }
+    if (/^[0-9]+$/.test(teamName)) {
+      setSnackbarMessage("Cannot be numbers only.");
+      setSnackbarOpen(true);
+      return false;
+    }
     setMyTeamName(teamName);
-    setTeamNameError("");
     return true;
   };
 
   const validateNationality = () => {
     if (!nationality) {
-      setTeamNameError("Please select a nationality.");
+      setSnackbarMessage("Please select a nationality.");
+      setSnackbarOpen(true);
       return false;
     }
     setMyNation(nationality);
     return true;
   };
-  console.log("✅ setMySelectedPlayers", mySelectedPlayers);
+
+  const validateLogoSelection = () => {
+    if (currentStep === 2 && confirmedLogoId === null) {
+      setSnackbarMessage("Please select a logo before continuing.");
+      setSnackbarOpen(true);
+      return false;
+    }
+    return true;
+  };
 
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
+      {loading && <LoadingSpinner />}
       <Typography variant="h4" mb={2}>
         Step {currentStep + 1}
       </Typography>
@@ -119,15 +247,12 @@ const Register: React.FC = () => {
         <StepClubName
           teamName={teamName}
           setTeamName={setTeamName}
-          error={teamNameError}
-          clearError={() => setTeamNameError("")}
         />
       )}
       {currentStep === 1 && (
         <StepNationality
           nationality={nationality}
           setNationality={setNationality}
-          error={teamNameError}
         />
       )}
       {currentStep === 2 && (
@@ -141,19 +266,10 @@ const Register: React.FC = () => {
             setMyUniformImgUrl(
               `https://jlzddfddozuowxamnreb.supabase.co/storage/v1/object/public/kfc//u${logo.id}-removebg-preview.png`
             );
-            setTeamNameError(""); // 선택 시 오류 제거
           }}
-          error={teamNameError}
         />
       )}
-      {currentStep === 3 && (
-        <StepSquadBuilder
-          myFormation={myFormation}
-          setSelectedPosition={() => {}}
-          listRef={listRef}
-        />
-      )}
-
+      {currentStep === 3 && <StepSquadBuilder />}
       {currentStep < 4 && (
         <Button
           variant="contained"
@@ -161,11 +277,8 @@ const Register: React.FC = () => {
           onClick={() => {
             if (currentStep === 0 && !validateTeamName()) return;
             if (currentStep === 1 && !validateNationality()) return;
-            if (currentStep === 2 && confirmedLogoId === null) {
-              setTeamNameError("Please select a logo before continuing.");
-              return;
-            }
-            setCurrentStep((prev) => prev + 1);
+            if (currentStep === 2 && !validateLogoSelection()) return;
+            setCurrentStep((prev: number) => prev + 1);
           }}
         >
           Next

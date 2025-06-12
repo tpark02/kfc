@@ -10,11 +10,11 @@ import "../../DropZone.css";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
-  searchPlayerRef: React.RefObject<HTMLDivElement | null>;
+  // searchPlayerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const SquadBuilder: React.FC<SquadBuilderProp> = ({
-  searchPlayerRef,
+  // searchPlayerRef,
   selectedFormation,
 }) => {
   const {
@@ -60,9 +60,9 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
       resetDropZoneList();
     }
 
-    if (searchPlayerRef.current) {
-      searchPlayerRef.current.scrollTop = 0;
-    }
+    // if (searchPlayerRef.current) {
+    //   searchPlayerRef.current.scrollTop = 0;
+    // }
   };
 
   return (
