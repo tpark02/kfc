@@ -10,7 +10,7 @@ export const getPosColor = (pos: string) => {
   if (pos.includes("ST") || pos.includes("W")) c = "red";
   else if (pos.includes("M")) c = "orange";
   else if (pos.includes("B")) c = "blue";
-  else if (pos.includes("G")) c = "orange";
+  else if (pos.includes("G")) c = "green";
   return c;
 };
 

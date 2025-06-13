@@ -59,5 +59,5 @@ export const getPlayerRole = (pos: string) => {
   if (pos.includes("CB")) return "Defender";
   if (pos.includes("CAM") || pos.includes("CM")) return "Midfielder";
   if (pos.includes("LW") || pos.includes("RW")) return "Winger";
-  return "Player";
+  return pos;
 };

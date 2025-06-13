@@ -14,12 +14,16 @@ const SquadMetrics: React.FC = () => {
   // const metricsData = metrics(players);
   const {
     // dropPlayers,
+    myTeamName,
+    myLogoImgUrl,
     mySelectedPlayers,
     myTeamOvr,
     myTeamSquadValue,
   } = useSquadStore(
     (s) => ({
       // dropPlayers: s.dropPlayers,
+      myTeamName: s.myTeamName,
+      myLogoImgUrl: s.myLogoImgUrl,
       mySelectedPlayers: s.mySelectedPlayers,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
@@ -47,6 +51,10 @@ const SquadMetrics: React.FC = () => {
           // margin: "1px auto",
         }}
       >
+        <div className="squad-metrics-section">
+          <img src={myLogoImgUrl} style={{ width: "50%", height: "auto" }} />
+          <Typography variant="h3">{myTeamName}</Typography>
+        </div>
         <div className="squad-metrics-section">
           <Typography>OVR</Typography>
           <Typography variant="subtitle1" fontWeight="bold">

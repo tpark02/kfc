@@ -7,6 +7,7 @@ import { shallow } from "zustand/shallow";
 
 import "../../style/SquadBuilder.css";
 import "../../DropZone.css";
+import { getPosColor } from "../../util/util";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
@@ -18,12 +19,11 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   selectedFormation,
 }) => {
   const {
-    myLogoImgUrl,
     mySelectedPlayers,
     dropZoneList,
     setDropZoneList,
     setMySelectedPlayers,
-    resetDropZoneList,
+    // resetDropZoneList,
   } = useSquadStore(
     (s) => ({
       myLogoImgUrl: s.myLogoImgUrl,
@@ -57,12 +57,8 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
       });
 
       setMySelectedPlayers(updatedPlayers);
-      resetDropZoneList();
+      // resetDropZoneList();
     }
-
-    // if (searchPlayerRef.current) {
-    //   searchPlayerRef.current.scrollTop = 0;
-    // }
   };
 
   return (
@@ -73,13 +69,13 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
           .filter((p): p is MyPlayer => !!p)
           .sort((a, b) => a.idx - b.idx)
           .find((p) => p.idx === idx);
-
+        const posColor = getPosColor(player?.pos ?? "");
         return (
           <Button
             key={`starting-${idx}`}
             onClick={() => handlePlayerClick(idx, pos)}
             style={{
-              color: "red",
+              color: "white",
               position: "absolute",
               top: `${position.top}%`,
               left: `${position.left}%`,
@@ -89,16 +85,30 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               flexWrap: "wrap",
             }}
           >
-            <img
-              src={player?.name !== "dummy" ? myLogoImgUrl : "/img/avatar.jpg"}
-              alt={player?.name}
+            <div
               style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "8px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
               }}
-            />
-            {player?.name}
+            >
+              {/* 🔵 Dot on top */}
+              <div
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  backgroundColor: posColor,
+                  boxShadow: "0 0 6px rgba(0, 0, 0, 0.6)",
+                  marginBottom: 4, // adds space between dot and name
+                }}
+              />
+
+              {/* 👤 Player last name */}
+              <div style={{ fontSize: 12, color: "white" }}>
+                {player?.name?.split(" ").slice(-1)[0]}
+              </div>
+            </div>
           </Button>
         );
       })}

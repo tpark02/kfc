@@ -8,9 +8,13 @@ import { useSquadStore } from "../../store/useSquadStore";
 
 const LoginForm: React.FC = () => {
   const {
+    myFormation,
+    mySelectedPlayers,
+    myClubs,
+    myUserId,
     setMySelectedPlayers,
     setMyTeamOvr,
-    setIsDropZoneSelected,
+    // setIsDropZoneSelected,
     setMyTeamSquadValue,
     setMyTeamAge,
     setMyTeamPace,
@@ -20,12 +24,15 @@ const LoginForm: React.FC = () => {
     setMyTeamStamina,
     setMyClubs,
     setMyUserId,
+    setMyFormation,
   } = useSquadStore(
     (s) => ({
       myUserId: s.myUserId,
       myFormation: s.myFormation,
+      mySelectedPlayers: s.mySelectedPlayers,
+      myClubs: s.myClubs,
       setMyTeamOvr: s.setMyTeamOvr,
-      setIsDropZoneSelected: s.setIsDropZoneSelected,
+      // setIsDropZoneSelected: s.setIsDropZoneSelected,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
       setMyTeamPace: s.setMyTeamPace,
@@ -36,6 +43,7 @@ const LoginForm: React.FC = () => {
       setMyClubs: s.setMyClubs,
       setMyUserId: s.setMyUserId,
       setMySelectedPlayers: s.setMySelectedPlayers,
+      setMyFormation: s.setMyFormation,
     }),
     shallow
   );
@@ -90,13 +98,27 @@ const LoginForm: React.FC = () => {
 
   const fetchMyInfo = async () => {
     try {
-      const res = await axiosInstance.get("http://localhost:8080/me", {
+      const res = await axiosInstance.get("/api/me", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       console.log("🙋 내 정보:", res.data); // { userId: 3 }
-      setMyUserId(res.data.userId); // ✅ 저장
+
+      const userId = res.data.userId;
+      const myClub = res.data.myClub;
+      const myFormation = res.data.myFormation;
+      const myplayers = res.data.myPlayers;
+
+      console.log("user id - ", userId);
+      console.log("my club - ", myClub);
+      console.log("my formation - ", myFormation);
+      console.log("my players - ", myplayers);
+
+      setMyUserId(userId); // ✅ 저장
+      setMyClubs(myClub);
+      setMyFormation(myFormation.name);
+      setMySelectedPlayers(myplayers);
 
     } catch (e) {
       console.error("❌ 사용자 정보 가져오기 실패:", e);

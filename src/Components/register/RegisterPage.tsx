@@ -30,7 +30,7 @@ const Register: React.FC = () => {
     myTeamClubCohesion,
     myTeamAttack,
     myTeamStamina,
-
+    myClubs,
     setMySelectedPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -50,7 +50,7 @@ const Register: React.FC = () => {
       myFormation: s.myFormation,
       mySelectedPlayers: s.mySelectedPlayers,
       myUserId: s.myUserId,
-
+      myClubs: s.myClubs,
       myTeamName: s.myTeamName,
       myNation: s.myNation,
       myLogoId: s.myLogoId,
@@ -236,6 +236,10 @@ const Register: React.FC = () => {
     return true;
   };
 
+  console.log("my data 1- ", myUserId);
+  console.log("my data 2- ", mySelectedPlayers);
+  console.log("my data 3- ", myClubs);
+  console.log("my data 4- ", myFormation);
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
       {loading && <LoadingSpinner />}
@@ -244,10 +248,7 @@ const Register: React.FC = () => {
       </Typography>
 
       {currentStep === 0 && (
-        <StepClubName
-          teamName={teamName}
-          setTeamName={setTeamName}
-        />
+        <StepClubName teamName={teamName} setTeamName={setTeamName} />
       )}
       {currentStep === 1 && (
         <StepNationality

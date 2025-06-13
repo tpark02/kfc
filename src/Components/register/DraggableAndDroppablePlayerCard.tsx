@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { CardContent, Box, Typography } from "@mui/material";
 import { MyPlayer } from "../../types/player";
 import { playerCardStyle, playerRowStyle } from "../../style/playerCardStyles";
+import { getStatDisplay } from "../../style/playerStyle";
+import { getPosColor } from "../../util/util";
 
 interface Props {
   player: MyPlayer;
@@ -37,6 +39,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
   });
 
   if (!player || player.name === "dummy") return null;
+  const posColor = getPosColor(player.pos);
 
   return (
     <CardContent
@@ -48,7 +51,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
       }}
     >
       <Box sx={playerRowStyle}>
-        <Typography variant="body2" sx={{ flex: "0 0 40px" }}>
+        <Typography variant="body2" sx={{ flex: "0 0 40px", color: posColor }}>
           {player.pos}
         </Typography>
         <Typography sx={{ flex: 1, fontWeight: 600, textAlign: "center" }}>
@@ -58,7 +61,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
           variant="body2"
           sx={{ flex: "0 0 50px", textAlign: "center" }}
         >
-          {player.ovr}
+          {getStatDisplay("", player.ovr)}
         </Typography>
       </Box>
     </CardContent>
