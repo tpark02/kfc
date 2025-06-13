@@ -7,7 +7,7 @@ import { UserInfoResponse, SeasonResponse } from "../types/response";
 
 export const fetchUserInfo = async (userId: number) => {
   try {
-    const res = await axiosInstance.post<UserInfoResponse>("/userInfo/", { userId });
+    const res = await axiosInstance.post<UserInfoResponse>("/api/userInfo", { userId });
     return res;
   } catch (error) {
     handleApiError(error, "fetchUserInfo");

@@ -64,19 +64,28 @@ const LoginForm: React.FC = () => {
         "/api/login",
         form
       );
+
+      // ✅ 로그인 성공 시 토큰 및 userId 저장
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", String(response.data.userId));
       setError("");
 
-      // 선택: 로그인 후 보호 API 테스트
+      // ✅ 선택: 로그인 후 보호된 API 요청 (테스트용)
       const protectedData = await getProtectedData();
       console.log("🔐 보호된 데이터:", protectedData.message);
+
       await fetchMyInfo();
 
+      // ✅ 로그인 성공 후 페이지 이동
       setTimeout(() => navigate("/squad"), 300);
     } catch (err: any) {
+      // ✅ 서버가 문자열 에러 메시지를 직접 body에 보내는 경우
       const msg =
-        err.response?.data?.message || err.message || "알 수 없는 오류 발생";
-      setError(msg);
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : err.message || "알 수 없는 오류 발생";
+
+      setError(msg); // 사용자에게 표시
     }
   };
 
@@ -119,7 +128,6 @@ const LoginForm: React.FC = () => {
       setMyClubs(myClub);
       setMyFormation(myFormation.name);
       setMySelectedPlayers(myplayers);
-
     } catch (e) {
       console.error("❌ 사용자 정보 가져오기 실패:", e);
     }
@@ -148,6 +156,9 @@ const LoginForm: React.FC = () => {
         <button onClick={handleLogin} style={{ width: "100%" }}>
           로그인
         </button>
+        <p style={{ marginTop: 10 }}>
+          계정이 없으신가요? <a href="/signup">회원가입</a>
+        </p>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
     </div>

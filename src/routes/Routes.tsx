@@ -11,12 +11,14 @@ import Register from "../components/register/RegisterPage";
 import StepSquadBuilder from "../components/register/StepSquadBuilder";
 import PrivateRoute from "../components/PrivateRoutes";
 import Layout from "../Layout";
+import SignUpForm from "../components/login/SignupForm";
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
       {/* 로그인은 레이아웃 없이 */}
       <Route path="/login" element={<LoginForm />} />
+      <Route path="/signup" element={<SignUpForm />} />
 
       {/* 공통 레이아웃 적용 */}
       <Route element={<Layout />}>

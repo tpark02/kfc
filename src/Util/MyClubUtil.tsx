@@ -21,7 +21,7 @@ const handleApiError = (error: unknown, context: string): string => {
 // ✅ 유저 정보
 export const fetchUserInfo = async (userId: number) => {
   try {
-    const res = await axiosInstance.post<UserInfoResponse>("/userInfo/", {
+    const res = await axiosInstance.post<UserInfoResponse>("/api/userInfo", {
       userId,
     });
     return res;

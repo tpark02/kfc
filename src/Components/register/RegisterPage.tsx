@@ -161,6 +161,7 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     if (currentStep === 3) {
+      console.log("load random team  user id - ", myUserId);
       loadRandomSquad();
     }
     if (currentStep === 4) {
