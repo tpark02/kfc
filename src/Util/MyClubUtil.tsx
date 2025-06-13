@@ -165,7 +165,7 @@ export const updateMyClub = async (
   myTeamDefense: number,
   myTeamAttack: number,
   myTeamClubCohesion: number,
-  myTeamStamina: number
+  myTeamStamina: number,
 ): Promise<string> => {
   try {
     console.log("registerMyInfo data:", {
@@ -183,7 +183,7 @@ export const updateMyClub = async (
       myTeamDefense,
       myTeamAttack,
       myTeamClubCohesion,
-      myTeamStamina,
+      myTeamStamina,      
     });
     const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
       myNation: myNation,

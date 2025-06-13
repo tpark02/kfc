@@ -134,33 +134,31 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="app-container">
-      <div style={{ maxWidth: 300, margin: "auto" }}>
-        <h2>로그인</h2>
-        <input
-          type="text"
-          name="username"
-          placeholder="아이디"
-          value={form.username}
-          onChange={handleChange}
-          style={{ width: "100%", margin: "50px auto" }}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="비밀번호"
-          value={form.password}
-          onChange={handleChange}
-          style={{ width: "100%", marginBottom: 8 }}
-        />
-        <button onClick={handleLogin} style={{ width: "100%" }}>
-          로그인
-        </button>
-        <p style={{ marginTop: 10 }}>
-          계정이 없으신가요? <a href="/signup">회원가입</a>
-        </p>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </div>
+    <div style={{ maxWidth: 300, margin: "auto" }}>
+      <h2>로그인</h2>
+      <input
+        type="text"
+        name="username"
+        placeholder="아이디"
+        value={form.username}
+        onChange={handleChange}
+        style={{ width: "100%", margin: "50px auto" }}
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="비밀번호"
+        value={form.password}
+        onChange={handleChange}
+        style={{ width: "100%", marginBottom: 8 }}
+      />
+      <button onClick={handleLogin} style={{ width: "100%" }}>
+        로그인
+      </button>
+      <p style={{ marginTop: 10 }}>
+        계정이 없으신가요? <a href="/signup">회원가입</a>
+      </p>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };

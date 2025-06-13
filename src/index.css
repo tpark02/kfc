@@ -100,10 +100,7 @@ td {
   box-shadow: none;
 }
 
-.app-container {
-  width: 100vw;
-  min-height: 100vh; /* ✅ make sure it fills screen */
-  box-sizing: border-box;
+.app-container {      
   margin-top: 50px;
   background-color: var(--background-color);
 }

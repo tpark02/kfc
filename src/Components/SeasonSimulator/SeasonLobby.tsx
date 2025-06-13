@@ -86,7 +86,7 @@ export default function SeasonLobby() {
   };
 
   useEffect(() => {
-    setMyUserId(1); // 임시 user id
+    // setMyUserId(1); // 임시 user id
     console.log("setting user id:", myUserId);
   }, []);
 
@@ -190,7 +190,7 @@ export default function SeasonLobby() {
   }, [HasRedCard]);
 
   return (
-    <Box p={4}>
+    <Box>
       {/* <MyClubSelect selectedIdx={selectedMyClubIdx} setIdx={setIdx} /> */}
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         {joinedSeasonId}

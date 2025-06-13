@@ -1,9 +1,17 @@
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 
-import { CardContent, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { MyPlayer } from "../../types/player";
-import { playerCardStyle, playerRowStyle } from "../../style/playerCardStyles";
+import {
+  outerCardStyle,
+  rowStyle,
+  posStyle,
+  nameBoxStyle,
+  firstNameStyle,
+  lastNameStyle,
+  ovrStyle,
+} from "../../style/playerCardStyles";
 import { getStatDisplay } from "../../style/playerStyle";
 import { getPosColor } from "../../util/util";
 
@@ -38,33 +46,64 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
     },
   });
 
-  if (!player || player.name === "dummy") return null;
+  // if (!player || player.name === "dummy") return null;
   const posColor = getPosColor(player.pos);
+  const [firstName, lastName] = player.name.split(" ");
 
-  return (
-    <CardContent
-      ref={(node) => dragRef(dropRef(node))}
-      sx={{
-        ...playerCardStyle,
-        opacity: isDragging ? 0.5 : 1,
-        cursor: "grab",
-      }}
+  return player.name === "dummy" ? (
+    <Box
+      ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
+      sx={outerCardStyle(isDragging)}
     >
-      <Box sx={playerRowStyle}>
-        <Typography variant="body2" sx={{ flex: "0 0 40px", color: posColor }}>
-          {player.pos}
-        </Typography>
-        <Typography sx={{ flex: 1, fontWeight: 600, textAlign: "center" }}>
-          {player.name}
-        </Typography>
+      <Box sx={{ ...rowStyle }}>
         <Typography
           variant="body2"
-          sx={{ flex: "0 0 50px", textAlign: "center" }}
+          component="span"
+          sx={{
+            width: "100%",
+          }}
         >
+          EMPTY
+        </Typography>
+
+        {/* <Box sx={nameBoxStyle}>
+          <Typography component="span" sx={firstNameStyle}>
+            {firstName}
+          </Typography>
+          <Typography component="span" sx={lastNameStyle}>
+            {lastName}
+          </Typography>
+        </Box>
+
+        <Typography variant="body2" component="span" sx={ovrStyle}>
+          {getStatDisplay("", player.ovr)}
+        </Typography> */}
+      </Box>
+    </Box>
+  ) : (
+    <Box
+      ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
+      sx={outerCardStyle(isDragging)}
+    >
+      <Box sx={rowStyle}>
+        <Typography variant="body2" component="span" sx={posStyle(posColor)}>
+          {player.pos}
+        </Typography>
+
+        <Box sx={nameBoxStyle}>
+          <Typography component="span" sx={firstNameStyle}>
+            {firstName}
+          </Typography>
+          <Typography component="span" sx={lastNameStyle}>
+            {lastName}
+          </Typography>
+        </Box>
+
+        <Typography variant="body2" component="span" sx={ovrStyle}>
           {getStatDisplay("", player.ovr)}
         </Typography>
       </Box>
-    </CardContent>
+    </Box>
   );
 };
 

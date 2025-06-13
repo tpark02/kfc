@@ -50,9 +50,9 @@ const NavBar: React.FC = () => {
       <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/tournament"); }}>
         Tournament
       </Button>
-      <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/register"); }}>
+      {/* <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/register"); }}>
         Register
-      </Button>
+      </Button> */}
       {/* 오른쪽 끝에 로그인/로그아웃 버튼 */}
       <div style={{ marginLeft: "auto" }}>
         {token ? (

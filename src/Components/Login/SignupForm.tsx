@@ -68,6 +68,8 @@ const SignUpForm: React.FC = () => {
       return;
     }
 
+    console.log("input password : ", password); // true or false
+
     try {
       setLoading(true);
       const res = await axiosInstance.post("/api/signup", form);
@@ -76,7 +78,7 @@ const SignUpForm: React.FC = () => {
       console.log("🆕 회원가입 완료:", res.data);
 
       setMyUserId(res.data.userId);
-      
+
       setSuccess("회원가입이 완료되었습니다! 클럽 셋업 페이지로 이동합니다.");
       setError("");
     } catch (err: any) {
@@ -101,43 +103,41 @@ const SignUpForm: React.FC = () => {
   }, [success, navigate]);
 
   return (
-    <div className="app-container">
-      <div style={{ maxWidth: 300, margin: "auto" }}>
-        <h2>회원가입</h2>
-        <input
-          type="text"
-          name="username"
-          placeholder="아이디"
-          value={form.username}
-          onChange={handleChange}
-          style={{ width: "100%", margin: "16px auto" }}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="비밀번호"
-          value={form.password}
-          onChange={handleChange}
-          style={{ width: "100%", margin: "16px auto" }}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="example@domain.com"
-          value={form.email}
-          onChange={handleChange}
-          style={{ width: "100%", margin: "16px auto" }}
-        />
-        <button
-          onClick={handleSignUp}
-          disabled={loading}
-          style={{ width: "100%", padding: "10px", marginTop: "16px" }}
-        >
-          {loading ? "처리 중..." : "회원가입"}
-        </button>
-        {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
-        {success && <p style={{ color: "green", marginTop: 12 }}>{success}</p>}
-      </div>
+    <div style={{ maxWidth: 300, margin: "auto" }}>
+      <h2>회원가입</h2>
+      <input
+        type="text"
+        name="username"
+        placeholder="아이디"
+        value={form.username}
+        onChange={handleChange}
+        style={{ width: "100%", margin: "16px auto" }}
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="비밀번호"
+        value={form.password}
+        onChange={handleChange}
+        style={{ width: "100%", margin: "16px auto" }}
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="example@domain.com"
+        value={form.email}
+        onChange={handleChange}
+        style={{ width: "100%", margin: "16px auto" }}
+      />
+      <button
+        onClick={handleSignUp}
+        disabled={loading}
+        style={{ width: "100%", padding: "10px", marginTop: "16px" }}
+      >
+        {loading ? "처리 중..." : "회원가입"}
+      </button>
+      {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
+      {success && <p style={{ color: "green", marginTop: 12 }}>{success}</p>}
     </div>
   );
 };

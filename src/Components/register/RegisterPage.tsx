@@ -13,8 +13,10 @@ import { fetchRandomSquad } from "../../api/squad";
 import { shallow } from "zustand/shallow";
 import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
 import LoadingSpinner from "../LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const {
     myFormation,
     myUserId,
@@ -166,6 +168,7 @@ const Register: React.FC = () => {
     }
     if (currentStep === 4) {
       handleUpdateMyInfo();
+      navigate("/squad");
     }
   }, [currentStep]);
 

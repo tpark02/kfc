@@ -1,41 +1,56 @@
-// Squad.tsx
-import React, { useState, useRef, useEffect } from "react";
-import { Snackbar, Alert, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Grid, Divider, Button } from "@mui/material";
+import SquadBuilder from "../teambuilder/SquadBuilder";
+import SquadMetrics from "../teambuilder/SquadMetrics";
+import SelectFormation from "../teambuilder/SelectFormation";
+import { formations } from "../../data/formations";
 import { shallow } from "zustand/shallow";
-
-// API
-import { fetchRandomSquad } from "../../api/squad";
-import { fetchMyClubs } from "../../util/myClubUtil";
-
-// Store
 import { useSquadStore } from "../../store/useSquadStore";
-
-// Components
-import MyClub from "../myclub/MyClub";
-import SquadMetrics from "./SquadMetrics";
-import SquadBuilder from "./SquadBuilder";
-import SelectFormation from "./SelectFormation";
+import DraggableAndDroppablePlayerCard from "../../components/register/DraggableAndDroppablePlayerCard";
+import { Snackbar, Alert } from "@mui/material";
+import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
 import LoadingSpinner from "../LoadingSpinner";
 
-// Data
-import { formations } from "../../data/formations";
-
-// Types
-import { DropZone } from "../../types/dropZone";
-import { Country } from "../../types/country";
-import { League } from "../../types/league";
-import { Team } from "../../types/team";
-
-// Styles
-import "../../style/Squad.css";
-
 const Squad: React.FC = () => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
+    const updated = [...mySelectedPlayers];
+
+    // swap
+    [updated[sourceIdx], updated[targetIdx]] = [
+      updated[targetIdx],
+      updated[sourceIdx],
+    ];
+
+    // ✅ idx 값도 실제 위치에 맞춰 갱신
+    updated.forEach((p, i) => {
+      p.idx = i;
+    });
+
+    setMySelectedPlayers(updated);
+  };
+
   const {
-    myUserId,
     myFormation,
+    myUserId,
+    myTeamName,
+    myNation,
+    myLogoId,
+    mySelectedPlayers,
+    myTeamOvr,
+    myTeamSquadValue,
+    myTeamAge,
+    myTeamPace,
+    myTeamDefense,
+    myTeamClubCohesion,
+    myTeamAttack,
+    myTeamStamina,
+    myClubs,
     setMySelectedPlayers,
     setMyTeamOvr,
-    setIsDropZoneSelected,
     setMyTeamSquadValue,
     setMyTeamAge,
     setMyTeamPace,
@@ -43,14 +58,31 @@ const Squad: React.FC = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
-    setMyClubs,
-    setMyUserId,
+    setMyLogoId,
+    setMyLogoImgUrl,
+    setMyUniformImgUrl,
+    setMyTeamName,
+    setMyNation,
   } = useSquadStore(
     (s) => ({
-      myUserId: s.myUserId,
       myFormation: s.myFormation,
+      mySelectedPlayers: s.mySelectedPlayers,
+      myUserId: s.myUserId,
+      myClubs: s.myClubs,
+      myTeamName: s.myTeamName,
+      myNation: s.myNation,
+      myLogoId: s.myLogoId,
+      myTeamOvr: s.myTeamOvr,
+      myTeamSquadValue: s.myTeamSquadValue,
+      myTeamAge: s.myTeamAge,
+      myTeamPace: s.myTeamPace,
+      myTeamDefense: s.myTeamDefense,
+      myTeamClubCohesion: s.myTeamClubCohesion,
+      myTeamAttack: s.myTeamAttack,
+      myTeamStamina: s.myTeamStamina,
+
+      setMySelectedPlayers: s.setMySelectedPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
-      setIsDropZoneSelected: s.setIsDropZoneSelected,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
       setMyTeamPace: s.setMyTeamPace,
@@ -58,127 +90,212 @@ const Squad: React.FC = () => {
       setMyTeamAttack: s.setMyTeamAttack,
       setMyTeamClubCohesion: s.setMyTeamClubCohesion,
       setMyTeamStamina: s.setMyTeamStamina,
-      setMyClubs: s.setMyClubs,
-      setMyUserId: s.setMyUserId,
-      setMySelectedPlayers: s.setMySelectedPlayers,
+      setMyLogoId: s.setMyLogoId,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
+      setMyUniformImgUrl: s.setMyUniformImgUrl,
+      setMyTeamName: s.setMyTeamName,
+      setMyNation: s.setMyNation,
+      // setIsDropZoneSelected: s.setIsDropZoneSelected,
     }),
     shallow
   );
 
-  // State
-  const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
-  const [selectedLeagues, setSelectedLeagues] = useState<League[]>([]);
-  const [selectedClubs, setSelectedClubs] = useState<Team[]>([]);
-  const [selectedPos, setSelectedPosition] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [selectedDropZone, setSelectedDropZone] = useState<DropZone>({
-    index: -1,
-    pos: "",
-  });
-  const [loading, setLoading] = useState(false);
-
-  const squadSelectRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    setMyUserId(1); // 임시 user ID
-  }, []);
-
-  useEffect(() => {
-    if (myUserId === -1) return;
-
-    fetchMyClubs(myUserId)
-      .then((clubs) => {
-        // const padded = Array(3).fill(null);
-        // clubs.forEach((club, idx) => (padded[idx] = club ?? null));
-        setMyClubs(clubs);
-      })
-      .catch((err) => console.error("❌ 클럽 설정 실패:", err));
-  }, [myUserId]);
-
-  const loadRandomSquad = () => {
+  const handleUpdateMyInfo = () => {
     setLoading(true);
-    fetchRandomSquad({
-      name: myFormation,
-      countries: selectedCountries,
-      leagues: selectedLeagues,
-      clubs: selectedClubs,
-      userId: myUserId,
-    })
-      .then((data) => {
-        setMySelectedPlayers(data.myPlayerList);
-        setMyTeamOvr(data.myTeamOvr);
-        setMyTeamSquadValue(data.myTeamSquadValue);
-        setMyTeamAge(data.myTeamAge);
-        setMyTeamPace(data.myTeamPace);
-        setMyTeamDefense(data.myTeamDef);
-        setMyTeamAttack(data.myTeamAtk);
-        setMyTeamClubCohesion(data.myTeamClubCohesion);
-        setMyTeamStamina(data.myTeamStamina);
-      })
-      .catch((err) => {
-        setSnackbarMessage(err.response?.data || "에러 발생");
-        setSnackbarOpen(true);
-      })
-      .finally(() => setLoading(false));
+
+    if (myTeamName.length > 0) {
+      updateMyClub(
+        myNation,
+        myLogoId,
+        mySelectedPlayers,
+        myUserId,
+        1,
+        myTeamName,
+        myFormation,
+        myTeamOvr,
+        myTeamSquadValue,
+        myTeamAge,
+        myTeamPace,
+        myTeamDefense,
+        myTeamClubCohesion,
+        myTeamAttack,
+        myTeamStamina
+      )
+        .then((msg) => {
+          setSnackbarMessage(msg);
+          setSnackbarOpen(true);
+          fetchMyClubs(myUserId).then((clubs) => {
+            console.log("my club.tsx updated clubs - ", clubs);
+            const updatedClub = clubs.find((c) => c.clubId === 1);
+            if (updatedClub && updatedClub.players) {
+              setMySelectedPlayers(updatedClub.players);
+            }
+            console.log("my club.tsx selected players - ", mySelectedPlayers);
+          });
+        })
+        .catch((err) => {
+          const msg =
+            typeof err === "string"
+              ? err
+              : err?.response?.data?.message ||
+                JSON.stringify(err?.response?.data ?? err, null, 2);
+          setSnackbarMessage(msg);
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          setLoading(false);
+          //   setEditingIndex(null);
+        });
+    }
+    // setLoading(false);
+    // setEditingIndex(null);
   };
 
   return (
-    <div className="app-container">
+    <Box sx={{ width: "100%", margin: "0 auto" }}>
       {loading && <LoadingSpinner />}
-      <div className="squad-container">
-        <SquadMetrics />
-
-        <div className="squad-formation" ref={squadSelectRef}>
-          {myFormation && (
-            <SquadBuilder
-              selectedFormation={myFormation as keyof typeof formations}
-              setSelectedDropZone={setSelectedDropZone}
-              setIsDropZoneSelected={setIsDropZoneSelected}
-              setPosition={setSelectedPosition}
-              searchPlayerRef={listRef}
-              selectedDropZone={selectedDropZone}
-            />
-          )}
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={4000}
-            onClose={() => setSnackbarOpen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={2}>
+          <SquadMetrics />
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <SquadBuilder
+            selectedFormation={myFormation as keyof typeof formations}
+            // setSelectedDropZone={setSelectedDropZone}
+            // setIsDropZoneSelected={setIsDropZoneSelected}
+            // setPosition={setSelectedPosition}
+            // searchPlayerRef={listRef}
+            // selectedDropZone={selectedDropZone}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={3}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            width: "100%",
+            outline:"1px solid red"
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              display: "flex",
+              width: "100%",
+              marginBottom: "10px",
+            }}
+            onClick={handleUpdateMyInfo}
           >
-            <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-              {typeof snackbarMessage === "string"
-                ? snackbarMessage
-                : JSON.stringify(snackbarMessage)}
-            </Alert>
-          </Snackbar>
-        </div>
+            Save
+          </Button>
+          <SelectFormation />
+          <Box mb={1}></Box>
 
-        <div className="squad-team">
-          <div className="team-controls">
-            <SelectFormation />
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={loadRandomSquad}
-              sx={{ margin: "1px" }}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+              width: "100%",
+              // outline: "1px solid red",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                // outline: "1px solid red",
+              }}
             >
-              Create Squad
-            </Button>
-          </div>
+              <Box mb={1}>{"STARTING"}</Box>
+              {mySelectedPlayers.slice(0, 11).map((player, index) => {
+                // if (!player || player.name === "dummy") return null;
 
-          <div className="myclub-container">
-            <MyClub
-              snackbarOpen={snackbarOpen}
-              setSnackbarOpen={setSnackbarOpen}
-              setSnackbarMessage={setSnackbarMessage}
-              setLoading={setLoading}
+                return (
+                  <DraggableAndDroppablePlayerCard
+                    key={`starter-${player.id}-${index}`}
+                    index={index} // ✅ 추가
+                    player={player}
+                    onSwap={handleSwapPlayers}
+                  />
+                );
+              })}
+
+              <Divider
+                sx={{ width: "80%", mt: 2, mb: 2, borderColor: "#888" }}
+              />
+
+              <Box mb={1}>{"BENCH"}</Box>
+              {mySelectedPlayers.slice(11, 17).map((player, index) => {
+                // if (!player || player.name === "dummy") return null;
+                console.log("players - ", player);
+                return (
+                  <DraggableAndDroppablePlayerCard
+                    key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
+                    index={11 + index} // ✅ bench는 offset 줘야 돼
+                    player={player}
+                    onSwap={handleSwapPlayers}
+                  />
+                );
+              })}
+            </Box>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ height: "100%", mx: 2, borderColor: "#888" }}
             />
-          </div>
-        </div>
-      </div>
-    </div>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                // outline: "1px solid red",
+              }}
+            >
+              <Box mb={1}>{"RESERVE"}</Box>
+              {mySelectedPlayers.slice(17).map((player, index) => {
+                // if (!player || player.name === "dummy") return null;
+                console.log("players - ", player);
+                return (
+                  <DraggableAndDroppablePlayerCard
+                    key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
+                    index={17 + index} // ✅ bench는 offset 줘야 돼
+                    player={player}
+                    onSwap={handleSwapPlayers}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+
+          {/* <Button
+            onClick={() => {
+              const reversed = [...mySelectedPlayers].reverse();
+              reversed.forEach((p, i) => (p.idx = i));
+              setMySelectedPlayers([...reversed]);
+            }}
+          >
+            테스트로 뒤집기
+          </Button> */}
+        </Grid>
+      </Grid>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 };
 

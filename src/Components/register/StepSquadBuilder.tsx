@@ -93,7 +93,7 @@ const StepSquadBuilder: React.FC = () => {
               />
             );
           })}
-          <Button
+          {/* <Button
             onClick={() => {
               const reversed = [...mySelectedPlayers].reverse();
               reversed.forEach((p, i) => (p.idx = i));
@@ -101,7 +101,7 @@ const StepSquadBuilder: React.FC = () => {
             }}
           >
             테스트로 뒤집기
-          </Button>
+          </Button> */}
         </Grid>
       </Grid>
     </Box>

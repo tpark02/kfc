@@ -66,47 +66,43 @@ const LeagueSimulator = () => {
   };
 
   return (
-    <div className="app-container">
-      <div
-        style={{ display: "flex", flexDirection:"column"}}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          fetchData();
+        }}
+        disabled={HasRedCard}
+        sx={{ margin: "10px" }}
       >
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => {
-            fetchData();
-          }}
-          disabled={HasRedCard}
-          sx={{ margin: "10px" }}
-        >
-          START
-        </Button>
-        <div
-          style={{
-            backgroundColor: "var(--background-color)",
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignContent: "stretch",
-            width: "100%",
-            height: "auto",
-            outline: "1px solid red",
-            margin: "10px 0 0 0",
-          }}
-        >
-          <LeagueMyTeam matches={matches} />
-          <LeagueScheduleViewer matches={matches} />
-          <LeagueOpponentTeam />
-        </div>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={() => setSnackbarOpen(false)}
-          message={snackbarMessage}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        />
+        START
+      </Button>
+      <div
+        style={{
+          backgroundColor: "var(--background-color)",
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignContent: "stretch",
+          width: "100%",
+          height: "auto",
+          outline: "1px solid red",
+          margin: "10px 0 0 0",
+        }}
+      >
+        <LeagueMyTeam matches={matches} />
+        <LeagueScheduleViewer matches={matches} />
+        <LeagueOpponentTeam />
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </div>
   );
 };

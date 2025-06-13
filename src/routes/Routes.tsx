@@ -12,6 +12,7 @@ import StepSquadBuilder from "../components/register/StepSquadBuilder";
 import PrivateRoute from "../components/PrivateRoutes";
 import Layout from "../Layout";
 import SignUpForm from "../components/login/SignupForm";
+import Squad from "../components/teambuilder/Squad";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -42,7 +43,7 @@ const AppRoutes: React.FC = () => {
           path="/squad"
           element={
             <PrivateRoute>
-              <StepSquadBuilder />
+              <Squad />
             </PrivateRoute>
           }
         />

@@ -1,29 +1,63 @@
-import { height, margin } from "@mui/system";
-
-export const playerCardStyle = {
+// styles.ts 또는 컴포넌트 상단에 함께 정의
+export const outerCardStyle = (isDragging: boolean) => ({
+  opacity: isDragging ? 0.5 : 1,
+  cursor: "grab",
+  "&:active": {
+    cursor: "grabbing",
+  },
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  width: "100%",
   backgroundColor: "#1e1e1e",
   color: "#fff",
-  borderRadius: 2, // ✅ reduced from 8 or 12 to make it sharper
+  borderRadius: 2,
   outline: "1px solid gray",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundColor: "#333",
-  },
-  width: "100%", // adjust as needed for full name support
   padding: "4px 8px",
-  height: "45px",
-  margin: "0 0 10px 0"  
-};
+  margin: "0 0 10px 0",
+  height: "auto",
+});
 
-export const playerRowStyle = {
+export const rowStyle = {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  justifyContent: "space-evenly",
+  justifyContent: "space-between",
   width: "100%",
-  gap: 1,
-  overflow: "hidden", // prevent spillover
-  minHeight: "36px", // ✅ consistent height
+  gap: 0.5,
+  overflow: "hidden",
+  minHeight: "32px",
+  padding: "0 4px",
+  flex: 1,    
+};
+
+export const posStyle = (posColor: string) => ({
+  flex: 1,
+  color: posColor,
+  fontSize: 12,
+  minWidth: 24,
+  textAlign: "left",
+});
+
+export const nameBoxStyle = {
+  flex: 2,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+export const firstNameStyle = {
+  fontWeight: 600,
+  fontSize: 13,
+};
+
+export const lastNameStyle = {
+  fontSize: 12,
+};
+
+export const ovrStyle = {
+  flex: 1,
+  fontSize: 13,
+  minWidth: 30,
+  textAlign: "right",
 };
