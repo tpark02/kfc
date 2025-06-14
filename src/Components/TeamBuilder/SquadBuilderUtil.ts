@@ -1,4 +1,4 @@
-import { Player } from "../../types/player";
+import { MyPlayer, Player } from "../../types/player";
 
 function getMaxClubCount(players: { [index: number]: Player | null }) {
   const clubCount: { [key: string]: number } = {};
@@ -32,7 +32,7 @@ const POSITION_MULTIPLIER = Object.freeze({
 
 // Estimate value function
 function estimateValue(player: Player) {
-  const baseValue = Math.pow(player.ovr, 2) * 1000;
+  const baseValue = Math.pow(player.ovr, 2);
   const multiplier =
     POSITION_MULTIPLIER[player.pos as keyof typeof POSITION_MULTIPLIER] || 1.0;
 
@@ -43,7 +43,7 @@ function estimateValue(player: Player) {
   return Math.round(baseValue * multiplier);
 }
 
-export const getTeamAvr = (players: Player[]) => {
+export const getTeamAvr = (players: MyPlayer[]) => {
   let totalCount = 0;
   Object.values(players).map((p) => {
     totalCount += p !== null ? 1 : 0;

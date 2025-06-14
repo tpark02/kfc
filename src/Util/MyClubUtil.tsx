@@ -44,21 +44,14 @@ export const fetchSeasonInfo = async (seasonId: string) => {
   }
 };
 
-export const fetchMyClubs = async (userId: number): Promise<MyClubData[]> => {
+export const fetchMyClubs = async (userId: number): Promise<MyClubData | null> => {
   try {
-    const res = await axiosInstance.get(`/users/${userId}/myclubs`);
-    const data = Array.isArray(res.data) ? res.data : [res.data];
-
-    // ✅ Log nation and teamLogoImg
-    data.forEach((club, index) => {
-      console.log(`Club ${index + 1} - Nation:`, club.nation);
-      console.log(`Club ${index + 1} - Team Logo Img:`, club.teamLogoImg);
-    });
-
+    const data: MyClubData = await axiosInstance.get(`/users/${userId}/myclubs`);   
+    console.log("fetch my club - ", data);
     return data;
   } catch (error) {
     handleApiError(error, "fetchMyClubs");
-    return [];
+    return null;
   }
 };
 
@@ -147,8 +140,6 @@ export const getOvrIndicator = (
 export const getTeamOvrIndicator = (a: number, b: number): string =>
   a === b ? "⚪" : a < b ? "🔴🔻" : "🟢🔺";
 
-
-
 // ✅ 클럽 업데이트
 export const updateMyClub = async (
   myNation: string,
@@ -165,11 +156,11 @@ export const updateMyClub = async (
   myTeamDefense: number,
   myTeamAttack: number,
   myTeamClubCohesion: number,
-  myTeamStamina: number,
+  myTeamStamina: number
 ): Promise<string> => {
   try {
     console.log("registerMyInfo data:", {
-      myNation, 
+      myNation,
       myLogoId,
       userId,
       clubId,
@@ -183,7 +174,7 @@ export const updateMyClub = async (
       myTeamDefense,
       myTeamAttack,
       myTeamClubCohesion,
-      myTeamStamina,      
+      myTeamStamina,
     });
     const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
       myNation: myNation,

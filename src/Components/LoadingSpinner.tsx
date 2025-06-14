@@ -29,8 +29,7 @@ const LoadingSpinner: React.FC = () => {
           boxShadow: 24,
         }}
       >
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Building Squads...
+        <Typography variant="h6" sx={{ mb: 2 }}>          
         </Typography>
         <CircularProgress size={48} thickness={4} color="inherit" />
       </Box>

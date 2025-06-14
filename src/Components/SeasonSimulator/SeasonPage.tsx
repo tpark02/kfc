@@ -176,8 +176,8 @@ export default function SeasonPage() {
   };
 
   const loadMyClub = async () => {
-    const clubs = await fetchMyClubs(myUserId);
-    const selectedClub = clubs.find((c) => c.clubId === mySelectedClubId);
+    const club = await fetchMyClubs(myUserId);
+    const selectedClub = club ?? undefined;
     if (!selectedClub) {
       setSnackbarMessage("The club not found");
       setSnackbarOpen(true);

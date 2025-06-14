@@ -5,16 +5,13 @@ import { AuthRequest, AuthResponse } from "../../types/auth";
 import { getProtectedData } from "../../types/auth"; // 선택적 테스트용
 import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
+import { fetchMyClubs } from "../../util/myClubUtil";
+import { setSquadStateFromClubData } from "../../util/setSquadStateFromClubData";
 
 const LoginForm: React.FC = () => {
   const {
-    myFormation,
-    mySelectedPlayers,
-    myClubs,
-    myUserId,
     setMySelectedPlayers,
     setMyTeamOvr,
-    // setIsDropZoneSelected,
     setMyTeamSquadValue,
     setMyTeamAge,
     setMyTeamPace,
@@ -22,7 +19,6 @@ const LoginForm: React.FC = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
-    setMyClubs,
     setMyUserId,
     setMyFormation,
   } = useSquadStore(
@@ -32,7 +28,6 @@ const LoginForm: React.FC = () => {
       mySelectedPlayers: s.mySelectedPlayers,
       myClubs: s.myClubs,
       setMyTeamOvr: s.setMyTeamOvr,
-      // setIsDropZoneSelected: s.setIsDropZoneSelected,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
       setMyTeamPace: s.setMyTeamPace,
@@ -44,6 +39,16 @@ const LoginForm: React.FC = () => {
       setMyUserId: s.setMyUserId,
       setMySelectedPlayers: s.setMySelectedPlayers,
       setMyFormation: s.setMyFormation,
+    }),
+    shallow
+  );
+
+  const { setMyLogoImgUrl, setMyTeamName } = useSquadStore(
+    (s) => ({
+      setMyLogoId: s.setMyLogoId,
+      setMyNation: s.setMyNation,
+      setMyTeamName: s.setMyTeamName,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
     }),
     shallow
   );
@@ -60,6 +65,7 @@ const LoginForm: React.FC = () => {
 
   const handleLogin = async () => {
     try {
+      console.log("✅ Updating Zustand store...");
       const response = await axiosInstance.post<AuthResponse>(
         "/api/login",
         form
@@ -71,10 +77,12 @@ const LoginForm: React.FC = () => {
       setError("");
 
       // ✅ 선택: 로그인 후 보호된 API 요청 (테스트용)
-      const protectedData = await getProtectedData();
-      console.log("🔐 보호된 데이터:", protectedData.message);
+      // const protectedData = await getProtectedData();
+      // console.log("🔐 보호된 데이터:", protectedData.message);
 
-      await fetchMyInfo();
+      const userId = await fetchMyInfo(); // ✅ correct, freshly returned
+
+      if (!userId) throw new Error("유저 정보를 불러오지 못했습니다");
 
       // ✅ 로그인 성공 후 페이지 이동
       setTimeout(() => navigate("/squad"), 300);
@@ -104,32 +112,81 @@ const LoginForm: React.FC = () => {
       </div>
     );
   }
-
-  const fetchMyInfo = async () => {
+  const fetchMyInfo = async (): Promise<number | null> => {
     try {
       const res = await axiosInstance.get("/api/me", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("🙋 내 정보:", res.data); // { userId: 3 }
 
       const userId = res.data.userId;
       const myClub = res.data.myClub;
       const myFormation = res.data.myFormation;
       const myplayers = res.data.myPlayers;
 
-      console.log("user id - ", userId);
-      console.log("my club - ", myClub);
-      console.log("my formation - ", myFormation);
-      console.log("my players - ", myplayers);
+      // ✅ 응답 로그 출력
+      console.log("✅ /api/me 응답");
+      console.log("👤 userId:", userId);
+      console.log("🏟️ myClub:", myClub);
+      console.log("🧩 myFormation:", myFormation);
+      console.log("🧍 myPlayers:", myplayers);
 
-      setMyUserId(userId); // ✅ 저장
-      setMyClubs(myClub);
+      // ✅ Zustand 상태 저장
+      setMyUserId(userId);
       setMyFormation(myFormation.name);
       setMySelectedPlayers(myplayers);
+
+      // ✅ 상태 저장 후 로그
+      console.log("✅ 상태 저장 완료");
+      console.log("🧠 Zustand 저장 상태:");
+      console.log(" - myUserId:", userId);
+      console.log(" - myFormation.name:", myFormation.name);
+      console.log(" - myClubs length:", myClub?.length ?? 0);
+      console.log(" - mySelectedPlayers length:", myplayers?.length ?? 0);
+
+      if (myClub) {
+        console.log("2️⃣ setMyTeamOvr 실행");
+        setMyTeamOvr(myClub.ovr);
+
+        console.log("3️⃣ setMyTeamSquadValue 실행");
+        setMyTeamSquadValue(myClub.price);
+
+        console.log("4️⃣ setMyTeamAge 실행");
+        setMyTeamAge(myClub.age);
+
+        console.log("5️⃣ setMyTeamPace 실행");
+        setMyTeamPace(myClub.pace);
+
+        console.log("6️⃣ setMyTeamDefense 실행");
+        setMyTeamDefense(myClub.defense);
+
+        console.log("7️⃣ setMyTeamAttack 실행");
+        setMyTeamAttack(myClub.attack);
+
+        console.log("8️⃣ setMyTeamClubCohesion 실행");
+        setMyTeamClubCohesion(myClub.clubCohesion);
+
+        console.log("9️⃣ setMyTeamStamina 실행");
+        setMyTeamStamina(myClub.stamina);
+
+        console.log("🔟 setMyTeamName 실행");
+        setMyTeamName(myClub.name);
+
+        console.log("✅ 팀 이름 설정됨:", myClub.name);
+
+        setMyLogoImgUrl(myClub.teamLogoImg);        
+        console.log("✅ 로고 이미지 URL 설정됨:", myClub.teamLogoImg);
+
+        setMyFormation(myClub.formationName);
+        console.log("✅ 포메이션 설정됨:", myClub.formationName);
+
+        console.log("✅ Store update complete");
+      }
+      return userId;
     } catch (e) {
       console.error("❌ 사용자 정보 가져오기 실패:", e);
+      return null;
     }
   };
 

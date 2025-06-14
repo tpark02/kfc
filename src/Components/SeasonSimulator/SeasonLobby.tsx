@@ -19,7 +19,6 @@ import {
   Paper,
 } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
-// import MyClubSelect from "./MyClubSelect";
 import { fetchMyClubs } from "../../util/myClubUtil";
 
 interface Season {
@@ -34,17 +33,14 @@ export default function SeasonLobby() {
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [selectedMyClubIdx, setIdx] = useState(0);
 
   const {
     HasRedCard,
     myUserId,
     mySelectedClubId,
     joinedSeasonId,
-    setMyUserId,
     setJoinedSeasonId,
     setMySelectedPlayers,
-    // setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
     setMyTeamAge,
@@ -61,10 +57,8 @@ export default function SeasonLobby() {
       myUserId: s.myUserId,
       mySelectedClubId: s.mySelectedClubId,
       joinedSeasonId: s.joinedSeasonId,
-      setMyUserId: s.setMyUserId,
       setJoinedSeasonId: s.setJoinedSeasonId,
       setMySelectedPlayers: s.setMySelectedPlayers,
-      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
@@ -120,17 +114,10 @@ export default function SeasonLobby() {
   }, [joinedSeasonId, setJoinedSeasonId]);
 
   useEffect(() => {
-    fetchMyClubs(myUserId).then((clubs) => {
-      const idx = clubs.findIndex((c) => c.clubId === mySelectedClubId);
-      setIdx(idx);
-    });
-  }, []);
-
-  useEffect(() => {
     fetchMyClubs(myUserId)
       .then((clubs) => {
         // const selectedClub = clubs.find((c) => c.clubId === club?.clubId);
-        const selectedClub = clubs[selectedMyClubIdx] ?? undefined;
+        const selectedClub = clubs ?? undefined;
 
         // if (selectedClub === undefined) return;
 
@@ -162,10 +149,9 @@ export default function SeasonLobby() {
       })
       .finally(() => {});
   }, [
-    selectedMyClubIdx,
+    mySelectedClubId,
     myUserId,
     setMySelectedPlayers,
-    // setDropPlayers,
     setMyFormation,
     setMyTeamOvr,
     setMyTeamSquadValue,

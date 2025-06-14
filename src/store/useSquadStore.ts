@@ -41,7 +41,7 @@ type SquadStore = {
   setMyLogoImgUrl: (s: string) => void;
   setMyLogoId: (n: number) => void;
   setMyNation: (nation: string) => void;
-  setMyUniformImgUrl: (s: string) => void;
+  // setMyUniformImgUrl: (s: string) => void;
   setJoinedSeasonId: (n: number) => void;
   setUserEmail: (s: string) => void;
   setUserName: (s: string) => void;
@@ -87,7 +87,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   myUserEmail: "",
   myUserName: "",
   myUserId: -1,
-  mySelectedClubId: -1,
+  mySelectedClubId: 1,
   myTeamName: "",
   myFormation: "442",
   // dropPlayers: [],
@@ -136,7 +136,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   setMyTeamOvr: (ovr: number) => {
     set({ myTeamOvr: ovr });
   },
-  setMyUniformImgUrl: (s: string) => set({ myUniformImgUrl: s}),
+  // setMyUniformImgUrl: (s: string) => set({ myUniformImgUrl: s}),
   setMyNation: (nation: string) => set({ myNation: nation }),
   setJoinedSeasonId: (n: number) => set({ joinedSeasonId: n }),
   setMyTeamName: (s: string) => set({ myTeamName: s }),
@@ -194,3 +194,5 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   matches: [],
   setMatches: (matches) => set({ matches: matches }),
 }));
+
+// set my club info

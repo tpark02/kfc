@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useSquadStore } from "../../store/useSquadStore";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import SquadRadarChart from "./squadRadarChart";
+import SquadRadarChart from "./SquadRadarChart";
 
 import { shallow } from "zustand/shallow";
 import { getImgByCountryName } from "../../data/countryData";
+import LoadingSpinner from "../LoadingSpinner";
 import "../../style/Squad.css";
 
 const SquadMetrics: React.FC = () => {
@@ -39,8 +40,23 @@ const SquadMetrics: React.FC = () => {
     )
   );
 
+  useEffect(() => {
+    // 상태가 채워졌는지 체크해서 ready 여부 설정
+    console.log("myLogoImgUrl ", myLogoImgUrl);
+    if (
+      myTeamName !== "" &&
+      myLogoImgUrl !== "" &&
+      mySelectedPlayers &&
+      mySelectedPlayers.length > 0
+    ) {
+      setLoading(false);
+    }
+  }, [myTeamName, myLogoImgUrl, mySelectedPlayers]);
+
+  const [loading, setLoading] = useState(true);
   return (
     <div className="squad-overview">
+      {loading && <LoadingSpinner />}
       <div
         style={{
           display: "flex",

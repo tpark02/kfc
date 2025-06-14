@@ -48,21 +48,7 @@ const Squad: React.FC = () => {
     myTeamClubCohesion,
     myTeamAttack,
     myTeamStamina,
-    myClubs,
     setMySelectedPlayers,
-    setMyTeamOvr,
-    setMyTeamSquadValue,
-    setMyTeamAge,
-    setMyTeamPace,
-    setMyTeamDefense,
-    setMyTeamAttack,
-    setMyTeamClubCohesion,
-    setMyTeamStamina,
-    setMyLogoId,
-    setMyLogoImgUrl,
-    setMyUniformImgUrl,
-    setMyTeamName,
-    setMyNation,
   } = useSquadStore(
     (s) => ({
       myFormation: s.myFormation,
@@ -92,10 +78,8 @@ const Squad: React.FC = () => {
       setMyTeamStamina: s.setMyTeamStamina,
       setMyLogoId: s.setMyLogoId,
       setMyLogoImgUrl: s.setMyLogoImgUrl,
-      setMyUniformImgUrl: s.setMyUniformImgUrl,
       setMyTeamName: s.setMyTeamName,
       setMyNation: s.setMyNation,
-      // setIsDropZoneSelected: s.setIsDropZoneSelected,
     }),
     shallow
   );
@@ -124,9 +108,9 @@ const Squad: React.FC = () => {
         .then((msg) => {
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
-          fetchMyClubs(myUserId).then((clubs) => {
-            console.log("my club.tsx updated clubs - ", clubs);
-            const updatedClub = clubs.find((c) => c.clubId === 1);
+          fetchMyClubs(myUserId).then((club) => {
+            const updatedClub = club ?? undefined;
+
             if (updatedClub && updatedClub.players) {
               setMySelectedPlayers(updatedClub.players);
             }
@@ -177,7 +161,7 @@ const Squad: React.FC = () => {
             flexDirection: "column",
             alignItems: "stretch",
             width: "100%",
-            outline:"1px solid red"
+            // outline:"1px solid red"
           }}
         >
           <Button

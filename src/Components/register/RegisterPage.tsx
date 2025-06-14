@@ -1,26 +1,30 @@
-// Register.tsx
+// src/components/register/Register.tsx
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Snackbar, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import StepClubName from "../register/StepClubName";
 import StepNationality from "../register/StepNationality";
 import StepLogo from "../register/StepLogo";
 import StepSquadBuilder from "../register/StepSquadBuilder";
-import { useSquadStore } from "../../store/useSquadStore";
-// import { DropZone } from "../../types/dropZone";
-import { Logo } from "../../types/Logo";
-import axiosInstance from "../../axiosInstance";
 import { fetchRandomSquad } from "../../api/squad";
-import { shallow } from "zustand/shallow";
 import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
+import axiosInstance from "../../axiosInstance";
 import LoadingSpinner from "../LoadingSpinner";
-import { useNavigate } from "react-router-dom";
+
+import { Logo } from "../../types/Logo";
+import { useSquadGetters } from "../hooks/useSquadGetters";
+import { useSquadSetters } from "../hooks/useSquadSetter";
+import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+
+  // ✅ Zustand getters
   const {
     myFormation,
     myUserId,
-    myTeamName,
     myNation,
     myLogoId,
     mySelectedPlayers,
@@ -32,7 +36,11 @@ const Register: React.FC = () => {
     myTeamClubCohesion,
     myTeamAttack,
     myTeamStamina,
-    myClubs,
+    // myClubs,
+  } = useSquadGetters();
+
+  // ✅ Zustand setters
+  const {
     setMySelectedPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -42,47 +50,72 @@ const Register: React.FC = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
+  } = useSquadSetters();
+
+  const {
+    myTeamName,
     setMyLogoId,
     setMyLogoImgUrl,
-    setMyUniformImgUrl,
     setMyTeamName,
     setMyNation,
   } = useSquadStore(
     (s) => ({
-      myFormation: s.myFormation,
-      mySelectedPlayers: s.mySelectedPlayers,
-      myUserId: s.myUserId,
-      myClubs: s.myClubs,
       myTeamName: s.myTeamName,
-      myNation: s.myNation,
-      myLogoId: s.myLogoId,
-      myTeamOvr: s.myTeamOvr,
-      myTeamSquadValue: s.myTeamSquadValue,
-      myTeamAge: s.myTeamAge,
-      myTeamPace: s.myTeamPace,
-      myTeamDefense: s.myTeamDefense,
-      myTeamClubCohesion: s.myTeamClubCohesion,
-      myTeamAttack: s.myTeamAttack,
-      myTeamStamina: s.myTeamStamina,
-
-      setMySelectedPlayers: s.setMySelectedPlayers,
-      setMyTeamOvr: s.setMyTeamOvr,
-      setMyTeamSquadValue: s.setMyTeamSquadValue,
-      setMyTeamAge: s.setMyTeamAge,
-      setMyTeamPace: s.setMyTeamPace,
-      setMyTeamDefense: s.setMyTeamDefense,
-      setMyTeamAttack: s.setMyTeamAttack,
-      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
-      setMyTeamStamina: s.setMyTeamStamina,
       setMyLogoId: s.setMyLogoId,
-      setMyLogoImgUrl: s.setMyLogoImgUrl,
-      setMyUniformImgUrl: s.setMyUniformImgUrl,
-      setMyTeamName: s.setMyTeamName,
       setMyNation: s.setMyNation,
-      // setIsDropZoneSelected: s.setIsDropZoneSelected,
+      setMyTeamName: s.setMyTeamName,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
     }),
     shallow
   );
+
+  const [loading, setLoading] = useState(false);
+  const [teamName, setTeamName] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [logos, setLogos] = useState<Logo[]>([]);
+  const [confirmedLogoId, setConfirmedLogoId] = useState<number | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  useEffect(() => {
+    axiosInstance.get("/api/logos").then((res) => setLogos(res.data));
+  }, []);
+
+  useEffect(() => {
+    if (currentStep === 3) {
+      loadRandomSquad();
+    }
+    if (currentStep === 4) {
+      handleUpdateMyInfo();
+      navigate("/squad");
+    }
+  }, [currentStep]);
+
+  const loadRandomSquad = async () => {
+    try {
+      const data = await fetchRandomSquad({
+        name: myFormation,
+        countries: [],
+        leagues: [],
+        clubs: [],
+        userId: myUserId,
+      });
+
+      setMySelectedPlayers(data.myPlayerList);
+      setMyTeamOvr(data.myTeamOvr);
+      setMyTeamSquadValue(data.myTeamSquadValue);
+      setMyTeamAge(data.myTeamAge);
+      setMyTeamPace(data.myTeamPace);
+      setMyTeamDefense(data.myTeamDef);
+      setMyTeamAttack(data.myTeamAtk);
+      setMyTeamClubCohesion(data.myTeamClubCohesion);
+      setMyTeamStamina(data.myTeamStamina);
+    } catch (err: any) {
+      setSnackbarMessage(err.response?.data || "Error loading squad");
+      setSnackbarOpen(true);
+    }
+  };
 
   const handleUpdateMyInfo = () => {
     setLoading(true);
@@ -108,13 +141,10 @@ const Register: React.FC = () => {
         .then((msg) => {
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
-          fetchMyClubs(myUserId).then((clubs) => {
-            console.log("my club.tsx updated clubs - ", clubs);
-            const updatedClub = clubs.find((c) => c.clubId === 1);
-            if (updatedClub && updatedClub.players) {
-              setMySelectedPlayers(updatedClub.players);
+          fetchMyClubs(myUserId).then((club) => {
+            if (club && club.players) {
+              setMySelectedPlayers(club.players);
             }
-            console.log("my club.tsx selected players - ", mySelectedPlayers);
           });
         })
         .catch((err) => {
@@ -125,74 +155,11 @@ const Register: React.FC = () => {
                 JSON.stringify(err?.response?.data ?? err, null, 2);
           setSnackbarMessage(msg);
           setSnackbarOpen(true);
-          // ✅ 에러 발생 시 Step 1로 이동
-          setCurrentStep(1);
+          setCurrentStep(1); // 실패 시 Step 1로 이동
         })
         .finally(() => {
           setLoading(false);
-          //   setEditingIndex(null);
         });
-    }
-    // setLoading(false);
-    // setEditingIndex(null);
-  };
-  const [loading, setLoading] = useState(false);
-
-  const [teamName, setTeamName] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [logos, setLogos] = useState<Logo[]>([]);
-  // const [selectedLogo, setSelectedLogo] = uses<Logo>({
-  //   id: -1,
-  //   logoImg: "",
-  // });
-  const [confirmedLogoId, setConfirmedLogoId] = useState<number | null>(null);
-  // const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  // const [logoError, setLogoError] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  // const [selectedDropZone, setSelectedDropZone] = useState<DropZone>({
-  //   index: -1,
-  //   pos: "",
-  // });
-  // const listRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    axiosInstance.get("/api/logos").then((res) => setLogos(res.data));
-  }, []);
-
-  useEffect(() => {
-    if (currentStep === 3) {
-      console.log("load random team  user id - ", myUserId);
-      loadRandomSquad();
-    }
-    if (currentStep === 4) {
-      handleUpdateMyInfo();
-      navigate("/squad");
-    }
-  }, [currentStep]);
-
-  const loadRandomSquad = async () => {
-    try {
-      const data = await fetchRandomSquad({
-        name: myFormation,
-        countries: [],
-        leagues: [],
-        clubs: [],
-        userId: myUserId,
-      });
-      setMySelectedPlayers(data.myPlayerList);
-      setMyTeamOvr(data.myTeamOvr);
-      setMyTeamSquadValue(data.myTeamSquadValue);
-      setMyTeamAge(data.myTeamAge);
-      setMyTeamPace(data.myTeamPace);
-      setMyTeamDefense(data.myTeamDef);
-      setMyTeamAttack(data.myTeamAtk);
-      setMyTeamClubCohesion(data.myTeamClubCohesion);
-      setMyTeamStamina(data.myTeamStamina);
-    } catch (err: any) {
-      setSnackbarMessage(err.response?.data || "Error loading squad");
-      setSnackbarOpen(true);
     }
   };
 
@@ -240,10 +207,6 @@ const Register: React.FC = () => {
     return true;
   };
 
-  console.log("my data 1- ", myUserId);
-  console.log("my data 2- ", mySelectedPlayers);
-  console.log("my data 3- ", myClubs);
-  console.log("my data 4- ", myFormation);
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
       {loading && <LoadingSpinner />}
@@ -268,13 +231,11 @@ const Register: React.FC = () => {
             setConfirmedLogoId(logo.id);
             setMyLogoId(logo.id);
             setMyLogoImgUrl(logo.logoImg);
-            setMyUniformImgUrl(
-              `https://jlzddfddozuowxamnreb.supabase.co/storage/v1/object/public/kfc//u${logo.id}-removebg-preview.png`
-            );
           }}
         />
       )}
       {currentStep === 3 && <StepSquadBuilder />}
+
       {currentStep < 4 && (
         <Button
           variant="contained"
@@ -283,7 +244,7 @@ const Register: React.FC = () => {
             if (currentStep === 0 && !validateTeamName()) return;
             if (currentStep === 1 && !validateNationality()) return;
             if (currentStep === 2 && !validateLogoSelection()) return;
-            setCurrentStep((prev: number) => prev + 1);
+            setCurrentStep((prev) => prev + 1);
           }}
         >
           Next
