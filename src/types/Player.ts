@@ -60,6 +60,7 @@ export type Player = {
   gkKicking: number;
   gkPositioning: number;
   gkReflexes: number;
+  price: number;
 };
 
 export const defaultPlayer: Player = {
@@ -122,6 +123,7 @@ export const defaultPlayer: Player = {
   gkKicking: 0,
   gkPositioning: 0,
   gkReflexes: 0,
+  price: 0,
 };
 
 export type MyPlayer = {
@@ -271,6 +273,7 @@ export const myPlayerToPlayer = (myPlayer: MyPlayer): Player => ({
   gkKicking: myPlayer.gkKicking,
   gkPositioning: myPlayer.gkPositioning,
   gkReflexes: myPlayer.gkReflexes,
+  price: myPlayer.ovr / 10,
 });
 
 

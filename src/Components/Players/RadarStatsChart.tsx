@@ -46,7 +46,7 @@ const RadarStatChart: React.FC<PlayerStats> = ({
           <PolarAngleAxis dataKey="stat" />
           <PolarRadiusAxis
             angle={30}
-            domain={[0, 100]}
+            domain={[0, 1000]}
             tick={false}
             axisLine={false}
           />

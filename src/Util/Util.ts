@@ -6,11 +6,12 @@ export const getOvrColor = (value: number) => {
 };
 
 export const getPosColor = (pos: string) => {
+  const upperPos = pos.toUpperCase();
   let c = "";
-  if (pos.includes("ST") || pos.includes("W")) c = "red";
-  else if (pos.includes("M")) c = "orange";
-  else if (pos.includes("B")) c = "blue";
-  else if (pos.includes("G")) c = "green";
+  if (upperPos.includes("ST") || upperPos.includes("W")) c = "red";
+  else if (upperPos.includes("M")) c = "orange";
+  else if (upperPos.includes("B")) c = "blue";
+  else if (upperPos.includes("G")) c = "green";
   return c;
 };
 

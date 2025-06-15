@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import { playerPosData } from "../data/playerPosData";
 import { PlayerPos } from "../types/playerPosition";
+import { getPosColor } from "../util/util";
 
 interface PlayerPosModalProps {
   isOpen: boolean;
@@ -63,29 +64,32 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
         }}
       >
         {/* ✅ 필터링된 포지션 리스트 */}
-        {filteredPositions.map((playerPos) => (
-          <Box
-            className="filter-box"
-            key={playerPos.code}
-            display="flex"
-            alignItems="center"
-            mb={1}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              const alreadySelected = prevList.some(
-                (c) => c.code === playerPos.code
-              );
-              if (alreadySelected) return;
+        {filteredPositions.map((playerPos) => {
+          const posColor = getPosColor(playerPos.code);
+          return (
+            <Box
+              className="filter-box"
+              key={playerPos.code}
+              display="flex"
+              alignItems="center"
+              mb={1}
+              style={{ cursor: "pointer", color: posColor }}
+              onClick={() => {
+                const alreadySelected = prevList.some(
+                  (c) => c.code === playerPos.code
+                );
+                if (alreadySelected) return;
 
-              const newList = [...prevList, playerPos];
-              onSelectPlayerPos(newList);
-            }}
-          >
-            <Typography variant="body2">
-              {playerPos.code.toUpperCase()}
-            </Typography>
-          </Box>
-        ))}
+                const newList = [...prevList, playerPos];
+                onSelectPlayerPos(newList);
+              }}
+            >
+              <Typography variant="body2">
+                {playerPos.code.toUpperCase()}
+              </Typography>
+            </Box>
+          );
+        })}
       </Box>
       {/* <Button
         variant="contained"

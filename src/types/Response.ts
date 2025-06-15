@@ -3,7 +3,7 @@ import { MyPlayer, Player } from "./player";
 export type ResponseSearch = { content: Player[] };
 
 export type ResponsePlayerPage = {
-  content: Player[];
+  playerList: Player[];
   totalPages: number;
   totalElements: number;
   number: number; // 현재 페이지 번호

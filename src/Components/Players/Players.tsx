@@ -23,7 +23,7 @@ export const Players: React.FC = () => {
   const [selectedPosition, setSelectedPosition] = useState<PlayerPos[]>([]);
   const [selectedLeagues, setSelectedLeagues] = useState<League[]>([]);
 
-  const [pageInfo, setPageInfo] = useState<Omit<ResponsePlayerPage, "content">>(
+  const [pageInfo, setPageInfo] = useState<Omit<ResponsePlayerPage, "playerList">>(
     {
       totalPages: 0,
       totalElements: 0,
@@ -75,7 +75,7 @@ export const Players: React.FC = () => {
       playerPositionFilter: selectedPosition,
     })
       .then((data) => {
-        setPlayers(data.content);
+        setPlayers(data.playerList);
         setPageInfo({
           totalPages: data.totalPages,
           totalElements: data.totalElements,
@@ -129,8 +129,8 @@ export const Players: React.FC = () => {
               | "OVR_ASC"
               | "RANK_DESC"
               | "RANK_ASC"
-              | "AGE_ASC"
-              | "AGE_DESC";
+              // | "AGE_ASC"
+              // | "AGE_DESC";
             setSortType(newSort);
             fetchPage(
               0,
@@ -148,8 +148,8 @@ export const Players: React.FC = () => {
           <option value="OVR_ASC">ovr asc</option>
           <option value="RANK_DESC">rank desc</option>
           <option value="RANK_ASC">rank asc</option>
-          <option value="AGE_DESC">age desc</option>
-          <option value="AGE_ASC">age asc</option>
+          {/* <option value="AGE_DESC">age desc</option>
+          <option value="AGE_ASC">age asc</option> */}
         </select>
 
         <button onClick={() => setModalOpen(true)}>Filter</button>

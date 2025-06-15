@@ -139,7 +139,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
         >
           Country
         </Button>
-        <Button
+        {/* <Button
           className="filter-button"
           variant="black"
           onClick={() => {
@@ -162,7 +162,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
           }}
         >
           League
-        </Button>
+        </Button> */}
         <Button
           className="filter-button"
           variant="black"

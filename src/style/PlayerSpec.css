@@ -1,6 +1,6 @@
 .player-spec-body {
   width: 80%;
-  margin: 50px auto;
+  margin: 50px auto;  
 }
 
 .player-spec-backbutton {
@@ -19,10 +19,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* background-color: #1e1e1e; */
+  background-color: #1e1e1e;
   border-radius: 8px;
   padding: 24px 0 55px 0;
-  outline: 1px solid #333;
+  outline: 1px solid gray;
 }
 
 .player-img-container {
@@ -59,8 +59,9 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  font-size: 1.5rem;
-  /* outline: 1px solid #333; */
+  font-size: 3rem;
+  /* border-radius: 8px; */
+  /* outline: 1px solid gray; */
 }
 
 .player-spec-name {

@@ -334,11 +334,11 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
       <ConfirmDialog
         open={confirmOpen}
         title="Confirm Club Update"
+        target=""
         message="⚠️ If you proceed, it will erase the previous club. Do you want to continue?"
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />
-
       {/* Snackbar for validation messages */}
     </div>
   );

@@ -1,25 +1,26 @@
-
 .player-list {
   width: 100%;
   max-width: 900px;
   margin: 10px auto;
-  box-sizing: border-box;
+  box-sizing: border-box;  
   /* outline: 1px solid white; */
 }
 
 .player-table {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-around;
   margin-top: 4px;
   margin-bottom: 12px;
-  outline: 1px solid blue;
+  border-radius: 8px;
+  outline: 1px solid gray;  
 }
 
 .player-row {
   display: flex;
-  align-items: center;    
+  align-items: center;
   flex-wrap: wrap;
-  outline: 1px solid red;
+  
+  /* outline: 1px solid red; */
 }
 
 .player-img {
@@ -29,16 +30,17 @@
   border-radius: 6px;
 }
 
-.player-name {  
-  width: 230px;      
-  outline: 1px solid white;
+.player-name {
+  width: 200px;
+  text-align: left;
+  /* outline: 1px solid white; */
 }
 
 .player-cell {
   width: 60px;
   color: #fff;
   flex-wrap: wrap;
-  outline: 1px solid white;
+  /* outline: 1px solid white; */
 }
 
 .player-card:hover {
@@ -67,7 +69,8 @@
   align-items: center;
   margin-bottom: 1rem;
   gap: 12px;
-  outline: 1px solid white;
+  /* border-radius: 8px; */
+  /* outline: 1px solid gray; */
 }
 
 /* .left-group,

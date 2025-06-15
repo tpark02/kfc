@@ -1,9 +1,6 @@
 // ✅ React & Router
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-// ✅ External Libraries
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useLocation } from "react-router-dom";
 
 // ✅ Types
 import { Team } from "../../types/team";
@@ -13,7 +10,6 @@ import { Player } from "../../types/player";
 // ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
 import { getOvrColor } from "../../util/util";
-import CroppedAvatar from "../teambuilder/CroppedAvatar";
 
 // ✅ Data
 import { countryData } from "../../data/countryData";
@@ -23,8 +19,7 @@ import "../../style/PlayerSpec.css";
 import axiosInstance from "../../axiosInstance";
 
 const PlayerSpec: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation();  
   const player = (location.state as { player: Player })?.player;
 
   const countryCode =
@@ -43,16 +38,6 @@ const PlayerSpec: React.FC = () => {
       })
       .catch((err) => console.error(err));
   }, [location.pathname]);
-
-  const teamData = teams.find((team) =>
-    team.name.toLowerCase().includes(player.team.toLowerCase())
-  ) ?? {
-    name: "",
-    url: "",
-  };
-
-  // console.log(player.team.toLowerCase());
-  // console.log("teamData", teamData.name);
 
   const getValue = (
     key: keyof Player,
@@ -94,28 +79,15 @@ const PlayerSpec: React.FC = () => {
 
   return (
     <div className="player-spec-body">
-      <button className="player-spec-backbutton" onClick={() => navigate(-1)}>
+      {/* <button className="player-spec-backbutton" onClick={() => navigate(-1)}>
         <ArrowBackIcon />
-      </button>
+      </button> */}
 
       <div className="player-content">
         <div className="player-basic-info">
-          <div className="player-img-container">
-            {/* <img
-              className="player-spec-img"
-              src={player.img}
-              alt={player.name}
-            /> */}
-            {/* <CroppedAvatar
-              src={player.img}
-              width={200}
-              height={200}
-              offsetX={20}
-              offsetY={10}
-              scale={1.2}
-            /> */}
+          {/* <div className="player-img-container"> */}
             <div className="player-name-row">{player.name}</div>
-          </div>
+          {/* </div> */}
           <RadarStatChart
             pac={player.pac}
             sho={player.sho}
@@ -158,49 +130,9 @@ const PlayerSpec: React.FC = () => {
                   {player.nation}
                 </div>
               </div>
-            </div>
-            {/* {getValue("league", "League", false)} */}
+            </div>            
             {getValue("rank", "Rank", false)}
-            {getValue("ovr", "OVR", false)}
-            {/* {getValue("team", "Club", false)} */}
-            {/* {
-              <div className="player-info-cell-group">
-                <div className="player-info-cell-label">Club</div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  {teamData.url ? (
-                    <img
-                      src={teamData.url || "/img/fallback.png"}
-                      alt={teamData.name}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          "/img/fallback.png";
-                      }}
-                      style={{
-                        width: "auto",
-                        height: "20px",
-                        backgroundColor: "white",
-                        margin: "0 5px",
-                      }}
-                    />
-                  ) : null}
-
-                  <div
-                    className="player-info-cell"
-                    style={{
-                      borderRadius: "3px",
-                    }}
-                  >
-                    {player.team}
-                  </div>
-                </div>
-              </div>
-            } */}
+            {getValue("ovr", "OVR", false)}           
             {getValue("pos", "Position", false)}
             {getValue("age", "Age", false)}
             {getValue("height", "Height", false)}
@@ -212,34 +144,39 @@ const PlayerSpec: React.FC = () => {
           <>
             <div className="player-info-stats-row">
               <div className="player-info-cell-label">SHOOTING</div>
-              {getValue("positioning", "Positioning")}
+              {getValue("shotPower", "Shot Power")}
+              {getValue("longShots", "Long Shots")}
+              {getValue("freeKickAccuracy", "Free Kick Accuracy")}
+              {getValue("curve", "Curve")}
+
+              {/* {getValue("positioning", "Positioning")}
               {getValue("finishing", "Finishing")}
               {getValue("shotPower", "Shot Power")}
               {getValue("longShots", "Long Shots")}
               {getValue("volleys", "Volleys")}
               {getValue("crossing", "Crossing")}
               {getValue("freeKickAccuracy", "Free Kick Accuracy")}
-              {getValue("curve", "Curve")}
+              {getValue("curve", "Curve")} */}
             </div>
             <div className="player-info-stats-row">
               <div className="player-info-cell-label">DRIBBLING</div>
               {getValue("dribbling", "Dribbling")}
               {getValue("balance", "Balance")}
-              {getValue("reactions", "Reactions")}
+              {/* {getValue("reactions", "Reactions")} */}
               {getValue("ballControl", "Ball Control")}
               {getValue("agility", "Agility")}
-              {getValue("composure", "Composure")}
+              {/* {getValue("composure", "Composure")} */}
             </div>
             <div className="player-info-stats-row">
               <div className="player-info-cell-label">PASSING</div>
-              {getValue("vision", "Vision")}
+              {/* {getValue("vision", "Vision")} */}
               {getValue("crossing", "Crossing")}
               {getValue("shortPassing", "Short Passing")}
               {getValue("longPassing", "Long Passing")}
             </div>
             <div className="player-info-stats-row">
               <div className="player-info-cell-label">DEFENDING</div>
-              {getValue("defAwareness", "Defensive Awareness")}
+              {getValue("defAwareness", "Def. Awareness")}
               {getValue("standingTackle", "Standing Tackle")}
               {getValue("slidingTackle", "Sliding Tackle")}
               {getValue("interceptions", "Interceptions")}
@@ -256,17 +193,7 @@ const PlayerSpec: React.FC = () => {
               {getValue("stamina", "Stamina")}
               {getValue("strength", "Strength")}
               {getValue("aggression", "Aggression")}
-            </div>
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">MENTALITY</div>
-              {getValue("vision", "Vision")}
-              {getValue("penalties", "Penalties")}
-              {getValue("composure", "Composure")}
-              {getValue("interceptions", "Interceptions")}
-              {getValue("defAwareness", "Defensive Awareness")}
-              {getValue("aggression", "Aggression")}
-              {getValue("reactions", "Reactions")}
-            </div>
+            </div>            
             <div className="player-info-stats-row">
               <div className="player-info-cell-label">GOALKEEPING</div>
               {getValue("gkDiving", "Diving")}
