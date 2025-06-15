@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SeasonResponse } from "../../types/response";
 import { devMatchTimer } from "../../util/util";
-import { Snackbar } from "@mui/material";
 
 import CreateSeasonForm from "./CreateSeasonForm";
 import SeasonTimerLobby from "./SeasonTimerLobby"; // ✅ 실시간 타이머 컴포넌트 추가
@@ -28,11 +27,10 @@ interface Season {
   createdAt: string;
   finishedAt: string;
 }
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 export default function SeasonLobby() {
   const [seasons, setSeasons] = useState<Season[]>([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const {
     HasRedCard,
@@ -100,8 +98,7 @@ export default function SeasonLobby() {
         if (res.data.finishedAt) {
           console.log("🎯 finishedAt detected, stopping polling");
           setJoinedSeasonId(-1);
-          setSnackbarMessage("Match is finished");
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar("Match is finished");
           fetchSeasons(); // refresh all matches in the lobby
           clearInterval(interval);
         }
@@ -122,8 +119,7 @@ export default function SeasonLobby() {
         // if (selectedClub === undefined) return;
 
         if (selectedClub === undefined) {
-          setSnackbarMessage("The club not found");
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar("The club not found");
           return;
         }
 
@@ -168,10 +164,9 @@ export default function SeasonLobby() {
 
   useEffect(() => {
     if (HasRedCard) {
-      setSnackbarMessage(
+      useSnackbarStore.getState().setSnackbar(
         "You cannot have a red carded player in the starting member"
       );
-      setSnackbarOpen(true);
     }
   }, [HasRedCard]);
 
@@ -231,14 +226,7 @@ export default function SeasonLobby() {
             );
           })}
         </Paper> */}
-      </Box>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
+      </Box>     
     </Box>
   );
 }

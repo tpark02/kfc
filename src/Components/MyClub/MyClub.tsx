@@ -11,24 +11,16 @@ import ConfirmDialog from "../ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
-import { Snackbar } from "@mui/material";
 import { MyPlayer } from "../../types/player";
 import { totalNumberOfPlayers } from "../../types/team";
 import { shallow } from "zustand/shallow";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 interface MyClubProp {
-  snackbarOpen: boolean;
-  setSnackbarOpen: (open: boolean) => void;
-  setSnackbarMessage: (message: string) => void;
   setLoading: (open: boolean) => void;
 }
 
-const MyClub: React.FC<MyClubProp> = ({
-  snackbarOpen,
-  setSnackbarOpen,
-  setSnackbarMessage,
-  setLoading,
-}) => {
+const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
   // 🎯 상태와 setter들을 묶어서 shallow 비교
   const {
     myNation,
@@ -97,8 +89,8 @@ const MyClub: React.FC<MyClubProp> = ({
     }),
     shallow
   );
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newTeamName, setNewTeamName] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleUpdateClub = (clubId: number, players: MyPlayer[]) => {
     setLoading(true);
@@ -122,13 +114,11 @@ const MyClub: React.FC<MyClubProp> = ({
         myTeamStamina
       )
         .then((msg) => {
-          setSnackbarMessage(msg);
-          setSnackbarOpen(true);
-          fetchMyClubs(myUserId).then((clubs) => {
-            console.log("my club.tsx updated clubs - ", clubs);
-            const updatedClub = clubs.find((c) => c.clubId === clubId);
-            if (updatedClub && updatedClub.players) {
-              setMySelectedPlayers(updatedClub.players);
+          useSnackbarStore.getState().setSnackbar(msg);
+
+          fetchMyClubs(myUserId).then((club) => {
+            if (club && club.players) {
+              setMySelectedPlayers(club.players);
             }
             console.log("my club.tsx selected players - ", mySelectedPlayers);
           });
@@ -139,19 +129,17 @@ const MyClub: React.FC<MyClubProp> = ({
               ? err
               : err?.response?.data?.message ||
                 JSON.stringify(err?.response?.data ?? err, null, 2);
-          setSnackbarMessage(msg);
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar(msg);
         })
         .finally(() => {
           setLoading(false);
-          setEditingIndex(null);
+          setIsEditing(false);
         });
     }
     setLoading(false);
-    setEditingIndex(null);
+    setIsEditing(false);
   };
 
-  const [snackbarMessage, _] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingUpdate, setPendingUpdate] = useState<{
     idx: number;
@@ -162,63 +150,31 @@ const MyClub: React.FC<MyClubProp> = ({
   const handleConfirm = () => {
     if (!pendingUpdate) return;
 
-    const updated = [...myClubs];
-    const { idx, newName, clubId } = pendingUpdate;
-
-    if (updated[idx]) {
-      updated[idx] = {
-        ...updated[idx],
-        name: newName,
-        formationName: updated[idx].formationName || "",
-      };
-    }
-
-    console.log("club id to update:", clubId);
-
+    const updated = myClubs;
     const playersSnapshot = [...mySelectedPlayers]; // ✅ 복사하여 안전하게 사용
     console.log("player snapshot", playersSnapshot);
-    handleUpdateClub(clubId, playersSnapshot);
+
+    handleUpdateClub(1, playersSnapshot);
     setMyClubs(updated);
-    setMySelectedClubId(clubId);
+    setMySelectedClubId(1);
     setConfirmOpen(false);
-    setEditingIndex(null);
+    setIsEditing(false);
     setPendingUpdate(null);
   };
 
   const handleCancel = () => {
     setConfirmOpen(false);
-    setEditingIndex(null);
+    setIsEditing(false);
     setPendingUpdate(null);
   };
 
   const handleBlur = (club: MyClubData, idx: number) => {
     if (!newTeamName.trim()) {
-      setSnackbarMessage("Club name is empty");
-      setSnackbarOpen(true);
-      setEditingIndex(null);
+      useSnackbarStore.getState().setSnackbar("Club name is empty");
+      setIsEditing(false);
       return;
     }
 
-    const updated = [...myClubs];
-
-    if (updated[idx]!) {
-      updated[idx] = {
-        ...updated[idx],
-        name: newTeamName,
-        formationName: updated[idx]?.formationName || "",
-      };
-    }
-    // const hasEmptyPlayer = Object.values(dropPlayers).some((d) => d === null);
-
-    // if (hasEmptyPlayer) {
-    //   setSnackbarMessage(
-    //     `The number of players must be ${totalNumberOfPlayers}`
-    //   );
-    //   setSnackbarOpen(true);
-    //   setLoading(false);
-    //   setEditingIndex(null);
-    //   return;
-    // }
     if (club?.clubId !== undefined) {
       setPendingUpdate({
         idx,
@@ -244,179 +200,136 @@ const MyClub: React.FC<MyClubProp> = ({
       <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
         My Club
       </Typography>
-      {myClubs.map((club, idx) => {
-        const isEditing = editingIndex === idx;
-
-        return (
+      {myClubs && (
+        <>
+          <Divider sx={{ borderColor: "gray" }} />
           <div
-            key={club?.clubId ?? `slot-${idx}`}
             style={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               width: "100%",
+              textAlign: "center",
             }}
           >
-            <Divider sx={{ borderColor: "gray" }} />
+            <Button
+              sx={{
+                flex: 1,
+                outline: "1px solid gray",
+                minWidth: 0,
+                padding: 0,
+              }}
+              onClick={() => {
+                setLoading(true);
+                fetchMyClubs(myUserId)
+                  .then((club) => {
+                    if (!club) {
+                      useSnackbarStore
+                        .getState()
+                        .setSnackbar("The club not found");
+                      return;
+                    }
+
+                    setMySelectedPlayers(club.players);
+                    setMyFormation(club.formationName);
+                    setMyTeamOvr(club.ovr);
+                    setMyTeamSquadValue(club.price);
+                    setMyTeamAge(club.age);
+                    setMyTeamPace(club.pace);
+                    setMyTeamDefense(club.defense);
+                    setMyTeamAttack(club.attack);
+                    setMyTeamClubCohesion(club.clubCohesion);
+                    setMyTeamStamina(club.stamina);
+                    resetDropZoneList();
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+                setIsEditing(false);
+              }}
+              disabled={
+                myClubs?.name === null ||
+                myClubs?.name === "" ||
+                (myClubs?.players?.length ?? 0) < totalNumberOfPlayers
+              }
+            >
+              <CheckIcon sx={{ color: myClubs?.name ? "green" : "red" }} />
+            </Button>
+            {/* ✅ Name or Editable Input */}
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
-                width: "100%",
-                textAlign: "center",
+                flex: 3,
+                padding: "4px",
+                outline: "1px solid gray",
               }}
             >
-              <Button
-                sx={{
-                  flex: 1,
-                  outline: "1px solid gray",
-                  minWidth: 0,
-                  padding: 0,
-                }}
-                onClick={() => {
-                  setLoading(true);
-                  fetchMyClubs(myUserId)
-                    .then((clubs) => {
-                      console.log("my club.tsx fetched clubs - ", clubs);
-
-                      const selectedClub = clubs.find(
-                        (c) => c.clubId === club?.clubId
-                      );
-
-                      if (club?.clubId !== undefined) {
-                        console.log("Setting selected club ID:", club.clubId);
-                        setMySelectedClubId(club.clubId);
-                      }
-
-                      if (!selectedClub) {
-                        setSnackbarMessage("The club not found");
-                        setSnackbarOpen(true);
-                        return;
-                      }
-
-                      console.log(
-                        "my club.tsx selected Club - ",
-                        selectedClub.players
-                      );
-                      setMySelectedPlayers(selectedClub.players);
-
-                      //set club name
-                      // setMyTeamName(selectedClub?.name);
-                      // const playerList: Player[] =
-                      //   selectedClub.players.map(myPlayerToPlayer);
-                      // console.log("my club.tsx drop players - ", dropPlayers);
-                      // setDropPlayers([...playerList]);
-                      setMyFormation(selectedClub.formationName);
-                      setMyTeamOvr(selectedClub.ovr);
-                      setMyTeamSquadValue(selectedClub.price);
-                      setMyTeamAge(selectedClub.age);
-                      setMyTeamPace(selectedClub.pace);
-                      setMyTeamDefense(selectedClub.defense);
-                      setMyTeamAttack(selectedClub.attack);
-                      setMyTeamClubCohesion(selectedClub.clubCohesion);
-                      setMyTeamStamina(selectedClub.stamina);
-                      resetDropZoneList();
-                    })
-                    .finally(() => {
-                      setLoading(false);
-                    });
-                  setEditingIndex(null);
-                }}
-                disabled={
-                  club?.name === null ||
-                  club?.name === "" ||
-                  (club?.players?.length ?? 0) < totalNumberOfPlayers
-                }
-              >
-                <CheckIcon sx={{ color: club?.name ? "green" : "red" }} />
-              </Button>
-              {/* ✅ Name or Editable Input */}
-              <div
-                style={{
-                  flex: 3,
-                  padding: "4px",
-                  outline: "1px solid gray",
-                }}
-              >
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={newTeamName}
-                    onChange={(e) => setNewTeamName(e.target.value)}
-                    onBlur={() => {
-                      handleBlur(club!, idx);
-                    }}
-                    autoFocus
-                    style={{ width: "100%" }}
-                  />
-                ) : (
-                  <span
-                    style={{
-                      cursor: "pointer",
-                      display: "block",
-                      color: "white",
-                    }}
-                  >
-                    {club?.name ?? "(Click to add name)"}
-                  </span>
-                )}
-              </div>
-              <Button
-                sx={{
-                  flex: 1,
-                  outline: "1px solid gray",
-                  minWidth: 0,
-                  padding: 0,
-                  color: "white",
-                }}
-                onClick={() => {
-                  console.log("click edit");
-                  setEditingIndex(idx);
-                  setNewTeamName(club?.name ?? "");
-                }}
-              >
-                <EditIcon />
-              </Button>
-              {/* 🗑️ Delete Button (disabled if null) */}
-              <Button
-                sx={{
-                  flex: 1,
-                  // outline: "1px solid gray",
-                  minWidth: 0,
-                  padding: 0,
-                  color: "white",
-                }}
-                // disabled={!club}
-                onClick={() => {
-                  setLoading(true);
-                  if (club?.clubId) {
-                    deleteMyClub(myUserId, club.clubId)
-                      .then((msg) => {
-                        setSnackbarMessage(msg);
-                        setSnackbarOpen(true);
-                        fetchMyClubs(myUserId).then((clubs) => {
-                          // const paddedClubs: (MyClubData | null)[] =
-                          //   Array(3).fill(null);
-
-                          // clubs.forEach((club, idx) => {
-                          //   paddedClubs[idx] = club ?? null;
-                          // });
-                          console.log("my club.tsx updated clubs - ", clubs);
-                          const updatedClubs = clubs.filter(
-                            (c) => c.clubId !== club?.clubId
-                          );
-                          setMyClubs(updatedClubs);
-                        });
-                      })
-                      .finally(() => setLoading(false));
-                  }
-                }}
-              >
-                <DeleteIcon />
-              </Button>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={newTeamName}
+                  onChange={(e) => setNewTeamName(e.target.value)}
+                  onBlur={() => {
+                    handleBlur(myClubs!, 0);
+                  }}
+                  autoFocus
+                  style={{ width: "100%" }}
+                />
+              ) : (
+                <span
+                  style={{
+                    cursor: "pointer",
+                    display: "block",
+                    color: "white",
+                  }}
+                >
+                  {myClubs?.name ?? "(Click to add name)"}
+                </span>
+              )}
             </div>
+            <Button
+              sx={{
+                flex: 1,
+                outline: "1px solid gray",
+                minWidth: 0,
+                padding: 0,
+                color: "white",
+              }}
+              onClick={() => {
+                console.log("click edit");
+                setIsEditing(true);
+                setNewTeamName(myClubs?.name ?? "");
+              }}
+            >
+              <EditIcon />
+            </Button>
+            {/* 🗑️ Delete Button (disabled if null) */}
+            <Button
+              sx={{
+                flex: 1,
+                // outline: "1px solid gray",
+                minWidth: 0,
+                padding: 0,
+                color: "white",
+              }}
+              // disabled={!club}
+              onClick={() => {
+                setLoading(true);
+                if (myClubs?.clubId) {
+                  deleteMyClub(myUserId, myClubs.clubId)
+                    .then((msg) => {
+                      useSnackbarStore.getState().setSnackbar(msg);
+                      fetchMyClubs(myUserId).then((club) => {
+                        if (club !== null) setMyClubs(club);
+                      });
+                    })
+                    .finally(() => setLoading(false));
+                }
+              }}
+            >
+              <DeleteIcon />
+            </Button>
           </div>
-        );
-      })}
+        </>
+      )}
       {/* Confirmation Dialog */}
       <ConfirmDialog
         open={confirmOpen}
@@ -427,12 +340,6 @@ const MyClub: React.FC<MyClubProp> = ({
       />
 
       {/* Snackbar for validation messages */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-      />
     </div>
   );
 };

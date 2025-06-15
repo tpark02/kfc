@@ -8,6 +8,7 @@ import { ResponseSearch } from "../../types/response";
 import { getImgByCountryName } from "../../data/countryData";
 import { getOvrColor, getPosColor } from "../../util/util";
 import RadarStatChart from "../players/RadarStatsChart";
+
 import "../../style/SearchPlayer.css";
 
 interface SearchPlayerProp {
@@ -16,15 +17,7 @@ interface SearchPlayerProp {
   club: string;
   pos: string;
   listRef: React.RefObject<HTMLDivElement | null>;
-  // dropPlayers: { [idx: number]: Player | null };
   selectedDropZone: { index: number };
-  // setDropPlayers: React.Dispatch<
-  //   React.SetStateAction<{
-  //     [idx: number]: Player | null;
-  //   }>
-  // >;
-  setSnackbarMessage: (formation: string) => void;
-  setSnackbarOpen: (isOpen: boolean) => void;
 }
 
 const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
@@ -61,7 +54,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
               country,
               league,
               club,
-              //pos: localPos,
             }
           );
 
@@ -254,27 +246,12 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                   key={player.id}
                   onMouseEnter={() => setHoveredPlayer(player)}
                   onMouseLeave={() => setHoveredPlayer(null)}
-                  // disabled={Object.values(dropPlayers).some(
-                  //   (d) => d && d.id === player.id
-                  // )} // ✅ 개별 판단
                   onClick={() => {
                     console.log(
                       "🔥 선택된 dropzone index:",
                       selectedDropZone.index
                     );
                     console.log("🔥 넣을 player:", player);
-                    // console.log("dropPlayers", dropPlayers);
-                    // const alreadySelectedPlayer = Object.values(
-                    //   dropPlayers
-                    // ).some((d) => d && d.id === player.id);
-
-                    // if (alreadySelectedPlayer) {
-                    //   setSnackbarMessage("You already selected " + player.name);
-                    //   setSnackbarOpen(true);
-                    //   return;
-                    // }
-
-                    // updateDropPlayer(selectedDropZone.index, player);
                   }}
                   sx={{ color: "white" }}
                 >
@@ -284,7 +261,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                         flex: "2",
                         height: "25px",
                         backgroundColor: c,
-                        // outline: "1px solid gray",
                       }}
                     >
                       {player.pos}
@@ -293,7 +269,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
                       style={{
                         flex: "8",
                         height: "25px",
-                        // outline: "1px solid gray",
                       }}
                     >
                       {player.name}

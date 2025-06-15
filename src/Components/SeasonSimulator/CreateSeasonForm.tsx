@@ -1,9 +1,9 @@
 import axiosInstance from "../../axiosInstance";
 import { useState } from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { Snackbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { shallow } from "zustand/shallow";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 export default function CreateSeasonForm({
   onCreated,
@@ -23,8 +23,6 @@ export default function CreateSeasonForm({
       shallow
     );
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
 
   const handleCreate = async () => {
@@ -40,22 +38,21 @@ export default function CreateSeasonForm({
         onCreated();
         setJoinedSeasonId(response.data.id);
 
-        setSnackbarMessage(response.data.msg);
-        setSnackbarOpen(true);
+        useSnackbarStore.getState().setSnackbar(response.data.msg);
 
         // ✅ 성공한 시즌으로 이동
         navigate(`/season/${response.data.id}`);
       } else {
-        setSnackbarMessage(response.data.error);
-        setSnackbarOpen(true);
+        useSnackbarStore.getState().setSnackbar(response.data.error);
+
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setSnackbarMessage("요청 실패: " + error.message);
+        useSnackbarStore.getState().setSnackbar("요청 실패: " + error.message);
       } else {
-        setSnackbarMessage("알 수 없는 오류가 발생했습니다.");
+        useSnackbarStore.getState().setSnackbar("알 수 없는 오류가 발생했습니다.");
       }
-      setSnackbarOpen(true);
+
     }
 
     setName("");
@@ -79,13 +76,6 @@ export default function CreateSeasonForm({
       >
         Create
       </button>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
     </div>
   );
 }

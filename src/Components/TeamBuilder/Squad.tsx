@@ -7,13 +7,11 @@ import { formations } from "../../data/formations";
 import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
 import DraggableAndDroppablePlayerCard from "../../components/register/DraggableAndDroppablePlayerCard";
-import { Snackbar, Alert } from "@mui/material";
 import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
 import LoadingSpinner from "../LoadingSpinner";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 const Squad: React.FC = () => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
@@ -106,8 +104,7 @@ const Squad: React.FC = () => {
         myTeamStamina
       )
         .then((msg) => {
-          setSnackbarMessage(msg);
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar(msg);
           fetchMyClubs(myUserId).then((club) => {
             const updatedClub = club ?? undefined;
 
@@ -123,8 +120,7 @@ const Squad: React.FC = () => {
               ? err
               : err?.response?.data?.message ||
                 JSON.stringify(err?.response?.data ?? err, null, 2);
-          setSnackbarMessage(msg);
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar(msg);
         })
         .finally(() => {
           setLoading(false);
@@ -268,17 +264,7 @@ const Squad: React.FC = () => {
             테스트로 뒤집기
           </Button> */}
         </Grid>
-      </Grid>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      </Grid>     
     </Box>
   );
 };

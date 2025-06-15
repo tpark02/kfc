@@ -8,6 +8,7 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 // import CroppedAvatar from "../teambuilder/CroppedAvatar";
 import "../../style/Player.css";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 interface PlayerListProps {
   players: Player[];
@@ -15,9 +16,10 @@ interface PlayerListProps {
 
 const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
   const navigate = useNavigate();
-  const { myUserId } = useSquadStore(
+  const { myUserId, setMySelectedPlayers } = useSquadStore(
     (s) => ({
       myUserId: s.myUserId,
+      setMySelectedPlayers: s.setMySelectedPlayers,
     }),
     shallow
   );
@@ -35,7 +37,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
             onClick={() =>
               navigate(`/player/${repo.id}`, { state: { player: repo } })
             }
-          >            
+          >
             <div className="player-name">{repo.name}</div>
             <div className="player-cell">{repo.age}</div>
             <div className="player-cell">{repo.pos}</div>
@@ -51,9 +53,10 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
             variant="contained"
             style={{ outline: "1px solid red" }}
             onClick={async () => {
-              console.log("buy button clicked!");
-              const message = await buyPlayer(myUserId, repo.id);
-              alert(message); // 혹은 toast 등으로 출력
+              const res = await buyPlayer(myUserId, repo.id);
+              if (res.updatedMyPlayers.length > 0)
+                setMySelectedPlayers(res.updatedMyPlayers);
+              useSnackbarStore.getState().setSnackbar(res.msg);
             }}
           >
             Buy

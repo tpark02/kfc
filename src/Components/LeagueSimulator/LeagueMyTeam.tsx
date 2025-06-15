@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { Button, Snackbar } from "@mui/material";
+import { Button } from "@mui/material";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useSquadSetters } from "../hooks/useSquadSetter";
 import { useSquadGetters } from "../hooks/useSquadGetters";
 
@@ -59,9 +60,6 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     }),
     shallow
   );
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isClicked, setIsClicked] = useState(false);
 
   const [totalAddStatPoints, setTotalAddStatPoints] = useState(
@@ -97,10 +95,8 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
         myTeamStamina
       );
 
-      setSnackbarMessage(msg);
-      setSnackbarOpen(true);
-
-      const updatedClub = await fetchMyClubs(myUserId);      
+      useSnackbarStore.getState().setSnackbar(msg);
+      const updatedClub = await fetchMyClubs(myUserId);
 
       if (updatedClub && updatedClub.players) {
         await setSquadStateFromClubData(updatedClub, {
@@ -114,7 +110,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
           setMyTeamClubCohesion,
           setMyTeamStamina,
         });
-        setMyFormation(updatedClub.formationName);        
+        setMyFormation(updatedClub.formationName);
       }
     } catch (err: any) {
       const msg =
@@ -122,8 +118,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
           ? err
           : err?.response?.data?.message ||
             JSON.stringify(err?.response?.data ?? err, null, 2);
-      setSnackbarMessage(msg);
-      setSnackbarOpen(true);
+      useSnackbarStore.getState().setSnackbar(msg);      
     }
   };
 
@@ -227,13 +222,6 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
           <div>선수가 없습니다.</div>
         )}
       </div>
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-      />
     </div>
   );
 };

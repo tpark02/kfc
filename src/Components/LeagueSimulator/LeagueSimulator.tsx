@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import LeagueScheduleViewer from "./LeagueScheduleViewer";
 import LeagueMyTeam from "./LeagueMyTeam";
 import LeagueOpponentTeam from "./LeagueOpponentTeam";
@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { fetchSchedule } from "../../util/leagueUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
-import { Snackbar } from "@mui/material";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 const LeagueSimulator = () => {
   const {
@@ -30,15 +30,13 @@ const LeagueSimulator = () => {
     shallow
   );
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
   useEffect(() => {
     if (HasRedCard) {
-      setSnackbarMessage(
-        "You cannot have a red carded player in the starting member"
-      );
-      setSnackbarOpen(true);
+      useSnackbarStore
+        .getState()
+        .setSnackbar(
+          "You cannot have a red carded player in the starting member"
+        );
     }
   }, [HasRedCard]);
 
@@ -95,14 +93,7 @@ const LeagueSimulator = () => {
         <LeagueMyTeam matches={matches} />
         <LeagueScheduleViewer matches={matches} />
         <LeagueOpponentTeam />
-      </div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
+      </div>     
     </div>
   );
 };

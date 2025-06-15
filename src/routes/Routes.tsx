@@ -8,7 +8,6 @@ import SeasonPage from "../components/seasonSimulator/SeasonPage";
 import LeagueSimulator from "../components/leagueSimulator/LeagueSimulator";
 import LoginForm from "../components/login/LoginForm";
 import Register from "../components/register/RegisterPage";
-import StepSquadBuilder from "../components/register/StepSquadBuilder";
 import PrivateRoute from "../components/PrivateRoutes";
 import Layout from "../Layout";
 import SignUpForm from "../components/login/SignupForm";

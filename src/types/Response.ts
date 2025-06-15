@@ -43,15 +43,21 @@ export type SeasonResponse = {
   finishedAt: string | null;
   participantNames: string[];
   remainingSeconds: number;
-}
+};
 
 export type UserInfoResponse = {
   userId: number;
   userName: string;
   userEmail: string;
-  userPassWord: string;  
+  userPassWord: string;
   userCoin: number;
   tournamentToken: number;
   leagueToken: number;
   userIsAi: string;
-}
+};
+
+export type BuyResponse = {
+  updatedMyPlayers: MyPlayer[];
+  msg: string;
+  purchasedPlayer: string;
+};

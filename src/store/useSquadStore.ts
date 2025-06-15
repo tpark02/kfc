@@ -34,7 +34,7 @@ type SquadStore = {
   // unused
   selectedDropZone: { index: number; pos: string };
   position: string;
-  myClubs: (MyClubData | null)[];
+  myClubs: (MyClubData | null);
   dropZoneList: DropZone[];
   mySelectedPlayers: MyPlayer[];
   HasRedCard: boolean;
@@ -48,7 +48,7 @@ type SquadStore = {
   setMySelectedClubId: (n: number) => void;
   setMySelectedPlayers: (players: MyPlayer[]) => void;
   setMyUserId: (userId: number) => void;
-  setMyClubs: (clubs: (MyClubData | null)[]) => void;
+  setMyClubs: (clubs: MyClubData | null) => void;
   setMyTeamOvr: (ovr: number) => void; // 추가된 부분
   setMyTeamName: (f: string) => void;
   setMyFormation: (f: string) => void;

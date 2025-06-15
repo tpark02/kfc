@@ -21,8 +21,8 @@ import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/response";
 // import MyClubSelect from "./MyClubSelect";
-import { Snackbar } from "@mui/material";
-// import { Player, myPlayerToPlayer } from "../../types/Player";
+import { useSnackbarStore } from "../../store/userSnackBarStore";// import { Player, myPlayerToPlayer } from "../../types/Player";
+
 import {
   getOvrIndicator,
   getTeamOvrIndicator,
@@ -47,7 +47,6 @@ export default function SeasonPage() {
   // const [selectedMyClubIdx] = useState(0);
   const navigate = useNavigate();
   const userId = 1; // TODO: replace with actual logged-in user
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const {
     mySelectedClubId,
     joinedSeasonId,
@@ -91,7 +90,6 @@ export default function SeasonPage() {
     shallow
   );
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
   // useEffect(() => {
   //   fetchMyClubs(myUserId).then((clubs) => {
@@ -179,8 +177,7 @@ export default function SeasonPage() {
     const club = await fetchMyClubs(myUserId);
     const selectedClub = club ?? undefined;
     if (!selectedClub) {
-      setSnackbarMessage("The club not found");
-      setSnackbarOpen(true);
+      useSnackbarStore.getState().setSnackbar("The club not found");
       return;
     }
 
@@ -375,14 +372,7 @@ export default function SeasonPage() {
             {dialogMsg}
           </DialogContentText>
         </DialogContent>
-      </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
+      </Dialog>    
     </>
   );
 }

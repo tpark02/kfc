@@ -1,6 +1,6 @@
 // src/components/register/Register.tsx
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Snackbar, Alert } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import StepClubName from "../register/StepClubName";
@@ -17,6 +17,8 @@ import { useSquadGetters } from "../hooks/useSquadGetters";
 import { useSquadSetters } from "../hooks/useSquadSetter";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
+
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -75,8 +77,6 @@ const Register: React.FC = () => {
   const [logos, setLogos] = useState<Logo[]>([]);
   const [confirmedLogoId, setConfirmedLogoId] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     axiosInstance.get("/api/logos").then((res) => setLogos(res.data));
@@ -112,8 +112,9 @@ const Register: React.FC = () => {
       setMyTeamClubCohesion(data.myTeamClubCohesion);
       setMyTeamStamina(data.myTeamStamina);
     } catch (err: any) {
-      setSnackbarMessage(err.response?.data || "Error loading squad");
-      setSnackbarOpen(true);
+      useSnackbarStore
+        .getState()
+        .setSnackbar(err.response?.data || "Error loading squad");
     }
   };
 
@@ -139,8 +140,8 @@ const Register: React.FC = () => {
         myTeamStamina
       )
         .then((msg) => {
-          setSnackbarMessage(msg);
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar(msg);
+
           fetchMyClubs(myUserId).then((club) => {
             if (club && club.players) {
               setMySelectedPlayers(club.players);
@@ -153,8 +154,8 @@ const Register: React.FC = () => {
               ? err
               : err?.response?.data?.message ||
                 JSON.stringify(err?.response?.data ?? err, null, 2);
-          setSnackbarMessage(msg);
-          setSnackbarOpen(true);
+          useSnackbarStore.getState().setSnackbar(msg);
+
           setCurrentStep(1); // 실패 시 Step 1로 이동
         })
         .finally(() => {
@@ -165,23 +166,22 @@ const Register: React.FC = () => {
 
   const validateTeamName = () => {
     if (!teamName) {
-      setSnackbarMessage("Team name is required.");
-      setSnackbarOpen(true);
+      useSnackbarStore.getState().setSnackbar("Team name is required.");
+
       return false;
     }
     if (teamName.length > 10) {
-      setSnackbarMessage("Max 10 characters.");
-      setSnackbarOpen(true);
+      useSnackbarStore.getState().setSnackbar("Max 10 characters.");
       return false;
     }
     if (!/^[A-Za-z0-9]+$/.test(teamName)) {
-      setSnackbarMessage("Only English letters and numbers.");
-      setSnackbarOpen(true);
+      useSnackbarStore
+        .getState()
+        .setSnackbar("Only English letters and numbers.");
       return false;
     }
     if (/^[0-9]+$/.test(teamName)) {
-      setSnackbarMessage("Cannot be numbers only.");
-      setSnackbarOpen(true);
+      useSnackbarStore.getState().setSnackbar("Cannot be numbers only.");
       return false;
     }
     setMyTeamName(teamName);
@@ -190,8 +190,7 @@ const Register: React.FC = () => {
 
   const validateNationality = () => {
     if (!nationality) {
-      setSnackbarMessage("Please select a nationality.");
-      setSnackbarOpen(true);
+      useSnackbarStore.getState().setSnackbar("Please select a nationality.");
       return false;
     }
     setMyNation(nationality);
@@ -200,8 +199,9 @@ const Register: React.FC = () => {
 
   const validateLogoSelection = () => {
     if (currentStep === 2 && confirmedLogoId === null) {
-      setSnackbarMessage("Please select a logo before continuing.");
-      setSnackbarOpen(true);
+      useSnackbarStore
+        .getState()
+        .setSnackbar("Please select a logo before continuing.");
       return false;
     }
     return true;
@@ -250,17 +250,6 @@ const Register: React.FC = () => {
           Next
         </Button>
       )}
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert severity="error" onClose={() => setSnackbarOpen(false)}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
