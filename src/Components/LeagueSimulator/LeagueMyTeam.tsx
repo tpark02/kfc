@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-
-import { Button } from "@mui/material";
+import { Grid, Box, Button, Typography } from "@mui/material";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useSquadSetters } from "../hooks/useSquadSetter";
 import { useSquadGetters } from "../hooks/useSquadGetters";
+import { useNavigate } from "react-router-dom";
 
 import { setSquadStateFromClubData } from "../../util/setSquadStateFromClubData";
 import { useSquadStore } from "../../store/useSquadStore";
@@ -18,11 +18,26 @@ import {
 import { Match } from "../../types/match";
 import { shallow } from "zustand/shallow";
 
+import {
+  outerCardStyle,
+  rowStyle,
+  posStyle,
+  nameBoxStyle,
+  firstNameStyle,
+  lastNameStyle,
+  ovrStyle,
+} from "../../style/playerCardStyles";
+
+import { getPosColor } from "../../util/util";
+import { getStatDisplay } from "../../style/playerStyle";
+
 interface LeagueMyTeamProp {
   matches: Match[];
 }
 
 const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
+  const navigate = useNavigate();
+
   const {
     myNation,
     myLogoId,
@@ -53,10 +68,9 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     setMyTeamStamina,
   } = useSquadSetters();
 
-  const { setMyFormation, setMySelectedClubId } = useSquadStore(
+  const { setMyFormation } = useSquadStore(
     (s) => ({
       setMyFormation: s.setMyFormation,
-      setMySelectedClubId: s.setMySelectedClubId,
     }),
     shallow
   );
@@ -67,7 +81,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
   );
 
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
-  const myTeamName = myClubs[mySelectedClubId]?.name ?? "N/A";
+  const myTeamName = myClubs?.name ?? "N/A";
 
   useEffect(() => {
     setTotalAddStatPoints(matches.reduce((acc, m) => acc + m.addStats, 0));
@@ -96,7 +110,6 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
       );
 
       useSnackbarStore.getState().setSnackbar(msg);
-      console.log("8");
       const updatedClub = await fetchMyClubs(myUserId);
 
       if (updatedClub && updatedClub.players) {
@@ -119,10 +132,11 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
           ? err
           : err?.response?.data?.message ||
             JSON.stringify(err?.response?.data ?? err, null, 2);
-      useSnackbarStore.getState().setSnackbar(msg);      
+      useSnackbarStore.getState().setSnackbar(msg);
     }
   };
 
+  console.log("my team ovr", myTeamOvr);
   return (
     <div
       style={{
@@ -166,59 +180,89 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
         }}
       >
         {mySelectedPlayers && mySelectedPlayers.length > 0 ? (
-          mySelectedPlayers.map((player, idx) => (
-            <div
-              key={player.id ?? idx}
-              style={{ display: "flex", flexDirection: "row" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "stretch",
-                  alignItems: "center",
-                  width: "100%",
-                  outline: "1px solid red",
-                }}
-              >
-                {player?.name} - {player?.pos} - OVR: {player?.ovr}
-              </div>
-              <Button
-                disabled={totalAddStatPoints === 0}
-                variant="contained"
-                sx={{
-                  backgroundColor: "green",
-                  color: "white",
-                  minWidth: "40px",
-                  fontSize: "18px",
-                  borderRadius: "6px",
-                  "&.Mui-disabled": {
-                    backgroundColor: "green",
-                    color: "white",
-                    opacity: 0.4,
-                  },
-                }}
-                onClick={() => {
-                  setIsClicked(true);
-                  setTotalAddStatPoints((prev) => prev - 1);
+          mySelectedPlayers.slice(0, 17).map((player) => {
+            const posColor = getPosColor(player.pos);
+            const [firstName, lastName] = player.name.split(" ");
 
-                  const idx = mySelectedPlayers.findIndex(
-                    (p) => p.id === player.id
-                  );
-                  if (idx === -1) return;
-
-                  const updatedList = [...mySelectedPlayers];
-                  updatedList[idx] = {
-                    ...updatedList[idx],
-                    ovr: updatedList[idx].ovr + 1,
-                  };
-                  setMySelectedPlayers(updatedList);
-                }}
+            return (
+              <Grid
+                container
+                spacing={1}
+                style={{ display: "flex", flexDirection: "row" }}
               >
-                ➕
-              </Button>
-            </div>
-          ))
+                <Grid item xs={12} md={9}>
+                  <Button
+                    onClick={() =>
+                      navigate(`/myPlayer/${player.id}`, {
+                        state: { player: player },
+                      })
+                    }
+                    sx={outerCardStyle(false)}
+                  >
+                    <Box
+                      // ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
+                      sx={rowStyle}
+                    >
+                      {/* <Box sx={rowStyle}> */}
+                      <Typography
+                        variant="body2"
+                        component="span"
+                        sx={posStyle(posColor)}
+                      >
+                        {player.pos}
+                      </Typography>
+
+                      <Box sx={nameBoxStyle}>
+                        <Typography component="span" sx={firstNameStyle}>
+                          {firstName}
+                        </Typography>
+                        <Typography component="span" sx={lastNameStyle}>
+                          {lastName}
+                        </Typography>
+                      </Box>
+
+                      <Typography
+                        variant="body2"
+                        component="span"
+                        sx={ovrStyle}
+                      >
+                        {getStatDisplay("", player.ovr)}
+                      </Typography>
+                      {/* </Box> */}
+                    </Box>
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={2}>
+                  <Button
+                    disabled={totalAddStatPoints === 0}
+                    sx={{
+                      ...outerCardStyle(false),
+                      minHeight: "58px",
+                      justifyContent: "center",
+                    }}
+                    onClick={() => {
+                      setIsClicked(true);
+                      setTotalAddStatPoints((prev) => prev - 1);
+
+                      const idx = mySelectedPlayers.findIndex(
+                        (p) => p.id === player.id
+                      );
+                      if (idx === -1) return;
+
+                      const updatedList = [...mySelectedPlayers];
+                      updatedList[idx] = {
+                        ...updatedList[idx],
+                        ovr: updatedList[idx].ovr + 1,
+                      };
+                      setMySelectedPlayers(updatedList);
+                    }}
+                  >
+                    ➕
+                  </Button>
+                </Grid>
+              </Grid>
+            );
+          })
         ) : (
           <div>선수가 없습니다.</div>
         )}

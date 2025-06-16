@@ -1,7 +1,3 @@
-import { outlinedInputClasses } from "@mui/material";
-import { height } from "@mui/system";
-
-// styles.ts 또는 컴포넌트 상단에 함께 정의
 export const outerCardStyle = (isDragging: boolean) => ({
   opacity: isDragging ? 0.5 : 1,
   cursor: "grab",

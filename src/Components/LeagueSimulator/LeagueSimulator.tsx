@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import LeagueScheduleViewer from "./LeagueScheduleViewer";
 import LeagueMyTeam from "./LeagueMyTeam";
 import LeagueOpponentTeam from "./LeagueOpponentTeam";
-import { Button } from "@mui/material";
+
 import { fetchSchedule } from "../../util/leagueUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
+import { Grid, Box, Button, Typography } from "@mui/material";
 
 const LeagueSimulator = () => {
   const {
@@ -76,7 +77,7 @@ const LeagueSimulator = () => {
       >
         START
       </Button>
-      <div
+      {/* <div
         style={{
           backgroundColor: "var(--background-color)",
           display: "flex",
@@ -89,12 +90,24 @@ const LeagueSimulator = () => {
           outline: "1px solid red",
           margin: "10px 0 0 0",
         }}
+      > */}
+      <Grid
+        container
+        spacing={1}
+        style={{ display: "flex", flexDirection: "row" }}
       >
-        <LeagueMyTeam matches={matches} />
-        <LeagueScheduleViewer matches={matches} />
-        <LeagueOpponentTeam />
-      </div>     
+        <Grid item xs={12} md={2}>
+          <LeagueMyTeam matches={matches} />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <LeagueScheduleViewer matches={matches} />
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <LeagueOpponentTeam />
+        </Grid>
+      </Grid>
     </div>
+    // </div>
   );
 };
 
