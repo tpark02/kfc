@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axiosInstance";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 interface Participant {
   id: number;
@@ -18,7 +19,6 @@ export default function SeasonParticipantsList({
   refreshKey,
 }: Props) {
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
       axiosInstance
@@ -30,12 +30,10 @@ export default function SeasonParticipantsList({
       .catch((err: unknown) => {
         console.error("❌ Failed to load participants:", err);
       })
-      .finally((): void => {
-        setLoading(false);
+      .finally((): void => {        
+        useLoadingSpinnerStore.getState().setIsLoading(false)
       });
   }, [seasonId, refreshKey]); // ✅ Reloads when refreshKey changes
-
-  if (loading) return <div>⏳ Loading participants...</div>;
 
   return (
     <div className="mb-6">

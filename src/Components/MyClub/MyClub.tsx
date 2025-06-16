@@ -15,12 +15,9 @@ import { MyPlayer } from "../../types/player";
 import { totalNumberOfPlayers } from "../../types/team";
 import { shallow } from "zustand/shallow";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
-interface MyClubProp {
-  setLoading: (open: boolean) => void;
-}
-
-const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
+const MyClub: React.FC = () => {
   // 🎯 상태와 setter들을 묶어서 shallow 비교
   const {
     myNation,
@@ -93,8 +90,7 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleUpdateClub = (clubId: number, players: MyPlayer[]) => {
-    setLoading(true);
-
+    useLoadingSpinnerStore.getState().setIsLoading(true);
     if (newTeamName.length > 0) {
       updateMyClub(
         myNation,
@@ -132,11 +128,11 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
           useSnackbarStore.getState().setSnackbar(msg);
         })
         .finally(() => {
-          setLoading(false);
+          useLoadingSpinnerStore.getState().setIsLoading(false);
           setIsEditing(false);
         });
     }
-    setLoading(false);
+    useLoadingSpinnerStore.getState().setIsLoading(false);
     setIsEditing(false);
   };
 
@@ -219,7 +215,7 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
                 padding: 0,
               }}
               onClick={() => {
-                setLoading(true);
+                useLoadingSpinnerStore.getState().setIsLoading(true);
                 fetchMyClubs(myUserId)
                   .then((club) => {
                     if (!club) {
@@ -242,7 +238,7 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
                     resetDropZoneList();
                   })
                   .finally(() => {
-                    setLoading(false);
+                    useLoadingSpinnerStore.getState().setIsLoading(false);
                   });
                 setIsEditing(false);
               }}
@@ -312,7 +308,7 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
               }}
               // disabled={!club}
               onClick={() => {
-                setLoading(true);
+                useLoadingSpinnerStore.getState().setIsLoading(true);
                 if (myClubs?.clubId) {
                   deleteMyClub(myUserId, myClubs.clubId)
                     .then((msg) => {
@@ -321,7 +317,9 @@ const MyClub: React.FC<MyClubProp> = ({ setLoading }) => {
                         if (club !== null) setMyClubs(club);
                       });
                     })
-                    .finally(() => setLoading(false));
+                    .finally(() =>
+                      useLoadingSpinnerStore.getState().setIsLoading(false)
+                    );
                 }
               }}
             >

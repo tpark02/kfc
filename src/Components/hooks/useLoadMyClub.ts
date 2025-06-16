@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { fetchMyClubs } from "../../util/myClubUtil";
 import { setSquadStateFromClubData } from "../../util/setSquadStateFromClubData";
 import { useSquadSetters } from "./useSquadSetter";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 export const useLoadMyClub = (userId: number | null) => {
   const setters = useSquadSetters();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) return;
 
     const load = async () => {
-      setLoading(true);
+      useLoadingSpinnerStore.getState().setIsLoading(true);
       const data = await fetchMyClubs(userId);
       if (data) {
         await setSquadStateFromClubData(data, setters);
@@ -21,11 +21,11 @@ export const useLoadMyClub = (userId: number | null) => {
       } else {
         setError("❌ Failed to load club data.");
       }
-      setLoading(false);
+      useLoadingSpinnerStore.getState().setIsLoading(false);
     };
 
     load();
   }, [userId]);
 
-  return { loading, error };
+  return { error };
 };

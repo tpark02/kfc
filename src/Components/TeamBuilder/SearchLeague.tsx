@@ -10,6 +10,7 @@ import {
 import { League } from "../../types/league";
 import { LeaguePage } from "../../types/leaguePage"; // 필요하면 타입 만들어
 import Popper from "@mui/material/Popper";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import "../../style/Squad.css";
 
 interface SearchLeagueProp {
@@ -23,7 +24,6 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
 }) => {
   const [leagues, setLeagues] = useState<League[]>([]);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedLeague, setSelectedLeagueInternal] = useState<League | null>(
     null
   );
@@ -50,14 +50,14 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
   );
   useEffect(() => {
     if (open && leagues.length === 0) {
-      setLoading(true);
+      useLoadingSpinnerStore.getState().setIsLoading(true);
       axiosInstance
         .get<LeaguePage>("/leagues")
         .then((response: { data: LeaguePage }) => {
           setLeagues(response.data.content);
         })
         .catch((err: unknown) => console.error(err))
-        .finally(() => setLoading(false));
+        .finally(() => useLoadingSpinnerStore.getState().setIsLoading(false));
     }
   }, [open]);
 
@@ -69,7 +69,7 @@ const SearchLeague: React.FC<SearchLeagueProp> = ({
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
         options={leagues}
-        loading={loading}
+        // loading={loading}
         value={selectedLeague}
         onChange={(_, newValue) => {
           if (!newValue) return;

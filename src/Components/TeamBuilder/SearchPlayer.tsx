@@ -8,6 +8,7 @@ import { ResponseSearch } from "../../types/response";
 import { getImgByCountryName } from "../../data/countryData";
 import { getOvrColor, getPosColor } from "../../util/util";
 import RadarStatChart from "../players/RadarStatsChart";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 import "../../style/SearchPlayer.css";
 
@@ -37,7 +38,6 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
     const [results, setResults] = useState<Player[]>([]);
     const [, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
     const [hoveredPlayer, setHoveredPlayer] = useState<Player | null>(null);
 
     const fetchPlayers = useCallback(
@@ -45,7 +45,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
         console.log("🔥 fetchPlayers called with query:", q);
 
         try {
-          setLoading(true);
+          useLoadingSpinnerStore.getState().setIsLoading(true);
           const response = await axiosInstance.post<ResponseSearch>(
             "/squadsearch",
             {
@@ -77,7 +77,7 @@ const SearchPlayer = forwardRef<HTMLDivElement, SearchPlayerProp>(
           console.error(err);
           setHasMore(false);
         } finally {
-          setLoading(false);
+          useLoadingSpinnerStore.getState().setIsLoading(false);
         }
       },
       [country, league, club, pos]

@@ -8,12 +8,10 @@ import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
 import DraggableAndDroppablePlayerCard from "../../components/register/DraggableAndDroppablePlayerCard";
 import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
-import LoadingSpinner from "../LoadingSpinner";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 const Squad: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-
   const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
     const updated = [...mySelectedPlayers];
 
@@ -83,7 +81,7 @@ const Squad: React.FC = () => {
   );
 
   const handleUpdateMyInfo = () => {
-    setLoading(true);
+    useLoadingSpinnerStore.getState().setIsLoading(true);
 
     if (myTeamName.length > 0) {
       updateMyClub(
@@ -123,7 +121,7 @@ const Squad: React.FC = () => {
           useSnackbarStore.getState().setSnackbar(msg);
         })
         .finally(() => {
-          setLoading(false);
+          useLoadingSpinnerStore.getState().setIsLoading(false);
           //   setEditingIndex(null);
         });
     }
@@ -132,8 +130,7 @@ const Squad: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", margin: "0 auto" }}>
-      {loading && <LoadingSpinner />}
+    <Box sx={{ width: "100%", margin: "0 auto" }}>      
       <Grid container spacing={2}>
         <Grid item xs={12} md={2}>
           <SquadMetrics />
@@ -209,21 +206,21 @@ const Squad: React.FC = () => {
               <Divider
                 sx={{ width: "80%", mt: 2, mb: 2, borderColor: "#888" }}
               />
-
-              <Box mb={1}>{"BENCH"}</Box>
-              {mySelectedPlayers.slice(11, 17).map((player, index) => {
+              <Box mb={1}>{"RESERVE"}</Box>
+              {mySelectedPlayers.slice(17).map((player, index) => {
                 // if (!player || player.name === "dummy") return null;
                 console.log("players - ", player);
                 return (
                   <DraggableAndDroppablePlayerCard
                     key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
-                    index={11 + index} // ✅ bench는 offset 줘야 돼
+                    index={17 + index} // ✅ bench는 offset 줘야 돼
                     player={player}
                     onSwap={handleSwapPlayers}
                   />
                 );
               })}
             </Box>
+
             <Divider
               orientation="vertical"
               flexItem
@@ -238,14 +235,14 @@ const Squad: React.FC = () => {
                 // outline: "1px solid red",
               }}
             >
-              <Box mb={1}>{"RESERVE"}</Box>
-              {mySelectedPlayers.slice(17).map((player, index) => {
+              <Box mb={1}>{"BENCH"}</Box>
+              {mySelectedPlayers.slice(11, 17).map((player, index) => {
                 // if (!player || player.name === "dummy") return null;
                 console.log("players - ", player);
                 return (
                   <DraggableAndDroppablePlayerCard
                     key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
-                    index={17 + index} // ✅ bench는 offset 줘야 돼
+                    index={11 + index} // ✅ bench는 offset 줘야 돼
                     player={player}
                     onSwap={handleSwapPlayers}
                   />
@@ -264,7 +261,7 @@ const Squad: React.FC = () => {
             테스트로 뒤집기
           </Button> */}
         </Grid>
-      </Grid>     
+      </Grid>
     </Box>
   );
 };

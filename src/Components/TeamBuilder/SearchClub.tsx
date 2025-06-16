@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import Popper, { PopperProps } from "@mui/material/Popper";
 import "../../style/Squad.css";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 interface SearchClubProp {
   setSearchTermClub: (term: string) => void;
@@ -21,7 +22,6 @@ interface SearchClubProp {
 const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
   const CustomPopper = (props: PopperProps) => (
@@ -48,14 +48,16 @@ const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
 
   useEffect(() => {
     if (open && teams.length === 0) {
-      setLoading(true);
+      useLoadingSpinnerStore.getState().setIsLoading(true);
       axiosInstance
         .get<TeamPage>("/teams")
         .then((response: { data: TeamPage }) => {
           setTeams(response.data.content);
         })
         .catch((err: unknown) => console.error(err))
-        .finally((): void => setLoading(false));
+        .finally((): void =>
+          useLoadingSpinnerStore.getState().setIsLoading(false)
+        );
     }
   }, [open]);
 
@@ -67,7 +69,7 @@ const SearchClub: React.FC<SearchClubProp> = ({ setClub, prevList }) => {
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
         options={teams}
-        loading={loading}
+        // loading={loading}
         value={selectedTeam}
         onChange={(_, newValue) => {
           if (!newValue) return;

@@ -3,6 +3,7 @@ import axiosInstance from "../../axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 interface SignUpFormData {
   username: string;
@@ -25,7 +26,6 @@ const SignUpForm: React.FC = () => {
 
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -71,7 +71,7 @@ const SignUpForm: React.FC = () => {
     console.log("input password : ", password); // true or false
 
     try {
-      setLoading(true);
+      useLoadingSpinnerStore.getState().setIsLoading(true);
       const res = await axiosInstance.post("/api/signup", form);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId); // ✅ userId도 저장
@@ -90,7 +90,7 @@ const SignUpForm: React.FC = () => {
       }
       setSuccess("");
     } finally {
-      setLoading(false);
+      useLoadingSpinnerStore.getState().setIsLoading(false);
     }
   };
 
@@ -104,7 +104,7 @@ const SignUpForm: React.FC = () => {
 
   return (
     <div style={{ maxWidth: 300, margin: "auto" }}>
-      <h2>회원가입</h2>
+      <h2>Sign Up</h2>
       <input
         type="text"
         name="username"
@@ -131,10 +131,11 @@ const SignUpForm: React.FC = () => {
       />
       <button
         onClick={handleSignUp}
-        disabled={loading}
+        // disabled={loading}
         style={{ width: "100%", padding: "10px", marginTop: "16px" }}
       >
-        {loading ? "처리 중..." : "회원가입"}
+        {/* {loading ? "처리 중..." : "회원가입"} */}
+        Sign Up
       </button>
       {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
       {success && <p style={{ color: "green", marginTop: 12 }}>{success}</p>}

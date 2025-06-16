@@ -1,11 +1,10 @@
-import axiosInstance from "../../axiosInstance"
+import axiosInstance from "../../axiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Typography,
-  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -13,15 +12,13 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import { devMatchTimer } from "../../util/util";
 import ChampionsBracket from "./ChampionsBracket";
-// import SeasonParticipantsList from "./SeasonParticipantsList";
 import SeasonTimer from "./SeasonTimer";
 import { useSquadStore } from "../../store/useSquadStore";
 import { SeasonResponse } from "../../types/response";
-// import MyClubSelect from "./MyClubSelect";
-import { useSnackbarStore } from "../../store/userSnackBarStore";// import { Player, myPlayerToPlayer } from "../../types/Player";
+import { useSnackbarStore } from "../../store/userSnackBarStore"; // import { Player, myPlayerToPlayer } from "../../types/Player";
 
 import {
   getOvrIndicator,
@@ -39,7 +36,6 @@ import "../../style/SeasonPage.css";
 export default function SeasonPage() {
   const { seasonId } = useParams<{ seasonId: string }>();
   const [season, setSeason] = useState<SeasonResponse | null>(null);
-  const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMsg, setDialogMsg] = useState("");
@@ -111,7 +107,7 @@ export default function SeasonPage() {
 
       if (res !== null) setSeason(res);
 
-      setLoading(false);
+      useLoadingSpinnerStore.getState().setIsLoading(false);
     })();
   }, [seasonId, navigate]);
 
@@ -235,24 +231,20 @@ export default function SeasonPage() {
             setSeason={setSeason}
           />
         )}
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <Button
-            variant="contained"
-            color={joinedSeasonId !== -1 ? "error" : "primary"}
-            onClick={toggleJoin}
-            disabled={
-              processing ||
-              season?.started ||
-              (joinedSeasonId !== -1 &&
-                joinedSeasonId !== parseInt(seasonId ?? "-1"))
-            }
-            sx={{ mb: 3, border: "1px solid red" }}
-          >
-            {joinedSeasonId !== -1 ? "Leave" : "Join"}
-          </Button>
-        )}
+        <Button
+          variant="contained"
+          color={joinedSeasonId !== -1 ? "error" : "primary"}
+          onClick={toggleJoin}
+          disabled={
+            processing ||
+            season?.started ||
+            (joinedSeasonId !== -1 &&
+              joinedSeasonId !== parseInt(seasonId ?? "-1"))
+          }
+          sx={{ mb: 3, border: "1px solid red" }}
+        >
+          {joinedSeasonId !== -1 ? "Leave" : "Join"}
+        </Button>
       </Box>
 
       <Box
@@ -372,7 +364,7 @@ export default function SeasonPage() {
             {dialogMsg}
           </DialogContentText>
         </DialogContent>
-      </Dialog>    
+      </Dialog>
     </>
   );
 }

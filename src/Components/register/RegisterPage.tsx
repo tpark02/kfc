@@ -10,7 +10,6 @@ import StepSquadBuilder from "../register/StepSquadBuilder";
 import { fetchRandomSquad } from "../../api/squad";
 import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
 import axiosInstance from "../../axiosInstance";
-import LoadingSpinner from "../LoadingSpinner";
 
 import { Logo } from "../../types/Logo";
 import { useSquadGetters } from "../hooks/useSquadGetters";
@@ -19,6 +18,7 @@ import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 
 import { useSnackbarStore } from "../../store/userSnackBarStore";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -70,8 +70,7 @@ const Register: React.FC = () => {
     }),
     shallow
   );
-
-  const [loading, setLoading] = useState(false);
+  
   const [teamName, setTeamName] = useState("");
   const [nationality, setNationality] = useState("");
   const [logos, setLogos] = useState<Logo[]>([]);
@@ -102,6 +101,7 @@ const Register: React.FC = () => {
         userId: myUserId,
       });
 
+      useLoadingSpinnerStore.getState().setIsLoading(true);
       setMySelectedPlayers(data.myPlayerList);
       setMyTeamOvr(data.myTeamOvr);
       setMyTeamSquadValue(data.myTeamSquadValue);
@@ -119,7 +119,7 @@ const Register: React.FC = () => {
   };
 
   const handleUpdateMyInfo = () => {
-    setLoading(true);
+    useLoadingSpinnerStore.getState().setIsLoading(true);
 
     if (myTeamName.length > 0) {
       updateMyClub(
@@ -135,8 +135,8 @@ const Register: React.FC = () => {
         myTeamAge,
         myTeamPace,
         myTeamDefense,
-        myTeamClubCohesion,
         myTeamAttack,
+        myTeamClubCohesion,        
         myTeamStamina
       )
         .then((msg) => {
@@ -159,7 +159,7 @@ const Register: React.FC = () => {
           setCurrentStep(1); // 실패 시 Step 1로 이동
         })
         .finally(() => {
-          setLoading(false);
+          useLoadingSpinnerStore.getState().setIsLoading(false);
         });
     }
   };
@@ -208,10 +208,12 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      {loading && <LoadingSpinner />}
+    <Box sx={{ textAlign: "center", mt: 4 }}>      
       <Typography variant="h4" mb={2}>
         Step {currentStep + 1}
+        {/* <Button onClick={loadRandomSquad}>
+          random team
+        </Button> */}
       </Typography>
 
       {currentStep === 0 && (

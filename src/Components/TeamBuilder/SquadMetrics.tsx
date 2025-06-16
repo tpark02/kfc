@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect } from "react";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import { useSquadStore } from "../../store/useSquadStore";
 
 import Typography from "@mui/material/Typography";
@@ -8,7 +8,6 @@ import SquadRadarChart from "./SquadRadarChart";
 
 import { shallow } from "zustand/shallow";
 import { getImgByCountryName } from "../../data/countryData";
-import LoadingSpinner from "../LoadingSpinner";
 import "../../style/Squad.css";
 
 const SquadMetrics: React.FC = () => {
@@ -45,21 +44,19 @@ const SquadMetrics: React.FC = () => {
     console.log("myLogoImgUrl ", myLogoImgUrl);
     console.log("myTeamName ", myTeamName);
     console.log("mySelectedPlayers ", mySelectedPlayers);
-    
+
     if (
       myTeamName !== "" &&
       myLogoImgUrl !== "" &&
       mySelectedPlayers &&
       mySelectedPlayers.length > 0
     ) {
-      setLoading(false);
+      useLoadingSpinnerStore.getState().setIsLoading(false);
     }
   }, [myTeamName, myLogoImgUrl, mySelectedPlayers]);
 
-  const [loading, setLoading] = useState(true);
   return (
     <div className="squad-overview">
-      {loading && <LoadingSpinner />}
       <div
         style={{
           display: "flex",
