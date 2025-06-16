@@ -170,6 +170,7 @@ export default function SeasonPage() {
   };
 
   const loadMyClub = async () => {
+    console.log("3");
     const club = await fetchMyClubs(myUserId);
     const selectedClub = club ?? undefined;
     if (!selectedClub) {

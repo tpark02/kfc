@@ -46,13 +46,13 @@ export const fetchSeasonInfo = async (seasonId: string) => {
 
 export const fetchMyClubs = async (userId: number): Promise<MyClubData | null> => {
   try {
-    const data: MyClubData = await axiosInstance.get(`/users/${userId}/myclubs`);   
-    console.log("fetch my club - ", data);
-    return data;
+    const res = await axiosInstance.get(`/users/${userId}/myclubs`);   
+    console.log("fetch my club - ", res.data);    
+    return res.data;
   } catch (error) {
     handleApiError(error, "fetchMyClubs");
     return null;
-  }
+  }   
 };
 
 // ✅ 클럽 업데이트

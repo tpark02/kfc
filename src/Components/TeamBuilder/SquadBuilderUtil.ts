@@ -1,6 +1,6 @@
-import { MyPlayer, Player } from "../../types/player";
+import { MyPlayer } from "../../types/player";
 
-function getMaxClubCount(players: { [index: number]: Player | null }) {
+function getMaxClubCount(players: { [index: number]: MyPlayer | null }) {
   const clubCount: { [key: string]: number } = {};
 
   for (const p of Object.values(players)) {
@@ -31,7 +31,7 @@ const POSITION_MULTIPLIER = Object.freeze({
 });
 
 // Estimate value function
-function estimateValue(player: Player) {
+function estimateValue(player: MyPlayer) {
   const baseValue = Math.pow(player.ovr, 2);
   const multiplier =
     POSITION_MULTIPLIER[player.pos as keyof typeof POSITION_MULTIPLIER] || 1.0;

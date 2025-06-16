@@ -14,6 +14,7 @@ export type MyClubData = {
   clubCohesion: number;
   stamina: number;
 
-  nation: string;           // ✅ new
-  teamLogoImg: string;      // ✅ new
+  nation: string;
+  teamLogoImg: string;
+  teamLogoId: number;
 };

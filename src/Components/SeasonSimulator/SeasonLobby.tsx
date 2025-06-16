@@ -111,27 +111,15 @@ export default function SeasonLobby() {
   }, [joinedSeasonId, setJoinedSeasonId]);
 
   useEffect(() => {
+    console.log("4");
     fetchMyClubs(myUserId)
       .then((clubs) => {
-        // const selectedClub = clubs.find((c) => c.clubId === club?.clubId);
         const selectedClub = clubs ?? undefined;
-
-        // if (selectedClub === undefined) return;
-
         if (selectedClub === undefined) {
           useSnackbarStore.getState().setSnackbar("The club not found");
           return;
         }
-
-        // if (club?.clubId !== undefined) {
-        //   setMySelectedClubId(club.clubId);
-        // }
-
         setMySelectedPlayers(selectedClub.players);
-
-        // const playerList: Player[] = selectedClub.players.map(myPlayerToPlayer);
-
-        // setDropPlayers([...playerList]);
         setMyFormation(selectedClub.formationName);
         setMyTeamOvr(selectedClub.ovr);
         setMyTeamSquadValue(selectedClub.price);

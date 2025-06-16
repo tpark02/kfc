@@ -8,7 +8,7 @@ import StepNationality from "../register/StepNationality";
 import StepLogo from "../register/StepLogo";
 import StepSquadBuilder from "../register/StepSquadBuilder";
 import { fetchRandomSquad } from "../../api/squad";
-import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
+import { updateMyClub } from "../../util/myClubUtil";
 import axiosInstance from "../../axiosInstance";
 
 import { Logo } from "../../types/Logo";
@@ -70,7 +70,7 @@ const Register: React.FC = () => {
     }),
     shallow
   );
-  
+
   const [teamName, setTeamName] = useState("");
   const [nationality, setNationality] = useState("");
   const [logos, setLogos] = useState<Logo[]>([]);
@@ -111,6 +111,33 @@ const Register: React.FC = () => {
       setMyTeamAttack(data.myTeamAtk);
       setMyTeamClubCohesion(data.myTeamClubCohesion);
       setMyTeamStamina(data.myTeamStamina);
+
+      setMySelectedPlayers(data.myPlayerList);
+      console.log("✅ Selected Players:", data.myPlayerList);
+
+      setMyTeamOvr(data.myTeamOvr);
+      console.log("📊 Team OVR:", data.myTeamOvr);
+
+      setMyTeamSquadValue(data.myTeamSquadValue);
+      console.log("💰 Squad Value:", data.myTeamSquadValue);
+
+      setMyTeamAge(data.myTeamAge);
+      console.log("🎂 Average Age:", data.myTeamAge);
+
+      setMyTeamPace(data.myTeamPace);
+      console.log("⚡ Pace:", data.myTeamPace);
+
+      setMyTeamDefense(data.myTeamDef);
+      console.log("🛡️ Defense:", data.myTeamDef);
+
+      setMyTeamAttack(data.myTeamAtk);
+      console.log("⚔️ Attack:", data.myTeamAtk);
+
+      setMyTeamClubCohesion(data.myTeamClubCohesion);
+      console.log("🤝 Club Cohesion:", data.myTeamClubCohesion);
+
+      setMyTeamStamina(data.myTeamStamina);
+      console.log("🏃‍♂️ Stamina:", data.myTeamStamina);
     } catch (err: any) {
       useSnackbarStore
         .getState()
@@ -136,17 +163,24 @@ const Register: React.FC = () => {
         myTeamPace,
         myTeamDefense,
         myTeamAttack,
-        myTeamClubCohesion,        
+        myTeamClubCohesion,
         myTeamStamina
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
 
-          fetchMyClubs(myUserId).then((club) => {
-            if (club && club.players) {
-              setMySelectedPlayers(club.players);
-            }
-          });
+          // fetchMyClubs(myUserId).then((club) => {
+          //   if (club && club.players) {
+          //     setMySelectedPlayers(club.players);
+          //     setMyTeamOvr(club.ovr);
+          //     setMyTeamPace(club.pace);
+          //     setMyTeamAttack(club.attack);
+          //     setMyTeamDefense(club.defense);
+          //     setMyTeamStamina(club.stamina);
+          //     setMyTeamClubCohesion(club.clubCohesion);
+          //     setMyTeamSquadValue(club.price);
+          //   }
+          // });
         })
         .catch((err) => {
           const msg =
@@ -208,7 +242,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>      
+    <Box sx={{ textAlign: "center", mt: 4 }}>
       <Typography variant="h4" mb={2}>
         Step {currentStep + 1}
         {/* <Button onClick={loadRandomSquad}>

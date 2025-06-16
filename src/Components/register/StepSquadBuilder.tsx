@@ -9,16 +9,16 @@ import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
 import DraggableAndDroppablePlayerCard from "./DraggableAndDroppablePlayerCard";
 
-
 const StepSquadBuilder: React.FC = () => {
-  const { myFormation, mySelectedPlayers, setMySelectedPlayers } = useSquadStore(
-    (s) => ({
-      myFormation: s.myFormation,
-      mySelectedPlayers: s.mySelectedPlayers,
-      setMySelectedPlayers: s.setMySelectedPlayers,
-    }),
-    shallow
-  );
+  const { myFormation, mySelectedPlayers, setMySelectedPlayers } =
+    useSquadStore(
+      (s) => ({
+        myFormation: s.myFormation,
+        mySelectedPlayers: s.mySelectedPlayers,
+        setMySelectedPlayers: s.setMySelectedPlayers,
+      }),
+      shallow
+    );
 
   const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
     const updated = [...mySelectedPlayers];
@@ -64,7 +64,7 @@ const StepSquadBuilder: React.FC = () => {
           }}
         >
           <SelectFormation />
-          <Box mb={1}></Box>
+          <Box margin={1}>{"STARTING"}</Box>
 
           {mySelectedPlayers.slice(0, 11).map((player, index) => {
             if (!player || player.name === "dummy") return null;
@@ -79,7 +79,7 @@ const StepSquadBuilder: React.FC = () => {
             );
           })}
 
-          <Divider sx={{ width: "80%", mt: 2, mb: 2, borderColor: "#888" }} />
+          <Box margin={1}>{"BENCH"}</Box>
 
           {mySelectedPlayers.slice(11).map((player, index) => {
             if (!player || player.name === "dummy") return null;

@@ -105,13 +105,13 @@ const MyClub: React.FC = () => {
         myTeamAge,
         myTeamPace,
         myTeamDefense,
-        myTeamClubCohesion,
         myTeamAttack,
+        myTeamClubCohesion,        
         myTeamStamina
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
-
+console.log("7");
           fetchMyClubs(myUserId).then((club) => {
             if (club && club.players) {
               setMySelectedPlayers(club.players);
@@ -216,6 +216,7 @@ const MyClub: React.FC = () => {
               }}
               onClick={() => {
                 useLoadingSpinnerStore.getState().setIsLoading(true);
+                console.log("6");
                 fetchMyClubs(myUserId)
                   .then((club) => {
                     if (!club) {
@@ -313,6 +314,7 @@ const MyClub: React.FC = () => {
                   deleteMyClub(myUserId, myClubs.clubId)
                     .then((msg) => {
                       useSnackbarStore.getState().setSnackbar(msg);
+                      console.log("5");
                       fetchMyClubs(myUserId).then((club) => {
                         if (club !== null) setMyClubs(club);
                       });

@@ -23,16 +23,14 @@ export type ResponseLoadSquad = {
 
 export type ResponseRandomSquad = {
   myPlayerList: MyPlayer[];
-  myTeamOvr: number;
-  chemistry: number;
-  myTeamSquadValue: number;
-  myTeamAge: number;
-  myTeamPace: number;
-  myTeamDef: number;
-  myTeamAtk: number;
+  myTeamOvr: number;  
   myTeamClubCohesion: number;
-  myTeamStamina: number;
-  benchPlayers: Player[];
+  myTeamStamina: number;  
+  myTeamAge: number;
+  myTeamAtk: number;
+  myTeamDef: number;
+  myTeamPace: number;  
+  myTeamSquadValue: number;  
 };
 
 export type SeasonResponse = {

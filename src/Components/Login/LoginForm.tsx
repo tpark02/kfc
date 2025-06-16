@@ -43,7 +43,7 @@ const LoginForm: React.FC = () => {
     shallow
   );
 
-  const { setMyLogoImgUrl, setMyTeamName } = useSquadStore(
+  const { setMyLogoImgUrl, setMyTeamName, setMyLogoId } = useSquadStore(
     (s) => ({
       setMyLogoId: s.setMyLogoId,
       setMyNation: s.setMyNation,
@@ -175,11 +175,14 @@ const LoginForm: React.FC = () => {
 
         console.log("✅ 팀 이름 설정됨:", myClub.name);
 
-        setMyLogoImgUrl(myClub.teamLogoImg);        
+        setMyLogoImgUrl(myClub.teamLogoImg);
         console.log("✅ 로고 이미지 URL 설정됨:", myClub.teamLogoImg);
 
         setMyFormation(myClub.formationName);
         console.log("✅ 포메이션 설정됨:", myClub.formationName);
+
+        setMyLogoId(myClub.teamLogoId);
+        console.log("✅ 로고 이미지 id 설정됨:", myClub.teamLogoId);
 
         console.log("✅ Store update complete");
       }

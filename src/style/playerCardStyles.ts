@@ -1,3 +1,6 @@
+import { outlinedInputClasses } from "@mui/material";
+import { height } from "@mui/system";
+
 // styles.ts 또는 컴포넌트 상단에 함께 정의
 export const outerCardStyle = (isDragging: boolean) => ({
   opacity: isDragging ? 0.5 : 1,
@@ -15,7 +18,7 @@ export const outerCardStyle = (isDragging: boolean) => ({
   outline: "1px solid gray",
   padding: "4px 8px",
   margin: "0 0 10px 0",
-  height: "auto",
+  height: "auto",  
 });
 
 export const rowStyle = {
@@ -23,10 +26,10 @@ export const rowStyle = {
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
-  width: "100%",
+  width: "100%",  
   gap: 0.5,
   overflow: "hidden",
-  minHeight: "32px",
+  minHeight: "50px",
   padding: "0 4px",
   flex: 1,    
 };
@@ -46,9 +49,8 @@ export const nameBoxStyle = {
   alignItems: "center",
 };
 
-export const firstNameStyle = {
-  fontWeight: 600,
-  fontSize: 13,
+export const firstNameStyle = {  
+  fontSize: 12,
 };
 
 export const lastNameStyle = {

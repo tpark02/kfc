@@ -96,6 +96,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
       );
 
       useSnackbarStore.getState().setSnackbar(msg);
+      console.log("8");
       const updatedClub = await fetchMyClubs(myUserId);
 
       if (updatedClub && updatedClub.players) {

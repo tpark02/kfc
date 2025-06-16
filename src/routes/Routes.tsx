@@ -12,6 +12,7 @@ import PrivateRoute from "../components/PrivateRoutes";
 import Layout from "../Layout";
 import SignUpForm from "../components/login/SignupForm";
 import Squad from "../components/teambuilder/Squad";
+import MyPlayerSpec from "../components/players/MyPlayerSpec";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -35,6 +36,14 @@ const AppRoutes: React.FC = () => {
           element={
             <PrivateRoute>
               <PlayerSpec />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/myPlayer/:id"
+          element={
+            <PrivateRoute>
+              <MyPlayerSpec />
             </PrivateRoute>
           }
         />

@@ -42,7 +42,7 @@ const NavBar: React.FC = () => {
         Recruit
       </Button>
       <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/squad"); }}>
-        Team Builder
+        My Club
       </Button>
       <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/league"); }}>
         League

@@ -1,7 +1,7 @@
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
-
-import { Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Box, Button, Typography } from "@mui/material";
 import { MyPlayer } from "../../types/player";
 import {
   outerCardStyle,
@@ -26,7 +26,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
   index,
   onSwap,
 }) => {
-  // 👇 indexRef 추가
+  const navigate = useNavigate();
   const indexRef = useRef(index);
   indexRef.current = index;
   const [{ isDragging }, dragRef] = useDrag(() => ({
@@ -52,7 +52,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
 
   return player.name === "dummy" ? (
     <Box
-      ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
+      // ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
       sx={outerCardStyle(isDragging)}
     >
       <Box sx={{ ...rowStyle }}>
@@ -61,31 +61,25 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
           component="span"
           sx={{
             width: "100%",
+            textAlign: "center",
           }}
         >
           EMPTY
         </Typography>
-
-        {/* <Box sx={nameBoxStyle}>
-          <Typography component="span" sx={firstNameStyle}>
-            {firstName}
-          </Typography>
-          <Typography component="span" sx={lastNameStyle}>
-            {lastName}
-          </Typography>
-        </Box>
-
-        <Typography variant="body2" component="span" sx={ovrStyle}>
-          {getStatDisplay("", player.ovr)}
-        </Typography> */}
       </Box>
     </Box>
   ) : (
-    <Box
-      ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
+    <Button
+      onClick={() =>
+        navigate(`/myPlayer/${player.id}`, { state: { player: player } })
+      }
       sx={outerCardStyle(isDragging)}
     >
-      <Box sx={rowStyle}>
+      <Box
+        ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
+        sx={rowStyle}
+      >
+        {/* <Box sx={rowStyle}> */}
         <Typography variant="body2" component="span" sx={posStyle(posColor)}>
           {player.pos}
         </Typography>
@@ -102,8 +96,9 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
         <Typography variant="body2" component="span" sx={ovrStyle}>
           {getStatDisplay("", player.ovr)}
         </Typography>
+        {/* </Box> */}
       </Box>
-    </Box>
+    </Button>
   );
 };
 

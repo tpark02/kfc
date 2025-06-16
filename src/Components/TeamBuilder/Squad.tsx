@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Box, Grid, Divider, Button } from "@mui/material";
 import SquadBuilder from "../teambuilder/SquadBuilder";
 import SquadMetrics from "../teambuilder/SquadMetrics";
@@ -10,6 +10,7 @@ import DraggableAndDroppablePlayerCard from "../../components/register/Draggable
 import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
+import { getTeamAvr } from "./SquadBuilderUtil";
 
 const Squad: React.FC = () => {
   const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
@@ -45,6 +46,14 @@ const Squad: React.FC = () => {
     myTeamAttack,
     myTeamStamina,
     setMySelectedPlayers,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
   } = useSquadStore(
     (s) => ({
       myFormation: s.myFormation,
@@ -97,12 +106,13 @@ const Squad: React.FC = () => {
         myTeamAge,
         myTeamPace,
         myTeamDefense,
-        myTeamClubCohesion,
         myTeamAttack,
+        myTeamClubCohesion,
         myTeamStamina
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
+          console.log("1");
           fetchMyClubs(myUserId).then((club) => {
             const updatedClub = club ?? undefined;
 
@@ -129,8 +139,41 @@ const Squad: React.FC = () => {
     // setEditingIndex(null);
   };
 
+  useEffect(() => {
+    useLoadingSpinnerStore.getState().setIsLoading(true);
+    console.log("2");
+    fetchMyClubs(myUserId)
+      .then((club) => {
+        const updatedClub = club ?? undefined;
+
+        if (updatedClub && updatedClub.players) {
+
+          setMySelectedPlayers(updatedClub.players);
+          setMyTeamOvr(updatedClub.ovr);
+          setMyTeamPace(updatedClub.pace);
+          setMyTeamAttack(updatedClub.attack);
+          setMyTeamDefense(updatedClub.defense);
+          setMyTeamStamina(updatedClub.stamina);
+          setMyTeamClubCohesion(updatedClub.clubCohesion);
+          setMyTeamSquadValue(updatedClub.price);
+        }
+      })
+      .catch((err) => {
+        const msg =
+          typeof err === "string"
+            ? err
+            : err?.response?.data?.message ||
+              JSON.stringify(err?.response?.data ?? err, null, 2);
+        useSnackbarStore.getState().setSnackbar(msg);
+      })
+      .finally(() => {
+        useLoadingSpinnerStore.getState().setIsLoading(false);
+        //   setEditingIndex(null);
+      });
+  }, [myUserId, setMySelectedPlayers]);
+
   return (
-    <Box sx={{ width: "100%", margin: "0 auto" }}>      
+    <Box sx={{ width: "100%", margin: "0 auto" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={2}>
           <SquadMetrics />
@@ -202,30 +245,8 @@ const Squad: React.FC = () => {
                   />
                 );
               })}
-
-              <Divider
-                sx={{ width: "80%", mt: 2, mb: 2, borderColor: "#888" }}
-              />
-              <Box mb={1}>{"RESERVE"}</Box>
-              {mySelectedPlayers.slice(17).map((player, index) => {
-                // if (!player || player.name === "dummy") return null;
-                console.log("players - ", player);
-                return (
-                  <DraggableAndDroppablePlayerCard
-                    key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
-                    index={17 + index} // ✅ bench는 offset 줘야 돼
-                    player={player}
-                    onSwap={handleSwapPlayers}
-                  />
-                );
-              })}
             </Box>
-
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ height: "100%", mx: 2, borderColor: "#888" }}
-            />
+            <Box ml={1}></Box>
             <Box
               sx={{
                 display: "flex",
@@ -249,6 +270,28 @@ const Squad: React.FC = () => {
                 );
               })}
             </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)", // 2 columns
+              gridTemplateRows: "repeat(5, auto)", // 5 rows
+              gap: 1,
+              width: "100%",
+            }}
+          >
+            <Box gridColumn="1 / -1" mb={1} sx={{ textAlign: "center" }}>
+              {"RESERVE"}
+            </Box>
+
+            {mySelectedPlayers.slice(17, 27).map((player, index) => (
+              <DraggableAndDroppablePlayerCard
+                key={`reserve-${player.id}-${index}`}
+                index={17 + index}
+                player={player}
+                onSwap={handleSwapPlayers}
+              />
+            ))}
           </Box>
 
           {/* <Button
