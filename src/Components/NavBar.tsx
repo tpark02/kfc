@@ -47,9 +47,9 @@ const NavBar: React.FC = () => {
       <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/league"); }}>
         League
       </Button>
-      <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/tournament"); }}>
+      {/* <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/tournament"); }}>
         Tournament
-      </Button>
+      </Button> */}
       {/* <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/register"); }}>
         Register
       </Button> */}
@@ -57,11 +57,11 @@ const NavBar: React.FC = () => {
       <div style={{ marginLeft: "auto" }}>
         {token ? (
           <Button variant="outlined" color="error" onClick={handleLogout}>
-            로그아웃
+            Log Out
           </Button>
         ) : (
           <Button variant="contained" onClick={() => navigate("/login")}>
-            로그인
+            Sign In
           </Button>
         )}
       </div>

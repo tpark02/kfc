@@ -32,6 +32,8 @@ const LeagueSimulator = () => {
   );
 
   useEffect(() => {
+    setMatches([]);
+
     if (HasRedCard) {
       useSnackbarStore
         .getState()
@@ -66,17 +68,6 @@ const LeagueSimulator = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          fetchData();
-        }}
-        disabled={HasRedCard}
-        sx={{ margin: "10px" }}
-      >
-        START
-      </Button>
       {/* <div
         style={{
           backgroundColor: "var(--background-color)",
@@ -97,7 +88,11 @@ const LeagueSimulator = () => {
         style={{ display: "flex", flexDirection: "row" }}
       >
         <Grid item xs={12} md={2}>
-          <LeagueMyTeam matches={matches} />
+          <LeagueMyTeam
+            matches={matches}
+            fetchData={fetchData}
+            HasRedCard={HasRedCard}
+          />
         </Grid>
         <Grid item xs={12} md={8}>
           <LeagueScheduleViewer matches={matches} />

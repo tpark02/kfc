@@ -6,7 +6,7 @@ export const outerCardStyle = (isDragging: boolean) => ({
   },
   display: "flex",
   flexDirection: "row",
-  justifyContent: "space-between",
+  justifyContent: "space-evenly",
   width: "100%",
   backgroundColor: "#1e1e1e",
   color: "#fff",

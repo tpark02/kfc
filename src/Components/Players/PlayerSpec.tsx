@@ -15,11 +15,13 @@ import { getOvrColor } from "../../util/util";
 import { countryData } from "../../data/countryData";
 
 // ✅ Styles
-import "../../style/PlayerSpec.css";
 import axiosInstance from "../../axiosInstance";
+import CroppedAvatar from "../teambuilder/CroppedAvatar";
+import { Box } from "@mui/system";
+import "../../style/PlayerSpec.css";
 
 const PlayerSpec: React.FC = () => {
-  const location = useLocation();  
+  const location = useLocation();
   const player = (location.state as { player: Player })?.player;
 
   const countryCode =
@@ -45,11 +47,11 @@ const PlayerSpec: React.FC = () => {
     isStat: boolean = true
   ) => {
     return (
-      <div className="player-info-cell-group">
+      <Box className="player-info-cell-group">
         {isStat ? (
           <>
-            <div className="player-info-cell">{name}</div>
-            <div
+            <Box className="player-info-cell">{name}</Box>
+            <Box
               className="player-info-cell"
               style={{
                 color: getOvrColor(player[key] as number),
@@ -58,36 +60,37 @@ const PlayerSpec: React.FC = () => {
               }}
             >
               {player[key] ? player[key] : "N/A"}
-            </div>
+            </Box>
           </>
         ) : (
           <>
-            <div className="player-info-cell-label">{name}</div>
-            <div
+            <Box className="player-info-cell-label">{name}</Box>
+            <Box
               className="player-info-cell"
               style={{
                 borderRadius: "3px",
               }}
             >
               {player[key]}
-            </div>
+            </Box>
           </>
         )}
-      </div>
+      </Box>
     );
   };
 
   return (
-    <div className="player-spec-body">
+    <Box className="player-spec-body">
       {/* <button className="player-spec-backbutton" onClick={() => navigate(-1)}>
         <ArrowBackIcon />
       </button> */}
 
-      <div className="player-content">
-        <div className="player-basic-info">
-          {/* <div className="player-img-container"> */}
-            <div className="player-name-row">{player.name}</div>
-          {/* </div> */}
+      <Box className="player-content">
+        <Box className="player-basic-info">
+          <Box className="player-img-container">
+            <CroppedAvatar src={player.img} />
+            {/* <Box className="player-name-row">{player.name}</Box> */}
+          </Box>          
           <RadarStatChart
             pac={player.pac}
             sho={player.sho}
@@ -96,11 +99,11 @@ const PlayerSpec: React.FC = () => {
             def={player.def}
             phy={player.phy}
           />
-          <div className="player-info">
+          <Box className="player-info">
             {/* ✅ 국가 코드에 해당하는 flag 이미지 추가 */}
-            <div className="player-info-cell-group">
-              <div className="player-info-cell-label">Nation</div>
-              <div
+            <Box className="player-info-cell-group">
+              <Box className="player-info-cell-label">Nation</Box>
+              <Box
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -121,29 +124,29 @@ const PlayerSpec: React.FC = () => {
                     e.currentTarget.src = "../../img/fallback.png";
                   }}
                 />
-                <div
+                <Box
                   className="player-info-cell"
                   style={{
                     borderRadius: "3px",
                   }}
                 >
                   {player.nation}
-                </div>
-              </div>
-            </div>            
+                </Box>
+              </Box>
+            </Box>
             {getValue("rank", "Rank", false)}
-            {getValue("ovr", "OVR", false)}           
+            {getValue("ovr", "OVR", false)}
             {getValue("pos", "Position", false)}
             {getValue("age", "Age", false)}
             {getValue("height", "Height", false)}
             {getValue("weight", "Weight", false)}
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        <div className="player-info-stats">
+        <Box className="player-info-stats">
           <>
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">SHOOTING</div>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">SHOOTING</Box>
               {getValue("shotPower", "Shot Power")}
               {getValue("longShots", "Long Shots")}
               {getValue("freeKickAccuracy", "Free Kick Accuracy")}
@@ -157,55 +160,55 @@ const PlayerSpec: React.FC = () => {
               {getValue("crossing", "Crossing")}
               {getValue("freeKickAccuracy", "Free Kick Accuracy")}
               {getValue("curve", "Curve")} */}
-            </div>
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">DRIBBLING</div>
+            </Box>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">DRIBBLING</Box>
               {getValue("dribbling", "Dribbling")}
               {getValue("balance", "Balance")}
               {/* {getValue("reactions", "Reactions")} */}
               {getValue("ballControl", "Ball Control")}
               {getValue("agility", "Agility")}
               {/* {getValue("composure", "Composure")} */}
-            </div>
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">PASSING</div>
+            </Box>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">PASSING</Box>
               {/* {getValue("vision", "Vision")} */}
               {getValue("crossing", "Crossing")}
               {getValue("shortPassing", "Short Passing")}
               {getValue("longPassing", "Long Passing")}
-            </div>
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">DEFENDING</div>
+            </Box>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">DEFENDING</Box>
               {getValue("defAwareness", "Def. Awareness")}
               {getValue("standingTackle", "Standing Tackle")}
               {getValue("slidingTackle", "Sliding Tackle")}
               {getValue("interceptions", "Interceptions")}
-            </div>
+            </Box>
 
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">PACE</div>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">PACE</Box>
               {getValue("acceleration", "Acceleration")}
               {getValue("sprintSpeed", "Sprint Speed")}
-            </div>
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">PHYSICALITY</div>
+            </Box>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">PHYSICALITY</Box>
               {getValue("jumping", "Jumping")}
               {getValue("stamina", "Stamina")}
               {getValue("strength", "Strength")}
               {getValue("aggression", "Aggression")}
-            </div>            
-            <div className="player-info-stats-row">
-              <div className="player-info-cell-label">GOALKEEPING</div>
-              {getValue("gkDiving", "Diving")}
+            </Box>
+            <Box className="player-info-stats-row">
+              <Box className="player-info-cell-label">GOALKEEPING</Box>
+              {getValue("gkBoxing", "Boxing")}
               {getValue("gkHandling", "Handling")}
               {getValue("gkKicking", "Kicking")}
               {getValue("gkPositioning", "Positioning")}
               {getValue("gkReflexes", "Reflexes")}
-            </div>
+            </Box>
           </>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

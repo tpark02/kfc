@@ -4,13 +4,12 @@ import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useSquadSetters } from "../hooks/useSquadSetter";
 import { useSquadGetters } from "../hooks/useSquadGetters";
 import { useNavigate } from "react-router-dom";
-
+import { AxiosError } from "axios";
 import { setSquadStateFromClubData } from "../../util/setSquadStateFromClubData";
 import { useSquadStore } from "../../store/useSquadStore";
 
 import {
   adjustTeamOvr,
-  getTeamOvrIndicator,
   updateMyClub,
   fetchMyClubs,
 } from "../../util/myClubUtil";
@@ -33,9 +32,19 @@ import { getStatDisplay } from "../../style/playerStyle";
 
 interface LeagueMyTeamProp {
   matches: Match[];
+  fetchData: () => Promise<void>;
+  HasRedCard: boolean;
 }
 
-const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
+interface ErrorResponse {
+  message?: string;
+}
+
+const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
+  matches,
+  fetchData,
+  HasRedCard,
+}) => {
   const navigate = useNavigate();
 
   const {
@@ -68,9 +77,10 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     setMyTeamStamina,
   } = useSquadSetters();
 
-  const { setMyFormation } = useSquadStore(
+  const { setMyFormation, myLogoImgUrl } = useSquadStore(
     (s) => ({
       setMyFormation: s.setMyFormation,
+      myLogoImgUrl: s.myLogoImgUrl,
     }),
     shallow
   );
@@ -87,6 +97,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     setTotalAddStatPoints(matches.reduce((acc, m) => acc + m.addStats, 0));
   }, [matches]);
 
+  useEffect(() => {});
   const handleSave = async () => {
     setIsClicked(false);
 
@@ -126,7 +137,8 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
         });
         setMyFormation(updatedClub.formationName);
       }
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
       const msg =
         typeof err === "string"
           ? err
@@ -136,11 +148,11 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
     }
   };
 
-  console.log("my team ovr", myTeamOvr);
+  const totalAddStatPointsColor = totalAddStatPoints === 0 ? "white" : "red";
+
   return (
-    <div
+    <Box
       style={{
-        outline: "1px solid blue",
         minWidth: "300px",
         flex: "1 1 30%",
         maxWidth: "100%",
@@ -150,29 +162,59 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
         height: "auto",
       }}
     >
-      <div>My Team</div>
-      <div>Formation: {myFormation}</div>
-      <div>Team Name: {myTeamName}</div>
-      <div>Squad Value: {myTeamSquadValue}</div>
-      <div>
-        OVR: {myTeamOvr} → {adjustedTeamOvr}{" "}
-        {getTeamOvrIndicator(adjustedTeamOvr, myTeamOvr)}
-      </div>
-      <div style={{ color: "red" }}>
-        Earned Stat Points: {totalAddStatPoints}
-      </div>
-
+      <Box className="squad-metrics-section">
+        <img src={myLogoImgUrl} style={{ width: "50%", height: "auto" }} />
+        <Typography variant="h3">{myTeamName}</Typography>
+      </Box>
+      <Box className="squad-metrics-section">
+        <Typography>OVR</Typography>
+        <Typography variant="subtitle1" fontWeight="bold">
+          {typeof myTeamOvr === "number" && !isNaN(myTeamOvr)
+            ? myTeamOvr
+            : "N/A"}
+        </Typography>
+      </Box>
+      <Box className="squad-metrics-section">
+        <Typography variant="subtitle2" gutterBottom>
+          Total Value
+        </Typography>
+        <Typography variant="subtitle1" fontWeight="bold">
+          {typeof myTeamSquadValue === "number" && !isNaN(myTeamSquadValue)
+            ? "$" + myTeamSquadValue.toLocaleString()
+            : "$0"}
+        </Typography>
+      </Box>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          fetchData();
+        }}
+        disabled={HasRedCard}
+        sx={{ marginBottom: "10px" }}
+      >
+        START
+      </Button>
+      <Box
+        className="squad-metrics-section"
+        sx={{ color: totalAddStatPointsColor }}
+      >
+        <Typography variant="subtitle2" gutterBottom>
+          Level Up Points
+        </Typography>
+        {totalAddStatPoints}
+      </Box>
       <Button
         variant="contained"
         disabled={totalAddStatPoints === 0 && !isClicked}
         onClick={handleSave}
+        sx={{ mb: "10px", outline: "1px solid gray", borderRadius: "8px" }}
       >
         SAVE
       </Button>
 
-      <div
+      <Box
         style={{
-          outline: "1px solid red",
           display: "flex",
           flexDirection: "column",
           width: "100%",
@@ -187,23 +229,23 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
             return (
               <Grid
                 container
-                spacing={1}
-                style={{ display: "flex", flexDirection: "row" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  gap: "10px",
+                }}
               >
-                <Grid item xs={12} md={9}>
+                <Grid item xs={12} md={9} sx={{ display: "flex" }}>
                   <Button
                     onClick={() =>
                       navigate(`/myPlayer/${player.id}`, {
                         state: { player: player },
                       })
                     }
-                    sx={outerCardStyle(false)}
+                    sx={{ ...outerCardStyle(false) }}
                   >
-                    <Box
-                      // ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
-                      sx={rowStyle}
-                    >
-                      {/* <Box sx={rowStyle}> */}
+                    <Box sx={{ ...rowStyle }}>
                       <Typography
                         variant="body2"
                         component="span"
@@ -264,10 +306,10 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({ matches }) => {
             );
           })
         ) : (
-          <div>선수가 없습니다.</div>
+          <Box>No teams selected</Box>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

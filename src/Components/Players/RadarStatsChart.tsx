@@ -7,6 +7,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import { Box } from "@mui/system";
 import "../../style/PlayerSpec.css";
 
 interface PlayerStats {
@@ -27,7 +28,7 @@ const RadarStatChart: React.FC<PlayerStats> = ({
   phy,
 }) => {
   return (
-    <div className="player-spec-radar-chart">
+    <Box className="player-spec-radar-chart">
       <ResponsiveContainer>
         <RadarChart
           cx="50%"
@@ -46,7 +47,7 @@ const RadarStatChart: React.FC<PlayerStats> = ({
           <PolarAngleAxis dataKey="stat" />
           <PolarRadiusAxis
             angle={30}
-            domain={[0, 1000]}
+            domain={[0, 100]}
             tick={false}
             axisLine={false}
           />
@@ -59,7 +60,7 @@ const RadarStatChart: React.FC<PlayerStats> = ({
           />
         </RadarChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 };
 

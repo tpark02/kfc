@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box } from '@mui/material';
 
 interface CroppedAvatarProps {
   src: string;
@@ -19,7 +18,7 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   src,
   width = 80,
   height = 80,
-  offsetX = 4,
+  offsetX = 0,
   offsetY = 0,
   borderRadius = "8px",
   selected = false,
@@ -50,18 +49,18 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
 
   return (
     <div
-      className={`player${selected ? " selected" : ""}`}
-      style={{
-        width,
-        height,
-        overflow: "hidden",
-        borderRadius,
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "gray",
-      }}
+      // className={`player${selected ? " selected" : ""}`}
+      // style={{
+      //   width,
+      //   height,
+      //   overflow: "hidden",
+      //   borderRadius,
+      //   position: "relative",
+      //   display: "flex",
+      //   alignItems: "center",
+      //   justifyContent: "center",
+      //   backgroundColor: "gray",
+      // }}
     >
       {!isLoaded && (
         <CircularProgress
@@ -76,12 +75,12 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
           src={finalSrc}
           alt="avatar"
           style={{
-            position: "absolute",
-            top: `-${offsetY}px`,
-            left: `-${offsetX}px`,
-            width: width * scale,
-            height: height * scale,
-            objectFit: "cover",
+            // position: "absolute",
+            // top: `-${offsetY}px`,
+            // left: `-${offsetX}px`,
+            width: "100%",
+            height: "100%",
+            // objectFit: "cover",
           }}
         />
       )}
