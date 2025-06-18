@@ -35,7 +35,7 @@ const LeagueOpponentTeam: React.FC = () => {
       <Box
         style={{
           // outline: "1px solid blue",
-          minWidth: "300px", // ✅ prevent items from becoming too small
+          // minWidth: "300px", // ✅ prevent items from becoming too small
           flex: "1 1 30%", // ✅ flexible but constrained
           maxWidth: "100%", // ✅ responsive on shrink
           display: "flex",
@@ -46,7 +46,7 @@ const LeagueOpponentTeam: React.FC = () => {
       >
         <Box
           style={{
-            minWidth: "300px",
+            // minWidth: "300px",
             flex: "1 1 30%",
             maxWidth: "100%",
             display: "flex",

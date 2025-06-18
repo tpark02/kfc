@@ -154,7 +154,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
   return (
     <Box
       style={{
-        minWidth: "300px",
+        // minWidth: "300px",
         flex: "1 1 30%",
         maxWidth: "100%",
         display: "flex",
