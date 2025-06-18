@@ -13,12 +13,22 @@ import {
 } from "../../style/playerCardStyles";
 import { getPosColor } from "../../util/util";
 import { getStatDisplay } from "../../style/playerStyle";
+import { shallow } from "zustand/shallow";
+import CroppedAvatar from "../teambuilder/CroppedAvatar";
 
 const LeagueOpponentTeam: React.FC = () => {
-  const { matches, hoveredMatchIndex } = useSquadStore();
-  const hoveredMatch =
-    hoveredMatchIndex !== null ? matches[hoveredMatchIndex] : matches[0];
+  const { matches, selectedIdx } = useSquadStore(
+    (s) => ({
+      matches: s.matches,
+      selectedIdx: s.selectedIdx,
+      setSelectedIdx: s.setSelectedIdx,
+    }),
+    shallow
+  );
+
   const navigate = useNavigate();
+
+  const selectedMatch = selectedIdx > 0 ? matches[selectedIdx] : null;
 
   return (
     <>
@@ -46,30 +56,41 @@ const LeagueOpponentTeam: React.FC = () => {
           }}
         >
           <Box className="squad-metrics-section">
-            {/* <img src={myLogoImgUrl} style={{ width: "50%", height: "auto" }} /> */}
-            <Typography variant="h3">{hoveredMatch?.awayTeam}</Typography>
+            {/* <img
+              src={hoveredMatch?.teamImg || "../../../img/fallback.png"}
+              style={{
+                width: "200px",
+                height: "200px",
+                // outline: "1px solid gray",
+                borderRadius: "8px",
+              }}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "../../../img/fallback.png";
+              }}
+            /> */}
+            <CroppedAvatar
+              src={selectedMatch?.teamImg ?? "../../../img/fallback.png"}
+              fallbackSrc={"../../../img/fallback.png"}
+              width={200}
+              height={200}
+              fallBackWidth={200}
+              fallBackHeight={200}
+              aspectRatio={4 / 3}
+            />
+            <Typography variant="h4">{selectedMatch?.awayTeam}</Typography>
           </Box>
           <Box className="squad-metrics-section">
             <Typography>OVR</Typography>
             <Typography variant="subtitle1" fontWeight="bold">
-              {typeof hoveredMatch?.ovr === "number" &&
-              !isNaN(hoveredMatch?.ovr)
-                ? hoveredMatch?.ovr
+              {typeof selectedMatch?.ovr === "number" &&
+              !isNaN(selectedMatch?.ovr)
+                ? selectedMatch?.ovr
                 : "N/A"}
             </Typography>
           </Box>
-          {/* <Box className="squad-metrics-section">
-            <Typography variant="subtitle2" gutterBottom>
-              Total Value
-            </Typography>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {typeof myTeamSquadValue === "number" && !isNaN(myTeamSquadValue)
-                ? "$" + myTeamSquadValue.toLocaleString()
-                : "$0"}
-            </Typography>
-          </Box> */}
-          {hoveredMatch?.members ? (
-            hoveredMatch.members.map((player) => {
+          {selectedMatch?.members ? (
+            selectedMatch.members.map((player) => {
               const posColor = getPosColor(player.pos);
               const [firstName, lastName] = player.name.split(" ");
 

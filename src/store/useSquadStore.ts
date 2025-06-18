@@ -9,7 +9,7 @@ import { createWithEqualityFn } from "zustand/traditional";
 export type DropPlayers = { [index: number]: Player | null };
 
 type SquadStore = {
-  myUniformImgUrl: string,
+  myUniformImgUrl: string;
   myLogoImgUrl: string;
   myLogoId: number;
   myNation: string;
@@ -34,7 +34,7 @@ type SquadStore = {
   // unused
   selectedDropZone: { index: number; pos: string };
   position: string;
-  myClubs: (MyClubData | null);
+  myClubs: MyClubData | null;
   dropZoneList: DropZone[];
   mySelectedPlayers: MyPlayer[];
   HasRedCard: boolean;
@@ -72,8 +72,8 @@ type SquadStore = {
   // resetSquad: () => void;
 
   // league simulator
-  hoveredMatchIndex: number | null;
-  setHoveredMatchIndex: (index: number | null) => void;
+  selectedIdx: number;
+  setSelectedIdx: (index: number | null) => void;
   matches: Match[];
   setMatches: (matches: Match[]) => void;
 };
@@ -83,7 +83,6 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   myLogoId: -1,
   myNation: "",
   joinedSeasonId: -1,
-
   myUserEmail: "",
   myUserName: "",
   myUserId: -1,
@@ -107,7 +106,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   myTeamClubCohesion: 0,
   myTeamStamina: 0,
   myTeamOvr: 0,
-  myClubs: [],
+  myClubs: null,
   mySelectedPlayers: [],
   HasRedCard: false,
   myUniformImgUrl: "",
@@ -132,7 +131,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
         .some((p) => p.redCard > 0),
     }),
   setMyUserId: (userId: number) => set({ myUserId: userId }),
-  setMyClubs: (clubs: (MyClubData | null)[]) => set({ myClubs: clubs }),
+  setMyClubs: (clubs: MyClubData | null) => set({ myClubs: clubs }),
   setMyTeamOvr: (ovr: number) => {
     set({ myTeamOvr: ovr });
   },
@@ -189,8 +188,8 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   //     position: "",
   //   }),
   // league simulator
-  hoveredMatchIndex: null,
-  setHoveredMatchIndex: (index) => set({ hoveredMatchIndex: index }),
+  selectedIdx: -1,
+  setSelectedIdx: (index) => set({ selectedIdx: index }),
   matches: [],
   setMatches: (matches) => set({ matches: matches }),
 }));

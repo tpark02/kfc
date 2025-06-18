@@ -40,10 +40,7 @@ const SquadMetrics: React.FC = () => {
   );
 
   useEffect(() => {
-    // 상태가 채워졌는지 체크해서 ready 여부 설정
-    console.log("myLogoImgUrl ", myLogoImgUrl);
-    console.log("myTeamName ", myTeamName);
-    console.log("mySelectedPlayers ", mySelectedPlayers);
+    console.log("my team ovr", myTeamOvr)
 
     if (
       myTeamName !== "" &&

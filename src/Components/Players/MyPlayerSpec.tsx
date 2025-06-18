@@ -88,7 +88,15 @@ const MyPlayerSpec: React.FC = () => {
       <Box className="player-content">
         <Box className="player-basic-info">
           <Box className="player-img-container">
-            <CroppedAvatar src={player.img} />
+            <CroppedAvatar
+              src={player.img}
+              fallbackSrc="/img/avatar.jpg"
+              width={250}
+              height={350}
+              fallBackWidth={200}
+              fallBackHeight={200}
+              aspectRatio={4 / 3}
+            />
             {/* <Box className="player-name-row">{player.name}</Box> */}
           </Box>
           <RadarStatChart

@@ -7,6 +7,7 @@ import { fetchSchedule } from "../../util/leagueUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import { Grid, Box, Button, Typography } from "@mui/material";
 
 const LeagueSimulator = () => {
@@ -32,8 +33,10 @@ const LeagueSimulator = () => {
   );
 
   useEffect(() => {
-    setMatches([]);
+    if (matches.length === 0) fetchData();
+  }, []);
 
+  useEffect(() => {
     if (HasRedCard) {
       useSnackbarStore
         .getState()
@@ -44,6 +47,8 @@ const LeagueSimulator = () => {
   }, [HasRedCard]);
 
   const fetchData = async () => {
+    useLoadingSpinnerStore.getState().setIsLoading(true);
+
     const players = mySelectedPlayers;
 
     if (players.length === 0) {
@@ -63,29 +68,17 @@ const LeagueSimulator = () => {
       }
     } catch (err) {
       console.error("❌ 경기 일정 불러오기 실패:", err);
+    } finally {
+      useLoadingSpinnerStore.getState().setIsLoading(false);
     }
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {/* <div
-        style={{
-          backgroundColor: "var(--background-color)",
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignContent: "stretch",
-          width: "100%",
-          height: "auto",
-          outline: "1px solid red",
-          margin: "10px 0 0 0",
-        }}
-      > */}
       <Grid
         container
         spacing={1}
-        style={{ display: "flex", flexDirection: "row" }}
+        style={{ display: "flex", flexDirection: "row", justifyContent:"center" }}
       >
         <Grid item xs={12} md={2}>
           <LeagueMyTeam
@@ -94,7 +87,7 @@ const LeagueSimulator = () => {
             HasRedCard={HasRedCard}
           />
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={6}>
           <LeagueScheduleViewer matches={matches} />
         </Grid>
         <Grid item xs={12} md={2}>

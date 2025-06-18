@@ -91,6 +91,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
   );
 
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
+  console.log("adjusted team ovr", adjustedTeamOvr);
   const myTeamName = myClubs?.name ?? "N/A";
 
   useEffect(() => {
@@ -164,7 +165,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
     >
       <Box className="squad-metrics-section">
         <img src={myLogoImgUrl} style={{ width: "50%", height: "auto" }} />
-        <Typography variant="h3">{myTeamName}</Typography>
+        <Typography variant="h4">{myTeamName}</Typography>
       </Box>
       <Box className="squad-metrics-section">
         <Typography>OVR</Typography>

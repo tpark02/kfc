@@ -8,4 +8,5 @@ export type Match = {
   res: string;
   members: Player[];
   addStats: number;
+  teamImg: string;
 };

@@ -147,6 +147,7 @@ const Squad: React.FC = () => {
         const updatedClub = club ?? undefined;
 
         if (updatedClub && updatedClub.players) {
+                    console.log("fetch my ovr", myUserId);
 
           setMySelectedPlayers(updatedClub.players);
           setMyTeamOvr(updatedClub.ovr);

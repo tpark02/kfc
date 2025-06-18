@@ -10,28 +10,29 @@ interface CroppedAvatarProps {
   borderRadius?: string;
   selected?: boolean;
   scale?: number; // 추가: 이미지 크기 조정 비율
+  fallbackSrc: string;
+  fallBackWidth: number;
+  fallBackHeight: number;
+  aspectRatio: number;
 }
-
-const fallbackSrc = "/img/avatar.jpg";
 
 const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   src,
   width = 80,
   height = 80,
-  offsetX = 0,
-  offsetY = 0,
   borderRadius = "8px",
-  selected = false,
-  scale = 1.0, // default scaling
+  fallbackSrc = "/img/avatar.jpg",
+  fallBackWidth = 0,
+  fallBackHeight = 0,
+  aspectRatio = 1, // 👈 default to square
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [finalSrc, setFinalSrc] = useState<string>("");
 
   useEffect(() => {
-    setIsLoaded(false); // 새로운 이미지 로딩 시작
-
+    setIsLoaded(false);
     const rawSrc = src && src.trim() !== "" ? src : fallbackSrc;
-    const cacheBustedSrc = `${rawSrc}?v=${Date.now()}`; // 캐시 무효화
+    const cacheBustedSrc = `${rawSrc}?v=${Date.now()}`;
 
     const img = new Image();
     img.src = cacheBustedSrc;
@@ -47,25 +48,28 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
     };
   }, [src]);
 
+  // 💡 Calculate both dimensions based on aspectRatio
+  const finalWidth =
+    width ?? (height && aspectRatio ? height * aspectRatio : 80);
+  const finalHeight =
+    height ?? (width && aspectRatio ? width / aspectRatio : 80);
+
   return (
     <div
-      // className={`player${selected ? " selected" : ""}`}
-      // style={{
-      //   width,
-      //   height,
-      //   overflow: "hidden",
-      //   borderRadius,
-      //   position: "relative",
-      //   display: "flex",
-      //   alignItems: "center",
-      //   justifyContent: "center",
-      //   backgroundColor: "gray",
-      // }}
+      style={{
+        // overflow: "hidden",
+        // borderRadius,
+        // position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "transparent",
+      }}
     >
       {!isLoaded && (
         <CircularProgress
           size={24}
-          style={{ position: "absolute", zIndex: 1 }}
+          style={{ zIndex: 1, width: "50px", height: "50px" }}
         />
       )}
 
@@ -75,12 +79,14 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
           src={finalSrc}
           alt="avatar"
           style={{
-            // position: "absolute",
-            // top: `-${offsetY}px`,
-            // left: `-${offsetX}px`,
-            width: "100%",
-            height: "100%",
-            // objectFit: "cover",
+            width: finalSrc.includes("fallback")
+              ? `${fallBackWidth}px`
+              : `${finalWidth}px`,
+            height: finalSrc.includes("fallback")
+              ? `${fallBackHeight}px`
+              : `${finalHeight}px`,
+            objectFit: "cover",
+            borderRadius: borderRadius,
           }}
         />
       )}

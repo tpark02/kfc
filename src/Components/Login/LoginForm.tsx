@@ -146,7 +146,7 @@ const LoginForm: React.FC = () => {
       console.log(" - mySelectedPlayers length:", myplayers?.length ?? 0);
 
       if (myClub) {
-        console.log("2️⃣ setMyTeamOvr 실행");
+        console.log("2️⃣ setMyTeamOvr 실행", myClub.ovr);
         setMyTeamOvr(myClub.ovr);
 
         console.log("3️⃣ setMyTeamSquadValue 실행");
