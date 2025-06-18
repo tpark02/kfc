@@ -206,8 +206,7 @@ const SquadMetrics: React.FC = () => {
                 <React.Fragment key={`club-${team}-${idx}`}>
                   {setCrest(team, 35, 25)}
                 </React.Fragment>
-              ))}
-            ;
+              ))}            
           </Box>
         </Box>
       </Box>

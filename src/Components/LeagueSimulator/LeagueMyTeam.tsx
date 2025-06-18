@@ -164,7 +164,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
       }}
     >
       <Box className="squad-metrics-section">
-        <img src={myLogoImgUrl} style={{ width: "50%", height: "auto" }} />
+        <img src={myLogoImgUrl} style={{ width: "120px", height: "auto" }} />
         <Typography variant="h4">{myTeamName}</Typography>
       </Box>
       <Box className="squad-metrics-section">

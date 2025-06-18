@@ -72,10 +72,10 @@ const LeagueOpponentTeam: React.FC = () => {
             <CroppedAvatar
               src={selectedMatch?.teamImg ?? "../../../img/fallback.png"}
               fallbackSrc={"../../../img/fallback.png"}
-              width={200}
-              height={200}
-              fallBackWidth={200}
-              fallBackHeight={200}
+              width={150}
+              height={150}
+              fallBackWidth={150}
+              fallBackHeight={150}
               aspectRatio={4 / 3}
             />
             <Typography variant="h4">{selectedMatch?.awayTeam}</Typography>

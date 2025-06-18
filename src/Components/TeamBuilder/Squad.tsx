@@ -11,6 +11,7 @@ import { updateMyClub, fetchMyClubs } from "../../util/myClubUtil";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import { getTeamAvr } from "./SquadBuilderUtil";
+import { fetchRandomSquad } from "../../api/squad";
 
 const Squad: React.FC = () => {
   const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
@@ -91,15 +92,8 @@ const Squad: React.FC = () => {
 
   useEffect(() => {
     if (mySelectedPlayers.length > 0 && myFormation) {
-      const {
-        ovr,
-        spd,
-        atk,
-        def,
-        sta,
-        tc,
-        squadVal,
-      } = getTeamAvr(mySelectedPlayers);
+      const { ovr, spd, atk, def, sta, tc, squadVal } =
+        getTeamAvr(mySelectedPlayers);
 
       setMyTeamOvr(ovr);
       setMyTeamPace(spd);
@@ -107,7 +101,7 @@ const Squad: React.FC = () => {
       setMyTeamAttack(atk);
       setMyTeamStamina(sta);
       setMyTeamClubCohesion(tc);
-      setMyTeamSquadValue(squadVal);      
+      setMyTeamSquadValue(squadVal);
     }
   }, [myFormation, mySelectedPlayers]);
 
@@ -195,6 +189,60 @@ const Squad: React.FC = () => {
       });
   }, [myUserId, setMySelectedPlayers]);
 
+  const loadRandomSquad = async () => {
+    try {
+      const data = await fetchRandomSquad({
+        name: myFormation,
+        countries: [],
+        leagues: [],
+        clubs: [],
+        userId: myUserId,
+      });
+
+      useLoadingSpinnerStore.getState().setIsLoading(true);
+      setMySelectedPlayers(data.myPlayerList);
+      setMyTeamOvr(data.myTeamOvr);
+      setMyTeamSquadValue(data.myTeamSquadValue);
+      setMyTeamAge(data.myTeamAge);
+      setMyTeamPace(data.myTeamPace);
+      setMyTeamDefense(data.myTeamDef);
+      setMyTeamAttack(data.myTeamAtk);
+      setMyTeamClubCohesion(data.myTeamClubCohesion);
+      setMyTeamStamina(data.myTeamStamina);
+
+      setMySelectedPlayers(data.myPlayerList);
+      console.log("✅ Selected Players:", data.myPlayerList);
+
+      setMyTeamOvr(data.myTeamOvr);
+      console.log("📊 Team OVR:", data.myTeamOvr);
+
+      setMyTeamSquadValue(data.myTeamSquadValue);
+      console.log("💰 Squad Value:", data.myTeamSquadValue);
+
+      setMyTeamAge(data.myTeamAge);
+      console.log("🎂 Average Age:", data.myTeamAge);
+
+      setMyTeamPace(data.myTeamPace);
+      console.log("⚡ Pace:", data.myTeamPace);
+
+      setMyTeamDefense(data.myTeamDef);
+      console.log("🛡️ Defense:", data.myTeamDef);
+
+      setMyTeamAttack(data.myTeamAtk);
+      console.log("⚔️ Attack:", data.myTeamAtk);
+
+      setMyTeamClubCohesion(data.myTeamClubCohesion);
+      console.log("🤝 Club Cohesion:", data.myTeamClubCohesion);
+
+      setMyTeamStamina(data.myTeamStamina);
+      console.log("🏃‍♂️ Stamina:", data.myTeamStamina);
+    } catch (err: any) {
+      useSnackbarStore
+        .getState()
+        .setSnackbar(err.response?.data || "Error loading squad");
+    }
+  };
+
   return (
     <Box sx={{ width: "100%", margin: "0 auto" }}>
       <Grid container spacing={2}>
@@ -233,6 +281,18 @@ const Squad: React.FC = () => {
             onClick={handleUpdateMyInfo}
           >
             Save
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={loadRandomSquad}
+            sx={{
+              display: "flex",
+              width: "100%",
+              marginBottom: "10px",
+            }}
+          >
+            random team
           </Button>
           <SelectFormation />
           <Box mb={1}></Box>
