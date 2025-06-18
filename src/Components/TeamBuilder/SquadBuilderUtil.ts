@@ -45,9 +45,11 @@ function estimateValue(player: MyPlayer) {
 
 export const getTeamAvr = (players: MyPlayer[]) => {
   let totalCount = 0;
-  Object.values(players).map((p) => {
-    totalCount += p !== null ? 1 : 0;
-  });
+  Object.values(players)
+    .filter((p) => p.name !== "dummy")
+    .map((p) => {
+      totalCount += p !== null ? 1 : 0;
+    });
 
   let ovr = 0,
     spd = 0,

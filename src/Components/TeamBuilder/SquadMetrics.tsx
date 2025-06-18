@@ -8,28 +8,89 @@ import SquadRadarChart from "./SquadRadarChart";
 
 import { shallow } from "zustand/shallow";
 import { getImgByCountryName } from "../../data/countryData";
+import { setCrest } from "../../data/countryData";
+
 import "../../style/Squad.css";
 
 const SquadMetrics: React.FC = () => {
-  // const metricsData = metrics(players);
   const {
-    // dropPlayers,
+    myFormation,
+    myUserId,
     myTeamName,
-    myLogoImgUrl,
+    myNation,
+    myLogoId,
     mySelectedPlayers,
     myTeamOvr,
     myTeamSquadValue,
+    myTeamAge,
+    myTeamPace,
+    myTeamDefense,
+    myTeamClubCohesion,
+    myTeamAttack,
+    myTeamStamina,
+    myLogoImgUrl,
+    setMySelectedPlayers,
+    setMyTeamOvr,
+    setMyTeamSquadValue,
+    setMyTeamAge,
+    setMyTeamPace,
+    setMyTeamDefense,
+    setMyTeamAttack,
+    setMyTeamClubCohesion,
+    setMyTeamStamina,
   } = useSquadStore(
     (s) => ({
-      // dropPlayers: s.dropPlayers,
-      myTeamName: s.myTeamName,
-      myLogoImgUrl: s.myLogoImgUrl,
+      myFormation: s.myFormation,
       mySelectedPlayers: s.mySelectedPlayers,
+      myUserId: s.myUserId,
+      myClubs: s.myClubs,
+      myTeamName: s.myTeamName,
+      myNation: s.myNation,
+      myLogoId: s.myLogoId,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
+      myTeamAge: s.myTeamAge,
+      myTeamPace: s.myTeamPace,
+      myTeamDefense: s.myTeamDefense,
+      myTeamClubCohesion: s.myTeamClubCohesion,
+      myTeamAttack: s.myTeamAttack,
+      myTeamStamina: s.myTeamStamina,
+      myLogoImgUrl: s.myLogoImgUrl,
+      setMySelectedPlayers: s.setMySelectedPlayers,
+      setMyTeamOvr: s.setMyTeamOvr,
+      setMyTeamSquadValue: s.setMyTeamSquadValue,
+      setMyTeamAge: s.setMyTeamAge,
+      setMyTeamPace: s.setMyTeamPace,
+      setMyTeamDefense: s.setMyTeamDefense,
+      setMyTeamAttack: s.setMyTeamAttack,
+      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
+      setMyTeamStamina: s.setMyTeamStamina,
+      setMyLogoId: s.setMyLogoId,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
+      setMyTeamName: s.setMyTeamName,
+      setMyNation: s.setMyNation,
     }),
     shallow
   );
+
+  // const {
+  //   // dropPlayers,
+  //   myTeamName,
+  //   myLogoImgUrl,
+  //   mySelectedPlayers,
+  //   myTeamOvr,
+  //   myTeamSquadValue,
+  // } = useSquadStore(
+  //   (s) => ({
+  //     // dropPlayers: s.dropPlayers,
+  //     myTeamName: s.myTeamName,
+  //     myLogoImgUrl: s.myLogoImgUrl,
+  //     mySelectedPlayers: s.mySelectedPlayers,
+  //     myTeamOvr: s.myTeamOvr,
+  //     myTeamSquadValue: s.myTeamSquadValue,
+  //   }),
+  //   shallow
+  // );
 
   const nationalSpread = Array.from(
     new Set(
@@ -39,8 +100,20 @@ const SquadMetrics: React.FC = () => {
     )
   );
 
+  const leagueSpread = Array.from(
+    new Set(
+      mySelectedPlayers.map((p) => p.leagueUrl).filter((l): l is string => !!l)
+    )
+  );
+
+  const clubSpread = Array.from(
+    new Set(
+      mySelectedPlayers.map((p) => p.teamUrl).filter((l): l is string => !!l)
+    )
+  );
+
   useEffect(() => {
-    console.log("my team ovr", myTeamOvr)
+    console.log("my team ovr", mySelectedPlayers);
 
     if (
       myTeamName !== "" &&
@@ -53,8 +126,8 @@ const SquadMetrics: React.FC = () => {
   }, [myTeamName, myLogoImgUrl, mySelectedPlayers]);
 
   return (
-    <div className="squad-overview">
-      <div
+    <Box className="squad-overview">
+      <Box
         style={{
           display: "flex",
           flexDirection: "column",
@@ -64,19 +137,19 @@ const SquadMetrics: React.FC = () => {
           // margin: "1px auto",
         }}
       >
-        <div className="squad-metrics-section">
+        <Box className="squad-metrics-section">
           <img src={myLogoImgUrl} style={{ width: "50%", height: "auto" }} />
           <Typography variant="h3">{myTeamName}</Typography>
-        </div>
-        <div className="squad-metrics-section">
+        </Box>
+        <Box className="squad-metrics-section">
           <Typography>OVR</Typography>
           <Typography variant="subtitle1" fontWeight="bold">
             {typeof myTeamOvr === "number" && !isNaN(myTeamOvr)
               ? myTeamOvr
               : "N/A"}
           </Typography>
-        </div>
-        <div className="squad-metrics-section">
+        </Box>
+        <Box className="squad-metrics-section">
           <Typography variant="subtitle2" gutterBottom>
             Total Value
           </Typography>
@@ -85,11 +158,11 @@ const SquadMetrics: React.FC = () => {
               ? "$" + myTeamSquadValue.toLocaleString()
               : "$0"}
           </Typography>
-        </div>
-        <div className="squad-metrics-section">
+        </Box>
+        <Box className="squad-metrics-section">
           <SquadRadarChart />
-        </div>
-        <div className="squad-metrics-section">
+        </Box>
+        <Box className="squad-metrics-section">
           <Typography variant="subtitle2" gutterBottom>
             Nations
           </Typography>
@@ -106,35 +179,39 @@ const SquadMetrics: React.FC = () => {
                 );
               })
             ) : (
-              <div>&nbsp;</div>
+              <Box>&nbsp;</Box>
             )}
           </Box>
-        </div>
-        {/* <div className="squad-metrics-section"> */}
-        {/* <Typography variant="subtitle2" gutterBottom>
+        </Box>
+        <Box className="squad-metrics-section">
+          <Typography variant="subtitle2" gutterBottom>
             Leagues
-          </Typography> */}
-        {/* <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}> */}
-        {/* {leagueSpread.size > 0 ? (
-              Array.from(leagueSpread).map(
-                (league, idx) =>
-                  league && (
-                    <Chip
-                      key={league ?? `league-${idx}`}
-                      label={league ?? "Unknown"}
-                      size="small"
-                      color="secondary"
-                    />
-                  )
-              )
-            ) : (
-              <div>&nbsp;</div>
-            )} */}
-        {/* </Box> */}
-        {/* </div> */}
-      </div>
-    </div>
-    // </div>
+          </Typography>
+          <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}>
+            {leagueSpread.length > 0 &&
+              Array.from(leagueSpread).map((league, idx) => (
+                <React.Fragment key={`league-${league}-${idx}`}>
+                  {setCrest(league, 35, 25)}
+                </React.Fragment>
+              ))}
+          </Box>
+        </Box>
+        <Box className="squad-metrics-section">
+          <Typography variant="subtitle2" gutterBottom>
+            Clubs
+          </Typography>
+          <Box display="flex" flexWrap="wrap" gap={1} sx={{ padding: "15px" }}>
+            {clubSpread.length > 0 &&
+              Array.from(clubSpread).map((team, idx) => (
+                <React.Fragment key={`club-${team}-${idx}`}>
+                  {setCrest(team, 35, 25)}
+                </React.Fragment>
+              ))}
+            ;
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

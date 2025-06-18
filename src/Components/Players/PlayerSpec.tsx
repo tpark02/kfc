@@ -12,12 +12,12 @@ import RadarStatChart from "./RadarStatsChart";
 import { getOvrColor } from "../../util/util";
 
 // ✅ Data
-import { countryData } from "../../data/countryData";
+import { countryData, setCrest } from "../../data/countryData";
 
 // ✅ Styles
 import axiosInstance from "../../axiosInstance";
 import CroppedAvatar from "../teambuilder/CroppedAvatar";
-import { Box } from "@mui/system";
+import { Box, textAlign } from "@mui/system";
 import "../../style/PlayerSpec.css";
 
 const PlayerSpec: React.FC = () => {
@@ -139,6 +139,50 @@ const PlayerSpec: React.FC = () => {
                   }}
                 >
                   {player.nation}
+                </Box>
+              </Box>
+            </Box>
+            <Box className="player-info-cell-group">
+              <Box className="player-info-cell-label">League</Box>
+              <Box
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  justifyContent: "space-evenly"
+                }}
+              >
+                {setCrest(player.leagueUrl, 35, 25)}
+                <Box
+                  className="player-info-cell"
+                  style={{
+                    borderRadius: "3px",
+                    textAlign:"end"
+                  }}
+                >
+                  {player.league}
+                </Box>
+              </Box>
+            </Box>
+            <Box className="player-info-cell-group">
+              <Box className="player-info-cell-label">Club</Box>
+              <Box
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  justifyContent: "space-evenly"
+                }}
+              >
+                {setCrest(player.teamUrl, 35, 25)}
+                <Box
+                  className="player-info-cell"
+                  style={{
+                    borderRadius: "3px",
+                    textAlign:"end"
+                  }}
+                >
+                  {player.team}
                 </Box>
               </Box>
             </Box>

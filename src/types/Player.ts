@@ -61,6 +61,10 @@ export type Player = {
   gkPositioning: number;
   gkReflexes: number;
   price: number;
+  teamId: number;
+  leagueId: number;
+  leagueUrl: string;
+  teamUrl: string;
 };
 
 export const defaultPlayer: Player = {
@@ -124,6 +128,10 @@ export const defaultPlayer: Player = {
   gkPositioning: 0,
   gkReflexes: 0,
   price: 0,
+  teamId: 0,
+  leagueId: 0,
+  leagueUrl: "",
+  teamUrl:"",
 };
 
 export type MyPlayer = {
@@ -191,6 +199,10 @@ export type MyPlayer = {
   gkKicking: number;
   gkPositioning: number;
   gkReflexes: number;
+  teamId: number;
+  leagueId: number;
+  leagueUrl: string;
+  teamUrl: string;
 };
 
 export type SquadMap = {
@@ -203,9 +215,7 @@ export const fetchPlayers = async (
 ): Promise<Player[]> => {
   try {
     console.log(`📦 fetchPlayers: userId=${userId}, clubId=${clubId}`);
-    const response = await axiosInstance.get(
-      `/players/${userId}/${clubId}`
-    );
+    const response = await axiosInstance.get(`/players/${userId}/${clubId}`);
     return Array.isArray(response.data) ? response.data : [response.data];
   } catch (error) {
     console.error("❌ 클럽 목록 불러오기 실패:", error);
@@ -274,8 +284,11 @@ export const myPlayerToPlayer = (myPlayer: MyPlayer): Player => ({
   gkPositioning: myPlayer.gkPositioning,
   gkReflexes: myPlayer.gkReflexes,
   price: myPlayer.ovr / 10,
+  teamId: myPlayer.teamId,
+  leagueId: myPlayer.leagueId,
+  leagueUrl: myPlayer.leagueUrl,
+  teamUrl: myPlayer.teamUrl,
 });
-
 
 export const playerToMyPlayer = (
   player: Player,
@@ -284,7 +297,7 @@ export const playerToMyPlayer = (
   yellowCard: number = 0,
   redCard: number = 0,
   id: number,
-  ovr: number,
+  ovr: number
 ): MyPlayer => ({
   id: id, // You may want to generate or assign a real id here
   userId,
@@ -350,4 +363,8 @@ export const playerToMyPlayer = (
   gkKicking: player.gkKicking,
   gkPositioning: player.gkPositioning,
   gkReflexes: player.gkReflexes,
+  teamId: player.teamId,
+  leagueId: player.leagueId,
+  leagueUrl: player.leagueUrl,
+  teamUrl: player.teamUrl,
 });

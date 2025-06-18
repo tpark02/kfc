@@ -89,6 +89,28 @@ const Squad: React.FC = () => {
     shallow
   );
 
+  useEffect(() => {
+    if (mySelectedPlayers.length > 0 && myFormation) {
+      const {
+        ovr,
+        spd,
+        atk,
+        def,
+        sta,
+        tc,
+        squadVal,
+      } = getTeamAvr(mySelectedPlayers);
+
+      setMyTeamOvr(ovr);
+      setMyTeamPace(spd);
+      setMyTeamDefense(def);
+      setMyTeamAttack(atk);
+      setMyTeamStamina(sta);
+      setMyTeamClubCohesion(tc);
+      setMyTeamSquadValue(squadVal);      
+    }
+  }, [myFormation, mySelectedPlayers]);
+
   const handleUpdateMyInfo = () => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
 
@@ -147,7 +169,7 @@ const Squad: React.FC = () => {
         const updatedClub = club ?? undefined;
 
         if (updatedClub && updatedClub.players) {
-                    console.log("fetch my ovr", myUserId);
+          console.log("fetch my ovr", myUserId);
 
           setMySelectedPlayers(updatedClub.players);
           setMyTeamOvr(updatedClub.ovr);

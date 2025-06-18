@@ -55,57 +55,6 @@ export const fetchMyClubs = async (userId: number): Promise<MyClubData | null> =
   }   
 };
 
-// ✅ 클럽 업데이트
-// export const updateMyClub = async (
-//   mySelectedPlayers: MyPlayer[],
-//   userId: number,
-//   clubId: number,
-//   newClubName: string,
-//   myFormation: string,
-//   myTeamOvr: number,
-//   myTeamSquadValue: number,
-//   myTeamAge: number,
-//   myTeamPace: number,
-//   myTeamDefense: number,
-//   myTeamAttack: number,
-//   myTeamClubCohesion: number,
-//   myTeamStamina: number
-// ): Promise<string> => {
-//   try {
-//     console.log("Updating club with data:", {
-//       userId,
-//       clubId,
-//       newClubName,
-//       myFormation,
-//       mySelectedPlayers,
-//       myTeamOvr,
-//       myTeamSquadValue,
-//       myTeamAge,
-//       myTeamPace,
-//       myTeamDefense,
-//       myTeamAttack,
-//       myTeamClubCohesion,
-//       myTeamStamina,
-//     });
-//     const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
-//       clubName: newClubName,
-//       formationName: myFormation,
-//       players: mySelectedPlayers,
-//       ovr: myTeamOvr,
-//       price: myTeamSquadValue,
-//       age: myTeamAge,
-//       pace: myTeamPace,
-//       defense: myTeamDefense,
-//       clubCohesion: myTeamClubCohesion,
-//       attack: myTeamAttack,
-//       stamina: myTeamStamina,
-//     });
-//     return res.data;
-//   } catch (error) {
-//     return handleApiError(error, "updateMyClub");
-//   }
-// };
-
 // ✅ 클럽 삭제
 export const deleteMyClub = async (
   userId: number,
