@@ -246,7 +246,7 @@ const Squad: React.FC = () => {
   const [isDelete, setIsDelete] = useState(false);
 
   return (
-    <Box sx={{ width: "100%", margin: "0 auto" }}>
+    <Box sx={{ width: "100%", padding:"0 20px 0 20px" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={2}>
           <SquadMetrics />
