@@ -69,11 +69,19 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
       </Box>
     </Box>
   ) : (
-    <Button
+    <Box
+      component="button"
       onClick={() =>
         navigate(`/myPlayer/${player.id}`, { state: { player: player } })
-      }
-      sx={outerCardStyle(isDragging)}
+      }      
+      sx={{
+        ...outerCardStyle(isDragging),
+        backgroundColor: "#1b1f26 !important", // ✅ Force override
+        color: "#fff",
+        "&:hover": {
+          backgroundColor: "#2a2e35 !important", // ✅ Override hover
+        },
+      }}
     >
       <Box
         ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
@@ -98,7 +106,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
         </Typography>
         {/* </Box> */}
       </Box>
-    </Button>
+    </Box>
   );
 };
 

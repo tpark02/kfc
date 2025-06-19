@@ -38,7 +38,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
             key={repo.id}
             style={{
               cursor: "pointer",
-              backgroundColor: "#1e1e1e",
+              backgroundColor: "#1b1f26",
               padding: "10px",
             }}
           >

@@ -12,7 +12,8 @@ import { useSquadStore } from "../../store/useSquadStore";
 import PlayerList from "./PlayerList";
 import Filters from "./Filter";
 import FilterModal from "../../modal/filterModal";
-import { fetchPlayers } from "../../api/playerApi"; // 👈 새 유틸 추가
+import { fetchPlayers } from "../../api/playerApi";
+import { Box, Button, Select, TextField } from "@mui/material";
 import "../../style/Player.css";
 
 export const Players: React.FC = () => {
@@ -23,14 +24,14 @@ export const Players: React.FC = () => {
   const [selectedPosition, setSelectedPosition] = useState<PlayerPos[]>([]);
   const [selectedLeagues, setSelectedLeagues] = useState<League[]>([]);
 
-  const [pageInfo, setPageInfo] = useState<Omit<ResponsePlayerPage, "playerList">>(
-    {
-      totalPages: 0,
-      totalElements: 0,
-      number: 0,
-      size: 20,
-    }
-  );
+  const [pageInfo, setPageInfo] = useState<
+    Omit<ResponsePlayerPage, "playerList">
+  >({
+    totalPages: 0,
+    totalElements: 0,
+    number: 0,
+    size: 20,
+  });
 
   const { myUserId, setMyUserId } = useSquadStore(
     (s) => ({ myUserId: s.myUserId, setMyUserId: s.setMyUserId }),
@@ -100,27 +101,31 @@ export const Players: React.FC = () => {
     );
   };
   return (
-    <div className="player-list">
-      <div className="search-bar">
-        {/* <div className="left-group"> */}
-        <input
+    <Box className="player-list">
+      <Box className="search-bar">
+        {/* <Box className="left-group"> */}
+        <TextField
           type="text"
           placeholder="name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            padding: "6px",
-            fontSize: "14px",
-            width: "200px",
+          sx={{
+            height: "38px", // outer wrapper
+            "& .MuiInputBase-root": {
+              height: "100%", // force input base to match
+            },
+            "& input": {
+              padding: "0 14px", // optional: reduce vertical padding
+            },
           }}
         />
-        <button onClick={handleSearch} style={{ padding: "6px 12px" }}>
+        <Button onClick={handleSearch} variant="contained">
           Search
-        </button>
-        {/* </div> */}
+        </Button>
+        {/* </Box> */}
 
-        {/* <div className="right-group"> */}
-        <select
+        {/* <Box className="right-group"> */}
+        <Select
           id="sortType"
           value={sortType}
           onChange={(e) => {
@@ -128,9 +133,9 @@ export const Players: React.FC = () => {
               | "OVR_DESC"
               | "OVR_ASC"
               | "RANK_DESC"
-              | "RANK_ASC"
-              // | "AGE_ASC"
-              // | "AGE_DESC";
+              | "RANK_ASC";
+            // | "AGE_ASC"
+            // | "AGE_DESC";
             setSortType(newSort);
             fetchPage(
               0,
@@ -142,7 +147,15 @@ export const Players: React.FC = () => {
               selectedPosition
             );
           }}
-          style={{ padding: "6px", fontSize: "14px" }}
+          sx={{
+            height: "38px", // outer wrapper
+            "& .MuiInputBase-root": {
+              height: "100%", // force input base to match
+            },
+            "& input": {
+              padding: "0 14px", // optional: reduce vertical padding
+            },
+          }}
         >
           <option value="OVR_DESC">ovr desc</option>
           <option value="OVR_ASC">ovr asc</option>
@@ -150,11 +163,13 @@ export const Players: React.FC = () => {
           <option value="RANK_ASC">rank asc</option>
           {/* <option value="AGE_DESC">age desc</option>
           <option value="AGE_ASC">age asc</option> */}
-        </select>
+        </Select>
 
-        <button onClick={() => setModalOpen(true)}>Filter</button>
-        {/* </div> */}
-      </div>
+        <Button onClick={() => setModalOpen(true)} variant="contained">
+          Filter
+        </Button>
+        {/* </Box> */}
+      </Box>
 
       <FilterModal
         isOpen={isModalOpen}
@@ -234,7 +249,7 @@ export const Players: React.FC = () => {
       <PlayerList players={players} />
 
       {/* 📄 Pagination */}
-      <div style={{ marginTop: "16px", textAlign: "center" }}>
+      <Box style={{ marginTop: "16px", textAlign: "center" }}>
         {(() => {
           const maxButtons = 10;
           const currentPage = pageInfo.number;
@@ -257,7 +272,7 @@ export const Players: React.FC = () => {
             <>
               {/* ◀ 이전 버튼 */}
               {currentPage > 0 && (
-                <button
+                <Button
                   onClick={() =>
                     fetchPage(
                       currentPage - 1,
@@ -272,12 +287,12 @@ export const Players: React.FC = () => {
                   style={{ margin: "0 4px", padding: "4px 8px" }}
                 >
                   ◀
-                </button>
+                </Button>
               )}
 
               {/* 페이지 번호 버튼 */}
               {visiblePages.map((page) => (
-                <button
+                <Button
                   key={page}
                   onClick={() =>
                     fetchPage(
@@ -297,12 +312,12 @@ export const Players: React.FC = () => {
                   }}
                 >
                   {page + 1}
-                </button>
+                </Button>
               ))}
 
               {/* ▶ 다음 버튼 */}
               {currentPage < totalPages - 1 && (
-                <button
+                <Button
                   onClick={() =>
                     fetchPage(
                       currentPage + 1,
@@ -317,12 +332,12 @@ export const Players: React.FC = () => {
                   style={{ margin: "0 4px", padding: "4px 8px" }}
                 >
                   ▶
-                </button>
+                </Button>
               )}
             </>
           );
         })()}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

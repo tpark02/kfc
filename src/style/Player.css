@@ -1,8 +1,9 @@
 .player-list {
   width: 100%;
   max-width: 900px;
-  margin: 10px auto;
-  box-sizing: border-box;  
+  margin: auto;
+  /* margin: 10px auto; */
+  /* box-sizing: border-box;   */
   /* outline: 1px solid white; */
 }
 

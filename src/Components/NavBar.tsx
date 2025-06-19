@@ -3,10 +3,11 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSquadStore } from "../store/useSquadStore";
 import { shallow } from "zustand/shallow";
-
-import "../index.css";
+import { useTheme } from "@mui/material/styles";
 
 const NavBar: React.FC = () => {
+  const theme = useTheme();
+
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -35,16 +36,34 @@ const NavBar: React.FC = () => {
         display: "flex",
         alignItems: "center",
         padding: "10px",
-        backgroundColor: "var(--navbar-color)",
+        backgroundColor: theme.palette.navbar.main,
       }}
     >
-      <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/"); }}>
+      <Button
+        className="nav-menu-button"
+        onClick={() => {
+          setIsDropZoneSelected(false);
+          navigate("/");
+        }}
+      >
         Recruit
       </Button>
-      <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/squad"); }}>
+      <Button
+        className="nav-menu-button"
+        onClick={() => {
+          setIsDropZoneSelected(false);
+          navigate("/squad");
+        }}
+      >
         My Club
       </Button>
-      <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/league"); }}>
+      <Button
+        className="nav-menu-button"
+        onClick={() => {
+          setIsDropZoneSelected(false);
+          navigate("/league");
+        }}
+      >
         League
       </Button>
       {/* <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/tournament"); }}>
@@ -56,8 +75,8 @@ const NavBar: React.FC = () => {
       {/* 오른쪽 끝에 로그인/로그아웃 버튼 */}
       <div style={{ marginLeft: "auto" }}>
         {token ? (
-          <Button variant="outlined" color="error" onClick={handleLogout}>
-            Log Out
+          <Button variant="contained" onClick={handleLogout}>
+            Logout
           </Button>
         ) : (
           <Button variant="contained" onClick={() => navigate("/login")}>

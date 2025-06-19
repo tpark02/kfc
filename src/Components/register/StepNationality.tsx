@@ -28,7 +28,7 @@ const StepNationality: React.FC<StepNationalityProps> = ({
           minWidth: 240,
           color: "#fff",
           border: "1px solid #888",
-          backgroundColor: "#1e1e1e",
+          backgroundColor: "#1b1f26",
         }}
         inputProps={{ style: { color: "#fff" } }}
       >

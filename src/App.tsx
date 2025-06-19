@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -7,9 +6,6 @@ import GlobalSnackbar from "./components/global/GlobarSnackbar";
 import GlobalConfirmDialog from "./components/global/GlobalConfirmDialog";
 import GlobalLoadingSpinner from "./components/global/GlobalLoadingSpinner";
 import "./App.css";
-import "./style/Player.css";
-
-
 
 function App() {
   return (

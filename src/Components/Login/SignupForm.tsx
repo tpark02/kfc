@@ -130,11 +130,9 @@ const SignUpForm: React.FC = () => {
         style={{ width: "100%", margin: "16px auto" }}
       />
       <button
-        onClick={handleSignUp}
-        // disabled={loading}
+        onClick={handleSignUp}        
         style={{ width: "100%", padding: "10px", marginTop: "16px" }}
-      >
-        {/* {loading ? "처리 중..." : "회원가입"} */}
+      >        
         Sign Up
       </button>
       {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
