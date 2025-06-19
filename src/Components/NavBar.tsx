@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSquadStore } from "../store/useSquadStore";
 import { shallow } from "zustand/shallow";
@@ -24,9 +24,9 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <div
+    <Box
       className="tab-bar"
-      style={{
+      sx={{
         position: "fixed",
         top: 0,
         left: 0,
@@ -34,8 +34,9 @@ const NavBar: React.FC = () => {
         zIndex: 1000,
         height: "50px",
         display: "flex",
-        alignItems: "center",
+        alignItems: "center",        
         padding: "10px",
+        gap: "10px",
         backgroundColor: theme.palette.navbar.main,
       }}
     >
@@ -73,7 +74,7 @@ const NavBar: React.FC = () => {
         Register
       </Button> */}
       {/* 오른쪽 끝에 로그인/로그아웃 버튼 */}
-      <div style={{ marginLeft: "auto" }}>
+      <Box style={{ marginLeft: "auto" }}>
         {token ? (
           <Button variant="contained" onClick={handleLogout}>
             Logout
@@ -83,8 +84,8 @@ const NavBar: React.FC = () => {
             Sign In
           </Button>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

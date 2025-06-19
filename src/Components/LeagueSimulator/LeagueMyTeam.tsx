@@ -228,23 +228,36 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
             const [firstName, lastName] = player.name.split(" ");
 
             return (
-              <Grid
-                container
-                style={{
+              <Box
+                sx={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "flex-start",
-                  gap: "10px",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                <Grid item xs={12} md={9} sx={{ display: "flex" }}>
-                  <Button
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Box
+                    component="button"
                     onClick={() =>
                       navigate(`/myPlayer/${player.id}`, {
                         state: { player: player },
                       })
                     }
-                    sx={{ ...outerCardStyle(false) }}
+                    sx={{
+                      ...outerCardStyle(false),
+                      backgroundColor: "#1b1f26 !important", // ✅ Force override
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#2a2e35 !important", // ✅ Override hover
+                      },
+                    }}
                   >
                     <Box sx={{ ...rowStyle }}>
                       <Typography
@@ -273,37 +286,44 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                       </Typography>
                       {/* </Box> */}
                     </Box>
-                  </Button>
-                </Grid>
-                <Grid item xs={12} md={2}>
-                  <Button
-                    disabled={totalAddStatPoints === 0}
-                    sx={{
-                      ...outerCardStyle(false),
-                      minHeight: "58px",
-                      justifyContent: "center",
-                    }}
-                    onClick={() => {
-                      setIsClicked(true);
-                      setTotalAddStatPoints((prev) => prev - 1);
+                  </Box>
+                </Box>
+                {/* <Grid item xs={12} md={1} sx={{ display: "flex" }}></Grid> */}
+                <Box
+                  component="button"
+                  disabled={totalAddStatPoints === 0}
+                  sx={{
+                    ...outerCardStyle(false),
+                    minHeight: "60px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#1b1f26 !important", // ✅ Force override
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#2a2e35 !important", // ✅ Override hover
+                    },
+                    maxWidth:"50px"
+                  }}
+                  onClick={() => {
+                    setIsClicked(true);
+                    setTotalAddStatPoints((prev) => prev - 1);
 
-                      const idx = mySelectedPlayers.findIndex(
-                        (p) => p.id === player.id
-                      );
-                      if (idx === -1) return;
+                    const idx = mySelectedPlayers.findIndex(
+                      (p) => p.id === player.id
+                    );
+                    if (idx === -1) return;
 
-                      const updatedList = [...mySelectedPlayers];
-                      updatedList[idx] = {
-                        ...updatedList[idx],
-                        ovr: updatedList[idx].ovr + 1,
-                      };
-                      setMySelectedPlayers(updatedList);
-                    }}
-                  >
-                    ➕
-                  </Button>
-                </Grid>
-              </Grid>
+                    const updatedList = [...mySelectedPlayers];
+                    updatedList[idx] = {
+                      ...updatedList[idx],
+                      ovr: updatedList[idx].ovr + 1,
+                    };
+                    setMySelectedPlayers(updatedList);
+                  }}
+                >
+                  ➕
+                </Box>
+              </Box>
             );
           })
         ) : (

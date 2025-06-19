@@ -4,14 +4,15 @@ import { Button } from "@mui/material";
 import { useSquadStore } from "../../store/useSquadStore";
 import { MyPlayer } from "../../types/player";
 import { shallow } from "zustand/shallow";
+import { getPosColor } from "../../util/util";
+import { Box } from "@mui/material";
 
 import "../../style/SquadBuilder.css";
 import "../../DropZone.css";
-import { getPosColor } from "../../util/util";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
-  // searchPlayerRef: React.RefObject<HTMLDivElement | null>;
+  // searchPlayerRef: React.RefObject<HTMLBoxElement | null>;
 }
 
 const SquadBuilder: React.FC<SquadBuilderProp> = ({
@@ -62,7 +63,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
   };
 
   return (
-    <div className="squad-field">
+    <Box className="squad-field">
       {formations[selectedFormation].map((position, idx) => {
         const pos = position.pos.replace(/[0-9]/g, "");
         const player = mySelectedPlayers
@@ -85,7 +86,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               flexWrap: "wrap",
             }}
           >
-            <div
+            <Box
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -93,7 +94,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               }}
             >
               {/* 🔵 Dot on top */}
-              <div
+              <Box
                 style={{
                   width: 18,
                   height: 18,
@@ -105,14 +106,14 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
               />
 
               {/* 👤 Player last name */}
-              <div style={{ fontSize: 12, color: "white" }}>
+              <Box style={{ fontSize: 12, color: "white" }}>
                 {player?.name?.split(" ").slice(-1)[0]}
-              </div>
-            </div>
+              </Box>
+            </Box>
           </Button>
         );
       })}
-    </div>
+    </Box>
   );
 };
 

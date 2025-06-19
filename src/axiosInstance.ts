@@ -28,8 +28,8 @@ instance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
       console.warn("🔒 인증 에러. 다시 로그인해야 합니다.");
-      // Optionally redirect or logout
-      // window.location.href = "/login"; // 또는 navigate("/login")
+      localStorage.removeItem("token");
+      window.location.href = "/login"; // 강제 이동
     }
     return Promise.reject(error);
   }

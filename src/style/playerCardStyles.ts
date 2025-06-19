@@ -8,13 +8,12 @@ export const outerCardStyle = (isDragging: boolean) => ({
   flexDirection: "row",
   justifyContent: "space-evenly",
   width: "100%",
-  // backgroundColor: "#1b1f26 !important",
   color: "#fff",
   borderRadius: 2,
   outline: "1px solid gray",
   padding: "4px 8px",
   margin: "0 0 10px 0",
-  height: "auto",  
+  height: "auto",    
 });
 
 export const rowStyle = {

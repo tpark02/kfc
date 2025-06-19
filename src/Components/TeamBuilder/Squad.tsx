@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, Divider, Button } from "@mui/material";
 import SquadBuilder from "../teambuilder/SquadBuilder";
 import SquadMetrics from "../teambuilder/SquadMetrics";
@@ -243,6 +243,8 @@ const Squad: React.FC = () => {
     }
   };
 
+  const [isDelete, setIsDelete] = useState(false);
+
   return (
     <Box sx={{ width: "100%", margin: "0 auto" }}>
       <Grid container spacing={2}>
@@ -294,9 +296,22 @@ const Squad: React.FC = () => {
           >
             random team
           </Button>
+          <Button
+            variant="contained"
+            sx={{
+              display: "flex",
+              width: "100%",
+              marginBottom: "10px",
+            }}
+            onClick={() => {
+              console.log("is delete", isDelete);
+              setIsDelete(!isDelete);
+            }}
+          >
+            Delete
+          </Button>
           <SelectFormation />
           <Box mb={1}></Box>
-
           <Box
             sx={{
               display: "flex",
@@ -325,6 +340,7 @@ const Squad: React.FC = () => {
                     index={index} // ✅ 추가
                     player={player}
                     onSwap={handleSwapPlayers}
+                    isDelete={isDelete}
                   />
                 );
               })}
@@ -349,6 +365,7 @@ const Squad: React.FC = () => {
                     index={11 + index} // ✅ bench는 offset 줘야 돼
                     player={player}
                     onSwap={handleSwapPlayers}
+                    isDelete={isDelete}
                   />
                 );
               })}
@@ -373,19 +390,10 @@ const Squad: React.FC = () => {
                 index={17 + index}
                 player={player}
                 onSwap={handleSwapPlayers}
+                isDelete={isDelete}
               />
             ))}
           </Box>
-
-          {/* <Button
-            onClick={() => {
-              const reversed = [...mySelectedPlayers].reverse();
-              reversed.forEach((p, i) => (p.idx = i));
-              setMySelectedPlayers([...reversed]);
-            }}
-          >
-            테스트로 뒤집기
-          </Button> */}
         </Grid>
       </Grid>
     </Box>

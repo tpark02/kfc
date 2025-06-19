@@ -106,13 +106,21 @@ const LeagueOpponentTeam: React.FC = () => {
                   }}
                 >
                   <Grid item xs={12} md={12} sx={{ display: "flex" }}>
-                    <Button
+                    <Box
+                      component="button"
                       onClick={() =>
                         navigate(`/player/${player.id}`, {
                           state: { player },
                         })
                       }
-                      sx={{ ...outerCardStyle(false) }}
+                      sx={{
+                        ...outerCardStyle(false),
+                        backgroundColor: "#1b1f26 !important", // ✅ Force override
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#2a2e35 !important", // ✅ Override hover
+                        },
+                      }}
                     >
                       <Box sx={{ ...rowStyle }}>
                         <Typography
@@ -140,7 +148,7 @@ const LeagueOpponentTeam: React.FC = () => {
                           {getStatDisplay("", player.ovr)}
                         </Typography>
                       </Box>
-                    </Button>
+                    </Box>
                   </Grid>
                 </Grid>
               );

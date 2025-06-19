@@ -44,15 +44,17 @@ export const fetchSeasonInfo = async (seasonId: string) => {
   }
 };
 
-export const fetchMyClubs = async (userId: number): Promise<MyClubData | null> => {
+export const fetchMyClubs = async (
+  userId: number
+): Promise<MyClubData | null> => {
   try {
-    const res = await axiosInstance.get(`/users/${userId}/myclubs`);   
-    console.log("fetch my club - ", res.data);    
+    const res = await axiosInstance.get(`/users/${userId}/myclubs`);
+    console.log("fetch my club - ", res.data);
     return res.data;
   } catch (error) {
     handleApiError(error, "fetchMyClubs");
     return null;
-  }   
+  }
 };
 
 // ✅ 클럽 삭제
@@ -144,4 +146,22 @@ export const updateMyClub = async (
   } catch (error) {
     return handleApiError(error, "updatemyinfo");
   }
+};
+
+export const updatePlayer = async (
+  userId: number,
+  idx: number
+): Promise<string> => {
+  try {
+    console.log("user id", userId, "idx", idx);
+    const res = await axiosInstance.put(`/updatePlayer/${userId}/${idx}`, {
+      userId: userId,
+      idx: idx,
+    });
+
+    return res.data;
+  } catch (error) {
+    console.log("delete player err - ", error);
+    return handleApiError(error, "updateplayer");
+  } 
 };
