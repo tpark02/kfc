@@ -70,6 +70,7 @@ const NavBar: React.FC = () => {
         padding: "10px",
         gap: "10px",
         backgroundColor: theme.palette.navbar.main,
+        boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
       }}
     >
       <Button
