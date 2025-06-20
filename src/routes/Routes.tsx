@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import { Players } from "../features/players/Players"
+import { Players } from "../features/players/Players";
 import PlayerSpec from "../features/players/PlayerSpec";
 import Season from "../features/seasonSimulator/Season";
 import SeasonPage from "../features/seasonSimulator/SeasonPage";
-import LeagueSimulator from "../features/league/LeagueSimulator"
+import LeagueSimulator from "../features/league/LeagueSimulator";
 import LoginForm from "../features/auth/LoginForm";
 import Register from "../features/register/RegisterPage";
 import PrivateRoute from "../components/PrivateRoutes";
@@ -13,6 +13,7 @@ import Layout from "../app/Layout";
 import SignUpForm from "../features/auth/SignupForm";
 import Squad from "../features/squad/Squad";
 import MyPlayerSpec from "../features/players/MyPlayerSpec";
+import LandingPage from "../features/landing/LandingPage"; // adjust path if needed
 
 const AppRoutes: React.FC = () => {
   return (
@@ -20,11 +21,20 @@ const AppRoutes: React.FC = () => {
       {/* 로그인은 레이아웃 없이 */}
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignUpForm />} />
-
+      <Route
+        path="/"
+        element={
+          localStorage.getItem("token") ? (
+            <Navigate to="/players" />
+          ) : (
+            <LandingPage />
+          )
+        }
+      />
       {/* 공통 레이아웃 적용 */}
       <Route element={<Layout />}>
         <Route
-          path="/"
+          path="/players"
           element={
             <PrivateRoute>
               <Players />
