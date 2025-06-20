@@ -1,6 +1,5 @@
 import React from "react";
-import { formations } from "../../data/formations";
-import { Button } from "@mui/material";
+import { formations, formations_mobile } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
 import { MyPlayer } from "../../types/player";
 import { shallow } from "zustand/shallow";

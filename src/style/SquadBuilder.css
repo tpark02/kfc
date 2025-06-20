@@ -32,6 +32,18 @@
   flex: 1; /* take remaining space */
 }
 
+/* ✅ Mobile styles (width <= 768px) */
+@media screen and (max-width: 768px) {
+  .squad-field {
+    height: 350px; /* smaller height for mobile */
+    flex-direction: column; /* optionally stack elements vertically */
+    border-radius: 8px;
+    background-size: cover; /* ✅ keep it filled */
+    background-position: center;
+    padding: 10px;
+  }
+}
+
 .squad-bench {
   width: 99%;
   position: relative;
