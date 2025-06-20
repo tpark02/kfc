@@ -14,7 +14,6 @@ export const useLoadMyClub = (userId: number | null) => {
 
     const load = async () => {
       useLoadingSpinnerStore.getState().setIsLoading(true);
-      console.log("9");
       const data = await fetchMyClubs(userId);
       if (data) {
         await setSquadStateFromClubData(data, setters);

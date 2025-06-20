@@ -1,12 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { shallow } from "zustand/shallow";
-
-import axiosInstance from "../../axiosInstance";
-import { useSquadStore } from "../../store/useSquadStore";
+import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { useSquadSetters } from "../hooks/useSquadSetter";
 import { AuthRequest, AuthResponse } from "../../types/auth";
-import ThemeTest from "./ThemeTest";
+import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
+import axiosInstance from "../../axiosInstance";
 
 const LoginForm: React.FC = () => {
   const [form, setForm] = useState<AuthRequest>({ username: "", password: "" });
@@ -14,8 +12,13 @@ const LoginForm: React.FC = () => {
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
   const {
+    setMyCoin,
+    setMyUserId,
+    setMyFormation,
+    setMyTeamName,
+    setMyLogoImgUrl,
+    setMyLogoId,
     setMySelectedPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
@@ -25,30 +28,7 @@ const LoginForm: React.FC = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
-    setMyUserId,
-    setMyFormation,
-    setMyTeamName,
-    setMyLogoImgUrl,
-    setMyLogoId,
-  } = useSquadStore(
-    (s) => ({
-      setMySelectedPlayers: s.setMySelectedPlayers,
-      setMyTeamOvr: s.setMyTeamOvr,
-      setMyTeamSquadValue: s.setMyTeamSquadValue,
-      setMyTeamAge: s.setMyTeamAge,
-      setMyTeamPace: s.setMyTeamPace,
-      setMyTeamDefense: s.setMyTeamDefense,
-      setMyTeamAttack: s.setMyTeamAttack,
-      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
-      setMyTeamStamina: s.setMyTeamStamina,
-      setMyUserId: s.setMyUserId,
-      setMyFormation: s.setMyFormation,
-      setMyTeamName: s.setMyTeamName,
-      setMyLogoImgUrl: s.setMyLogoImgUrl,
-      setMyLogoId: s.setMyLogoId,
-    }),
-    shallow
-  );
+  } = useSquadSetters();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -83,6 +63,8 @@ const LoginForm: React.FC = () => {
   };
 
   const fetchAndStoreUserInfo = async (): Promise<number | null> => {
+    useLoadingSpinnerStore.getState().setIsLoading(true);
+
     try {
       const res = await axiosInstance.get("/api/me", {
         headers: {
@@ -90,11 +72,12 @@ const LoginForm: React.FC = () => {
         },
       });
 
-      const { userId, myClub, myFormation, myPlayers } = res.data;
+      const { userId, myClub, myFormation, myPlayers, myCoin } = res.data;
 
       setMyUserId(userId);
       setMyFormation(myFormation.name);
       setMySelectedPlayers(myPlayers);
+      setMyCoin(myCoin);
 
       if (myClub) {
         setMyTeamOvr(myClub.ovr);
@@ -115,21 +98,38 @@ const LoginForm: React.FC = () => {
     } catch (e) {
       console.error("Failed to fetch user info:", e);
       return null;
+    } finally {
+      useLoadingSpinnerStore.getState().setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (token) {
+      const timer = setTimeout(() => {
+        navigate("/squad");
+      }, 2000); // ⏱️ 2 seconds
+
+      return () => clearTimeout(timer); // cleanup
+    }
+  }, [token, navigate]);
+
   if (token) {
     return (
-      <Box sx={{ maxWidth: 300, mx: "auto", mt: 8 }}>
-        <Typography>Already logged in</Typography>
-        <Button
-          fullWidth
-          onClick={handleLogout}
-          variant="contained"
-          sx={{ mt: 2 }}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{ whiteSpace: "pre-line", textAlign: "center" }}
         >
-          Logout
-        </Button>
+          {"Already logged in..."}
+        </Typography>{" "}
       </Box>
     );
   }
@@ -203,9 +203,9 @@ const LoginForm: React.FC = () => {
             </Button>
             <Typography sx={{ mt: 2, color: "#ccc", textAlign: "center" }}>
               Don't have an account?{" "}
-              <a href="/signup" style={{ color: "#ffc002" }}>
+              <Link href="/signup" sx={{ color: "#ffc002" }}>
                 Sign up
-              </a>
+              </Link>
             </Typography>
             {error && (
               <Typography color="error" sx={{ mt: 1, textAlign: "center" }}>

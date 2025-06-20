@@ -9,6 +9,8 @@ import { shallow } from "zustand/shallow";
 import { getPosColor } from "../../util/util";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useConfirmDialogStore } from "../../store/useConfirmDialogStore";
+import { useSquadGetters } from "../hooks/useSquadGetters";
+import { useLoadingMyCoin } from "../hooks/useLoadingMyCoin";
 
 import "../../style/Player.css";
 
@@ -25,7 +27,8 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
     }),
     shallow
   );
-  const showConfirmDialog = useConfirmDialogStore.getState().showConfirm;
+  const showConfirmDialog = useConfirmDialogStore.getState().showConfirm;  
+  const { error, reload } = useLoadingMyCoin(myUserId);
 
   return (
     <>
@@ -99,6 +102,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
                   },
                   () => {}
                 );
+                reload();
               }}
             >
               Recruit

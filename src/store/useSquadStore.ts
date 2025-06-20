@@ -20,6 +20,7 @@ type SquadStore = {
   mySelectedClubId: number;
   myTeamName: string;
   myFormation: string;
+  myCoin: number;
   //dropPlayers: Player[];
   // benchPlayers: Player[];
   isDropZoneSelected: boolean;
@@ -66,6 +67,7 @@ type SquadStore = {
   resetSquadMetric: () => void;
   setDropZoneList: (lst: DropZone[], d: DropZone) => void;
   resetDropZoneList: () => void;
+  setMyCoin: (c: number) => void;
   // unused
   // setSelectedDropZone: (info: { index: number; pos: string }) => void;
   // setPosition: (p: string) => void;
@@ -73,12 +75,13 @@ type SquadStore = {
 
   // league simulator
   selectedIdx: number;
-  setSelectedIdx: (index: number | null) => void;
+  setSelectedIdx: (index: number) => void;
   matches: Match[];
   setMatches: (matches: Match[]) => void;
 };
 
 export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
+  myCoin: 0,
   dropZoneList: [],
   myLogoId: -1,
   myNation: "",
@@ -192,6 +195,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   setSelectedIdx: (index) => set({ selectedIdx: index }),
   matches: [],
   setMatches: (matches) => set({ matches: matches }),
+  setMyCoin: (c) => set({ myCoin: c }),
 }));
 
 // set my club info

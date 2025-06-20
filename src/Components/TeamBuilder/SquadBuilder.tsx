@@ -64,7 +64,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
 
   return (
     <Box className="squad-field">
-      {formations[selectedFormation].map((position, idx) => {
+      {formations && formations[selectedFormation] && formations[selectedFormation].map((position, idx) => {
         const pos = position.pos.replace(/[0-9]/g, "");
         const player = mySelectedPlayers
           .filter((p): p is MyPlayer => !!p)

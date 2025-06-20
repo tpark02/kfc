@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import LeagueScheduleViewer from "./LeagueScheduleViewer";
 import LeagueMyTeam from "./LeagueMyTeam";
 import LeagueOpponentTeam from "./LeagueOpponentTeam";
-
+import { useLoadingMyCoin } from "../hooks/useLoadingMyCoin";
 import { fetchSchedule } from "../../util/leagueUtil";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
-import { Grid, Box, Button, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 
 const LeagueSimulator = () => {
   const {
@@ -31,6 +31,7 @@ const LeagueSimulator = () => {
     }),
     shallow
   );
+  const { error, reload } = useLoadingMyCoin(myUserId);
 
   useEffect(() => {
     if (matches.length === 0) fetchData();
@@ -57,15 +58,12 @@ const LeagueSimulator = () => {
     }
 
     try {
-      const response = await fetchSchedule(
-        // myTeamName,
-        myUserId,
-        mySelectedClubId
-      );
+      const response = await fetchSchedule(myUserId, mySelectedClubId);
       if (response !== undefined) {
         console.log("League Simulator MatchDto - ", response.data);
         setMatches(response.data);
       }
+      reload();
     } catch (err) {
       console.error("❌ 경기 일정 불러오기 실패:", err);
     } finally {
@@ -78,7 +76,11 @@ const LeagueSimulator = () => {
       <Grid
         container
         spacing={1}
-        style={{ display: "flex", flexDirection: "row", justifyContent:"center" }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
       >
         <Grid item xs={12} md={2}>
           <LeagueMyTeam

@@ -5,6 +5,12 @@ import { shallow } from "zustand/shallow";
 export const useSquadSetters = () =>
   useSquadStore(
     (s) => ({
+      setMyCoin: s.setMyCoin,
+      setMyUserId: s.setMyUserId,
+      setMyFormation: s.setMyFormation,
+      setMyTeamName: s.setMyTeamName,
+      setMyLogoImgUrl: s.setMyLogoImgUrl,
+      setMyLogoId: s.setMyLogoId,
       setMySelectedPlayers: s.setMySelectedPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,

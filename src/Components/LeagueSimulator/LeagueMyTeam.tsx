@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useSquadSetters } from "../hooks/useSquadSetter";
 import { useSquadGetters } from "../hooks/useSquadGetters";
@@ -29,6 +29,7 @@ import {
 
 import { getPosColor } from "../../util/util";
 import { getStatDisplay } from "../../style/playerStyle";
+
 
 interface LeagueMyTeamProp {
   matches: Match[];
@@ -76,6 +77,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
     setMyTeamClubCohesion,
     setMyTeamStamina,
   } = useSquadSetters();
+
 
   const { setMyFormation, myLogoImgUrl } = useSquadStore(
     (s) => ({
@@ -189,7 +191,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
         variant="contained"
         color="secondary"
         onClick={() => {
-          fetchData();
+          fetchData();          
         }}
         disabled={HasRedCard}
         sx={{ marginBottom: "10px" }}
@@ -302,7 +304,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                     "&:hover": {
                       backgroundColor: "#2a2e35 !important", // ✅ Override hover
                     },
-                    maxWidth:"50px"
+                    maxWidth: "50px",
                   }}
                   onClick={() => {
                     setIsClicked(true);

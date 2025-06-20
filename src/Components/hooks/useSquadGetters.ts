@@ -5,6 +5,7 @@ import { shallow } from "zustand/shallow";
 export const useSquadGetters = () =>
   useSquadStore(
     (s) => ({
+      myCoin: s.myCoin,
       myNation: s.myNation,
       myLogoId: s.myLogoId,
       myUserId: s.myUserId,

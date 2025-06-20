@@ -19,12 +19,14 @@ const handleApiError = (error: unknown, context: string): string => {
 };
 
 // ✅ 유저 정보
-export const fetchUserInfo = async (userId: number) => {
+export const fetchUserInfo = async (
+  userId: number
+): Promise<UserInfoResponse | null> => {
   try {
     const res = await axiosInstance.post<UserInfoResponse>("/api/userInfo", {
       userId,
     });
-    return res;
+    return res.data;
   } catch (err) {
     handleApiError(err, "fetchUserInfo");
     return null;
@@ -163,5 +165,5 @@ export const updatePlayer = async (
   } catch (error) {
     console.log("delete player err - ", error);
     return handleApiError(error, "updateplayer");
-  } 
+  }
 };

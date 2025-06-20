@@ -50,7 +50,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       </DialogTitle>
       <DialogContent sx={{ background: "#333" }}>
         <DialogContentText>
-          <div
+          <Box
             style={{
               textAlign: "center",
               whiteSpace: "pre-line",
@@ -59,7 +59,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             }}
           >
             {message}
-            <div
+            <Box
               style={{
                 color: "var(--yellow)",
                 marginTop: "20px",
@@ -68,8 +68,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               }}
             >
               {target}
-            </div>
-          </div>
+            </Box>
+          </Box>
         </DialogContentText>
       </DialogContent>
       <DialogActions

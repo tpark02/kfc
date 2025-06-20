@@ -44,14 +44,14 @@ export type SeasonResponse = {
 };
 
 export type UserInfoResponse = {
-  userId: number;
-  userName: string;
-  userEmail: string;
-  userPassWord: string;
-  userCoin: number;
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  coin: number;
   tournamentToken: number;
   leagueToken: number;
-  userIsAi: string;
+  isAi: string;
 };
 
 export type BuyResponse = {

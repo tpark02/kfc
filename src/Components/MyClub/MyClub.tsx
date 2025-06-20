@@ -18,7 +18,6 @@ import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 
 const MyClub: React.FC = () => {
-  // 🎯 상태와 setter들을 묶어서 shallow 비교
   const {
     myNation,
     myLogoId,
