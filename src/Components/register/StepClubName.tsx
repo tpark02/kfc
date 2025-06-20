@@ -1,6 +1,7 @@
 // ✅ Step 0: StepClubName.tsx
 import React from "react";
-import { Box, Input } from "@mui/material";
+import { TextField } from "@mui/material";
+import { Box } from "@mui/material";
 
 interface StepClubNameProps {
   teamName: string;
@@ -18,9 +19,11 @@ const StepClubName: React.FC<StepClubNameProps> = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        width: "100%",
+        height: "100%",
       }}
     >
-      <Input
+      <TextField
         placeholder="Club Name"
         value={teamName}
         onChange={(e) => {
@@ -28,7 +31,7 @@ const StepClubName: React.FC<StepClubNameProps> = ({
         }}
         sx={{
           maxWidth: 500,
-          width: "20%",
+          width: "40%",
           color: "#fff",
           borderBottom: "1px solid #888",
           "& input": { color: "#fff" },

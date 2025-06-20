@@ -64,6 +64,16 @@ const steamTheme = createTheme({
           },
         },
       },
+    },   
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#c7d5e0", // text.secondary
+          "&.Mui-focused": {
+            color: "#00adee", // primary.main
+          },
+        },
+      },
     },
   },
 });

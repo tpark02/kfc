@@ -18,6 +18,7 @@ const StepNationality: React.FC<StepNationalityProps> = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        height: "100%",
       }}
     >
       <Select

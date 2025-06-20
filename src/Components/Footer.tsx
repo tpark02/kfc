@@ -1,10 +1,25 @@
-import React from "react";
+import { Box, Container, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-const Footer: React.FC = () => {
+const Footer = () => {
+  const theme = useTheme();
+
   return (
-    <footer style={{ textAlign: "center", padding: "10px", backgroundColor: "#eee" }}>
-      <p>&copy; {new Date().getFullYear()} TaeMin FC. All rights reserved.</p>
-    </footer>
+    <Box
+      component="footer"
+      sx={{
+        backgroundColor: theme.palette.background,
+        py: 3,
+        mt: "auto",
+        textAlign: "center",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Typography variant="body2" color="textSecondary">
+          © {new Date().getFullYear()} Daniel Park
+        </Typography>
+      </Container>
+    </Box>
   );
 };
 

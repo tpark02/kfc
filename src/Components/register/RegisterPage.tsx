@@ -19,10 +19,11 @@ import { shallow } from "zustand/shallow";
 
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
+import { useTheme } from "@mui/material/styles";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-
+  const theme = useTheme();
   // ✅ Zustand getters
   const {
     myFormation,
@@ -81,13 +82,9 @@ const Register: React.FC = () => {
     axiosInstance.get("/api/logos").then((res) => setLogos(res.data));
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (currentStep === 3) {
       loadRandomSquad();
-    }
-    if (currentStep === 4) {
-      handleUpdateMyInfo();
-      navigate("/squad");
     }
   }, [currentStep]);
 
@@ -168,19 +165,6 @@ const Register: React.FC = () => {
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
-
-          // fetchMyClubs(myUserId).then((club) => {
-          //   if (club && club.players) {
-          //     setMySelectedPlayers(club.players);
-          //     setMyTeamOvr(club.ovr);
-          //     setMyTeamPace(club.pace);
-          //     setMyTeamAttack(club.attack);
-          //     setMyTeamDefense(club.defense);
-          //     setMyTeamStamina(club.stamina);
-          //     setMyTeamClubCohesion(club.clubCohesion);
-          //     setMyTeamSquadValue(club.price);
-          //   }
-          // });
         })
         .catch((err) => {
           const msg =
@@ -241,51 +225,116 @@ const Register: React.FC = () => {
     return true;
   };
 
-  return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
+  const getCurrentStepLabel = (): string => {
+    switch (currentStep + 1) {
+      case 1:
+        return "Club Name";
+      case 2:
+        return "Club Nationality";
+      case 3:
+        return "Club Crest";
+      case 4:
+        return "Club Roster";
+      default:
+        return "";
+    }
+  };
+
+  return currentStep !== 3 ? (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          // justifyContent: "center",
+          alignContent: "center",
+          flexDirection: "column",
+          width: "40vw",
+          height: "60vh",
+          borderRadius: 2,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+          // outline: "1px solid red",
+        }}
+      >
+        <Box sx={{ backgroundColor: theme.palette.navbar.main }}>
+          <Typography
+            variant="h4"
+            mt={2}
+            mb={2}
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            {getCurrentStepLabel()}
+          </Typography>
+        </Box>
+        {currentStep === 0 && (
+          <StepClubName teamName={teamName} setTeamName={setTeamName} />
+        )}
+        {currentStep === 1 && (
+          <StepNationality
+            nationality={nationality}
+            setNationality={setNationality}
+          />
+        )}
+        {currentStep === 2 && (
+          <StepLogo
+            logos={logos}
+            confirmedLogoId={confirmedLogoId}
+            onSelect={(logo) => {
+              setConfirmedLogoId(logo.id);
+              setMyLogoId(logo.id);
+              setMyLogoImgUrl(logo.logoImg);
+            }}
+          />
+        )}
+        {currentStep < 4 && (
+          <Button
+            variant="contained"
+            sx={{ mt: 4 }}
+            onClick={() => {
+              if (currentStep === 0 && !validateTeamName()) return;
+              if (currentStep === 1 && !validateNationality()) return;
+              if (currentStep === 2 && !validateLogoSelection()) return;
+              setCurrentStep((prev) => prev + 1);
+            }}
+          >
+            Next
+          </Button>
+        )}
+      </Box>
+    </Box>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Typography variant="h4" mb={2}>
-        Step {currentStep + 1}
-        {/* <Button onClick={loadRandomSquad}>
-          random team
-        </Button> */}
+        {getCurrentStepLabel()}
       </Typography>
-
-      {currentStep === 0 && (
-        <StepClubName teamName={teamName} setTeamName={setTeamName} />
-      )}
-      {currentStep === 1 && (
-        <StepNationality
-          nationality={nationality}
-          setNationality={setNationality}
-        />
-      )}
-      {currentStep === 2 && (
-        <StepLogo
-          logos={logos}
-          confirmedLogoId={confirmedLogoId}
-          onSelect={(logo) => {
-            setConfirmedLogoId(logo.id);
-            setMyLogoId(logo.id);
-            setMyLogoImgUrl(logo.logoImg);
-          }}
-        />
-      )}
-      {currentStep === 3 && <StepSquadBuilder />}
-
-      {currentStep < 4 && (
-        <Button
-          variant="contained"
-          sx={{ mt: 4 }}
-          onClick={() => {
-            if (currentStep === 0 && !validateTeamName()) return;
-            if (currentStep === 1 && !validateNationality()) return;
-            if (currentStep === 2 && !validateLogoSelection()) return;
-            setCurrentStep((prev) => prev + 1);
-          }}
-        >
-          Next
-        </Button>
-      )}
+      <Button
+        variant="contained"
+        sx={{ mb: 4 }}
+        onClick={() => {
+          handleUpdateMyInfo();
+          navigate("/squad");
+        }}
+      >
+        Next
+      </Button>
+      <StepSquadBuilder />
     </Box>
   );
 };
