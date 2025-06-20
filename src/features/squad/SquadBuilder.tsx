@@ -8,7 +8,7 @@ import { getPosColor } from "../../util/util";
 import { Box } from "@mui/material";
 
 import "../../style/SquadBuilder.css";
-import "../../style/dropZone.css"
+import "../../style/dropZone.css";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
@@ -24,7 +24,7 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
     dropZoneList,
     setDropZoneList,
     setMySelectedPlayers,
-    // resetDropZoneList,
+    resetDropZoneList,
   } = useSquadStore(
     (s) => ({
       myLogoImgUrl: s.myLogoImgUrl,
@@ -58,61 +58,67 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
       });
 
       setMySelectedPlayers(updatedPlayers);
-      // resetDropZoneList();
+      resetDropZoneList();
     }
   };
 
   return (
     <Box className="squad-field">
-      {formations && formations[selectedFormation] && formations[selectedFormation].map((position, idx) => {
-        const pos = position.pos.replace(/[0-9]/g, "");
-        const player = mySelectedPlayers
-          .filter((p): p is MyPlayer => !!p)
-          .sort((a, b) => a.idx - b.idx)
-          .find((p) => p.idx === idx);
-        const posColor = getPosColor(player?.pos ?? "");
-        return (
-          <Button
-            key={`starting-${idx}`}
-            onClick={() => handlePlayerClick(idx, pos)}
-            style={{
-              color: "white",
-              position: "absolute",
-              top: `${position.top}%`,
-              left: `${position.left}%`,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <Box
+      {formations &&
+        formations[selectedFormation] &&
+        formations[selectedFormation].map((position, idx) => {
+          const pos = position.pos.replace(/[0-9]/g, "");
+          const player = mySelectedPlayers
+            .filter((p): p is MyPlayer => !!p)
+            .sort((a, b) => a.idx - b.idx)
+            .find((p) => p.idx === idx);
+          const posColor = getPosColor(player?.pos ?? "");
+          const selectedIdx = dropZoneList.length > 0 && dropZoneList[0].index;
+
+          return (
+            <Box              
+              key={`starting-${idx}`}
+              onClick={() => handlePlayerClick(idx, pos)}
               style={{
+                color: "white",
+                position: "absolute",
+                top: `${position.top}%`,
+                left: `${position.left}%`,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                flexWrap: "wrap",                
+                background: "transparent",
               }}
             >
-              {/* 🔵 Dot on top */}
               <Box
                 style={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: "50%",
-                  backgroundColor: posColor,
-                  boxShadow: "0 0 6px rgba(0, 0, 0, 0.6)",
-                  marginBottom: 4, // adds space between dot and name
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
-              />
+              >
+                {/* 🔵 Dot on top */}
+                <Box
+                  style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    backgroundColor: posColor,
+                    boxShadow: "0 0 6px rgba(0, 0, 0, 0.6)",
+                    marginBottom: 4, // adds space between dot and name                    
+                    outline: selectedIdx === idx ? "5px solid yellow" : "",
+                  }}
+                />
 
-              {/* 👤 Player last name */}
-              <Box style={{ fontSize: 12, color: "white" }}>
-                {player?.name?.split(" ").slice(-1)[0]}
+                {/* 👤 Player last name */}
+                <Box style={{ fontSize: 12, color: "white" }}>
+                  {player?.name?.split(" ").slice(-1)[0]}
+                </Box>
               </Box>
             </Box>
-          </Button>
-        );
-      })}
+          );
+        })}
     </Box>
   );
 };
