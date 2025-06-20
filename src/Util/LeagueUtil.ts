@@ -1,4 +1,4 @@
-import axiosInstance from "../axiosInstance"
+import axiosInstance from "../app/axiosInstance"
 import { Match } from "../types/match";
 
 export const fetchSchedule = async (userid: number, clubid: number) => {

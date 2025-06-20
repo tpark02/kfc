@@ -1,5 +1,5 @@
 // src/api/myClubUtil.ts
-import axiosInstance, { isAxiosError } from "../axiosInstance";
+import axiosInstance, { isAxiosError } from "../app/axiosInstance";
 import { MyClubData } from "../types/club";
 import { MyPlayer } from "../types/player";
 import { totalNumberOfPlayers } from "../types/team";

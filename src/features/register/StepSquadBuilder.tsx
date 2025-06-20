@@ -1,0 +1,111 @@
+// ✅ Step 3: StepSquadBuilder.tsx
+import React from "react";
+import { Button, Box, Grid, Divider } from "@mui/material";
+import SquadBuilder from "../squad/SquadBuilder";
+import SquadMetrics from "../squad/SquadMetrics";
+import SelectFormation from "../squad/SelectFormation";
+import { formations } from "../../data/formations";
+import { shallow } from "zustand/shallow";
+import { useSquadStore } from "../../store/useSquadStore";
+import DraggableAndDroppablePlayerCard from "./DraggableAndDroppablePlayerCard";
+
+const StepSquadBuilder: React.FC = () => {
+  const { myFormation, mySelectedPlayers, setMySelectedPlayers } =
+    useSquadStore(
+      (s) => ({
+        myFormation: s.myFormation,
+        mySelectedPlayers: s.mySelectedPlayers,
+        setMySelectedPlayers: s.setMySelectedPlayers,
+      }),
+      shallow
+    );
+
+  const handleSwapPlayers = (sourceIdx: number, targetIdx: number) => {
+    const updated = [...mySelectedPlayers];
+
+    // swap
+    [updated[sourceIdx], updated[targetIdx]] = [
+      updated[targetIdx],
+      updated[sourceIdx],
+    ];
+
+    // ✅ idx 값도 실제 위치에 맞춰 갱신
+    updated.forEach((p, i) => {
+      p.idx = i;
+    });
+
+    setMySelectedPlayers(updated);
+  };
+
+  return (
+    <Box sx={{ width: "90%", margin: "0 auto" }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={2}>
+          <SquadMetrics />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <SquadBuilder
+            selectedFormation={myFormation as keyof typeof formations}
+            // setSelectedDropZone={setSelectedDropZone}
+            // setIsDropZoneSelected={setIsDropZoneSelected}
+            // setPosition={setSelectedPosition}
+            // searchPlayerRef={listRef}
+            // selectedDropZone={selectedDropZone}
+          />
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={2}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <SelectFormation />
+          <Box margin={1}>{"STARTING"}</Box>
+
+          {mySelectedPlayers.slice(0, 11).map((player, index) => {
+            if (!player || player.name === "dummy") return null;
+
+            return (
+              <DraggableAndDroppablePlayerCard
+                key={`starter-${player.id}-${index}`}
+                index={index} // ✅ 추가
+                player={player}
+                onSwap={handleSwapPlayers}
+              />
+            );
+          })}
+
+          <Box margin={1}>{"BENCH"}</Box>
+
+          {mySelectedPlayers.slice(11).map((player, index) => {
+            if (!player || player.name === "dummy") return null;
+
+            return (
+              <DraggableAndDroppablePlayerCard
+                key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
+                index={11 + index} // ✅ bench는 offset 줘야 돼
+                player={player}
+                onSwap={handleSwapPlayers}
+              />
+            );
+          })}
+          {/* <Button
+            onClick={() => {
+              const reversed = [...mySelectedPlayers].reverse();
+              reversed.forEach((p, i) => (p.idx = i));
+              setMySelectedPlayers([...reversed]);
+            }}
+          >
+            테스트로 뒤집기
+          </Button> */}
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export default StepSquadBuilder;

@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useSquadStore } from "../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { useTheme } from "@mui/material/styles";
-import { useSquadGetters } from "./hooks/useSquadGetters";
+import { useSquadGetters } from "../hooks/useSquadGetters";
 import { useLoadingSpinnerStore } from "../store/useLoadingSpinnerStore";
-import { useSquadSetters } from "./hooks/useSquadSetter";
-import axiosInstance from "../axiosInstance";
-import { useLoadingMyCoin } from "./hooks/useLoadingMyCoin";
+import { useSquadSetters } from "../hooks/useSquadSetter";
+import axiosInstance from "../app/axiosInstance";
+import { useLoadingMyCoin } from "../hooks/useLoadingMyCoin";
 
 const NavBar: React.FC = () => {
   const theme = useTheme();

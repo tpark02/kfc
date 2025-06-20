@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import { League } from "../types/league";
 import { LeaguePage } from "../types/leaguePage";
-import axiosInstance, { isAxiosError } from "../axiosInstance";
+import axiosInstance, { isAxiosError } from "../app/axiosInstance";
 
 interface LeagueModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 // src/api/utils.ts
-import { isAxiosError } from "../axiosInstance";
+import { isAxiosError } from "../app/axiosInstance";
 
 export function handleApiError(error: unknown, context: string): string {
   if (isAxiosError(error)) {

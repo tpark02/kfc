@@ -1,4 +1,4 @@
-import axiosInstance from "../axiosInstance"; // 👈 custom axios with interceptor
+import axiosInstance from "../app/axiosInstance"; // 👈 custom axios with interceptor
 import { Country } from "../types/country";
 import { League } from "../types/league";
 import { ResponseRandomSquad } from "../types/response";

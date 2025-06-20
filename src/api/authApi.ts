@@ -1,5 +1,5 @@
 // api/authApi.ts
-import axiosInstance from "../axiosInstance"
+import axiosInstance from "../app/axiosInstance"
 import { AuthRequest, AuthResponse } from "../types/auth";
 
 export const login = async (form: AuthRequest): Promise<AuthResponse> => {

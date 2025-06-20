@@ -1,5 +1,5 @@
 // src/api/fetchPlayers.ts
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../app/axiosInstance";
 import { ResponsePlayerPage } from "../types/response";
 import { Country } from "../types/country";
 import { Team } from "../types/team";

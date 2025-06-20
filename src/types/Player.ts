@@ -1,4 +1,4 @@
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../app/axiosInstance";
 
 export type Player = {
   id: number;

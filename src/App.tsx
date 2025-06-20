@@ -2,9 +2,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AppRoutes from "./routes/Routes";
-import GlobalSnackbar from "./components/global/GlobarSnackbar";
-import GlobalConfirmDialog from "./components/global/GlobalConfirmDialog";
-import GlobalLoadingSpinner from "./components/global/GlobalLoadingSpinner";
+import GlobalSnackbar from "./shared/GlobalSnackbar"
+import GlobalConfirmDialog from "./shared/GlobalConfirmDialog";
+import GlobalLoadingSpinner from "./shared/GlobalLoadingSpinner";
 import "./App.css";
 
 function App() {

@@ -1,4 +1,4 @@
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../app/axiosInstance";
 import { BuyResponse } from "../types/response";
 
 export const buyPlayer = async (

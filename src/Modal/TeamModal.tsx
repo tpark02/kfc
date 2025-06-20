@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField } from "@mui/material";
 import { Team } from "../types/team";
 import { TeamPage } from "../types/teamPage";
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../app/axiosInstance";
 
 interface TeamModalProps {
   isOpen: boolean;

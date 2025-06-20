@@ -1,0 +1,36 @@
+/* DropZone.css */
+.dropzone-container {
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start;
+    justify-content: flex-start; */
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: 0.2s;
+    /* background-color: var(--background-color); */
+}
+
+.dropzone-container:hover {
+    /* border-color: greenyellow; */
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.dropzone-container:active {
+    transform: scale(0.99);
+    background-color: #d9eaff;
+}
+
+/* DropZone.css */
+.dropzone-container.selected {
+    border: 2px solid red;
+    transition: border-color 0.3s ease;
+}
+
+.dropzone-button {
+    background-color: white;
+    display: flex;
+    flex-direction: column;    
+    height: 120px;
+    /* outline: 1px solid red; */
+}

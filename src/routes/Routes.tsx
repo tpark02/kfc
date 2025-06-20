@@ -1,18 +1,18 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import { Players } from "../components/players/Players";
-import PlayerSpec from "../components/players/PlayerSpec";
-import Season from "../components/seasonSimulator/Season";
-import SeasonPage from "../components/seasonSimulator/SeasonPage";
-import LeagueSimulator from "../components/leagueSimulator/LeagueSimulator";
-import LoginForm from "../components/login/LoginForm";
-import Register from "../components/register/RegisterPage";
+import { Players } from "../features/players/Players"
+import PlayerSpec from "../features/players/PlayerSpec";
+import Season from "../features/seasonSimulator/Season";
+import SeasonPage from "../features/seasonSimulator/SeasonPage";
+import LeagueSimulator from "../features/league/LeagueSimulator"
+import LoginForm from "../features/auth/LoginForm";
+import Register from "../features/register/RegisterPage";
 import PrivateRoute from "../components/PrivateRoutes";
-import Layout from "../Layout";
-import SignUpForm from "../components/login/SignupForm";
-import Squad from "../components/teambuilder/Squad";
-import MyPlayerSpec from "../components/players/MyPlayerSpec";
+import Layout from "../app/Layout";
+import SignUpForm from "../features/auth/SignupForm";
+import Squad from "../features/squad/Squad";
+import MyPlayerSpec from "../features/players/MyPlayerSpec";
 
 const AppRoutes: React.FC = () => {
   return (

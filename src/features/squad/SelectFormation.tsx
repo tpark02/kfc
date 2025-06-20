@@ -1,0 +1,81 @@
+import React from "react";
+import { Select, MenuItem, Box } from "@mui/material";
+import { baseFormations } from "../../data/formations";
+import { useSquadStore } from "../../store/useSquadStore";
+import { shallow } from "zustand/shallow";
+
+const SelectFormation: React.FC = () => {
+  const {
+    myFormation,
+    setIsDropZoneSelected,
+    setMyFormation,
+    resetSquadMetric,
+  } = useSquadStore(
+    (s) => ({
+      myFormation: s.myFormation,
+      setIsDropZoneSelected: s.setIsDropZoneSelected,
+      setMyFormation: s.setMyFormation,
+      resetSquadMetric: s.resetSquadMetric,
+    }),
+    shallow
+  );
+  return (
+    <>
+      <Select
+        variant="outlined"
+        style={{
+          width: "100%",
+          borderRadius: "8px",
+        }}
+        labelId="formation-label"
+        value={myFormation}
+        onChange={(e) => {
+          setMyFormation(e.target.value);
+          setIsDropZoneSelected(false);
+          resetSquadMetric();
+        }}
+        sx={{
+          backgroundColor: "#242424",
+          color: "white",
+          "& .MuiSelect-icon": {
+            color: "white",
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "gray",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "gray",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "gray", // ✅ This overrides the default blue border
+          },
+        }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: "#242424",
+              color: "#fff",
+            },
+          },
+        }}
+      >
+        {Object.entries(baseFormations).map(([key]) => (
+          <MenuItem
+            key={key}
+            value={key}
+            sx={{
+              backgroundColor: "#242424",
+              color: "#fff",
+            }}
+          >
+            <Box display="flex" alignItems="center">
+              {key}
+            </Box>
+          </MenuItem>
+        ))}
+      </Select>
+    </>
+  );
+};
+
+export default SelectFormation;

@@ -1,5 +1,5 @@
 // src/api/clubService.ts
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../app/axiosInstance";
 import { handleApiError } from "./utils";
 import { MyClubData } from "../types/club";
 import { MyPlayer } from "../types/player";
