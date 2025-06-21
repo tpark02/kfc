@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useLoadingSpinnerStore } from "../store/useLoadingSpinnerStore";
 import { fetchUserInfo } from "../util/myClubUtil";
 import { useSquadSetters } from "./useSquadSetter";
+import { isLoggedIn } from "../types/auth";
 
 export const useLoadingMyCoin = (userId: number | null) => {
   const [error, setError] = useState<string | null>(null);
@@ -11,11 +11,9 @@ export const useLoadingMyCoin = (userId: number | null) => {
   const reload = () => setReloadTrigger((prev) => prev + 1); // 🆕 trigger function
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !isLoggedIn()) return;
 
     const load = async () => {
-      // useLoadingSpinnerStore.getState().setIsLoading(true);
-
       const data = await fetchUserInfo(userId);
       console.log("💰 userLoadingMyCoin ", data?.username);
       setters.setMyCoin(data?.coin ?? 0);
@@ -25,8 +23,6 @@ export const useLoadingMyCoin = (userId: number | null) => {
       } else {
         setError("❌ Failed to load useLoadingMyCoin");
       }
-
-      // useLoadingSpinnerStore.getState().setIsLoading(false);
     };
 
     load();

@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSquadStore } from "../store/useSquadStore";
 import { shallow } from "zustand/shallow";
 import { useTheme } from "@mui/material/styles";
 import { useSquadGetters } from "../hooks/useSquadGetters";
-import { useLoadingSpinnerStore } from "../store/useLoadingSpinnerStore";
-import { useSquadSetters } from "../hooks/useSquadSetter";
-import axiosInstance from "../app/axiosInstance";
 import { useLoadingMyCoin } from "../hooks/useLoadingMyCoin";
 
 const NavBar: React.FC = () => {
@@ -24,32 +21,6 @@ const NavBar: React.FC = () => {
   );
   const { myUserId, myCoin } = useSquadGetters();
   const { error, reload } = useLoadingMyCoin(myUserId);
-
-  // const { myCoin } = useSquadGetters();
-  // const { setMyCoin } = useSquadSetters();
-
-  // const fetchMyCoin = async () => {
-  //   try {
-  //     const res = await axiosInstance.get("/api/me", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     });
-  //     const { myCoin } = res.data;
-  //     setMyCoin(myCoin);
-  //   } catch (e) {
-  //     console.error("Failed to fetch my coin:", e);
-  //   } finally {
-  //     useLoadingSpinnerStore.getState().setIsLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   useLoadingSpinnerStore.getState().setIsLoading(true);
-  //   console.log("🪙 my coin");
-  //   fetchMyCoin();
-  // });
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -103,28 +74,28 @@ const NavBar: React.FC = () => {
       >
         League
       </Button>
-      {/* <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/tournament"); }}>
-        Tournament
-      </Button> */}
-      {/* <Button className="nav-menu-button" onClick={() => { setIsDropZoneSelected(false); navigate("/register"); }}>
-        Register
-      </Button> */}
-      {/* 오른쪽 끝에 로그인/로그아웃 버튼 */}
-
       <Box sx={{ display: "flex", gap: 4, marginLeft: "auto" }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          🪙 {myCoin}
-        </Box>
         {token ? (
-          <Button variant="contained" onClick={handleLogout}>
-            Logout
-          </Button>
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              🪙 {myCoin}
+            </Box>
+            {token ? (
+              <Button variant="contained" onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={() => navigate("/login")}>
+                Sign In
+              </Button>
+            )}
+          </>
         ) : (
           <Button variant="contained" onClick={() => navigate("/login")}>
             Sign In

@@ -8,99 +8,39 @@ import SeasonPage from "../features/seasonSimulator/SeasonPage";
 import LeagueSimulator from "../features/league/LeagueSimulator";
 import LoginForm from "../features/auth/LoginForm";
 import Register from "../features/register/RegisterPage";
-import PrivateRoute from "../components/PrivateRoutes";
-import Layout from "../app/Layout";
 import SignUpForm from "../features/auth/SignupForm";
 import Squad from "../features/squad/Squad";
 import MyPlayerSpec from "../features/players/MyPlayerSpec";
-import LandingPage from "../features/landing/LandingPage"; // adjust path if needed
+import LandingPage from "../features/landing/LandingPage";
+import PublicLayout from "../app/PublicLayout"
+import PrivateLayout from "../app/PrivateLayout";
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* 로그인은 레이아웃 없이 */}
+      {/* Public: no layout */}
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignUpForm />} />
-      <Route
-        path="/"
-        element={
-          localStorage.getItem("token") ? (
-            <Navigate to="/players" />
-          ) : (
-            <LandingPage />
-          )
-        }
-      />
-      {/* 공통 레이아웃 적용 */}
-      <Route element={<Layout />}>
-        <Route
-          path="/players"
-          element={
-            <PrivateRoute>
-              <Players />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/player/:id"
-          element={
-            <PrivateRoute>
-              <PlayerSpec />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/myPlayer/:id"
-          element={
-            <PrivateRoute>
-              <MyPlayerSpec />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/squad"
-          element={
-            <PrivateRoute>
-              <Squad />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/league"
-          element={
-            <PrivateRoute>
-              <LeagueSimulator />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/tournament"
-          element={
-            <PrivateRoute>
-              <Season />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/season/:seasonId"
-          element={
-            <PrivateRoute>
-              <SeasonPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PrivateRoute>
-              <Register />
-            </PrivateRoute>
-          }
-        />
+      <Route path="/register" element={<Register />} />
+
+      {/* Public routes with public layout */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<LandingPage />} />
       </Route>
 
-      {/* 예외 처리 */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      {/* Private routes */}
+      <Route element={<PrivateLayout />}>
+        <Route path="/players" element={<Players />} />
+        <Route path="/player/:id" element={<PlayerSpec />} />
+        <Route path="/myPlayer/:id" element={<MyPlayerSpec />} />
+        <Route path="/squad" element={<Squad />} />
+        <Route path="/league" element={<LeagueSimulator />} />
+        <Route path="/tournament" element={<Season />} />
+        <Route path="/season/:seasonId" element={<SeasonPage />} />
+      </Route>
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

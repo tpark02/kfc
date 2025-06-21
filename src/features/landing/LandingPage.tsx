@@ -42,18 +42,30 @@ const LandingPage: React.FC = () => {
         Manage your own football club. Recruit players, build your dream squad,
         and dominate the league.
       </Typography>
-
-      <Button
-        variant="contained"
-        size="large"
-        sx={{
-          paddingX: 4,
-          paddingY: 1,
-        }}
-        onClick={() => (window.location.href = "/signup")}
-      >
-        Get Started
-      </Button>
+      <Box sx={{display:"flex", gap:4}}>
+        {/* <Button
+          variant="contained"
+          size="large"
+          sx={{
+            paddingX: 4,
+            paddingY: 1,
+          }}
+          onClick={() => (window.location.href = "/signup")}
+        >
+          Log In
+        </Button> */}
+        <Button
+          variant="contained"
+          size="large"
+          sx={{
+            paddingX: 4,
+            paddingY: 1,
+          }}
+          onClick={() => (window.location.href = "/signup")}
+        >
+          Get Started
+        </Button>
+      </Box>
     </Box>
   );
 };
