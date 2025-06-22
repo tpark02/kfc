@@ -94,7 +94,7 @@ The frontend consumes a Spring Boot REST API (not included here). You’ll need:
 
 ## 📄 License
 
-MIT License © 2025 Taemin Park ([@tpark02](https://github.com/tpark02))
+MIT License © 2025 Daniel Park ([@tpark02](https://github.com/tpark02))
 
 ---
 
