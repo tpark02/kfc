@@ -1,5 +1,5 @@
 import React from "react";
-import { formations, formations_mobile } from "../../data/formations";
+import { formations } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
 import { MyPlayer } from "../../types/player";
 import { shallow } from "zustand/shallow";
@@ -11,11 +11,9 @@ import "../../style/dropZone.css";
 
 interface SquadBuilderProp {
   selectedFormation: keyof typeof formations;
-  // searchPlayerRef: React.RefObject<HTMLBoxElement | null>;
 }
 
 const SquadBuilder: React.FC<SquadBuilderProp> = ({
-  // searchPlayerRef,
   selectedFormation,
 }) => {
   const {
@@ -97,7 +95,6 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                   alignItems: "center",
                 }}
               >
-                {/* 🔵 Dot on top */}
                 <Box
                   style={{
                     width: 18,
@@ -105,12 +102,11 @@ const SquadBuilder: React.FC<SquadBuilderProp> = ({
                     borderRadius: "50%",
                     backgroundColor: posColor,
                     boxShadow: "0 0 6px rgba(0, 0, 0, 0.6)",
-                    marginBottom: 4, // adds space between dot and name                    
+                    marginBottom: 4,                
                     outline: selectedIdx === idx ? "5px solid yellow" : "",
                   }}
                 />
 
-                {/* 👤 Player last name */}
                 <Box style={{ fontSize: 12, color: "white" }}>
                   {player?.name?.split(" ").slice(-1)[0]}
                 </Box>

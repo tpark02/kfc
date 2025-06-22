@@ -1,20 +1,15 @@
-// ✅ React & Router
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-// ✅ Types
 import { Team } from "../../types/team";
 import { TeamPage } from "../../types/teamPage";
-import { MyPlayer, Player } from "../../types/player";
+import { MyPlayer } from "../../types/player";
 
-// ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
 import { getOvrColor } from "../../util/util";
 
-// ✅ Data
 import { countryData } from "../../data/countryData";
 
-// ✅ Styles
 import CroppedAvatar from "../squad/CroppedAvatar";
 import axiosInstance from "../../app/axiosInstance";
 import { Box } from "@mui/system";
@@ -33,7 +28,7 @@ const MyPlayerSpec: React.FC = () => {
 
   useEffect(() => {
     axiosInstance
-      .get<TeamPage>("/teams") // 👈 baseURL 생략 가능
+      .get<TeamPage>("/teams")
       .then((response) => {
         console.log(response.data.content);
         setTeams(response.data.content);
@@ -81,10 +76,6 @@ const MyPlayerSpec: React.FC = () => {
 
   return (
     <Box className="player-spec-body">
-      {/* <button className="player-spec-backbutton" onClick={() => navigate(-1)}>
-        <ArrowBackIcon />
-      </button> */}
-
       <Box className="player-content">
         <Box className="player-basic-info">
           <Box className="player-img-container">
@@ -97,7 +88,6 @@ const MyPlayerSpec: React.FC = () => {
               fallBackHeight={200}
               aspectRatio={4 / 3}
             />
-            {/* <Box className="player-name-row">{player.name}</Box> */}
           </Box>
           <RadarStatChart
             pac={player.pac}
@@ -108,7 +98,6 @@ const MyPlayerSpec: React.FC = () => {
             phy={player.phy}
           />
           <Box className="player-info">
-            {/* ✅ 국가 코드에 해당하는 flag 이미지 추가 */}
             <Box className="player-info-cell-group">
               <Box className="player-info-cell-label">Nation</Box>
               <Box
@@ -124,7 +113,7 @@ const MyPlayerSpec: React.FC = () => {
                   style={{
                     width: "auto",
                     height: "15px",
-                    backgroundColor: "white", // ✅ add white background
+                    backgroundColor: "white",
                     margin: "0 5px",
                   }}
                   onError={(e) => {
@@ -159,28 +148,16 @@ const MyPlayerSpec: React.FC = () => {
               {getValue("longShots", "Long Shots")}
               {getValue("freeKickAccuracy", "Free Kick Accuracy")}
               {getValue("curve", "Curve")}
-
-              {/* {getValue("positioning", "Positioning")}
-              {getValue("finishing", "Finishing")}
-              {getValue("shotPower", "Shot Power")}
-              {getValue("longShots", "Long Shots")}
-              {getValue("volleys", "Volleys")}
-              {getValue("crossing", "Crossing")}
-              {getValue("freeKickAccuracy", "Free Kick Accuracy")}
-              {getValue("curve", "Curve")} */}
             </Box>
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">DRIBBLING</Box>
               {getValue("dribbling", "Dribbling")}
               {getValue("balance", "Balance")}
-              {/* {getValue("reactions", "Reactions")} */}
               {getValue("ballControl", "Ball Control")}
               {getValue("agility", "Agility")}
-              {/* {getValue("composure", "Composure")} */}
             </Box>
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">PASSING</Box>
-              {/* {getValue("vision", "Vision")} */}
               {getValue("crossing", "Crossing")}
               {getValue("shortPassing", "Short Passing")}
               {getValue("longPassing", "Long Passing")}
@@ -192,7 +169,6 @@ const MyPlayerSpec: React.FC = () => {
               {getValue("slidingTackle", "Sliding Tackle")}
               {getValue("interceptions", "Interceptions")}
             </Box>
-
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">PACE</Box>
               {getValue("acceleration", "Acceleration")}

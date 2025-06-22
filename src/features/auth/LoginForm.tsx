@@ -57,11 +57,6 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
-
   const fetchAndStoreUserInfo = async (): Promise<number | null> => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
 

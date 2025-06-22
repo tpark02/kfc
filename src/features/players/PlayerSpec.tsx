@@ -1,23 +1,18 @@
-// ✅ React & Router
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-// ✅ Types
 import { Team } from "../../types/team";
 import { TeamPage } from "../../types/teamPage";
 import { Player } from "../../types/player";
 
-// ✅ Components & Utils
 import RadarStatChart from "./RadarStatsChart";
 import { getOvrColor } from "../../util/util";
 
-// ✅ Data
 import { countryData, setCrest } from "../../data/countryData";
 
-// ✅ Styles
 import axiosInstance from "../../app/axiosInstance";
 import CroppedAvatar from "../squad/CroppedAvatar";
-import { Box, textAlign } from "@mui/system";
+import { Box } from "@mui/system";
 import "../../style/PlayerSpec.css";
 
 const PlayerSpec: React.FC = () => {
@@ -33,7 +28,7 @@ const PlayerSpec: React.FC = () => {
 
   useEffect(() => {
     axiosInstance
-      .get<TeamPage>("/teams") // 👈 baseURL 생략 가능
+      .get<TeamPage>("/teams")
       .then((response) => {
         console.log(response.data.content);
         setTeams(response.data.content);
@@ -81,10 +76,6 @@ const PlayerSpec: React.FC = () => {
 
   return (
     <Box className="player-spec-body">
-      {/* <button className="player-spec-backbutton" onClick={() => navigate(-1)}>
-        <ArrowBackIcon />
-      </button> */}
-
       <Box className="player-content">
         <Box className="player-basic-info">
           <Box className="player-img-container">
@@ -97,7 +88,6 @@ const PlayerSpec: React.FC = () => {
               fallBackHeight={250}
               aspectRatio={4 / 3}
             />
-            {/* <Box className="player-name-row">{player.name}</Box> */}
           </Box>
           <RadarStatChart
             pac={player.pac}
@@ -108,7 +98,6 @@ const PlayerSpec: React.FC = () => {
             phy={player.phy}
           />
           <Box className="player-info">
-            {/* ✅ 국가 코드에 해당하는 flag 이미지 추가 */}
             <Box className="player-info-cell-group">
               <Box className="player-info-cell-label">Nation</Box>
               <Box
@@ -124,7 +113,7 @@ const PlayerSpec: React.FC = () => {
                   style={{
                     width: "auto",
                     height: "15px",
-                    backgroundColor: "white", // ✅ add white background
+                    backgroundColor: "white",
                     margin: "0 5px",
                   }}
                   onError={(e) => {
@@ -149,7 +138,7 @@ const PlayerSpec: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-end",
-                  justifyContent: "space-evenly"
+                  justifyContent: "space-evenly",
                 }}
               >
                 {setCrest(player.leagueUrl, 35, 25)}
@@ -157,7 +146,7 @@ const PlayerSpec: React.FC = () => {
                   className="player-info-cell"
                   style={{
                     borderRadius: "3px",
-                    textAlign:"end"
+                    textAlign: "end",
                   }}
                 >
                   {player.league}
@@ -171,7 +160,7 @@ const PlayerSpec: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-end",
-                  justifyContent: "space-evenly"
+                  justifyContent: "space-evenly",
                 }}
               >
                 {setCrest(player.teamUrl, 35, 25)}
@@ -179,7 +168,7 @@ const PlayerSpec: React.FC = () => {
                   className="player-info-cell"
                   style={{
                     borderRadius: "3px",
-                    textAlign:"end"
+                    textAlign: "end",
                   }}
                 >
                   {player.team}
@@ -203,28 +192,16 @@ const PlayerSpec: React.FC = () => {
               {getValue("longShots", "Long Shots")}
               {getValue("freeKickAccuracy", "Free Kick Accuracy")}
               {getValue("curve", "Curve")}
-
-              {/* {getValue("positioning", "Positioning")}
-              {getValue("finishing", "Finishing")}
-              {getValue("shotPower", "Shot Power")}
-              {getValue("longShots", "Long Shots")}
-              {getValue("volleys", "Volleys")}
-              {getValue("crossing", "Crossing")}
-              {getValue("freeKickAccuracy", "Free Kick Accuracy")}
-              {getValue("curve", "Curve")} */}
             </Box>
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">DRIBBLING</Box>
               {getValue("dribbling", "Dribbling")}
               {getValue("balance", "Balance")}
-              {/* {getValue("reactions", "Reactions")} */}
               {getValue("ballControl", "Ball Control")}
               {getValue("agility", "Agility")}
-              {/* {getValue("composure", "Composure")} */}
             </Box>
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">PASSING</Box>
-              {/* {getValue("vision", "Vision")} */}
               {getValue("crossing", "Crossing")}
               {getValue("shortPassing", "Short Passing")}
               {getValue("longPassing", "Long Passing")}
@@ -236,7 +213,6 @@ const PlayerSpec: React.FC = () => {
               {getValue("slidingTackle", "Sliding Tackle")}
               {getValue("interceptions", "Interceptions")}
             </Box>
-
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">PACE</Box>
               {getValue("acceleration", "Acceleration")}

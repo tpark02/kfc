@@ -156,7 +156,6 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
   return (
     <Box
       style={{
-        // minWidth: "300px",
         flex: "1 1 30%",
         maxWidth: "100%",
         display: "flex",
@@ -254,10 +253,10 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                     }
                     sx={{
                       ...outerCardStyle(false),
-                      backgroundColor: "#1b1f26 !important", // ✅ Force override
+                      backgroundColor: "#1b1f26 !important",
                       color: "#fff",
                       "&:hover": {
-                        backgroundColor: "#2a2e35 !important", // ✅ Override hover
+                        backgroundColor: "#2a2e35 !important",
                       },
                     }}
                   >
@@ -290,7 +289,6 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                     </Box>
                   </Box>
                 </Box>
-                {/* <Grid item xs={12} md={1} sx={{ display: "flex" }}></Grid> */}
                 <Box
                   component="button"
                   disabled={totalAddStatPoints === 0}
@@ -299,10 +297,10 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                     minHeight: "60px",
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "#1b1f26 !important", // ✅ Force override
+                    backgroundColor: "#1b1f26 !important", 
                     color: "#fff",
                     "&:hover": {
-                      backgroundColor: "#2a2e35 !important", // ✅ Override hover
+                      backgroundColor: "#2a2e35 !important", 
                     },
                     maxWidth: "50px",
                   }}

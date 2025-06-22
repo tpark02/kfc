@@ -44,36 +44,40 @@ const NavBar: React.FC = () => {
         boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
       }}
     >
-      <Button
-        className="nav-menu-button"
-        onClick={() => {
-          reload();
-          setIsDropZoneSelected(false);
-          navigate("/");
-        }}
-      >
-        Recruit
-      </Button>
-      <Button
-        className="nav-menu-button"
-        onClick={() => {
-          reload();
-          setIsDropZoneSelected(false);
-          navigate("/squad");
-        }}
-      >
-        My Club
-      </Button>
-      <Button
-        className="nav-menu-button"
-        onClick={() => {
-          reload();
-          setIsDropZoneSelected(false);
-          navigate("/league");
-        }}
-      >
-        League
-      </Button>
+      {token && (
+        <>
+          <Button
+            className="nav-menu-button"
+            onClick={() => {
+              reload();
+              setIsDropZoneSelected(false);
+              navigate("/players");
+            }}
+          >
+            Recruit
+          </Button>
+          <Button
+            className="nav-menu-button"
+            onClick={() => {
+              reload();
+              setIsDropZoneSelected(false);
+              navigate("/squad");
+            }}
+          >
+            My Club
+          </Button>
+          <Button
+            className="nav-menu-button"
+            onClick={() => {
+              reload();
+              setIsDropZoneSelected(false);
+              navigate("/league");
+            }}
+          >
+            League
+          </Button>
+        </>
+      )}
       <Box sx={{ display: "flex", gap: 4, marginLeft: "auto" }}>
         {token ? (
           <>

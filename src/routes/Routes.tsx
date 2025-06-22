@@ -3,8 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import { Players } from "../features/players/Players";
 import PlayerSpec from "../features/players/PlayerSpec";
-import Season from "../features/seasonSimulator/Season";
-import SeasonPage from "../features/seasonSimulator/SeasonPage";
 import LeagueSimulator from "../features/league/LeagueSimulator";
 import LoginForm from "../features/auth/LoginForm";
 import Register from "../features/register/RegisterPage";
@@ -34,9 +32,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/player/:id" element={<PlayerSpec />} />
         <Route path="/myPlayer/:id" element={<MyPlayerSpec />} />
         <Route path="/squad" element={<Squad />} />
-        <Route path="/league" element={<LeagueSimulator />} />
-        <Route path="/tournament" element={<Season />} />
-        <Route path="/season/:seasonId" element={<SeasonPage />} />
+        <Route path="/league" element={<LeagueSimulator />} />        
       </Route>
 
       {/* Fallback */}

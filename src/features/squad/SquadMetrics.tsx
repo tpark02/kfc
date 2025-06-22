@@ -14,83 +14,21 @@ import "../../style/Squad.css";
 
 const SquadMetrics: React.FC = () => {
   const {
-    myFormation,
-    myUserId,
     myTeamName,
-    myNation,
-    myLogoId,
     mySelectedPlayers,
     myTeamOvr,
     myTeamSquadValue,
-    myTeamAge,
-    myTeamPace,
-    myTeamDefense,
-    myTeamClubCohesion,
-    myTeamAttack,
-    myTeamStamina,
     myLogoImgUrl,
-    setMySelectedPlayers,
-    setMyTeamOvr,
-    setMyTeamSquadValue,
-    setMyTeamAge,
-    setMyTeamPace,
-    setMyTeamDefense,
-    setMyTeamAttack,
-    setMyTeamClubCohesion,
-    setMyTeamStamina,
   } = useSquadStore(
     (s) => ({
-      myFormation: s.myFormation,
-      mySelectedPlayers: s.mySelectedPlayers,
-      myUserId: s.myUserId,
-      myClubs: s.myClubs,
       myTeamName: s.myTeamName,
-      myNation: s.myNation,
-      myLogoId: s.myLogoId,
+      mySelectedPlayers: s.mySelectedPlayers,
       myTeamOvr: s.myTeamOvr,
       myTeamSquadValue: s.myTeamSquadValue,
-      myTeamAge: s.myTeamAge,
-      myTeamPace: s.myTeamPace,
-      myTeamDefense: s.myTeamDefense,
-      myTeamClubCohesion: s.myTeamClubCohesion,
-      myTeamAttack: s.myTeamAttack,
-      myTeamStamina: s.myTeamStamina,
       myLogoImgUrl: s.myLogoImgUrl,
-      setMySelectedPlayers: s.setMySelectedPlayers,
-      setMyTeamOvr: s.setMyTeamOvr,
-      setMyTeamSquadValue: s.setMyTeamSquadValue,
-      setMyTeamAge: s.setMyTeamAge,
-      setMyTeamPace: s.setMyTeamPace,
-      setMyTeamDefense: s.setMyTeamDefense,
-      setMyTeamAttack: s.setMyTeamAttack,
-      setMyTeamClubCohesion: s.setMyTeamClubCohesion,
-      setMyTeamStamina: s.setMyTeamStamina,
-      setMyLogoId: s.setMyLogoId,
-      setMyLogoImgUrl: s.setMyLogoImgUrl,
-      setMyTeamName: s.setMyTeamName,
-      setMyNation: s.setMyNation,
     }),
     shallow
   );
-
-  // const {
-  //   // dropPlayers,
-  //   myTeamName,
-  //   myLogoImgUrl,
-  //   mySelectedPlayers,
-  //   myTeamOvr,
-  //   myTeamSquadValue,
-  // } = useSquadStore(
-  //   (s) => ({
-  //     // dropPlayers: s.dropPlayers,
-  //     myTeamName: s.myTeamName,
-  //     myLogoImgUrl: s.myLogoImgUrl,
-  //     mySelectedPlayers: s.mySelectedPlayers,
-  //     myTeamOvr: s.myTeamOvr,
-  //     myTeamSquadValue: s.myTeamSquadValue,
-  //   }),
-  //   shallow
-  // );
 
   const nationalSpread = Array.from(
     new Set(
@@ -206,7 +144,7 @@ const SquadMetrics: React.FC = () => {
                 <React.Fragment key={`club-${team}-${idx}`}>
                   {setCrest(team, 35, 25)}
                 </React.Fragment>
-              ))}            
+              ))}
           </Box>
         </Box>
       </Box>

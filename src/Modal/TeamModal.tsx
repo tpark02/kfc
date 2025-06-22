@@ -37,7 +37,6 @@ const TeamModal: React.FC<TeamModalProps> = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      {/* ✅ 검색 입력창 */}
       <TextField
         fullWidth
         placeholder="search"
@@ -48,10 +47,10 @@ const TeamModal: React.FC<TeamModalProps> = ({
         sx={{
           marginBottom: 2,
           "& .MuiOutlinedInput-root": {
-            color: "white", // ✅ 입력 텍스트 색
+            color: "white",
             "& input::placeholder": {
-              color: "gray", // ✅ placeholder 색
-              opacity: 1, // ✅ 일부 브라우저에서 회색 제대로 보이게
+              color: "gray",
+              opacity: 1,
             },
             "& fieldset": {
               borderColor: "gray",
@@ -65,7 +64,6 @@ const TeamModal: React.FC<TeamModalProps> = ({
           },
         }}
       />
-      {/* ✅ 필터링된 팀 리스트 */}
       {filteredTeams.map((team) => (
         <Box
           className="filter-box"
@@ -89,26 +87,16 @@ const TeamModal: React.FC<TeamModalProps> = ({
               width: "8%",
               height: "8%",
               marginRight: 8,
-              backgroundColor: "white", // ✅ add white background
+              backgroundColor: "white",
             }}
             onError={(e) => {
-              e.currentTarget.onerror = null; // 무한 루프 방지
-              e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "../../img/fallback.png";
             }}
           />
-
           <Typography variant="body2">{team.name}</Typography>
         </Box>
       ))}
-
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        onClick={onClose}
-        sx={{ marginLeft: 1 }}
-      >
-        close
-      </Button> */}
     </Box>
   );
 };

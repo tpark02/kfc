@@ -1,11 +1,9 @@
 import { useSquadStore } from "../../store/useSquadStore";
 import { Match } from "../../types/match";
 import { shallow } from "zustand/shallow";
-import { Grid, Box, Button, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { getStatDisplay } from "../../style/playerStyle";
-import { borderRadius, height } from "@mui/system";
 import CroppedAvatar from "../squad/CroppedAvatar";
-import { useState } from "react";
 
 interface LeagueScheduleViewerProps {
   matches: Match[];
@@ -61,16 +59,14 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
       </Box>
       <Box
         sx={{
-          // outline: "1px solid gray",
-          minWidth: "300px", // ✅ prevent items from becoming too small
-          flex: "1 1 30%", // ✅ flexible but constrained
-          maxWidth: "100%", // ✅ responsive on shrink
+          minWidth: "300px",
+          flex: "1 1 30%",
+          maxWidth: "100%",
           display: "flex",
           flexDirection: "column",
           width: "100%",
           height: "auto",
           borderRadius: "8px",
-          // flexWrap:"wrap",
         }}
       >
         <Box
@@ -79,31 +75,27 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
             flexDirection: "column",
             width: "100%",
             height: "auto",
-            // flexWrap:"wrap",
           }}
         >
           {matches && matches.length > 0 ? (
             <Box
               sx={{
-                display: "flex", // flex container
-                justifyContent: "center", // center horizontally
-                alignItems: "flex-start", // center vertically (optional)
-                minHeight: "100vh", // full height
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                minHeight: "100vh",
                 width: "100%",
                 marginTop: "20px",
-                // flexWrap:"wrap",
-                // backgroundColor: "#121212", // optional: matches your screenshot
               }}
             >
               <Box
                 sx={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                  gap: 1, // spacing between boxes
+                  gap: 1,
                   width: "100%",
-                  maxWidth: 800, // constrain width
-                  aspectRatio: "5 / 4", // keeps grid shape
-                  // flexWrap:"wrap",
+                  maxWidth: 800,
+                  aspectRatio: "5 / 4",
                 }}
               >
                 {matches.map((match, idx) => {
@@ -136,9 +128,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                           sx={{
                             textAlign: "center",
                             fontSize: "clamp(12px, 4vw, 15px)",
-                            // overflow: "hidden",
                             whiteSpace: "nowrap",
-                            // textOverflow: "ellipsis",
                           }}
                         >
                           {match.awayTeam}
@@ -171,7 +161,6 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                               justifyContent: "center",
                               alignItems: "center",
                               height: "100%",
-                              // outline: "1px solid red",
                             }}
                           >
                             {getStatDisplay("", match.ovr)}
@@ -197,22 +186,21 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
           ) : (
             <Box
               sx={{
-                display: "flex", // flex container
-                justifyContent: "center", // center horizontally
-                alignItems: "center", // center vertically (optional)
-                minHeight: "100vh", // full height
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "100vh",
                 width: "100%",
-                // backgroundColor: "#121212", // optional: matches your screenshot
               }}
             >
               <Box
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(5, 1fr)", // 5 columns
-                  gap: 1, // spacing between boxes
+                  gridTemplateColumns: "repeat(5, 1fr)",
+                  gap: 1,
                   width: "100%",
-                  maxWidth: 800, // constrain width
-                  aspectRatio: "5 / 4", // keeps grid shape
+                  maxWidth: 800,
+                  aspectRatio: "5 / 4",
                 }}
               >
                 {Array.from({ length: 20 }).map((_, idx) => (

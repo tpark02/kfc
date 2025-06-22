@@ -6,8 +6,8 @@ export type ResponsePlayerPage = {
   playerList: Player[];
   totalPages: number;
   totalElements: number;
-  number: number; // 현재 페이지 번호
-  size: number; // 한 페이지당 개수
+  number: number; 
+  size: number; 
 };
 
 export type ResponseSaveSquad = {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Divider, Button } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
 import SquadBuilder from "./SquadBuilder";
 import SquadMetrics from "./SquadMetrics";
 import SelectFormation from "./SelectFormation";
@@ -254,11 +254,6 @@ const Squad: React.FC = () => {
         <Grid item xs={12} md={7}>
           <SquadBuilder
             selectedFormation={myFormation as keyof typeof formations}
-            // setSelectedDropZone={setSelectedDropZone}
-            // setIsDropZoneSelected={setIsDropZoneSelected}
-            // setPosition={setSelectedPosition}
-            // searchPlayerRef={listRef}
-            // selectedDropZone={selectedDropZone}
           />
         </Grid>
         <Grid
@@ -357,12 +352,11 @@ const Squad: React.FC = () => {
             >
               <Box mb={1}>{"BENCH"}</Box>
               {mySelectedPlayers.slice(11, 17).map((player, index) => {
-                // if (!player || player.name === "dummy") return null;
                 console.log("players - ", player);
                 return (
                   <DraggableAndDroppablePlayerCard
-                    key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
-                    index={11 + index} // ✅ bench는 offset 줘야 돼
+                    key={`bench-${player.id}-${index}`} 
+                    index={11 + index}
                     player={player}
                     onSwap={handleSwapPlayers}
                     isDelete={isDelete}
@@ -374,8 +368,8 @@ const Squad: React.FC = () => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)", // 2 columns
-              gridTemplateRows: "repeat(5, auto)", // 5 rows
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gridTemplateRows: "repeat(5, auto)",
               gap: 1,
               width: "100%",
             }}

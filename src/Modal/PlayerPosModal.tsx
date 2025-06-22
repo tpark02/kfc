@@ -8,7 +8,7 @@ import { getPosColor } from "../util/util";
 interface PlayerPosModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectPlayerPos: (playerPositions: PlayerPos[]) => void; // 배열 전달
+  onSelectPlayerPos: (playerPositions: PlayerPos[]) => void;
   prevList: PlayerPos[];
 }
 
@@ -27,7 +27,6 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      {/* ✅ 검색 입력창 */}
       <TextField
         fullWidth
         placeholder="search"
@@ -38,10 +37,10 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
         sx={{
           marginBottom: 2,
           "& .MuiOutlinedInput-root": {
-            color: "white", // ✅ 입력 텍스트 색
+            color: "white",
             "& input::placeholder": {
-              color: "gray", // ✅ placeholder 색
-              opacity: 1, // ✅ 일부 브라우저에서 회색 제대로 보이게
+              color: "gray",
+              opacity: 1,
             },
             "& fieldset": {
               borderColor: "gray",
@@ -63,7 +62,6 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
           maxHeight: "auto",
         }}
       >
-        {/* ✅ 필터링된 포지션 리스트 */}
         {filteredPositions.map((playerPos) => {
           const posColor = getPosColor(playerPos.code);
           return (
@@ -91,14 +89,6 @@ const PlayerPosModal: React.FC<PlayerPosModalProps> = ({
           );
         })}
       </Box>
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        onClick={onClose}
-        sx={{ marginLeft: 1 }}
-      >
-        close
-      </Button> */}
     </Box>
   );
 };

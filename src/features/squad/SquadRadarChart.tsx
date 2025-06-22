@@ -1,4 +1,4 @@
-import { useEffect, useId } from "react";
+import { useId } from "react";
 import {
   BarChart,
   Bar,
@@ -11,10 +11,6 @@ import {
 import { type BarRectangleItem } from "recharts/types/cartesian/Bar";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
-
-// interface SquadBarChartProps {
-//   players: Record<number, Player | null>;
-// }
 
 const SquadBarChart: React.FC = () => {
   const {

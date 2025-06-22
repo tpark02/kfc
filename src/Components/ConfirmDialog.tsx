@@ -32,8 +32,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       onClose={onCancel}
       PaperProps={{
         sx: {
-          width: "50vw", // or use percentages like "80vw"
-          height: "auto", // or "auto" for dynamic height
+          width: "50vw", 
+          height: "auto",
           borderRadius: 2,
         },
       }}
@@ -42,7 +42,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         sx={{
           background: "#333",
           color: "yellow",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.1)", // subtle hint line
+          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
           textAlign: "center",
         }}
       >

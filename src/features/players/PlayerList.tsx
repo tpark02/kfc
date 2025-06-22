@@ -1,4 +1,3 @@
-// src/components/PlayerList.tsx
 import { useNavigate } from "react-router-dom";
 import { Player } from "../../types/player";
 import { getPlayerStatDisplay } from "../../style/playerStyle";
@@ -26,7 +25,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
     }),
     shallow
   );
-  const showConfirmDialog = useConfirmDialogStore.getState().showConfirm;  
+  const showConfirmDialog = useConfirmDialogStore.getState().showConfirm;
   const { error, reload } = useLoadingMyCoin(myUserId);
 
   return (
@@ -44,7 +43,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
               padding: "10px",
             }}
           >
-            {/* <div style={{ display: "flex" }}> */}
             <div
               className="player-row"
               onClick={() =>
@@ -52,7 +50,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
               }
             >
               <div className="player-name">{repo.name}</div>
-              {/* <div className="player-cell">{repo.age}</div> */}
               <div className="player-cell" style={{ color: posColor }}>
                 {repo.pos}
               </div>
@@ -74,7 +71,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
               <div className="player-cell">
                 {getPlayerStatDisplay("PAC", repo.pac)}
               </div>
-
               <div className="player-cell">
                 {getPlayerStatDisplay("PHY", repo.phy)}
               </div>
@@ -84,7 +80,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
               <div className="player-cell">
                 {getPlayerStatDisplay("Price", repo.price)}
               </div>
-            </div>{" "}
+            </div>
             <Button
               variant="text"
               onClick={async () => {
@@ -93,7 +89,6 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
                   `Do you want to purchase ?\n`,
                   repo.name,
                   async () => {
-                    // ✅ onConfirm logic
                     const res = await buyPlayer(myUserId, repo.id);
                     if (res.updatedMyPlayers.length > 0)
                       setMySelectedPlayers(res.updatedMyPlayers);
@@ -106,28 +101,9 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
             >
               Recruit
             </Button>
-            {/* </div> */}
-            {/* <div className="player-row bottom-row">
-              <div className="player-cell" style={{ visibility: "hidden" }}>
-                placeholder
-              </div>
-              <div className="player-cell" style={{ visibility: "hidden" }}>
-                {repo.height}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("DRI", repo.dri)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("DEF", repo.def)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("PHY", repo.phy)}
-              </div>
-            </div> */}
           </div>
         );
       })}
-      {/* </div> */}
     </>
   );
 };

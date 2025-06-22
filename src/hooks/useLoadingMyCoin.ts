@@ -5,10 +5,10 @@ import { isLoggedIn } from "../types/auth";
 
 export const useLoadingMyCoin = (userId: number | null) => {
   const [error, setError] = useState<string | null>(null);
-  const [reloadTrigger, setReloadTrigger] = useState(0); // 🆕 trigger state
+  const [reloadTrigger, setReloadTrigger] = useState(0); 
   const setters = useSquadSetters();
 
-  const reload = () => setReloadTrigger((prev) => prev + 1); // 🆕 trigger function
+  const reload = () => setReloadTrigger((prev) => prev + 1); 
 
   useEffect(() => {
     if (!userId || !isLoggedIn()) return;
@@ -26,7 +26,7 @@ export const useLoadingMyCoin = (userId: number | null) => {
     };
 
     load();
-  }, [userId, reloadTrigger]); // 🆕 reloadTrigger dependency
+  }, [userId, reloadTrigger]); 
 
-  return { error, reload }; // 🆕 return reload function
+  return { error, reload }; 
 };

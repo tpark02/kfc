@@ -13,7 +13,7 @@ import PlayerList from "./PlayerList";
 import Filters from "./Filter";
 import FilterModal from "../../modal/filterModal";
 import { fetchPlayers } from "../../api/playerApi";
-import { Box, Button, Select, TextField } from "@mui/material";
+import { Box, Button, Select, TextField, MenuItem } from "@mui/material";
 import "../../style/Player.css";
 
 export const Players: React.FC = () => {
@@ -48,11 +48,10 @@ export const Players: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchPage(0, searchTerm, "OVR_DESC"); // 초기 첫 페이지
+    fetchPage(0, searchTerm, "OVR_DESC");
   }, []);
 
   useEffect(() => {
-    // setMyUserId(1); // 임시 user id
     console.log("setting user id:", myUserId);
   }, []);
 
@@ -100,31 +99,28 @@ export const Players: React.FC = () => {
       selectedPosition
     );
   };
+
   return (
     <Box className="player-list">
       <Box className="search-bar">
-        {/* <Box className="left-group"> */}
         <TextField
           type="text"
           placeholder="name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{
-            height: "38px", // outer wrapper
+            height: "38px",
             "& .MuiInputBase-root": {
-              height: "100%", // force input base to match
+              height: "100%",
             },
             "& input": {
-              padding: "0 14px", // optional: reduce vertical padding
+              padding: "0 14px",
             },
           }}
         />
         <Button onClick={handleSearch} variant="contained">
           Search
         </Button>
-        {/* </Box> */}
-
-        {/* <Box className="right-group"> */}
         <Select
           id="sortType"
           value={sortType}
@@ -134,8 +130,6 @@ export const Players: React.FC = () => {
               | "OVR_ASC"
               | "RANK_DESC"
               | "RANK_ASC";
-            // | "AGE_ASC"
-            // | "AGE_DESC";
             setSortType(newSort);
             fetchPage(
               0,
@@ -148,34 +142,29 @@ export const Players: React.FC = () => {
             );
           }}
           sx={{
-            height: "38px", // outer wrapper
+            height: "38px",
             "& .MuiInputBase-root": {
-              height: "100%", // force input base to match
+              height: "100%",
             },
             "& input": {
-              padding: "0 14px", // optional: reduce vertical padding
+              padding: "0 14px",
             },
           }}
         >
-          <option value="OVR_DESC">ovr desc</option>
-          <option value="OVR_ASC">ovr asc</option>
-          <option value="RANK_DESC">rank desc</option>
-          <option value="RANK_ASC">rank asc</option>
-          {/* <option value="AGE_DESC">age desc</option>
-          <option value="AGE_ASC">age asc</option> */}
+          <MenuItem value="OVR_DESC">ovr desc</MenuItem>
+          <MenuItem value="OVR_ASC">ovr asc</MenuItem>
+          <MenuItem value="RANK_DESC">rank desc</MenuItem>
+          <MenuItem value="RANK_ASC">rank asc</MenuItem>
         </Select>
 
         <Button onClick={() => setModalOpen(true)} variant="contained">
           Filter
         </Button>
-        {/* </Box> */}
       </Box>
 
       <FilterModal
         isOpen={isModalOpen}
-        onClose={() => {
-          handleClose();
-        }}
+        onClose={handleClose}
         onSelectCountry={(newCountryList) => {
           setSelectedCountries(newCountryList);
           fetchPage(
@@ -231,7 +220,6 @@ export const Players: React.FC = () => {
         prevplayerPositionList={selectedPosition}
       />
 
-      {/* 🧾 Filter  */}
       <Filters
         selectedCountries={selectedCountries}
         selectedTeams={selectedTeams}
@@ -245,10 +233,8 @@ export const Players: React.FC = () => {
         setSelectedLeagues={setSelectedLeagues}
         setSelectedPosition={setSelectedPosition}
       />
-      {/* 🧾 Player Table */}
       <PlayerList players={players} />
 
-      {/* 📄 Pagination */}
       <Box style={{ marginTop: "16px", textAlign: "center" }}>
         {(() => {
           const maxButtons = 10;
@@ -258,7 +244,6 @@ export const Players: React.FC = () => {
           let start = Math.max(0, currentPage - Math.floor(maxButtons / 2));
           const end = Math.min(totalPages, start + maxButtons);
 
-          // 마지막에 걸칠 때 start 보정
           if (end - start < maxButtons) {
             start = Math.max(0, end - maxButtons);
           }
@@ -270,7 +255,6 @@ export const Players: React.FC = () => {
 
           return (
             <>
-              {/* ◀ 이전 버튼 */}
               {currentPage > 0 && (
                 <Button
                   onClick={() =>
@@ -290,7 +274,6 @@ export const Players: React.FC = () => {
                 </Button>
               )}
 
-              {/* 페이지 번호 버튼 */}
               {visiblePages.map((page) => (
                 <Button
                   key={page}
@@ -315,7 +298,6 @@ export const Players: React.FC = () => {
                 </Button>
               ))}
 
-              {/* ▶ 다음 버튼 */}
               {currentPage < totalPages - 1 && (
                 <Button
                   onClick={() =>

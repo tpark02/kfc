@@ -13,7 +13,6 @@ function getMaxClubCount(players: { [index: number]: MyPlayer | null }) {
   return maxCount * 10;
 }
 
-// Position multipliers
 const POSITION_MULTIPLIER = Object.freeze({
   GK: 0.9,
   CB: 1.0,
@@ -30,15 +29,10 @@ const POSITION_MULTIPLIER = Object.freeze({
   CF: 1.25,
 });
 
-// Estimate value function
 function estimateValue(player: MyPlayer) {
   const baseValue = Math.pow(player.ovr, 2);
   const multiplier =
     POSITION_MULTIPLIER[player.pos as keyof typeof POSITION_MULTIPLIER] || 1.0;
-
-  // console.log(
-  //   `estimating: ${player.name} / pos=${player.pos} / ovr=${player.ovr}`
-  // );
 
   return Math.round(baseValue * multiplier);
 }

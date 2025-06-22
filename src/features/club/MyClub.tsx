@@ -25,7 +25,6 @@ const MyClub: React.FC = () => {
     myUserId,
     myClubs,
     myFormation,
-    // dropPlayers,
     myTeamOvr,
     myTeamSquadValue,
     myTeamAge,
@@ -35,10 +34,8 @@ const MyClub: React.FC = () => {
     myTeamAttack,
     myTeamStamina,
 
-    // setMyTeamName,
     setMySelectedClubId,
     setMySelectedPlayers,
-    // setDropPlayers,
     setMyTeamOvr,
     setMyTeamSquadValue,
     setMyTeamAge,
@@ -67,10 +64,8 @@ const MyClub: React.FC = () => {
       myTeamAttack: s.myTeamAttack,
       myTeamStamina: s.myTeamStamina,
 
-      // setMyTeamName: s.setMyTeamName,
       setMySelectedClubId: s.setMySelectedClubId,
       setMySelectedPlayers: s.setMySelectedPlayers,
-      // setDropPlayers: s.setDropPlayers,
       setMyTeamOvr: s.setMyTeamOvr,
       setMyTeamSquadValue: s.setMyTeamSquadValue,
       setMyTeamAge: s.setMyTeamAge,
@@ -146,7 +141,7 @@ console.log("7");
     if (!pendingUpdate) return;
 
     const updated = myClubs;
-    const playersSnapshot = [...mySelectedPlayers]; // ✅ 복사하여 안전하게 사용
+    const playersSnapshot = [...mySelectedPlayers];
     console.log("player snapshot", playersSnapshot);
 
     handleUpdateClub(1, playersSnapshot);
@@ -301,12 +296,10 @@ console.log("7");
             <Button
               sx={{
                 flex: 1,
-                // outline: "1px solid gray",
                 minWidth: 0,
                 padding: 0,
                 color: "white",
               }}
-              // disabled={!club}
               onClick={() => {
                 useLoadingSpinnerStore.getState().setIsLoading(true);
                 if (myClubs?.clubId) {
@@ -338,7 +331,6 @@ console.log("7");
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />
-      {/* Snackbar for validation messages */}
     </div>
   );
 };

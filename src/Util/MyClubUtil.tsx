@@ -5,7 +5,6 @@ import { MyPlayer } from "../types/player";
 import { totalNumberOfPlayers } from "../types/team";
 import { UserInfoResponse, SeasonResponse } from "../types/response";
 
-// ✅ 공통 에러 처리 함수
 const handleApiError = (error: unknown, context: string): string => {
   if (isAxiosError(error)) {
     console.error(`🔥 Axios Error in ${context}:`, error.response?.data);
@@ -18,7 +17,6 @@ const handleApiError = (error: unknown, context: string): string => {
   }
 };
 
-// ✅ 유저 정보
 export const fetchUserInfo = async (
   userId: number
 ): Promise<UserInfoResponse | null> => {
@@ -33,7 +31,6 @@ export const fetchUserInfo = async (
   }
 };
 
-// ✅ 시즌 정보
 export const fetchSeasonInfo = async (seasonId: string) => {
   try {
     const res = await axiosInstance.get<SeasonResponse>(
@@ -59,7 +56,6 @@ export const fetchMyClubs = async (
   }
 };
 
-// ✅ 클럽 삭제
 export const deleteMyClub = async (
   userId: number,
   clubId: number
@@ -72,7 +68,6 @@ export const deleteMyClub = async (
   }
 };
 
-// ✅ OVR 계산 유틸
 export const adjustTeamOvr = (myPlayer: MyPlayer[]): number =>
   Math.floor(
     myPlayer.reduce(
@@ -93,7 +88,6 @@ export const getOvrIndicator = (
 export const getTeamOvrIndicator = (a: number, b: number): string =>
   a === b ? "⚪" : a < b ? "🔴🔻" : "🟢🔺";
 
-// ✅ 클럽 업데이트
 export const updateMyClub = async (
   myNation: string,
   myLogoId: number,

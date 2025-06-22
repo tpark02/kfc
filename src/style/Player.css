@@ -2,9 +2,6 @@
   width: 100%;
   max-width: 900px;
   margin: auto;
-  /* margin: 10px auto; */
-  /* box-sizing: border-box;   */
-  /* outline: 1px solid white; */
 }
 
 .player-table {
@@ -20,8 +17,6 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  
-  /* outline: 1px solid red; */
 }
 
 .player-img {
@@ -34,14 +29,12 @@
 .player-name {
   width: 200px;
   text-align: left;
-  /* outline: 1px solid white; */
 }
 
 .player-cell {
   width: 60px;
   color: #fff;
   flex-wrap: wrap;
-  /* outline: 1px solid white; */
 }
 
 .player-card:hover {
@@ -70,30 +63,8 @@
   align-items: center;
   margin-bottom: 1rem;
   gap: 12px;
-  /* border-radius: 8px; */
-  /* outline: 1px solid gray; */
 }
 
-/* .left-group,
-.right-group {
-  display: flex;
-  align-items: center;  
-  flex-wrap: wrap;
-} */
-
-/* .search-bar .left-group input {
-  width: 200px;
-  flex: none;
-}
-
-.search-bar .left-group button,
-.search-bar .right-group select,
-.search-bar .right-group button {
-  width: 100px;
-  flex: none;
-} */
-
-/* --- Player Spec --- */
 .player-spec {
   padding: 20px;
   max-width: 600px;

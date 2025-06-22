@@ -43,17 +43,6 @@ const LandingPage: React.FC = () => {
         and dominate the league.
       </Typography>
       <Box sx={{display:"flex", gap:4}}>
-        {/* <Button
-          variant="contained"
-          size="large"
-          sx={{
-            paddingX: 4,
-            paddingY: 1,
-          }}
-          onClick={() => (window.location.href = "/signup")}
-        >
-          Log In
-        </Button> */}
         <Button
           variant="contained"
           size="large"

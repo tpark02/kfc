@@ -224,7 +224,7 @@ export const fetchPlayers = async (
 };
 
 export const myPlayerToPlayer = (myPlayer: MyPlayer): Player => ({
-  id: myPlayer.playerId, // MyPlayer에는 playerId가 따로 존재
+  id: myPlayer.playerId,
   idx: myPlayer.idx,
   rank: myPlayer.rank,
   name: myPlayer.name,
@@ -299,7 +299,7 @@ export const playerToMyPlayer = (
   id: number,
   ovr: number
 ): MyPlayer => ({
-  id: id, // You may want to generate or assign a real id here
+  id: id,
   userId,
   playerId: player.id,
   clubId,

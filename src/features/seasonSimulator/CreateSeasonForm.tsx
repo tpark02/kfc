@@ -40,7 +40,6 @@ export default function CreateSeasonForm({
 
         useSnackbarStore.getState().setSnackbar(response.data.msg);
 
-        // ✅ 성공한 시즌으로 이동
         navigate(`/season/${response.data.id}`);
       } else {
         useSnackbarStore.getState().setSnackbar(response.data.error);
@@ -57,8 +56,6 @@ export default function CreateSeasonForm({
 
     setName("");
   };
-
-  // const isdRedCard = selectedMyPlayers.slice(0, 10).some((p) => p.redCard > 0);
 
   return (
     <div className="flex gap-2 my-4">

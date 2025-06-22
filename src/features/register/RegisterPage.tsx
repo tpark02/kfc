@@ -253,14 +253,12 @@ const Register: React.FC = () => {
       <Box
         sx={{
           display: "flex",
-          // justifyContent: "center",
           alignContent: "center",
           flexDirection: "column",
           width: "40vw",
           height: "60vh",
           borderRadius: 2,
           boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
-          // outline: "1px solid red",
         }}
       >
         <Box sx={{ backgroundColor: theme.palette.navbar.main }}>

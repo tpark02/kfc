@@ -14,7 +14,7 @@ instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (
     token &&
-    config.url !== "/api/signup" && // 예외 처리
+    config.url !== "/api/signup" && // Exception handling
     config.url !== "/api/login"
   ) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -27,9 +27,9 @@ instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
-      console.warn("🔒 인증 에러. 다시 로그인해야 합니다.");
+      console.warn("🔒 Authentication error. You need to log in again.");
       localStorage.removeItem("token");
-      window.location.href = "/login"; // 강제 이동
+      window.location.href = "/login"; // Force redirect
     }
     return Promise.reject(error);
   }

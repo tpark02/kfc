@@ -43,7 +43,6 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      {/* ✅ 검색 입력창 */}
       <TextField
         fullWidth
         placeholder="search"
@@ -54,10 +53,10 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
         sx={{
           marginBottom: 2,
           "& .MuiOutlinedInput-root": {
-            color: "white", // ✅ 입력 텍스트 색
+            color: "white",
             "& input::placeholder": {
-              color: "gray", // ✅ placeholder 색
-              opacity: 1, // ✅ 일부 브라우저에서 회색 제대로 보이게
+              color: "gray",
+              opacity: 1,
             },
             "& fieldset": {
               borderColor: "gray",
@@ -72,7 +71,6 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
         }}
       />
 
-      {/* ✅ 리그 리스트 */}
       {filteredLeagues.map((league) => (
         <Box
           className="filter-box"
@@ -98,25 +96,16 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
               width: "8%",
               height: "8%",
               marginRight: 8,
-              backgroundColor: "white", // ✅ add white background
+              backgroundColor: "white",
             }}
             onError={(e) => {
-              e.currentTarget.onerror = null; // 무한 루프 방지
-              e.currentTarget.src = "../../img/fallback.png"; // 대체 이미지 경로
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "../../img/fallback.png";
             }}
           />
           <Typography>{league.name}</Typography>
         </Box>
       ))}
-      {/* ✅ 취소 버튼 */}
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        onClick={onClose}
-        sx={{ marginLeft: 1 }}
-      >
-        close
-      </Button> */}
     </Box>
   );
 };

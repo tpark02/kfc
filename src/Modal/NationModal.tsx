@@ -7,13 +7,12 @@ import { Country } from "../types/country";
 interface NationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectCountry: (countries: Country[]) => void; // 배열 전달
-  prevList: Country[]; // 👈 기존 선택된 목록 받기
+  onSelectCountry: (countries: Country[]) => void;
+  prevList: Country[];
 }
 
 const NationModal: React.FC<NationModalProps> = ({
   isOpen,
-  onClose,
   onSelectCountry,
   prevList,
 }) => {
@@ -35,7 +34,6 @@ const NationModal: React.FC<NationModalProps> = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      {/* ✅ 검색 입력창 */}
       <TextField
         fullWidth
         placeholder="search"
@@ -46,10 +44,10 @@ const NationModal: React.FC<NationModalProps> = ({
         sx={{
           marginBottom: 2,
           "& .MuiOutlinedInput-root": {
-            color: "white", // ✅ 입력 텍스트 색
+            color: "white",
             "& input::placeholder": {
-              color: "gray", // ✅ placeholder 색
-              opacity: 1, // ✅ 일부 브라우저에서 회색 제대로 보이게
+              color: "gray",
+              opacity: 1,
             },
             "& fieldset": {
               borderColor: "gray",
@@ -64,7 +62,6 @@ const NationModal: React.FC<NationModalProps> = ({
         }}
       />
 
-      {/* ✅ 필터링된 국가 리스트 */}
       {filteredCountries.map((country) => (
         <Box
           className="filter-box"
@@ -90,7 +87,7 @@ const NationModal: React.FC<NationModalProps> = ({
               width: "8%",
               height: "8%",
               marginRight: 8,
-              backgroundColor: "white", // ✅ add white background
+              backgroundColor: "white",
             }}
             onError={(e) => {
               e.currentTarget.onerror = null;
@@ -100,15 +97,6 @@ const NationModal: React.FC<NationModalProps> = ({
           <Typography variant="body2">{country.name}</Typography>
         </Box>
       ))}
-
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        onClick={onClose}
-        style={{ marginTop: 1 }}
-      >
-        close
-      </Button> */}
     </Box>
   );
 };

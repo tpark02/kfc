@@ -9,16 +9,6 @@
   background-color: var(--background-color);
 }
 
-/* .squad-formation {
-  flex: 1 1 50%;
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  height: 900px;
-} */
-
 .squad-formation {
   width: 100%;
   height: auto;
@@ -27,29 +17,6 @@
   justify-content: center;
   align-items: stretch;
 }
-
-/* .squad-team,
-.squad-overview {
-  flex: 1 1 25%;
-  width: 90%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}*/
-
-/* .squad-overview {
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-} */
-
-/* .button-group {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-} */
 
 .squad-team-player {
   display: flex;
@@ -62,7 +29,6 @@
 .squad-player {
   background-color: #007bff;
   border-radius: 8px !important;
-  /* ✅ force square */
   color: white;
   display: flex;
   justify-content: center;
@@ -110,14 +76,14 @@
   justify-content: center;
   align-items: center;
   width: 90%;
-  height: auto;  
-  outline: 1px solid gray;  
+  height: auto;
+  outline: 1px solid gray;
 }
 
 @media (max-width: 1000px) {
   .squad-container {
     flex-wrap: wrap;
-    /* ✅ 모바일: 줄바꿈 허용 */
+    /* Mobile: allow line breaks */
   }
 
   .squad-overview,

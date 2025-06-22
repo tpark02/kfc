@@ -41,7 +41,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
   indexRef.current = index;
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: "PLAYER",
-    item: () => ({ index: indexRef.current }), // ✅ 항상 최신 index 제공
+    item: () => ({ index: indexRef.current }),
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -56,7 +56,6 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
     },
   });
 
-  // if (!player || player.name === "dummy") return null;
   const posColor = getPosColor(player.pos);
   const [firstName, lastName] = player.name.split(" ");
 
@@ -96,7 +95,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
           backgroundColor: "red",
           color: "#fff",
           "&:hover": {
-            backgroundColor: "#2a2e35 !important", // ✅ Override hover
+            backgroundColor: "#2a2e35 !important",
           },
         }}
       >
@@ -104,7 +103,6 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
           ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
           sx={rowStyle}
         >
-          {/* <Box sx={rowStyle}> */}
           <Typography variant="body2" component="span" sx={posStyle(posColor)}>
             {player.pos}
           </Typography>
@@ -128,7 +126,6 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
   } else {
     return player.name === "dummy" ? (
       <Box
-        // ref={(node: HTMLDivElement | null) => dragRef(dropRef(node))}
         sx={outerCardStyle(isDragging)}
       >
         <Box sx={{ ...rowStyle }}>
@@ -152,10 +149,10 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
         }
         sx={{
           ...outerCardStyle(isDragging),
-          backgroundColor: "#1b1f26 !important", // ✅ Force override
+          backgroundColor: "#1b1f26 !important", 
           color: "#fff",
           "&:hover": {
-            backgroundColor: "#2a2e35 !important", // ✅ Override hover
+            backgroundColor: "#2a2e35 !important",
           },
         }}
       >

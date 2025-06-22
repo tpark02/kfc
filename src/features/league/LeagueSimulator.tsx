@@ -17,7 +17,6 @@ const LeagueSimulator = () => {
     mySelectedClubId,
     mySelectedPlayers,
     matches,
-    // myTeamName,
     setMatches,
   } = useSquadStore(
     (s) => ({
@@ -26,11 +25,11 @@ const LeagueSimulator = () => {
       mySelectedClubId: s.mySelectedClubId,
       mySelectedPlayers: s.mySelectedPlayers,
       matches: s.matches,
-      // myTeamName: s.myTeamName,
       setMatches: s.setMatches,
     }),
     shallow
   );
+
   const { error, reload } = useLoadingMyCoin(myUserId);
 
   useEffect(() => {
@@ -53,7 +52,7 @@ const LeagueSimulator = () => {
     const players = mySelectedPlayers;
 
     if (players.length === 0) {
-      console.log("선수가 없습니다.");
+      console.log("No players selected.");
       return;
     }
 
@@ -65,7 +64,7 @@ const LeagueSimulator = () => {
       }
       reload();
     } catch (err) {
-      console.error("❌ 경기 일정 불러오기 실패:", err);
+      console.error("❌ Failed to load match schedule:", err);
     } finally {
       useLoadingSpinnerStore.getState().setIsLoading(false);
     }
@@ -97,7 +96,6 @@ const LeagueSimulator = () => {
         </Grid>
       </Grid>
     </div>
-    // </div>
   );
 };
 

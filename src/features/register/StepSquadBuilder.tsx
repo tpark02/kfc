@@ -1,6 +1,6 @@
 // ✅ Step 3: StepSquadBuilder.tsx
 import React from "react";
-import { Button, Box, Grid, Divider } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import SquadBuilder from "../squad/SquadBuilder";
 import SquadMetrics from "../squad/SquadMetrics";
 import SelectFormation from "../squad/SelectFormation";
@@ -46,11 +46,6 @@ const StepSquadBuilder: React.FC = () => {
         <Grid item xs={12} md={8}>
           <SquadBuilder
             selectedFormation={myFormation as keyof typeof formations}
-            // setSelectedDropZone={setSelectedDropZone}
-            // setIsDropZoneSelected={setIsDropZoneSelected}
-            // setPosition={setSelectedPosition}
-            // searchPlayerRef={listRef}
-            // selectedDropZone={selectedDropZone}
           />
         </Grid>
         <Grid
@@ -72,9 +67,10 @@ const StepSquadBuilder: React.FC = () => {
             return (
               <DraggableAndDroppablePlayerCard
                 key={`starter-${player.id}-${index}`}
-                index={index} // ✅ 추가
+                index={index}
                 player={player}
                 onSwap={handleSwapPlayers}
+                isDelete={false}
               />
             );
           })}
@@ -86,22 +82,14 @@ const StepSquadBuilder: React.FC = () => {
 
             return (
               <DraggableAndDroppablePlayerCard
-                key={`bench-${player.id}-${index}`} // ✅ index 함께 사용!
-                index={11 + index} // ✅ bench는 offset 줘야 돼
+                key={`bench-${player.id}-${index}`}
+                index={11 + index}
                 player={player}
                 onSwap={handleSwapPlayers}
+                isDelete={false}
               />
             );
           })}
-          {/* <Button
-            onClick={() => {
-              const reversed = [...mySelectedPlayers].reverse();
-              reversed.forEach((p, i) => (p.idx = i));
-              setMySelectedPlayers([...reversed]);
-            }}
-          >
-            테스트로 뒤집기
-          </Button> */}
         </Grid>
       </Grid>
     </Box>

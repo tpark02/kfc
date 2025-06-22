@@ -9,7 +9,7 @@ interface CroppedAvatarProps {
   offsetY?: number;
   borderRadius?: string;
   selected?: boolean;
-  scale?: number; // 추가: 이미지 크기 조정 비율
+  scale?: number;
   fallbackSrc: string;
   fallBackWidth: number;
   fallBackHeight: number;
@@ -24,7 +24,7 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   fallbackSrc = "/img/avatar.jpg",
   fallBackWidth = 0,
   fallBackHeight = 0,
-  aspectRatio = 1, // 👈 default to square
+  aspectRatio = 1,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [finalSrc, setFinalSrc] = useState<string>("");
@@ -48,7 +48,6 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
     };
   }, [src]);
 
-  // 💡 Calculate both dimensions based on aspectRatio
   const finalWidth =
     width ?? (height && aspectRatio ? height * aspectRatio : 80);
   const finalHeight =
@@ -57,9 +56,6 @@ const CroppedAvatar: React.FC<CroppedAvatarProps> = ({
   return (
     <div
       style={{
-        // overflow: "hidden",
-        // borderRadius,
-        // position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

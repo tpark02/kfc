@@ -55,11 +55,9 @@ const Filters: React.FC<FilterProps> = ({
           flexWrap="wrap"
           useFlexGap
           sx={{
-            width: "100%", // ✅ app-container 기준
-            maxWidth: "100%", // ✅ 절대 넘치지 않게
+            width: "100%", 
+            maxWidth: "100%",
             margin: "10px",
-            // marginLeft: 5,
-            // marginBottom: 2,
           }}
         >
           {selectedCountries.map((country) => (
@@ -97,7 +95,7 @@ const Filters: React.FC<FilterProps> = ({
             </Button>
           ))}
 
-          {/* ✅ 팀 필터 */}
+          {/* ✅ Team filter */}
           {selectedTeams.map((team) => (
             <Button
               key={team.id}
@@ -126,7 +124,7 @@ const Filters: React.FC<FilterProps> = ({
             </Button>
           ))}
 
-          {/* ✅ 리그 필터 */}
+          {/* ✅ League filter */}
           {selectedLeagues.map((league) => (
             <Button
               key={league.id}
@@ -158,7 +156,7 @@ const Filters: React.FC<FilterProps> = ({
             </Button>
           ))}
 
-          {/* ✅ 포지션 필터 */}
+          {/* ✅ Position filter */}
           {selectedPosition.map((position) => (
             <Button
               key={position.code}

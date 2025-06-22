@@ -34,10 +34,8 @@ const LeagueOpponentTeam: React.FC = () => {
     <>
       <Box
         style={{
-          // outline: "1px solid blue",
-          // minWidth: "300px", // ✅ prevent items from becoming too small
-          flex: "1 1 30%", // ✅ flexible but constrained
-          maxWidth: "100%", // ✅ responsive on shrink
+          flex: "1 1 30%", 
+          maxWidth: "100%",
           display: "flex",
           flexDirection: "column",
           width: "100%",
@@ -45,8 +43,7 @@ const LeagueOpponentTeam: React.FC = () => {
         }}
       >
         <Box
-          style={{
-            // minWidth: "300px",
+          style={{            
             flex: "1 1 30%",
             maxWidth: "100%",
             display: "flex",
@@ -56,19 +53,6 @@ const LeagueOpponentTeam: React.FC = () => {
           }}
         >
           <Box className="squad-metrics-section">
-            {/* <img
-              src={hoveredMatch?.teamImg || "../../../img/fallback.png"}
-              style={{
-                width: "200px",
-                height: "200px",
-                // outline: "1px solid gray",
-                borderRadius: "8px",
-              }}
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = "../../../img/fallback.png";
-              }}
-            /> */}
             <CroppedAvatar
               src={selectedMatch?.teamImg ?? "../../../img/fallback.png"}
               fallbackSrc={"../../../img/fallback.png"}
@@ -115,10 +99,10 @@ const LeagueOpponentTeam: React.FC = () => {
                       }
                       sx={{
                         ...outerCardStyle(false),
-                        backgroundColor: "#1b1f26 !important", // ✅ Force override
+                        backgroundColor: "#1b1f26 !important",
                         color: "#fff",
                         "&:hover": {
-                          backgroundColor: "#2a2e35 !important", // ✅ Override hover
+                          backgroundColor: "#2a2e35 !important",
                         },
                       }}
                     >

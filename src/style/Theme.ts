@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material/styles";
 
-// ✅ Extend MUI types to support `navbar` in palette
 declare module "@mui/material/styles" {
   interface Palette {
     navbar: {
@@ -30,8 +29,8 @@ const steamTheme = createTheme({
       secondary: "#c7d5e0",
     },
     navbar: {
-      main: "#1b2838", // ✅ More distinct navbar color
-    } as any, // <-- required for TS compatibility
+      main: "#1b2838", 
+    } as any, 
   },
   components: {
     MuiTextField: {
@@ -68,9 +67,9 @@ const steamTheme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color: "#c7d5e0", // text.secondary
+          color: "#c7d5e0",
           "&.Mui-focused": {
-            color: "#00adee", // primary.main
+            color: "#00adee",
           },
         },
       },

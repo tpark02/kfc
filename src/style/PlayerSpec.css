@@ -150,7 +150,7 @@
 @media (max-width: 1000px) {
   .player-basic-info {
     flex-wrap: wrap;
-    /* ✅ 모바일: 줄바꿈 허용 */
+    /* Mobile: allow line breaks */
   }
 }
 /* 🔁 When screen is below 768px, switch to 2 columns */

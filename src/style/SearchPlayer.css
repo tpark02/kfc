@@ -1,7 +1,7 @@
 .search-player-root {
   display: flex;
   flex-direction: column;
-  align-items: center;  
+  align-items: center;
   /* max-height: 900px; */
 }
 
@@ -10,10 +10,10 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: stretch;
-  /* 자식들의 height를 맞추기 위해 stretch */
+  /* Use stretch to align children's heights  */
   justify-content: space-evenly;
   width: 98%;
-  height: auto;  
+  height: auto;
   /* outline: 1px solid yellow; */
 }
 
@@ -24,16 +24,12 @@
   justify-content: center;
   width: 100%;
   height: auto;
-  /* min-height: 100px; */
-  /* border-radius: 8px; */
-  /* margin: 0 0 10px 0; */
-  /* outline: 1px solid gray; */
 }
 
 #search-player-list {
   display: flex;
-  flex-direction: column;    
-  overflow-y: auto;    
+  flex-direction: column;
+  overflow-y: auto;
   /* outline: 1px solid red; */
 }
 
