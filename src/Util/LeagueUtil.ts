@@ -4,7 +4,7 @@ import { Match } from "../types/match";
 export const fetchSchedule = async (userid: number, clubid: number) => {
   try {
     const response = await axiosInstance.post<Match[]>(
-      "/simulate/generate-schedule",
+      "/api/simulations/schedule",
       {
         userId: userid,
         clubId: clubid,

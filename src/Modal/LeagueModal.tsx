@@ -22,7 +22,7 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
 
   useEffect(() => {
     axiosInstance
-      .get<LeaguePage>("/leagues")
+      .get<LeaguePage>("/api/leagues")
       .then((response) => {
         setLeagues(response.data.content);
       })

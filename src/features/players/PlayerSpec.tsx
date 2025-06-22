@@ -28,7 +28,7 @@ const PlayerSpec: React.FC = () => {
 
   useEffect(() => {
     axiosInstance
-      .get<TeamPage>("/teams")
+      .get<TeamPage>("/api/teams")
       .then((response) => {
         console.log(response.data.content);
         setTeams(response.data.content);

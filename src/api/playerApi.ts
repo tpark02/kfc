@@ -18,6 +18,6 @@ interface FetchPlayerParams {
 }
 
 export const fetchPlayers = async (params: FetchPlayerParams): Promise<ResponsePlayerPage> => {
-  const response = await axiosInstance.post<ResponsePlayerPage>("/players", params);
+  const response = await axiosInstance.post<ResponsePlayerPage>("/api/players", params);
   return response.data;
 };

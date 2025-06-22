@@ -22,7 +22,7 @@ const TeamModal: React.FC<TeamModalProps> = ({
 
   useEffect(() => {
     axiosInstance
-      .get<TeamPage>("/teams")
+      .get<TeamPage>("/api/teams")
       .then((response) => {
         setTeams(response.data.content);
       })

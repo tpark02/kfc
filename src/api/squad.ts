@@ -11,6 +11,6 @@ export const fetchRandomSquad = async (data: {
   clubs: Team[];
   userId: number;
 }): Promise<ResponseRandomSquad> => {
-  const response = await axiosInstance.post("/randomteam", data);
+  const response = await axiosInstance.post("/api/teams/random", data);
   return response.data;
 };

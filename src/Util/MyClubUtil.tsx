@@ -21,24 +21,10 @@ export const fetchUserInfo = async (
   userId: number
 ): Promise<UserInfoResponse | null> => {
   try {
-    const res = await axiosInstance.post<UserInfoResponse>("/api/userInfo", {
-      userId,
-    });
+    const res = await axiosInstance.get<UserInfoResponse>(`/api/users/${userId}`);
     return res.data;
   } catch (err) {
     handleApiError(err, "fetchUserInfo");
-    return null;
-  }
-};
-
-export const fetchSeasonInfo = async (seasonId: string) => {
-  try {
-    const res = await axiosInstance.get<SeasonResponse>(
-      `/season/getSeason/${seasonId}`
-    );
-    return res.data;
-  } catch (err) {
-    handleApiError(err, "fetchSeasonInfo");
     return null;
   }
 };
@@ -47,7 +33,7 @@ export const fetchMyClubs = async (
   userId: number
 ): Promise<MyClubData | null> => {
   try {
-    const res = await axiosInstance.get(`/users/${userId}/myclubs`);
+    const res = await axiosInstance.get(`/api/users/${userId}/clubs`);
     console.log("fetch my club - ", res.data);
     return res.data;
   } catch (error) {
@@ -61,7 +47,7 @@ export const deleteMyClub = async (
   clubId: number
 ): Promise<string> => {
   try {
-    const res = await axiosInstance.delete(`/deletemyclub/${userId}/${clubId}`);
+    const res = await axiosInstance.delete(`/api/users/${userId}/clubs/${clubId}`);
     return res.data;
   } catch (error) {
     return handleApiError(error, "deleteMyClub");
@@ -123,7 +109,7 @@ export const updateMyClub = async (
       myTeamClubCohesion,
       myTeamStamina,
     });
-    const res = await axiosInstance.put(`/updatemyclub/${userId}/${clubId}`, {
+    const res = await axiosInstance.put(`/api/users/${userId}/clubs/${clubId}`, {
       myNation: myNation,
       myLogoId: myLogoId,
       clubName: newClubName,
@@ -150,7 +136,7 @@ export const updatePlayer = async (
 ): Promise<string> => {
   try {
     console.log("user id", userId, "idx", idx);
-    const res = await axiosInstance.put(`/updatePlayer/${userId}/${idx}`, {
+    const res = await axiosInstance.put(`/api/users/${userId}/players/${idx}`, {
       userId: userId,
       idx: idx,
     });
