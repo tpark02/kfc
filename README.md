@@ -87,7 +87,8 @@ The frontend consumes a Spring Boot REST API (not included here). You’ll need:
 
 ## 📸 Screenshots
 
-_TODO: Add screenshots of squad builder, player cards, and simulation results_
+![image](https://github.com/user-attachments/assets/767db428-4d7a-49d4-bf39-378dda088f74)
+
 
 ---
 
