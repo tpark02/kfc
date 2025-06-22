@@ -1,7 +1,6 @@
 import axiosInstance from "../app/axiosInstance"; // 👈 custom axios with interceptor
 import { Country } from "../types/country";
-import { League } from "../types/league";
-import { ResponseRandomSquad } from "../types/response";
+import { League } from "../types/league";import { ResponseRandomSquad } from "../types/response";
 import { Team } from "../types/team";
 
 export const fetchRandomSquad = async (data: {
