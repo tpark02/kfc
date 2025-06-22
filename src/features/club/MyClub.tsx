@@ -7,7 +7,7 @@ import {
 } from "../../util/myClubUtil";
 import { MyClubData } from "../../types/club";
 import { Button, Typography, Divider } from "@mui/material";
-import ConfirmDialog from "../ConfirmDialog";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
@@ -83,7 +83,7 @@ const MyClub: React.FC = () => {
   const [newTeamName, setNewTeamName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleUpdateClub = (clubId: number, players: MyPlayer[]) => {
+  const handleUpdateClub = (players: MyPlayer[]) => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
     if (newTeamName.length > 0) {
       updateMyClub(
@@ -144,7 +144,7 @@ console.log("7");
     const playersSnapshot = [...mySelectedPlayers];
     console.log("player snapshot", playersSnapshot);
 
-    handleUpdateClub(1, playersSnapshot);
+    handleUpdateClub(playersSnapshot);
     setMyClubs(updated);
     setMySelectedClubId(1);
     setConfirmOpen(false);

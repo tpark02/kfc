@@ -112,7 +112,7 @@ const SquadMetrics: React.FC = () => {
                 }-${idx}`;
                 return (
                   <React.Fragment key={safeKey}>
-                    {getImgByCountryName(nation ?? "", idx, 35, 25)}
+                    {getImgByCountryName(nation ?? "", 35, 25)}
                   </React.Fragment>
                 );
               })

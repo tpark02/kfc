@@ -33,7 +33,7 @@ export const Players: React.FC = () => {
     size: 20,
   });
 
-  const { myUserId, setMyUserId } = useSquadStore(
+  const { myUserId } = useSquadStore(
     (s) => ({ myUserId: s.myUserId, setMyUserId: s.setMyUserId }),
     shallow
   );

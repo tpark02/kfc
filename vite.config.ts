@@ -10,11 +10,10 @@ export default defineConfig({
       plugins: [
         NodeGlobalsPolyfillPlugin({
           buffer: true,
-          global: true,
         }),
       ],
       define: {
-        global: "globalThis", // 핵심 설정!
+        global: "globalThis",
       },
     },
   },
@@ -22,6 +21,6 @@ export default defineConfig({
     dedupe: ["@emotion/react", "@emotion/styled"],
   },
   define: {
-    global: "globalThis", // 이 줄도 필수
+    global: "globalThis",
   },
 });

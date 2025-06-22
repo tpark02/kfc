@@ -20,7 +20,7 @@ const NavBar: React.FC = () => {
     shallow
   );
   const { myUserId, myCoin } = useSquadGetters();
-  const { error, reload } = useLoadingMyCoin(myUserId);
+  const { reload } = useLoadingMyCoin(myUserId);
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");

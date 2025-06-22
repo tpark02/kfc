@@ -8,7 +8,7 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        backgroundColor: theme.palette.background,
+        backgroundColor: theme.palette.background.default,
         py: 3,
         mt: "auto",
         textAlign: "center",

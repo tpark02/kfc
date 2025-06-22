@@ -3,7 +3,7 @@ import axiosInstance, { isAxiosError } from "../app/axiosInstance";
 import { MyClubData } from "../types/club";
 import { MyPlayer } from "../types/player";
 import { totalNumberOfPlayers } from "../types/team";
-import { UserInfoResponse, SeasonResponse } from "../types/response";
+import { UserInfoResponse } from "../types/response";
 
 const handleApiError = (error: unknown, context: string): string => {
   if (isAxiosError(error)) {

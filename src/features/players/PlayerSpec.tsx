@@ -24,7 +24,7 @@ const PlayerSpec: React.FC = () => {
       d.name.toLowerCase().includes(player.nation.toLowerCase())
     )?.code ?? "unknown";
 
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [,setTeams] = useState<Team[]>([]);
 
   useEffect(() => {
     axiosInstance
@@ -227,7 +227,7 @@ const PlayerSpec: React.FC = () => {
             </Box>
             <Box className="player-info-stats-row">
               <Box className="player-info-cell-label">GOALKEEPING</Box>
-              {getValue("gkBoxing", "Boxing")}
+              {getValue("gkDiving", "Boxing")}
               {getValue("gkHandling", "Handling")}
               {getValue("gkKicking", "Kicking")}
               {getValue("gkPositioning", "Positioning")}

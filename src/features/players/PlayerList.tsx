@@ -26,7 +26,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
     shallow
   );
   const showConfirmDialog = useConfirmDialogStore.getState().showConfirm;
-  const { error, reload } = useLoadingMyCoin(myUserId);
+  const { reload } = useLoadingMyCoin(myUserId);
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSquadStore } from "../../store/useSquadStore";
-import { Grid, Box, Button, Typography } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
   outerCardStyle,
@@ -129,7 +129,7 @@ const LeagueOpponentTeam: React.FC = () => {
                           component="span"
                           sx={ovrStyle}
                         >
-                          {getStatDisplay("", player.ovr)}
+                          {getStatDisplay(player.ovr)}
                         </Typography>
                       </Box>
                     </Box>

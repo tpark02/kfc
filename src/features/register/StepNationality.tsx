@@ -36,13 +36,13 @@ const StepNationality: React.FC<StepNationalityProps> = ({
         <MenuItem value="" disabled>
           Select Nationality
         </MenuItem>
-        {countryData.map((country, idx) => (
+        {countryData.map((country) => (
           <MenuItem
             key={country.code}
             value={country.name}
             style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            {getImgByCountryName(country.name, idx, 24, 16)}
+            {getImgByCountryName(country.name, 24, 16)}
             {country.name}
           </MenuItem>
         ))}

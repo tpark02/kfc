@@ -283,7 +283,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                         component="span"
                         sx={ovrStyle}
                       >
-                        {getStatDisplay("", player.ovr)}
+                        {getStatDisplay(player.ovr)}
                       </Typography>
                       {/* </Box> */}
                     </Box>

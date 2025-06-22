@@ -163,7 +163,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                               height: "100%",
                             }}
                           >
-                            {getStatDisplay("", match.ovr)}
+                            {getStatDisplay(match.ovr)}
                           </Box>
                           <Box
                             sx={{

@@ -117,7 +117,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
           </Box>
 
           <Typography variant="body2" component="span" sx={ovrStyle}>
-            {getStatDisplay("", player.ovr)}
+            {getStatDisplay(player.ovr)}
           </Typography>
           {/* </Box> */}
         </Box>
@@ -175,7 +175,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
           </Box>
 
           <Typography variant="body2" component="span" sx={ovrStyle}>
-            {getStatDisplay("", player.ovr)}
+            {getStatDisplay(player.ovr)}
           </Typography>
           {/* </Box> */}
         </Box>

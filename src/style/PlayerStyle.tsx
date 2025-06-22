@@ -36,7 +36,7 @@ export const getPlayerStatDisplay = (label: string, value: number) => {
   );
 };
 
-export const getStatDisplay = (label: string, value: number) => {
+export const getStatDisplay = (value: number) => {
   return (
     <div style={{ textAlign: "center", lineHeight: 1.2 }}>
       <div

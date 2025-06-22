@@ -157,7 +157,6 @@ export const getCodeByCountryName = (name: string) => {
 
 export const getImgByCountryName = (
   name: string,
-  idx: number,
   width: number,
   height: number
 ) => {

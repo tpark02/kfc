@@ -30,7 +30,7 @@ const LeagueSimulator = () => {
     shallow
   );
 
-  const { error, reload } = useLoadingMyCoin(myUserId);
+  const { reload } = useLoadingMyCoin(myUserId);
 
   useEffect(() => {
     if (matches.length === 0) fetchData();
