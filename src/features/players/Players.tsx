@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 
 import { Player } from "../../types/player";
 import { Team } from "../../types/team";
-import { PlayerPos } from "../types/playerPos";
+import { PlayerPos } from "../../types/playerPos";
 import { Country } from "../../types/country";
 import { ResponsePlayerPage } from "../../types/response";
-import { League } from "../types/league";
+import { League } from "../../types/league";
 import { shallow } from "zustand/shallow";
 import { useSquadStore } from "../../store/useSquadStore";
 

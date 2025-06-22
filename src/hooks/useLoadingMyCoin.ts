@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchUserInfo } from "../util/myClubUtil";
 import { useSquadSetters } from "./useSquadSetter";
-import { isLoggedIn } from "../types/auth";
+import { isLoggedIn } from "../types/authUtil";
 
 export const useLoadingMyCoin = (userId: number | null) => {
   const [error, setError] = useState<string | null>(null);

@@ -5,8 +5,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { Country } from "../../types/country";
 import { Team } from "../../types/team";
-import { PlayerPos } from "../types/playerPos";
-import { League } from "../types/league";
+import { PlayerPos } from "../../types/playerPos"
+import { League } from "../../types/league";
 
 interface FilterProps {
   selectedCountries: Country[];
