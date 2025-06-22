@@ -1,6 +1,7 @@
-import { BrowserRouter as Router } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { HashRouter } from "react-router-dom";
+
 import AppRoutes from "./routes/Routes";
 import GlobalSnackbar from "./shared/GlobalSnackbar"
 import GlobalConfirmDialog from "./shared/GlobalConfirmDialog";
@@ -13,9 +14,9 @@ function App() {
       <GlobalSnackbar />
       <GlobalConfirmDialog />      
       <GlobalLoadingSpinner />
-      <Router>
+      <HashRouter>
         <AppRoutes />
-      </Router>
+      </HashRouter>
     </DndProvider>
   );
 }
