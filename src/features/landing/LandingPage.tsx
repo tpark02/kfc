@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -42,7 +44,7 @@ const LandingPage: React.FC = () => {
         Manage your own football club. Recruit players, build your dream squad,
         and dominate the league.
       </Typography>
-      <Box sx={{display:"flex", gap:4}}>
+      <Box sx={{ display: "flex", gap: 4 }}>
         <Button
           variant="contained"
           size="large"
@@ -50,7 +52,7 @@ const LandingPage: React.FC = () => {
             paddingX: 4,
             paddingY: 1,
           }}
-          onClick={() => (window.location.href = "/signup")}
+          onClick={() => navigate("/signup")}
         >
           Get Started
         </Button>

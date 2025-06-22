@@ -29,7 +29,7 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 || error.response?.status === 403) {
       console.warn("🔒 Authentication error. You need to log in again.");
       localStorage.removeItem("token");
-      window.location.href = "/login"; // Force redirect
+      window.location.href = "/#/login";
     }
     return Promise.reject(error);
   }
