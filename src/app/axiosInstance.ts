@@ -14,8 +14,8 @@ instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (
     token &&
-    config.url !== "/api/signup" && // Exception handling
-    config.url !== "/api/login"
+    config.url !== "/signup" && // Exception handling
+    config.url !== "/login"
   ) {
     config.headers.Authorization = `Bearer ${token}`;
   }

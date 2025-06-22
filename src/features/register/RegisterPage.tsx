@@ -79,7 +79,7 @@ const Register: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    axiosInstance.get("/api/logos").then((res) => setLogos(res.data));
+    axiosInstance.get("/logos").then((res) => setLogos(res.data));
   }, []);
 
   useEffect(() => {    

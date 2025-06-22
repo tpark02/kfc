@@ -64,7 +64,7 @@ const LoginForm: React.FC = () => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
 
     try {
-      const res = await axiosInstance.get("/api/me", {
+      const res = await axiosInstance.get("/me", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

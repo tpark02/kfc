@@ -74,7 +74,9 @@ const SignUpForm: React.FC = () => {
 
     try {
       useLoadingSpinnerStore.getState().setIsLoading(true);
-      const res = await axiosInstance.post("/api/signup", form);
+      const res = await axiosInstance.post("/signup", form);
+      console.log("🔍 baseURL:", axiosInstance.defaults.baseURL);
+      console.log("🔍 VITE_API_URL:", import.meta.env.VITE_API_URL);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
       console.log("🆕 Signup successful:", res.data);
@@ -82,7 +84,8 @@ const SignUpForm: React.FC = () => {
       setSuccess("Signup completed! Redirecting to club setup page...");
       setError("");
     } catch (err: any) {
-      const msg = err.response?.data || err.message || "An unknown error occurred.";
+      const msg =
+        err.response?.data || err.message || "An unknown error occurred.";
       if (msg.includes("already exists")) {
         setError("❌ This username already exists. Please choose another.");
       } else {
