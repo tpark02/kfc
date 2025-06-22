@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, Link } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useSquadSetters } from "../../hooks/useSquadSetter";
 import { AuthRequest, AuthResponse } from "../../types/auth";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
+import { Link as RouterLink } from "react-router-dom";
+import { Link as MuiLink } from "@mui/material";
+
 import axiosInstance from "../../app/axiosInstance";
 
 const LoginForm: React.FC = () => {
@@ -198,9 +201,13 @@ const LoginForm: React.FC = () => {
             </Button>
             <Typography sx={{ mt: 2, color: "#ccc", textAlign: "center" }}>
               Don't have an account?{" "}
-              <Link href="/signup" sx={{ color: "#ffc002" }}>
+              <MuiLink
+                component={RouterLink}
+                to="/signup"
+                sx={{ color: "#ffc002" }}
+              >
                 Sign up
-              </Link>
+              </MuiLink>
             </Typography>
             {error && (
               <Typography color="error" sx={{ mt: 1, textAlign: "center" }}>
