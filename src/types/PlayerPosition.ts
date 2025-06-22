@@ -1,7 +1,4 @@
-export type PlayerPos = {
-  name: string;
-  code: string;
-};
+import { PlayerPos } from "./playerPos";
 
 export type PlayerPosList = {
   playerPos: PlayerPos;
