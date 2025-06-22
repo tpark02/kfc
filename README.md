@@ -6,12 +6,12 @@ KFC is a full-stack football club simulation web application. It allows users to
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, TypeScript, Tailwind CSS, Vite
-- **Backend**: Spring Boot (Java) — not included in this repo
+- **Frontend**: React, TypeScript, Vite
+- **UI Framework**: Material UI (MUI)
 - **State Management**: Zustand
 - **HTTP Client**: Axios
 - **Build Tools**: Vite
-- **Styling**: Tailwind CSS + custom CSS modules
+- **Backend**: Spring Boot (Java) — not included in this repo
 
 ---
 
@@ -66,11 +66,12 @@ Visit `http://localhost:5173` in your browser.
 
 - 💼 Squad builder with draggable player positions
 - 🎮 League and match simulations
-- 🧠 AI-based squad generation
+- 🧠 Random Squad generation
 - 📊 Player stats visualization
 - 🛠️ Formation editor and modal-based filters
 - 🔐 Protected routes with login/signup flow
 - 💬 Global feedback (Snackbar, ConfirmDialog, Loading Spinner)
+- 🎨 Material UI integration for responsive and professional UI
 
 ---
 
@@ -88,7 +89,6 @@ The frontend consumes a Spring Boot REST API (not included here). You’ll need:
 ## 📸 Screenshots
 
 ![image](https://github.com/user-attachments/assets/767db428-4d7a-49d4-bf39-378dda088f74)
-
 
 ---
 
