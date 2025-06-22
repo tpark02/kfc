@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 import { Player } from "../../types/player";
 import { Team } from "../../types/team";
-import { PlayerPos } from "../../types/playerPosition";
+import { PlayerPos } from "../types/playerPos";
 import { Country } from "../../types/country";
 import { ResponsePlayerPage } from "../../types/response";
 import { League } from "../../types/league";

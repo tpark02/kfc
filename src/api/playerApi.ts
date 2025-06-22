@@ -4,7 +4,7 @@ import { ResponsePlayerPage } from "../types/response";
 import { Country } from "../types/country";
 import { Team } from "../types/team";
 import { League } from "../types/league";
-import { PlayerPos } from "../types/playerPosition";
+import { PlayerPos } from "../types/playerPos";
 
 interface FetchPlayerParams {
   page: number;

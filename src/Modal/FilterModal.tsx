@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { PlayerPos } from "../types/playerPosition";
+import { PlayerPos } from "../types/playerPos";
 import { League } from "../types/league";
 import { Team } from "../types/team";
 import { Country } from "../types/country";
