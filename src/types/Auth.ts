@@ -24,6 +24,3 @@ export const getProtectedData = async () => {
   return await response.json();
 };
 
-export const isLoggedIn = () => {
-  return !!localStorage.getItem("token");
-};
