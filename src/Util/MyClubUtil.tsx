@@ -21,7 +21,7 @@ export const fetchUserInfo = async (
   userId: number
 ): Promise<UserInfoResponse | null> => {
   try {
-    const res = await axiosInstance.get<UserInfoResponse>(`/api/users/${userId}`);
+    const res = await axiosInstance.get<UserInfoResponse>(`/users/${userId}`);
     return res.data;
   } catch (err) {
     handleApiError(err, "fetchUserInfo");
@@ -33,7 +33,7 @@ export const fetchMyClubs = async (
   userId: number
 ): Promise<MyClubData | null> => {
   try {
-    const res = await axiosInstance.get(`/api/users/${userId}/clubs`);
+    const res = await axiosInstance.get(`/users/${userId}/clubs`);
     console.log("fetch my club - ", res.data);
     return res.data;
   } catch (error) {
@@ -47,7 +47,7 @@ export const deleteMyClub = async (
   clubId: number
 ): Promise<string> => {
   try {
-    const res = await axiosInstance.delete(`/api/users/${userId}/clubs/${clubId}`);
+    const res = await axiosInstance.delete(`/users/${userId}/clubs/${clubId}`);
     return res.data;
   } catch (error) {
     return handleApiError(error, "deleteMyClub");
@@ -109,7 +109,7 @@ export const updateMyClub = async (
       myTeamClubCohesion,
       myTeamStamina,
     });
-    const res = await axiosInstance.put(`/api/users/${userId}/clubs/${clubId}`, {
+    const res = await axiosInstance.put(`/users/${userId}/clubs/${clubId}`, {
       myNation: myNation,
       myLogoId: myLogoId,
       clubName: newClubName,
@@ -136,7 +136,7 @@ export const updatePlayer = async (
 ): Promise<string> => {
   try {
     console.log("user id", userId, "idx", idx);
-    const res = await axiosInstance.put(`/api/users/${userId}/players/${idx}`, {
+    const res = await axiosInstance.put(`/users/${userId}/players/${idx}`, {
       userId: userId,
       idx: idx,
     });

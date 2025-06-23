@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
   const handleLogin = async () => {
     try {
       const response = await axiosInstance.post<AuthResponse>(
-        "/api/login",
+        "/login",
         form
       );
       localStorage.setItem("token", response.data.token);

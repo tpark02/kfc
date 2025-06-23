@@ -13,7 +13,7 @@ export const getProtectedData = async () => {
   console.log("🔐 Token:", token);
 
   const response = await fetch(
-    import.meta.env.VITE_API_URL + "/api/protected",
+    import.meta.env.VITE_API_URL + "/protected",
     {
       headers: {
         Authorization: `Bearer ${token}`, // ✅ 꼭 있어야 해

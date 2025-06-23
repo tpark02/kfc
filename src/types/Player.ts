@@ -215,7 +215,7 @@ export const fetchPlayers = async (
 ): Promise<Player[]> => {
   try {
     console.log(`📦 fetchPlayers: userId=${userId}, clubId=${clubId}`);
-    const response = await axiosInstance.get(`/api/users/${userId}/players`);
+    const response = await axiosInstance.get(`/users/${userId}/players`);
     return Array.isArray(response.data) ? response.data : [response.data];
   } catch (error) {
     console.error("❌ 클럽 목록 불러오기 실패:", error);

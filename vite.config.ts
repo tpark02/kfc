@@ -5,8 +5,9 @@ import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfil
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
+  
   return {
-    base: "/kfc/",
+    base: "/",
     plugins: [react()],
     optimizeDeps: {
       include: ["@emotion/styled"],

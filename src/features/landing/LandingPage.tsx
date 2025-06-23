@@ -55,7 +55,7 @@ const LandingPage: React.FC = () => {
           onClick={() => navigate("/signup")}
         >
           Get Started
-        </Button>
+        </Button>        
       </Box>
     </Box>
   );

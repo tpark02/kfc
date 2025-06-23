@@ -71,12 +71,12 @@ const SignUpForm: React.FC = () => {
     }
 
     console.log("Input password : ", password);
-
+    console.log("🔍 baseURL:", axiosInstance.defaults.baseURL);
+    console.log("🔍 VITE_API_URL:", import.meta.env.VITE_API_URL);
     try {
       useLoadingSpinnerStore.getState().setIsLoading(true);
       const res = await axiosInstance.post("/signup", form);
-      console.log("🔍 baseURL:", axiosInstance.defaults.baseURL);
-      console.log("🔍 VITE_API_URL:", import.meta.env.VITE_API_URL);
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
       console.log("🆕 Signup successful:", res.data);
@@ -93,6 +93,8 @@ const SignUpForm: React.FC = () => {
       }
       setSuccess("");
     } finally {
+      console.log("✅ finally block executed");
+
       useLoadingSpinnerStore.getState().setIsLoading(false);
     }
   };

@@ -6,7 +6,7 @@ export const buyPlayer = async (
   playerId: number
 ): Promise<BuyResponse> => {
     const response = await axiosInstance.put<BuyResponse>(
-      "/api/store/players/purchase",
+      "/store/players/purchase",
       {
         userId,
         playerId,
