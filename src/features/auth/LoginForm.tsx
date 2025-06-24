@@ -39,10 +39,7 @@ const LoginForm: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axiosInstance.post<AuthResponse>(
-        "/login",
-        form
-      );
+      const response = await axiosInstance.post<AuthResponse>("/login", form);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", String(response.data.userId));
       setError("");
@@ -148,9 +145,11 @@ const LoginForm: React.FC = () => {
             display: "flex",
             justifyContent: "center",
             alignContent: "center",
-            width: "40vw",
+            width: {
+              xs: "90vw", 
+              md: "40vw",
+            },
             height: "60vh",
-            // backgroundColor: "#1e1e1e",
             borderRadius: 2,
             boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
           }}
@@ -159,7 +158,10 @@ const LoginForm: React.FC = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              width: "20vw",
+              width: {
+                xs: "80vw",
+                md: "20vw",
+              },
               alignItems: "center",
               justifyContent: "center",
             }}

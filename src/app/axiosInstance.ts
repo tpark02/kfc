@@ -3,7 +3,7 @@ import axios from "axios";
 import { AxiosError } from "axios";
 
 const instance = axios.create({
-  baseURL: "/api",
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

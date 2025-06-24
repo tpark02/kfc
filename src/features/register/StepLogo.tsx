@@ -1,8 +1,6 @@
 // ✅ Step 2: StepLogo.tsx
 import React from "react";
-import {
-  Box,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import { Logo } from "../../types/Logo";
 
 interface StepLogoProps {
@@ -17,8 +15,25 @@ const StepLogo: React.FC<StepLogoProps> = ({
   onSelect,
 }) => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 4 }}>
-      <Box display="grid" gridTemplateColumns="repeat(5, 1fr)" gap={2}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent:"flex-start",
+        alignItems: "center",
+        mt: 4,        
+      }}
+    >
+      <Box
+        display="grid"
+        sx={{
+          gridTemplateColumns: {
+            xs: "repeat(4, 1fr)", // 📱 Mobile and up
+            md: "repeat(5, 1fr)", // 💻 Medium screens and up
+          },
+          gap: 2,
+        }}
+      >
         {logos.map((logo) => (
           <Box key={logo.id} display="flex" justifyContent="center">
             <img

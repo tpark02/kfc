@@ -5,12 +5,16 @@ import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfil
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
-  
   return {
     base: "/",
     plugins: [react()],
     optimizeDeps: {
-      include: ["@emotion/styled"],
+      include: [
+        "@mui/material",
+        "@mui/system",
+        "@emotion/react",
+        "@emotion/styled",
+      ],
       esbuildOptions: {
         plugins: [
           NodeGlobalsPolyfillPlugin({

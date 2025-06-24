@@ -1,8 +1,11 @@
 import React from "react";
-import { Select, MenuItem, Box } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { baseFormations } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";
+
+const formationKeys = Object.keys(baseFormations);
 
 const SelectFormation: React.FC = () => {
   const {
@@ -19,62 +22,54 @@ const SelectFormation: React.FC = () => {
     }),
     shallow
   );
+
+  const handleChange = (formation: string) => {
+    setMyFormation(formation);
+    setIsDropZoneSelected(false);
+    resetSquadMetric();
+  };
+
+  const currentIndex = formationKeys.indexOf(myFormation);
+
+  const goPrev = () => {
+    const newIndex =
+      (currentIndex - 1 + formationKeys.length) % formationKeys.length;
+    handleChange(formationKeys[newIndex]);
+  };
+
+  const goNext = () => {
+    const newIndex = (currentIndex + 1) % formationKeys.length;
+    handleChange(formationKeys[newIndex]);
+  };
+
   return (
-    <>
-      <Select
-        variant="outlined"
-        style={{
-          width: "100%",
-          borderRadius: "8px",
-        }}
-        labelId="formation-label"
-        value={myFormation}
-        onChange={(e) => {
-          setMyFormation(e.target.value);
-          setIsDropZoneSelected(false);
-          resetSquadMetric();
-        }}
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      gap={2}
+      sx={{ outline: "1px solid gray", borderRadius: "8px", mb: 2 }}
+    >
+      <IconButton onClick={goPrev} size="large">
+        <ArrowBackIos sx={{ color: "white" }} fontSize="large" />
+      </IconButton>
+
+      <Typography
+        variant="h6"
         sx={{
-          backgroundColor: "#242424",
           color: "white",
-          "& .MuiSelect-icon": {
-            color: "white",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "gray",
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "gray",
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "gray", // ✅ This overrides the default blue border
-          },
-        }}
-        MenuProps={{
-          PaperProps: {
-            sx: {
-              backgroundColor: "#242424",
-              color: "#fff",
-            },
-          },
+          minWidth: "100px",
+          textAlign: "center",
+          userSelect: "none",
         }}
       >
-        {Object.entries(baseFormations).map(([key]) => (
-          <MenuItem
-            key={key}
-            value={key}
-            sx={{
-              backgroundColor: "#242424",
-              color: "#fff",
-            }}
-          >
-            <Box display="flex" alignItems="center">
-              {key}
-            </Box>
-          </MenuItem>
-        ))}
-      </Select>
-    </>
+        {myFormation}
+      </Typography>
+
+      <IconButton onClick={goNext} size="small">
+        <ArrowForwardIos sx={{ color: "white" }} fontSize="large" />
+      </IconButton>
+    </Box>
   );
 };
 

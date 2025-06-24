@@ -42,8 +42,9 @@ const StepSquadBuilder: React.FC = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={2}>
           <SquadMetrics />
-        </Grid>
+        </Grid>        
         <Grid item xs={12} md={8}>
+          <SelectFormation />
           <SquadBuilder
             selectedFormation={myFormation as keyof typeof formations}
           />
@@ -57,8 +58,7 @@ const StepSquadBuilder: React.FC = () => {
             flexDirection: "column",
             alignItems: "center",
           }}
-        >
-          <SelectFormation />
+        >          
           <Box margin={1}>{"STARTING"}</Box>
 
           {mySelectedPlayers.slice(0, 11).map((player, index) => {

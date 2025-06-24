@@ -82,7 +82,7 @@ const Register: React.FC = () => {
     axiosInstance.get("/logos").then((res) => setLogos(res.data));
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (currentStep === 3) {
       loadRandomSquad();
     }
@@ -165,6 +165,9 @@ const Register: React.FC = () => {
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
+          console.log("logout");
+          localStorage.removeItem("token");
+          navigate("/login");
         })
         .catch((err) => {
           const msg =
@@ -174,7 +177,7 @@ const Register: React.FC = () => {
                 JSON.stringify(err?.response?.data ?? err, null, 2);
           useSnackbarStore.getState().setSnackbar(msg);
 
-          setCurrentStep(1); // 실패 시 Step 1로 이동
+          setCurrentStep(1);
         })
         .finally(() => {
           useLoadingSpinnerStore.getState().setIsLoading(false);
@@ -246,8 +249,15 @@ const Register: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: {
+          xs: "flex-start",
+          md: "center",
+        },        
         minHeight: "100vh",
+        mt: {
+          xs: 5,
+          md: 0,
+        }
       }}
     >
       <Box
@@ -255,7 +265,10 @@ const Register: React.FC = () => {
           display: "flex",
           alignContent: "center",
           flexDirection: "column",
-          width: "40vw",
+          width: {
+            xs: "90vw",
+            md: "40vw",
+          },
           height: "60vh",
           borderRadius: 2,
           boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
@@ -327,7 +340,6 @@ const Register: React.FC = () => {
         sx={{ mb: 4 }}
         onClick={() => {
           handleUpdateMyInfo();
-          navigate("/squad");
         }}
       >
         Next

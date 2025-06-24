@@ -41,7 +41,7 @@ const NavBar: React.FC = () => {
         padding: "10px",
         gap: "10px",
         backgroundColor: theme.palette.navbar.main,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.5)",        
       }}
     >
       {token && (
@@ -53,6 +53,11 @@ const NavBar: React.FC = () => {
               setIsDropZoneSelected(false);
               navigate("/players");
             }}
+            sx={{
+              fontSize: {
+                xs : "small",
+              }
+            }}
           >
             Recruit
           </Button>
@@ -62,9 +67,9 @@ const NavBar: React.FC = () => {
               reload();
               setIsDropZoneSelected(false);
               navigate("/squad");
-            }}
+            }}            
           >
-            My Club
+            Club
           </Button>
           <Button
             className="nav-menu-button"
@@ -91,17 +96,17 @@ const NavBar: React.FC = () => {
               🪙 {myCoin}
             </Box>
             {token ? (
-              <Button variant="contained" onClick={handleLogout}>
+              <Button onClick={handleLogout}>
                 Logout
               </Button>
             ) : (
-              <Button variant="contained" onClick={() => navigate("/login")}>
+              <Button onClick={() => navigate("/login")}>
                 Sign In
               </Button>
             )}
           </>
         ) : (
-          <Button variant="contained" onClick={() => navigate("/login")}>
+          <Button onClick={() => navigate("/login")}>
             Sign In
           </Button>
         )}

@@ -246,12 +246,13 @@ const Squad: React.FC = () => {
   const [isDelete, setIsDelete] = useState(false);
 
   return (
-    <Box sx={{ width: "100%", padding:"0 20px 0 20px" }}>
+    <Box sx={{ width: "100%", padding: "0 20px 0 20px" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={2}>
           <SquadMetrics />
         </Grid>
         <Grid item xs={12} md={7}>
+          <SelectFormation />
           <SquadBuilder
             selectedFormation={myFormation as keyof typeof formations}
           />
@@ -268,44 +269,52 @@ const Squad: React.FC = () => {
             // outline:"1px solid red"
           }}
         >
-          <Button
-            variant="contained"
+          <Box
             sx={{
               display: "flex",
-              width: "100%",
-              marginBottom: "10px",
-            }}
-            onClick={handleUpdateMyInfo}
-          >
-            Save
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={loadRandomSquad}
-            sx={{
-              display: "flex",
-              width: "100%",
-              marginBottom: "10px",
+              flexDirection: "column",
+              outline: "1px solid gray",
+              borderRadius: "8px",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 2,
+              gap:2
             }}
           >
-            random team
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              display: "flex",
-              width: "100%",
-              marginBottom: "10px",
-            }}
-            onClick={() => {
-              console.log("is delete", isDelete);
-              setIsDelete(!isDelete);
-            }}
-          >
-            Delete
-          </Button>
-          <SelectFormation />
+            <Button
+              onClick={loadRandomSquad}
+              sx={{
+                display: "flex",
+                width: "50%",
+                // marginBottom: "10px",
+              }}
+            >
+              random team
+            </Button>
+            <Button
+              sx={{
+                display: "flex",
+                width: "50%",                
+                // marginBottom: "10px",
+              }}
+              onClick={handleUpdateMyInfo}
+            >
+              Save
+            </Button>
+            <Button
+              sx={{
+                display: "flex",
+                width: "50%",
+                // marginBottom: "10px",
+              }}
+              onClick={() => {
+                console.log("is delete", isDelete);
+                setIsDelete(!isDelete);
+              }}
+            >
+              Delete
+            </Button>
+          </Box>
           <Box mb={1}></Box>
           <Box
             sx={{
@@ -355,7 +364,7 @@ const Squad: React.FC = () => {
                 console.log("players - ", player);
                 return (
                   <DraggableAndDroppablePlayerCard
-                    key={`bench-${player.id}-${index}`} 
+                    key={`bench-${player.id}-${index}`}
                     index={11 + index}
                     player={player}
                     onSwap={handleSwapPlayers}

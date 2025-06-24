@@ -31,7 +31,10 @@ const StepClubName: React.FC<StepClubNameProps> = ({
         }}
         sx={{
           maxWidth: 500,
-          width: "40%",
+          width: {
+            xs: "80vw",
+            md: "20vw",
+          },
           color: "#fff",
           borderBottom: "1px solid #888",
           "& input": { color: "#fff" },

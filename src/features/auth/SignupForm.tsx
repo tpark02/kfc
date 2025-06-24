@@ -122,7 +122,10 @@ const SignUpForm: React.FC = () => {
           display: "flex",
           justifyContent: "center",
           alignContent: "center",
-          width: "40vw",
+          width: {
+            xs: "90vw",
+            md: "40vw",
+          },
           height: "60vh",
           borderRadius: 2,
           boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
