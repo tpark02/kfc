@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, IconButton, Typography } from "@mui/material";
-import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIos from "@mui/icons-material/ArrowForwardIos";
 import { baseFormations } from "../../data/formations";
 import { useSquadStore } from "../../store/useSquadStore";
 import { shallow } from "zustand/shallow";

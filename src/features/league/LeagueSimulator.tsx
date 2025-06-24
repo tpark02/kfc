@@ -9,6 +9,7 @@ import { shallow } from "zustand/shallow";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import { Grid } from "@mui/material";
+import { Box } from "@mui/system";
 
 const LeagueSimulator = () => {
   const {
@@ -71,14 +72,18 @@ const LeagueSimulator = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        margin: "1rem",        
+      }}
+    >
       <Grid
         container
-        spacing={1}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
+        spacing={2}
+        sx={{
+          justifyContent: "center",                    
         }}
       >
         <Grid item xs={12} md={2}>
@@ -88,14 +93,22 @@ const LeagueSimulator = () => {
             HasRedCard={HasRedCard}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid
+          item
+          xs={12}
+          md={6}          
+        >
           <LeagueScheduleViewer matches={matches} />
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid
+          item
+          xs={12}
+          md={2}          
+        >
           <LeagueOpponentTeam />
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 };
 

@@ -30,7 +30,6 @@ import {
 import { getPosColor } from "../../util/util";
 import { getStatDisplay } from "../../style/playerStyle";
 
-
 interface LeagueMyTeamProp {
   matches: Match[];
   fetchData: () => Promise<void>;
@@ -77,7 +76,6 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
     setMyTeamClubCohesion,
     setMyTeamStamina,
   } = useSquadSetters();
-
 
   const { setMyFormation, myLogoImgUrl } = useSquadStore(
     (s) => ({
@@ -190,7 +188,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
         variant="contained"
         color="secondary"
         onClick={() => {
-          fetchData();          
+          fetchData();
         }}
         disabled={HasRedCard}
         sx={{ marginBottom: "10px" }}
@@ -297,12 +295,22 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                     minHeight: "60px",
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "#1b1f26 !important", 
-                    color: "#fff",
+                    backgroundColor: "#1b1f26",
+                    color: (theme) =>
+                      totalAddStatPoints === 0
+                        ? theme.palette.text.disabled
+                        : theme.palette.primary.main,
+                    cursor:
+                      totalAddStatPoints === 0 ? "not-allowed" : "pointer",
+                    pointerEvents: totalAddStatPoints === 0 ? "none" : "auto",
                     "&:hover": {
-                      backgroundColor: "#2a2e35 !important", 
+                      backgroundColor:
+                        totalAddStatPoints === 0 ? "#1b1f26" : "#2a2e35",
                     },
                     maxWidth: "50px",
+                    fontSize: "2rem",
+                    border: "1px solid #444",
+                    boxShadow: "none",
                   }}
                   onClick={() => {
                     setIsClicked(true);
@@ -321,7 +329,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                     setMySelectedPlayers(updatedList);
                   }}
                 >
-                  ➕
+                  +
                 </Box>
               </Box>
             );

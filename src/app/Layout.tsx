@@ -7,22 +7,24 @@ import { Box } from "@mui/system";
 const Layout: React.FC = () => {
   return (
     <Box
-      className="app-container"
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",        
+        minHeight: "100vh", // 전체 layout이 100vh 보장
       }}
     >
-      {/* Header */}
       <NavBar />
-
-      {/* Body */}
-      <Box sx={{ flex: 1, mt: 10}}>
+      <Box sx={{ margin: "2rem" }}></Box>
+      <Box
+        sx={{
+          flex: 1, // ✅ 핵심: Outlet이 flex-grow 1 해야 Footer 밀림
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Outlet />
       </Box>
 
-      {/* Footer */}
       <Footer />
     </Box>
   );

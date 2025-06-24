@@ -2,16 +2,49 @@ import { getOvrColor } from "../util/util";
 import { Typography, Box } from "@mui/material";
 import { ReactNode } from "react";
 
+export const getPlayerStringDisplay = (
+  label: string,
+  value: string,
+  color: string
+) => {
+  const stat = value === null ? "N/A" : value;
+  return (
+    <Box sx={{ textAlign: "center", lineHeight: 1.2 }}>
+      <Box sx={{ fontSize: 12, color: "#64625B" }}>{label.toUpperCase()}</Box>
+      <Box
+        sx={{
+          fontSize: 15,
+          fontWeight: "bold",
+          position: "relative",
+          display: "inline-block",
+          paddingBottom: "4px",
+          color: color,
+        }}
+      >
+        {stat}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            height: "4px",
+            width: "100%",
+            borderRadius: "2px",
+          }}
+        />
+      </Box>
+    </Box>
+  );
+};
+
 export const getPlayerStatDisplay = (label: string, value: number) => {
   const isPrice = label.toUpperCase() === "PRICE";
   const stat = value === null ? "N/A" : value;
   return (
-    <div style={{ textAlign: "center", lineHeight: 1.2 }}>
-      <div style={{ fontSize: 12, color: "#64625B" }}>
-        {label.toUpperCase()}
-      </div>
-      <div
-        style={{
+    <Box sx={{ textAlign: "center", lineHeight: 1.2 }}>
+      <Box sx={{ fontSize: 12, color: "#64625B" }}>{label.toUpperCase()}</Box>
+      <Box
+        sx={{
           fontSize: 15,
           fontWeight: "bold",
           position: "relative",
@@ -21,8 +54,8 @@ export const getPlayerStatDisplay = (label: string, value: number) => {
         }}
       >
         {stat}
-        <span
-          style={{
+        <Box
+          sx={{
             position: "absolute",
             bottom: 0,
             left: 0,
@@ -31,16 +64,16 @@ export const getPlayerStatDisplay = (label: string, value: number) => {
             borderRadius: "2px",
           }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
 export const getStatDisplay = (value: number) => {
   return (
-    <div style={{ textAlign: "center", lineHeight: 1.2 }}>
-      <div
-        style={{
+    <Box sx={{ textAlign: "center", lineHeight: 1.2 }}>
+      <Box
+        sx={{
           fontSize: 15,
           fontWeight: "bold",
           position: "relative",
@@ -49,8 +82,8 @@ export const getStatDisplay = (value: number) => {
         }}
       >
         {value}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

@@ -118,7 +118,7 @@ const PlayerSpec: React.FC = () => {
                   }}
                   onError={(e) => {
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = "../../img/fallback.png";
+                    e.currentTarget.src = "/img/fallback.png";
                   }}
                 />
                 <Box

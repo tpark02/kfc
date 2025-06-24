@@ -81,7 +81,7 @@ const TeamModal: React.FC<TeamModalProps> = ({
           }}
         >
           <img
-            src={team.url !== "" ? team.url : "../../img/fallback.png"}
+            src={team.url !== "" ? team.url : "/img/fallback.png"}
             alt={team.name}
             style={{
               width: "8%",
@@ -91,7 +91,7 @@ const TeamModal: React.FC<TeamModalProps> = ({
             }}
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = "../../img/fallback.png";
+              e.currentTarget.src = "/img/fallback.png";
             }}
           />
           <Typography variant="body2">{team.name}</Typography>

@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Player } from "../../types/player";
-import { getPlayerStatDisplay } from "../../style/playerStyle";
+import {
+  getPlayerStatDisplay,
+  getPlayerStringDisplay,
+} from "../../style/playerStyle";
 import { Button } from "@mui/material";
 import { buyPlayer } from "../../util/myStoreUtil";
 import { useSquadStore } from "../../store/useSquadStore";
@@ -9,6 +12,8 @@ import { getPosColor } from "../../util/util";
 import { useSnackbarStore } from "../../store/userSnackBarStore";
 import { useConfirmDialogStore } from "../../store/useConfirmDialogStore";
 import { useLoadingMyCoin } from "../../hooks/useLoadingMyCoin";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Box } from "@mui/system";
 
 import "../../style/Player.css";
 
@@ -27,6 +32,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
   );
   const showConfirmDialog = useConfirmDialogStore.getState().showConfirm;
   const { reload } = useLoadingMyCoin(myUserId);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   return (
     <>
@@ -34,53 +40,85 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
         const posColor = getPosColor(repo.pos ?? "");
 
         return (
-          <div
+          <Box
             className="player-table"
             key={repo.id}
-            style={{
+            sx={{
               cursor: "pointer",
               backgroundColor: "#1b1f26",
               padding: "10px",
+              margin: "1rem",
             }}
           >
-            <div
-              className="player-row"
-              onClick={() =>
-                navigate(`/player/${repo.id}`, { state: { player: repo } })
-              }
-            >
-              <div className="player-name">{repo.name}</div>
-              <div className="player-cell" style={{ color: posColor }}>
-                {repo.pos}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("OVR", repo.ovr)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("SHO", repo.sho)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("DRI", repo.dri)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("PAS", repo.pas)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("DEF", repo.def)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("PAC", repo.pac)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("PHY", repo.phy)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("GK", repo.gkReflexes)}
-              </div>
-              <div className="player-cell">
-                {getPlayerStatDisplay("Price", repo.price)}
-              </div>
-            </div>
+            {isMobile ? (
+              // ✅ Mobile Layout
+              <Box
+                className="player-row-mobile"
+                onClick={() =>
+                  navigate(`/player/${repo.id}`, { state: { player: repo } })
+                }
+              >
+                <Box className="player-name" sx={{ textAlign: "center" }}>
+                  {repo.name}
+                </Box>
+                <Box sx={{ display: "flex" }}>
+                  <Box
+                    className="player-cell"
+                    sx={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {getPlayerStringDisplay("POS", repo.pos, posColor)}
+                  </Box>
+                  <Box className="player-cell" sx={{ color: posColor }}>
+                    {getPlayerStatDisplay("OVR", repo.ovr)}
+                  </Box>
+                  <Box className="player-cell" sx={{ color: posColor }}>
+                    {getPlayerStatDisplay("Price", repo.price)}
+                  </Box>
+                </Box>
+              </Box>
+            ) : (
+              // ✅ Desktop Layout
+              <Box
+                className="player-row"
+                onClick={() =>
+                  navigate(`/player/${repo.id}`, { state: { player: repo } })
+                }
+              >
+                <Box className="player-name">{repo.name}</Box>
+                <Box className="player-cell" sx={{ color: posColor }}>
+                  {repo.pos}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("OVR", repo.ovr)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("SHO", repo.sho)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("DRI", repo.dri)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("PAS", repo.pas)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("DEF", repo.def)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("PAC", repo.pac)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("PHY", repo.phy)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("GK", repo.gkReflexes)}
+                </Box>
+                <Box className="player-cell">
+                  {getPlayerStatDisplay("Price", repo.price)}
+                </Box>
+              </Box>
+            )}
             <Button
               variant="text"
               onClick={async () => {
@@ -101,7 +139,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
             >
               Recruit
             </Button>
-          </div>
+          </Box>
         );
       })}
     </>

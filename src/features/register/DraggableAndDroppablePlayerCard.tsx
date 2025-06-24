@@ -135,6 +135,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
             sx={{
               width: "100%",
               textAlign: "center",
+              boxShadow:"none",
             }}
           >
             EMPTY
@@ -150,6 +151,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
         sx={{
           ...outerCardStyle(isDragging),
           backgroundColor: "#1b1f26 !important", 
+          boxShadow:"none",
           color: "#fff",
           "&:hover": {
             backgroundColor: "#2a2e35 !important",

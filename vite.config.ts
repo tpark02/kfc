@@ -1,6 +1,6 @@
+// vite.config.ts
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
@@ -8,30 +8,19 @@ export default defineConfig(({ mode }) => {
   return {
     base: "/",
     plugins: [react()],
-    optimizeDeps: {
-      include: [
-        "@mui/material",
-        "@mui/system",
-        "@emotion/react",
-        "@emotion/styled",
-      ],
-      esbuildOptions: {
-        plugins: [
-          NodeGlobalsPolyfillPlugin({
-            buffer: true,
-          }),
-        ],
-        define: {
-          global: "globalThis",
-        },
-      },
+    define: {
+      global: "globalThis",
+      "import.meta.env.VITE_API_URL": JSON.stringify(env.VITE_API_URL),
     },
     resolve: {
       dedupe: ["@emotion/react", "@emotion/styled"],
     },
-    define: {
-      global: "globalThis",
-      "import.meta.env.VITE_API_URL": JSON.stringify(env.VITE_API_URL),
+    build: {
+      // 쓰레드 수 제한으로 동시 열기 줄이기
+      chunkSizeWarningLimit: 2000, // 선택 사항
+      rollupOptions: {
+        // 기타 설정 유지
+      },
     },
   };
 });

@@ -52,12 +52,7 @@ const NavBar: React.FC = () => {
               reload();
               setIsDropZoneSelected(false);
               navigate("/players");
-            }}
-            sx={{
-              fontSize: {
-                xs : "small",
-              }
-            }}
+            }}            
           >
             Recruit
           </Button>
@@ -83,7 +78,7 @@ const NavBar: React.FC = () => {
           </Button>
         </>
       )}
-      <Box sx={{ display: "flex", gap: 4, marginLeft: "auto" }}>
+      <Box sx={{ display: "flex", gap: 2, marginLeft: "auto" }}>
         {token ? (
           <>
             <Box

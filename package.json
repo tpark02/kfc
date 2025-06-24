@@ -11,6 +11,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@emotion/hash": "^0.9.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.17.1",
@@ -53,7 +54,7 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^4.5.1",
+    "vite": "^6.3.5",
     "vite-plugin-gh-pages": "^1.0.1"
   }
 }

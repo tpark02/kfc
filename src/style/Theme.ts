@@ -29,8 +29,8 @@ const steamTheme = createTheme({
       secondary: "#c7d5e0",
     },
     navbar: {
-      main: "#1b2838", 
-    } as any, 
+      main: "#1b2838",     
+    }
   },
   components: {
     MuiTextField: {
@@ -53,13 +53,15 @@ const steamTheme = createTheme({
         },
       },
     },
-    MuiButton: {
+    MuiButton: {      
       styleOverrides: {
         root: {
           background: "linear-gradient(to right, #0078a0, #005a9c)",
-          color: "#fff",
+          border: "1px solid #555",  
+          color: "#fff",                
           "&:hover": {
             background: "linear-gradient(to right, #0088bb, #0066b2)",
+            borderColor: "#aaa",
           },
         },
       },

@@ -90,7 +90,7 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
           }}
         >
           <img
-            src={league.url !== "" ? league.url : "../../img/fallback.png"}
+            src={league.url !== "" ? league.url : "/img/fallback.png"}
             alt={league.name}
             style={{
               width: "8%",
@@ -100,7 +100,7 @@ const LeagueModal: React.FC<LeagueModalProps> = ({
             }}
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = "../../img/fallback.png";
+              e.currentTarget.src = "/img/fallback.png";
             }}
           />
           <Typography>{league.name}</Typography>

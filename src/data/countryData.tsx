@@ -175,7 +175,7 @@ export const getImgByCountryName = (
       }}
       onError={(e) => {
         e.currentTarget.onerror = null;
-        e.currentTarget.src = "../../img/fallback.png";
+        e.currentTarget.src = "/img/fallback.png";
         e.currentTarget.style.width = "45px";
         e.currentTarget.style.height = "35px";
         e.currentTarget.style.outline = "1px solid gray";
@@ -203,7 +203,7 @@ export const setCrest = (
       }}
       onError={(e) => {
         e.currentTarget.onerror = null;
-        e.currentTarget.src = "../../img/fallback.png";
+        e.currentTarget.src = "/img/fallback.png";
         e.currentTarget.style.width = "45px";
         e.currentTarget.style.height = "35px";
         e.currentTarget.style.outline = "1px solid gray";

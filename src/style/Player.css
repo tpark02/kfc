@@ -1,14 +1,13 @@
 .player-list {
   width: 100%;
-  max-width: 900px;
-  margin: auto;
+  max-width: 1000px;
+  margin: 0 auto;
+  /* outline: 1px solid gray;   */
 }
 
 .player-table {
   display: flex;
   justify-content: space-around;
-  margin-top: 4px;
-  margin-bottom: 12px;
   border-radius: 8px;
   outline: 1px solid gray;  
 }
@@ -17,6 +16,12 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.player-row-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
 }
 
 .player-img {
@@ -63,6 +68,7 @@
   align-items: center;
   margin-bottom: 1rem;
   gap: 12px;
+  outline: 1px solid red;
 }
 
 .player-spec {

@@ -10,10 +10,13 @@ export const outerCardStyle = (isDragging: boolean) => ({
   width: "100%",
   color: "#fff",
   borderRadius: 2,
-  outline: "1px solid gray",
   padding: "4px 8px",
   margin: "0 0 10px 0",
-  height: "auto",    
+  height: "auto",   
+  border: "1px solid #555",     
+  outline: "none",              
+  boxShadow: "none",            
+  backgroundColor: "#2a2e35",   
 });
 
 export const rowStyle = {

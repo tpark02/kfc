@@ -102,64 +102,99 @@ export const Players: React.FC = () => {
 
   return (
     <Box className="player-list">
-      <Box className="search-bar">
-        <TextField
-          type="text"
-          placeholder="name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{
-            height: "38px",
-            "& .MuiInputBase-root": {
-              height: "100%",
-            },
-            "& input": {
-              padding: "0 14px",
-            },
-          }}
-        />
-        <Button onClick={handleSearch} variant="contained">
-          Search
-        </Button>
-        <Select
-          id="sortType"
-          value={sortType}
-          onChange={(e) => {
-            const newSort = e.target.value as
-              | "OVR_DESC"
-              | "OVR_ASC"
-              | "RANK_DESC"
-              | "RANK_ASC";
-            setSortType(newSort);
-            fetchPage(
-              0,
-              searchTerm,
-              newSort,
-              selectedCountries,
-              selectedTeams,
-              selectedLeagues,
-              selectedPosition
-            );
-          }}
-          sx={{
-            height: "38px",
-            "& .MuiInputBase-root": {
-              height: "100%",
-            },
-            "& input": {
-              padding: "0 14px",
-            },
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: {
+            xs: "column", // 모바일: 세로
+            md: "row", // 데스크탑: 가로
+          },
+          justifyContent: "flex-end",          
+          gap: "1rem",     
+          margin: "0 1rem 1rem 1rem",     
+        }}
+      >
+        {/* 검색 영역 */}
+        <Box
+          sx={{            
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "1rem",
           }}
         >
-          <MenuItem value="OVR_DESC">ovr desc</MenuItem>
-          <MenuItem value="OVR_ASC">ovr asc</MenuItem>
-          <MenuItem value="RANK_DESC">rank desc</MenuItem>
-          <MenuItem value="RANK_ASC">rank asc</MenuItem>
-        </Select>
+          <TextField
+            fullWidth
+            type="text"
+            placeholder="name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{
+              height: "38px",
+              "& .MuiInputBase-root": {
+                height: "100%",
+              },
+              "& input": {
+                padding: "0 14px",
+              },
+            }}
+          />
+          <Button
+            sx={{ height: "38px", whiteSpace: "nowrap" }}
+            onClick={handleSearch}
+          >
+            Search
+          </Button>
+        </Box>
 
-        <Button onClick={() => setModalOpen(true)} variant="contained">
-          Filter
-        </Button>
+        {/* 정렬/필터 영역 */}
+        <Box
+          sx={{
+            display: "flex",            
+            justifyContent: "flex-end",
+            gap: "1rem",            
+          }}
+        >
+          <Select
+            id="sortType"
+            value={sortType}
+            onChange={(e) => {
+              const newSort = e.target.value as
+                | "OVR_DESC"
+                | "OVR_ASC"
+                | "RANK_DESC"
+                | "RANK_ASC";
+              setSortType(newSort);
+              fetchPage(
+                0,
+                searchTerm,
+                newSort,
+                selectedCountries,
+                selectedTeams,
+                selectedLeagues,
+                selectedPosition
+              );
+            }}
+            sx={{
+              width:"100%",
+              height: "38px",
+              minWidth: "120px",
+              "& .MuiInputBase-root": {
+                height: "100%",
+              },
+            }}
+          >
+            <MenuItem value="OVR_DESC">ovr desc</MenuItem>
+            <MenuItem value="OVR_ASC">ovr asc</MenuItem>
+            <MenuItem value="RANK_DESC">rank desc</MenuItem>
+            <MenuItem value="RANK_ASC">rank asc</MenuItem>
+          </Select>
+          <Button
+            sx={{ height: "38px", whiteSpace: "nowrap" }}
+            onClick={() => setModalOpen(true)}
+          >
+            Filter
+          </Button>
+        </Box>
       </Box>
 
       <FilterModal

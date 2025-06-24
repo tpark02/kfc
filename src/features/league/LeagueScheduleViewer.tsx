@@ -83,7 +83,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "flex-start",
-                minHeight: "100vh",
+                minHeight: "100%",
                 width: "100%",
                 marginTop: "20px",
               }}
@@ -95,7 +95,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                   gap: 1,
                   width: "100%",
                   maxWidth: 800,
-                  aspectRatio: "5 / 4",
+                  // aspectRatio: "5 / 4",
                 }}
               >
                 {matches.map((match, idx) => {
@@ -146,7 +146,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                         >
                           <CroppedAvatar
                             src={match?.teamImg}
-                            fallbackSrc={"../../../img/fallback.png"}
+                            fallbackSrc={"/img/fallback.png"}
                             width={50}
                             height={50}
                             fallBackWidth={50}
@@ -189,7 +189,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                minHeight: "100vh",
+                minHeight: "100%",
                 width: "100%",
               }}
             >
@@ -200,7 +200,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
                   gap: 1,
                   width: "100%",
                   maxWidth: 800,
-                  aspectRatio: "5 / 4",
+                  // aspectRatio: "5 / 4",
                 }}
               >
                 {Array.from({ length: 20 }).map((_, idx) => (

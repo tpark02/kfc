@@ -91,7 +91,7 @@ const NationModal: React.FC<NationModalProps> = ({
             }}
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = "../../img/fallback.png";
+              e.currentTarget.src = "/img/fallback.png";
             }}
           />
           <Typography variant="body2">{country.name}</Typography>
