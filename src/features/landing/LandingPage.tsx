@@ -13,11 +13,11 @@ const LandingPage: React.FC = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
-        padding: 4,
+        // outline: "1px solid red",
       }}
     >
       <Box
@@ -33,6 +33,7 @@ const LandingPage: React.FC = () => {
           width: "40%",
           zIndex: 0,
           pointerEvents: "none",
+          // outline: "1px solid red",
         }}
       />
       <Typography
@@ -40,19 +41,19 @@ const LandingPage: React.FC = () => {
         sx={{
           fontWeight: "bold",
           color: theme.palette.primary.main,
-          marginBottom: 4,
           textAlign: "center",
+          mt: "18rem",
+          // outline: "1px solid red",
         }}
       >
         Welcome to KFC Simulator
       </Typography>
 
       <Typography
-        variant="h6"
         sx={{
           color: theme.palette.text.secondary,
-          maxWidth: "600px",
-          textAlign: "center",
+          maxWidth: "800px",
+          opacity: "0.5",
           marginBottom: 4,
         }}
       >

@@ -100,8 +100,7 @@ const NavBar: React.FC = () => {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              alignItems: "center",
-              outline: "1px solid red",
+              alignItems: "center",              
             }}
           >
             {" "}
