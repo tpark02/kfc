@@ -14,7 +14,6 @@ import {
   fetchMyClubs,
 } from "../../util/myClubUtil";
 
-import { Match } from "../../types/match";
 import { shallow } from "zustand/shallow";
 
 import {

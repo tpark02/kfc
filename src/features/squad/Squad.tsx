@@ -55,7 +55,7 @@ const Squad: React.FC = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
-    setMyClubs
+    setMyClubs,
   } = useSquadStore(
     (s) => ({
       myFormation: s.myFormation,
@@ -130,10 +130,10 @@ const Squad: React.FC = () => {
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
-          
-          fetchMyClubs(myUserId).then((club) => {            
+
+          fetchMyClubs(myUserId).then((club) => {
             const updatedClub = club ?? undefined;
-                                    
+
             if (updatedClub && updatedClub.players) {
               setMyClubs(updatedClub);
               setMySelectedPlayers(updatedClub.players);
@@ -160,13 +160,12 @@ const Squad: React.FC = () => {
 
   useEffect(() => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
-    
+
     fetchMyClubs(myUserId)
       .then((club) => {
         const updatedClub = club ?? undefined;
 
-        if (updatedClub && updatedClub.players) {          
-
+        if (updatedClub && updatedClub.players) {
           setMySelectedPlayers(updatedClub.players);
           setMyTeamOvr(updatedClub.ovr);
           setMyTeamPace(updatedClub.pace);
@@ -192,6 +191,8 @@ const Squad: React.FC = () => {
   }, [myUserId, setMySelectedPlayers]);
 
   const loadRandomSquad = async () => {
+    useLoadingSpinnerStore.getState().setIsLoading(true);
+
     try {
       const data = await fetchRandomSquad({
         name: myFormation,
@@ -242,6 +243,8 @@ const Squad: React.FC = () => {
       useSnackbarStore
         .getState()
         .setSnackbar(err.response?.data || "Error loading squad");
+    } finally {
+          useLoadingSpinnerStore.getState().setIsLoading(false);      
     }
   };
 
@@ -280,7 +283,7 @@ const Squad: React.FC = () => {
               justifyContent: "center",
               alignItems: "center",
               padding: 2,
-              gap:2
+              gap: 2,
             }}
           >
             <Button
@@ -296,7 +299,7 @@ const Squad: React.FC = () => {
             <Button
               sx={{
                 display: "flex",
-                width: "50%",                
+                width: "50%",
                 // marginBottom: "10px",
               }}
               onClick={handleUpdateMyInfo}
@@ -362,7 +365,7 @@ const Squad: React.FC = () => {
               }}
             >
               <Box mb={1}>{"BENCH"}</Box>
-              {mySelectedPlayers.slice(11, 17).map((player, index) => {                
+              {mySelectedPlayers.slice(11, 17).map((player, index) => {
                 return (
                   <DraggableAndDroppablePlayerCard
                     key={`bench-${player.id}-${index}`}

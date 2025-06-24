@@ -16,13 +16,12 @@ const LandingPage: React.FC = () => {
         justifyContent: "flex-start",
         alignItems: "center",
         backgroundColor: theme.palette.background.default,
-        color: theme.palette.text.primary,
-        // outline: "1px solid red",
+        color: theme.palette.text.primary,        
       }}
     >
       <Box
         component="img"
-        src="/img/hero.png" // or `require("../assets/football-bg.png")`
+        src="/img/hero.png" 
         alt="background football"
         sx={{
           position: "absolute",
@@ -32,8 +31,7 @@ const LandingPage: React.FC = () => {
           opacity: 0.4,
           width: "40%",
           zIndex: 0,
-          pointerEvents: "none",
-          // outline: "1px solid red",
+          pointerEvents: "none",          
         }}
       />
       <Typography
@@ -42,8 +40,7 @@ const LandingPage: React.FC = () => {
           fontWeight: "bold",
           color: theme.palette.primary.main,
           textAlign: "center",
-          mt: "18rem",
-          // outline: "1px solid red",
+          mt: "18rem",          
         }}
       >
         Welcome to KFC Simulator
