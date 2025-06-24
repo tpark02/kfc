@@ -4,14 +4,22 @@ KFC is a full-stack football club simulation web application. It allows users to
 
 ---
 
+## 🧠 Project Overview
+
+Kickoff Football Club Simulator (KFC) is a football management simulation platform built with a professional service-oriented mindset.
+
+While the theme is football, the true goal is to demonstrate capabilities in **full-stack development**, including RESTful API design, frontend architecture, user authentication, data modeling, dynamic UI rendering, and **efficient large-scale data processing**.
+
+---
+
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, TypeScript, Vite
-- **UI Framework**: Material UI (MUI)
-- **State Management**: Zustand
-- **HTTP Client**: Axios
-- **Build Tools**: Vite
-- **Backend**: Spring Boot (Java) — not included in this repo
+| Layer        | Stack |
+|--------------|-------|
+| Frontend     | React + TypeScript + Zustand + Material UI (MUI) |
+| Backend      | Spring Boot 3, Java 17, JPA/Hibernate, RESTful APIs |
+| Database     | H2 / MariaDB |
+| Deployment   | Docker + VPS (Contabo) |
 
 ---
 
@@ -62,16 +70,34 @@ Visit `http://localhost:5173` in your browser.
 
 ---
 
-## 🌟 Features
+## 🧱 Key Features
 
-- 💼 Squad builder with draggable player positions
-- 🎮 League and match simulations
-- 🧠 Random Squad generation
-- 📊 Player stats visualization
-- 🛠️ Formation editor and modal-based filters
-- 🔐 Protected routes with login/signup flow
-- 💬 Global feedback (Snackbar, ConfirmDialog, Loading Spinner)
-- 🎨 Material UI integration for responsive and professional UI
+### ⚽ League Simulation
+- Simulates matches between clubs
+- Generates match results and scorers
+- Designed to be expandable for various simulation rules
+
+### 👤 My Club Management
+- Users build their own teams by signing players
+- Formation builder UI allows flexible squad setup
+- Team strength (OVR) is calculated from squad attributes
+
+### 🔐 Auth System
+- JWT-based signup, login, and route protection
+- Clubs and squads are tied to authenticated users
+
+---
+
+## 📌 Technical Highlights
+
+- **Layered Architecture**: Clean separation between Controller → Service → Repository  
+- **State Management**: Zustand-powered modular logic with persistence  
+- **Dynamic UI**: Formation-based 11-position rendering grid  
+- **Scalable APIs**: Designed for decoupling and maintainability  
+- **Large-Scale Data Processing**:  
+  - Handles thousands of player records and multiple user-owned clubs  
+  - Supports bulk updates and multi-match simulations  
+  - Optimized database access using pagination, filtering, and indexing  
 
 ---
 
