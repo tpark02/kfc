@@ -34,6 +34,7 @@ type SquadStore = {
   dropZoneList: DropZone[];
   mySelectedPlayers: MyPlayer[];
   HasRedCard: boolean;
+  totalAddStatPoints:number;
   setMyLogoImgUrl: (s: string) => void;
   setMyLogoId: (n: number) => void;
   setMyNation: (nation: string) => void;
@@ -63,6 +64,7 @@ type SquadStore = {
   setSelectedIdx: (index: number) => void;
   matches: Match[];
   setMatches: (matches: Match[]) => void;
+  setTotalAddStatPoints:(n: number)=>void;
 };
 
 export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
@@ -93,6 +95,7 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   mySelectedPlayers: [],
   HasRedCard: false,
   myUniformImgUrl: "",
+  totalAddStatPoints: 0,
   setMyLogoId: (n: number) => set({ myLogoId: n }),
   setUserEmail: (s: string) => set({ myUserEmail: s }),
   setUserName: (s: string) => set({ myUserName: s }),
@@ -140,4 +143,5 @@ export const useSquadStore = createWithEqualityFn<SquadStore>()((set) => ({
   matches: [],
   setMatches: (matches) => set({ matches: matches }),
   setMyCoin: (c) => set({ myCoin: c }),
+  setTotalAddStatPoints: (n) => set({ totalAddStatPoints: n })
 }));

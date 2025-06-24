@@ -20,6 +20,21 @@ const LandingPage: React.FC = () => {
         padding: 4,
       }}
     >
+      <Box
+        component="img"
+        src="/img/hero.png" // or `require("../assets/football-bg.png")`
+        alt="background football"
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -60%)",
+          opacity: 0.4,
+          width: "40%",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
       <Typography
         variant="h2"
         sx={{
@@ -55,7 +70,7 @@ const LandingPage: React.FC = () => {
           onClick={() => navigate("/signup")}
         >
           Get Started
-        </Button>        
+        </Button>
       </Box>
     </Box>
   );

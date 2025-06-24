@@ -55,6 +55,7 @@ const Squad: React.FC = () => {
     setMyTeamAttack,
     setMyTeamClubCohesion,
     setMyTeamStamina,
+    setMyClubs
   } = useSquadStore(
     (s) => ({
       myFormation: s.myFormation,
@@ -86,6 +87,7 @@ const Squad: React.FC = () => {
       setMyLogoImgUrl: s.setMyLogoImgUrl,
       setMyTeamName: s.setMyTeamName,
       setMyNation: s.setMyNation,
+      setMyClubs: s.setMyClubs,
     }),
     shallow
   );
@@ -128,11 +130,12 @@ const Squad: React.FC = () => {
       )
         .then((msg) => {
           useSnackbarStore.getState().setSnackbar(msg);
-          console.log("1");
-          fetchMyClubs(myUserId).then((club) => {
+          
+          fetchMyClubs(myUserId).then((club) => {            
             const updatedClub = club ?? undefined;
-
+                                    
             if (updatedClub && updatedClub.players) {
+              setMyClubs(updatedClub);
               setMySelectedPlayers(updatedClub.players);
             }
             console.log("my club.tsx selected players - ", mySelectedPlayers);
@@ -157,13 +160,12 @@ const Squad: React.FC = () => {
 
   useEffect(() => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
-    console.log("2");
+    
     fetchMyClubs(myUserId)
       .then((club) => {
         const updatedClub = club ?? undefined;
 
-        if (updatedClub && updatedClub.players) {
-          console.log("fetch my ovr", myUserId);
+        if (updatedClub && updatedClub.players) {          
 
           setMySelectedPlayers(updatedClub.players);
           setMyTeamOvr(updatedClub.ovr);
@@ -289,7 +291,7 @@ const Squad: React.FC = () => {
                 // marginBottom: "10px",
               }}
             >
-              random team
+              Random team
             </Button>
             <Button
               sx={{
@@ -360,8 +362,7 @@ const Squad: React.FC = () => {
               }}
             >
               <Box mb={1}>{"BENCH"}</Box>
-              {mySelectedPlayers.slice(11, 17).map((player, index) => {
-                console.log("players - ", player);
+              {mySelectedPlayers.slice(11, 17).map((player, index) => {                
                 return (
                   <DraggableAndDroppablePlayerCard
                     key={`bench-${player.id}-${index}`}

@@ -164,8 +164,7 @@ const Register: React.FC = () => {
         myTeamStamina
       )
         .then((msg) => {
-          useSnackbarStore.getState().setSnackbar(msg);
-          console.log("logout");
+          useSnackbarStore.getState().setSnackbar(msg);          
           localStorage.removeItem("token");
           navigate("/login");
         })

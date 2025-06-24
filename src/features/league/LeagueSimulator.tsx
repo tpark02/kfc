@@ -19,6 +19,7 @@ const LeagueSimulator = () => {
     mySelectedPlayers,
     matches,
     setMatches,
+    setTotalAddStatPoints,
   } = useSquadStore(
     (s) => ({
       HasRedCard: s.HasRedCard,
@@ -26,7 +27,9 @@ const LeagueSimulator = () => {
       mySelectedClubId: s.mySelectedClubId,
       mySelectedPlayers: s.mySelectedPlayers,
       matches: s.matches,
+
       setMatches: s.setMatches,
+      setTotalAddStatPoints: s.setTotalAddStatPoints,
     }),
     shallow
   );
@@ -49,7 +52,7 @@ const LeagueSimulator = () => {
 
   const fetchData = async () => {
     useLoadingSpinnerStore.getState().setIsLoading(true);
-
+    console.log("fetch data !!!");
     const players = mySelectedPlayers;
 
     if (players.length === 0) {
@@ -59,9 +62,9 @@ const LeagueSimulator = () => {
 
     try {
       const response = await fetchSchedule(myUserId, mySelectedClubId);
-      if (response !== undefined) {
-        console.log("League Simulator MatchDto - ", response.data);
+      if (response !== undefined) {        
         setMatches(response.data);
+        setTotalAddStatPoints(response.data.reduce((acc, m) => acc + m.addStats, 0));
       }
       reload();
     } catch (err) {
@@ -76,35 +79,23 @@ const LeagueSimulator = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        margin: "1rem",        
+        margin: "1rem",
       }}
     >
       <Grid
         container
         spacing={2}
         sx={{
-          justifyContent: "center",                    
+          justifyContent: "center",
         }}
       >
         <Grid item xs={12} md={2}>
-          <LeagueMyTeam
-            matches={matches}
-            fetchData={fetchData}
-            HasRedCard={HasRedCard}
-          />
+          <LeagueMyTeam fetchData={fetchData} HasRedCard={HasRedCard} />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}          
-        >
+        <Grid item xs={12} md={6}>
           <LeagueScheduleViewer matches={matches} />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={2}          
-        >
+        <Grid item xs={12} md={2}>
           <LeagueOpponentTeam />
         </Grid>
       </Grid>

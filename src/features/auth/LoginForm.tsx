@@ -171,7 +171,7 @@ const LoginForm: React.FC = () => {
               gutterBottom
               sx={{ textAlign: "center", color: "#fff" }}
             >
-              Login
+              Log in
             </Typography>
             <TextField
               label="Username"
@@ -199,7 +199,7 @@ const LoginForm: React.FC = () => {
               variant="contained"
               sx={{ mt: 2 }}
             >
-              Login
+              Log in
             </Button>
             <Typography sx={{ mt: 2, color: "#ccc", textAlign: "center" }}>
               Don't have an account?{" "}

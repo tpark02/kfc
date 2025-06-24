@@ -33,8 +33,7 @@ export const fetchMyClubs = async (
   userId: number
 ): Promise<MyClubData | null> => {
   try {
-    const res = await axiosInstance.get(`/users/${userId}/clubs`);
-    console.log("fetch my club - ", res.data);
+    const res = await axiosInstance.get(`/users/${userId}/clubs`);    
     return res.data;
   } catch (error) {
     handleApiError(error, "fetchMyClubs");

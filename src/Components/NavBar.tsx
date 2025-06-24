@@ -28,7 +28,6 @@ const NavBar: React.FC = () => {
 
   return (
     <Box
-      className="tab-bar"
       sx={{
         position: "fixed",
         top: 0,
@@ -41,33 +40,41 @@ const NavBar: React.FC = () => {
         padding: "10px",
         gap: "10px",
         backgroundColor: theme.palette.navbar.main,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.5)",        
+        boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
       }}
     >
+      {/* 🏷️ LOGO */}
+      <Box
+        component="img"
+        src="/img/hero.png" // or "/assets/logo.png" based on your structure
+        alt="Logo"
+        onClick={() => navigate("/squad")}
+        sx={{
+          height: "50px",
+          cursor: "pointer",          
+        }}
+      />
       {token && (
         <>
           <Button
-            className="nav-menu-button"
             onClick={() => {
               reload();
               setIsDropZoneSelected(false);
               navigate("/players");
-            }}            
+            }}
           >
             Recruit
           </Button>
           <Button
-            className="nav-menu-button"
             onClick={() => {
               reload();
               setIsDropZoneSelected(false);
               navigate("/squad");
-            }}            
+            }}
           >
             Club
           </Button>
           <Button
-            className="nav-menu-button"
             onClick={() => {
               reload();
               setIsDropZoneSelected(false);
@@ -78,34 +85,54 @@ const NavBar: React.FC = () => {
           </Button>
         </>
       )}
-      <Box sx={{ display: "flex", gap: 2, marginLeft: "auto" }}>
-        {token ? (
-          <>
-            <Box
+      {token ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: "auto",
+            gap: "1rem",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
+              outline: "1px solid red",
+            }}
+          >
+            {" "}
+            🪙 {myCoin}
+          </Box>
+          {token ? (
+            <Button
+              onClick={handleLogout}
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                height: "40px",
               }}
             >
-              🪙 {myCoin}
-            </Box>
-            {token ? (
-              <Button onClick={handleLogout}>
-                Logout
-              </Button>
-            ) : (
-              <Button onClick={() => navigate("/login")}>
-                Sign In
-              </Button>
-            )}
-          </>
-        ) : (
-          <Button onClick={() => navigate("/login")}>
-            Sign In
-          </Button>
-        )}
-      </Box>
+              Log out
+            </Button>
+          ) : (
+            <Button onClick={() => navigate("/login")}>Sign In</Button>
+          )}
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: "auto",
+            gap: "1rem",
+          }}
+        >
+          <Button onClick={() => navigate("/login")}>Log In</Button>
+        </Box>
+      )}
     </Box>
   );
 };

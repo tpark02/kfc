@@ -31,7 +31,6 @@ import { getPosColor } from "../../util/util";
 import { getStatDisplay } from "../../style/playerStyle";
 
 interface LeagueMyTeamProp {
-  matches: Match[];
   fetchData: () => Promise<void>;
   HasRedCard: boolean;
 }
@@ -41,7 +40,6 @@ interface ErrorResponse {
 }
 
 const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
-  matches,
   fetchData,
   HasRedCard,
 }) => {
@@ -77,26 +75,24 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
     setMyTeamStamina,
   } = useSquadSetters();
 
-  const { setMyFormation, myLogoImgUrl } = useSquadStore(
+  const {
+    myLogoImgUrl,
+    totalAddStatPoints,
+    setMyFormation,
+    setTotalAddStatPoints,
+  } = useSquadStore(
     (s) => ({
-      setMyFormation: s.setMyFormation,
       myLogoImgUrl: s.myLogoImgUrl,
+      totalAddStatPoints: s.totalAddStatPoints,
+      setMyFormation: s.setMyFormation,
+      setTotalAddStatPoints: s.setTotalAddStatPoints,
     }),
     shallow
   );
+  
   const [isClicked, setIsClicked] = useState(false);
-
-  const [totalAddStatPoints, setTotalAddStatPoints] = useState(
-    matches.reduce((acc, m) => acc + m.addStats, 0)
-  );
-
   const adjustedTeamOvr = adjustTeamOvr(mySelectedPlayers);
-  console.log("adjusted team ovr", adjustedTeamOvr);
   const myTeamName = myClubs?.name ?? "N/A";
-
-  useEffect(() => {
-    setTotalAddStatPoints(matches.reduce((acc, m) => acc + m.addStats, 0));
-  }, [matches]);
 
   useEffect(() => {});
   const handleSave = async () => {
@@ -222,12 +218,13 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
         }}
       >
         {mySelectedPlayers && mySelectedPlayers.length > 0 ? (
-          mySelectedPlayers.slice(0, 17).map((player) => {
+          mySelectedPlayers.slice(0, 17).map((player, index) => {
             const posColor = getPosColor(player.pos);
             const [firstName, lastName] = player.name.split(" ");
 
             return (
               <Box
+                key={index}
                 sx={{
                   display: "flex",
                   flexDirection: "row",
@@ -314,7 +311,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
                   }}
                   onClick={() => {
                     setIsClicked(true);
-                    setTotalAddStatPoints((prev) => prev - 1);
+                    setTotalAddStatPoints(totalAddStatPoints - 1);
 
                     const idx = mySelectedPlayers.findIndex(
                       (p) => p.id === player.id

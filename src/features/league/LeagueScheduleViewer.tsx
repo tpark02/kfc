@@ -100,8 +100,7 @@ const LeagueScheduleViewer: React.FC<LeagueScheduleViewerProps> = ({
               >
                 {matches.map((match, idx) => {
                   const resBackgroundColor =
-                    match.res === "W" ? "green" : "red";
-                  console.log("img", match?.teamImg);
+                    match.res === "W" ? "green" : "red";                  
                   return (
                     <>
                       <Box
