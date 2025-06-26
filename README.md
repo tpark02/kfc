@@ -124,6 +124,147 @@ MIT License © 2025 Daniel Park ([@tpark02](https://github.com/tpark02))
 
 ---
 
+
+# ⚽ KFC - 킥오프 풋볼 클럽 시뮬레이터
+
+**KFC**는 풀스택으로 구현된 축구 클럽 시뮬레이션 웹 애플리케이션입니다. 사용자는 스쿼드를 구성하고, 리그를 시뮬레이션하며, 선수와 포메이션을 관리하고, 실제 게임과 같은 경험으로 팀 통계를 확인할 수 있습니다.
+
+---
+
+## 🧠 프로젝트 개요
+
+**KFC (Kickoff Football Club Simulator)**는 축구를 테마로 한 매니지먼트 시뮬레이션 플랫폼으로, **전문적인 서비스 지향 아키텍처와 풀스택 개발 능력**을 보여주기 위한 목적으로 제작되었습니다.
+
+축구를 기반으로 하지만, 진정한 목표는 다음과 같은 기술 역량을 증명하는 것입니다:
+
+- **풀스택 개발 전반**
+- RESTful API 설계
+- 프론트엔드 아키텍처 구성
+- 사용자 인증 시스템
+- 데이터 모델링 및 대규모 데이터 처리
+- 동적인 UI 렌더링
+
+---
+
+## 🛠️ 기술 스택
+
+| 계층         | 기술 스택 |
+|--------------|------------|
+| 프론트엔드   | React + TypeScript + Zustand + Material UI (MUI) |
+| 백엔드       | Spring Boot 3, Java 17, JPA/Hibernate, RESTful API |
+| 데이터베이스 | H2 / MariaDB |
+| 배포         | Docker + VPS (Contabo) |
+
+---
+
+## 📦 폴더 구조
+
+```
+src/
+├── Components/        # 재사용 가능한 UI 컴포넌트 (네비게이션바, 푸터 등)
+├── Modal/             # 필터 및 선택 관련 모달 컴포넌트
+├── Util/              # 유틸리티 함수 (로직 및 상태 처리)
+├── api/               # Axios 기반 API 연동
+├── app/               # 레이아웃 및 Axios 설정
+├── data/              # 국가, 포메이션 등 정적 데이터
+├── hooks/             # 커스텀 훅 (Zustand, API 로딩 등)
+├── routes/            # 라우팅 정의
+├── shared/            # 글로벌 컨텍스트 컴포넌트 (로딩, 스낵바)
+├── store/             # Zustand 기반 상태 저장소
+├── style/             # 스타일 및 CSS 정의
+├── types/             # 전역 타입스크립트 타입 선언
+```
+
+---
+
+## 🚀 시작하기
+
+### 1. 레포지토리 클론
+
+```bash
+git clone https://github.com/tpark02/kfc.git
+cd kfc
+```
+
+### 2. 의존성 설치
+
+```bash
+npm install
+```
+
+### 3. 앱 실행 (프론트엔드)
+
+```bash
+npm run dev
+```
+
+브라우저에서 `http://localhost:5173` 로 접속하세요.
+
+> ℹ️ 백엔드(Spring Boot)는 별도로 실행되어야 하며, CORS 설정이 되어 있어야 합니다.
+
+---
+
+## 🧱 핵심 기능
+
+### ⚽ 리그 시뮬레이션
+- 클럽 간 경기 시뮬레이션
+- 경기 결과 및 득점자 자동 생성
+- 다양한 시뮬레이션 규칙 적용을 위한 확장성 고려
+
+### 👤 내 클럽 관리
+- 선수를 영입하여 나만의 팀 구성
+- 포메이션 빌더 UI를 통한 유연한 스쿼드 구성
+- 선수 능력치를 기반으로 팀 전력(OVR) 계산
+
+### 🔐 인증 시스템
+- JWT 기반 회원가입, 로그인, 라우트 보호
+- 클럽 및 스쿼드는 로그인된 사용자와 연동
+
+---
+
+## 📌 기술적 특징
+
+- **계층형 아키텍처**: Controller → Service → Repository 분리
+- **상태 관리**: Zustand 기반 모듈화 및 영속성 유지
+- **동적 UI**: 포지션 기반 11인 구성 그리드 렌더링
+- **확장 가능한 API**: 유지보수와 확장을 고려한 구조
+- **대규모 데이터 처리 능력**:  
+  - 수천 명의 선수 데이터 및 다수의 사용자 클럽 지원  
+  - 일괄 업데이트 및 다중 경기 시뮬레이션 처리  
+  - 페이지네이션, 필터링, 인덱싱을 통한 DB 최적화
+
+---
+
+## 🔌 백엔드 연동
+
+프론트엔드는 별도로 실행되는 Spring Boot 기반 REST API를 소비합니다.
+
+필요한 사항:
+
+- Java 17 이상
+- `/api/*` 엔드포인트를 포함한 Spring Boot 프로젝트
+- MySQL 또는 H2 DB
+- `localhost:5173`에 대한 CORS 허용
+
+---
+
+## 📸 스크린샷
+
+![image](https://github.com/user-attachments/assets/767db428-4d7a-49d4-bf39-378dda088f74)
+
+---
+
+## 📄 라이선스
+
+MIT License © 2025 Daniel Park ([@tpark02](https://github.com/tpark02))
+
+---
+
+## 🤝 기여하기
+
+Pull Request는 언제든지 환영합니다. 주요 변경 사항의 경우 먼저 이슈를 열어 논의해주세요.
+
+
 ## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss your ideas.
