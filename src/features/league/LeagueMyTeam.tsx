@@ -116,7 +116,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
         myTeamStamina
       );
 
-      useSnackbarStore.getState().setSnackbar(msg);
+      useSnackbarStore.getState().setSnackbar(msg, true);
       const updatedClub = await fetchMyClubs(myUserId);
 
       if (updatedClub && updatedClub.players) {
@@ -140,7 +140,7 @@ const LeagueMyTeam: React.FC<LeagueMyTeamProp> = ({
           ? err
           : err?.response?.data?.message ||
             JSON.stringify(err?.response?.data ?? err, null, 2);
-      useSnackbarStore.getState().setSnackbar(msg);
+      useSnackbarStore.getState().setSnackbar(msg, false);
     }
   };
 

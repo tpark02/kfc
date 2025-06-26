@@ -2,7 +2,7 @@ import { Snackbar, Alert } from "@mui/material";
 import { useSnackbarStore } from "../store/userSnackBarStore";
 
 const GlobalSnackbar = () => {
-  const { open, message, closeSnackbar } = useSnackbarStore();
+  const { open, message, closeSnackbar, alertType } = useSnackbarStore();
 
   return (
     <Snackbar
@@ -11,7 +11,11 @@ const GlobalSnackbar = () => {
       onClose={closeSnackbar}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
-      <Alert onClose={closeSnackbar} severity="success" sx={{ width: "100%" }}>
+      <Alert
+        onClose={closeSnackbar}
+        severity={alertType ? "info" : "error"}
+        sx={{ width: "100%" }}
+      >
         {message}
       </Alert>
     </Snackbar>

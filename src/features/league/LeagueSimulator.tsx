@@ -45,7 +45,8 @@ const LeagueSimulator = () => {
       useSnackbarStore
         .getState()
         .setSnackbar(
-          "You cannot have a red carded player in the starting member"
+          "You cannot have a red carded player in the starting member",
+          false
         );
     }
   }, [HasRedCard]);

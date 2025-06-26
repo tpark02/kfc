@@ -85,7 +85,7 @@ const DraggableAndDroppablePlayerCard: React.FC<Props> = ({
             player.name,
             async () => {
               const res = await updatePlayer(myUserId, player.idx);              
-              useSnackbarStore.getState().setSnackbar(res);
+              useSnackbarStore.getState().setSnackbar(res, true);
             },
             () => {}
           );

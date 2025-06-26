@@ -138,7 +138,7 @@ const Register: React.FC = () => {
     } catch (err: any) {
       useSnackbarStore
         .getState()
-        .setSnackbar(err.response?.data || "Error loading squad");
+        .setSnackbar(err.response?.data || "Error loading squad", false);
     }
   };
 
@@ -164,7 +164,7 @@ const Register: React.FC = () => {
         myTeamStamina
       )
         .then((msg) => {
-          useSnackbarStore.getState().setSnackbar(msg);          
+          useSnackbarStore.getState().setSnackbar(msg, true);          
           localStorage.removeItem("token");
           navigate("/login");
         })
@@ -174,7 +174,7 @@ const Register: React.FC = () => {
               ? err
               : err?.response?.data?.message ||
                 JSON.stringify(err?.response?.data ?? err, null, 2);
-          useSnackbarStore.getState().setSnackbar(msg);
+          useSnackbarStore.getState().setSnackbar(msg, false);
 
           setCurrentStep(1);
         })
@@ -186,22 +186,22 @@ const Register: React.FC = () => {
 
   const validateTeamName = () => {
     if (!teamName) {
-      useSnackbarStore.getState().setSnackbar("Team name is required.");
+      useSnackbarStore.getState().setSnackbar("Team name is required.", false);
 
       return false;
     }
     if (teamName.length > 10) {
-      useSnackbarStore.getState().setSnackbar("Max 10 characters.");
+      useSnackbarStore.getState().setSnackbar("Max 10 characters.", false);
       return false;
     }
     if (!/^[A-Za-z0-9]+$/.test(teamName)) {
       useSnackbarStore
         .getState()
-        .setSnackbar("Only English letters and numbers.");
+        .setSnackbar("Only English letters and numbers.", false);
       return false;
     }
     if (/^[0-9]+$/.test(teamName)) {
-      useSnackbarStore.getState().setSnackbar("Cannot be numbers only.");
+      useSnackbarStore.getState().setSnackbar("Cannot be numbers only.", false);
       return false;
     }
     setMyTeamName(teamName);
@@ -210,7 +210,7 @@ const Register: React.FC = () => {
 
   const validateNationality = () => {
     if (!nationality) {
-      useSnackbarStore.getState().setSnackbar("Please select a nationality.");
+      useSnackbarStore.getState().setSnackbar("Please select a nationality.", false);
       return false;
     }
     setMyNation(nationality);
@@ -221,7 +221,7 @@ const Register: React.FC = () => {
     if (currentStep === 2 && confirmedLogoId === null) {
       useSnackbarStore
         .getState()
-        .setSnackbar("Please select a logo before continuing.");
+        .setSnackbar("Please select a logo before continuing.", false);
       return false;
     }
     return true;

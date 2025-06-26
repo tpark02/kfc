@@ -11,14 +11,19 @@ const instance = axios.create({
 
 // ✅ Add token to all requests
 instance.interceptors.request.use((config) => {
+  console.log("🚀 Axios Request URL:", config.url);
+
   const token = localStorage.getItem("token");
+
   if (
     token &&
     config.url !== "/signup" && // Exception handling
     config.url !== "/login"
   ) {
+    console.log("🛑 Token being attached to:", config.url);
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
@@ -26,11 +31,18 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      console.warn("🔒 Authentication error. You need to log in again.");
+    const status = error.response?.status;
+
+    // ✅ Only redirect if NOT already on /login
+    const isAuthError = status === 401 || status === 403;
+    const isNotLoginRoute = !window.location.href.includes("/login");
+
+    if (isAuthError && isNotLoginRoute) {
+      console.warn("🔒 Auth error — redirecting to login");
       localStorage.removeItem("token");
-      window.location.href = "/#/login";
+      window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );

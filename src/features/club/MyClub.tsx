@@ -104,8 +104,8 @@ const MyClub: React.FC = () => {
         myTeamStamina
       )
         .then((msg) => {
-          useSnackbarStore.getState().setSnackbar(msg);
-console.log("7");
+          useSnackbarStore.getState().setSnackbar(msg, true);
+
           fetchMyClubs(myUserId).then((club) => {
             if (club && club.players) {
               setMySelectedPlayers(club.players);
@@ -119,7 +119,7 @@ console.log("7");
               ? err
               : err?.response?.data?.message ||
                 JSON.stringify(err?.response?.data ?? err, null, 2);
-          useSnackbarStore.getState().setSnackbar(msg);
+          useSnackbarStore.getState().setSnackbar(msg, false);
         })
         .finally(() => {
           useLoadingSpinnerStore.getState().setIsLoading(false);
@@ -160,7 +160,7 @@ console.log("7");
 
   const handleBlur = (club: MyClubData, idx: number) => {
     if (!newTeamName.trim()) {
-      useSnackbarStore.getState().setSnackbar("Club name is empty");
+      useSnackbarStore.getState().setSnackbar("Club name is empty", false);
       setIsEditing(false);
       return;
     }
@@ -216,7 +216,7 @@ console.log("7");
                     if (!club) {
                       useSnackbarStore
                         .getState()
-                        .setSnackbar("The club not found");
+                        .setSnackbar("The club not found", false);
                       return;
                     }
 
@@ -305,8 +305,7 @@ console.log("7");
                 if (myClubs?.clubId) {
                   deleteMyClub(myUserId, myClubs.clubId)
                     .then((msg) => {
-                      useSnackbarStore.getState().setSnackbar(msg);
-                      console.log("5");
+                      useSnackbarStore.getState().setSnackbar(msg, true);                      
                       fetchMyClubs(myUserId).then((club) => {
                         if (club !== null) setMyClubs(club);
                       });

@@ -38,18 +38,18 @@ export default function CreateSeasonForm({
         onCreated();
         setJoinedSeasonId(response.data.id);
 
-        useSnackbarStore.getState().setSnackbar(response.data.msg);
+        useSnackbarStore.getState().setSnackbar(response.data.msg, false);
 
         navigate(`/season/${response.data.id}`);
       } else {
-        useSnackbarStore.getState().setSnackbar(response.data.error);
+        useSnackbarStore.getState().setSnackbar(response.data.error, false);
 
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        useSnackbarStore.getState().setSnackbar("요청 실패: " + error.message);
+        useSnackbarStore.getState().setSnackbar("요청 실패: " + error.message, false);
       } else {
-        useSnackbarStore.getState().setSnackbar("알 수 없는 오류가 발생했습니다.");
+        useSnackbarStore.getState().setSnackbar("알 수 없는 오류가 발생했습니다.", false);
       }
 
     }

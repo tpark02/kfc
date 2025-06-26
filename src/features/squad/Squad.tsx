@@ -129,7 +129,7 @@ const Squad: React.FC = () => {
         myTeamStamina
       )
         .then((msg) => {
-          useSnackbarStore.getState().setSnackbar(msg);
+          useSnackbarStore.getState().setSnackbar(msg, true);
 
           fetchMyClubs(myUserId).then((club) => {
             const updatedClub = club ?? undefined;
@@ -147,7 +147,7 @@ const Squad: React.FC = () => {
               ? err
               : err?.response?.data?.message ||
                 JSON.stringify(err?.response?.data ?? err, null, 2);
-          useSnackbarStore.getState().setSnackbar(msg);
+          useSnackbarStore.getState().setSnackbar(msg, false);
         })
         .finally(() => {
           useLoadingSpinnerStore.getState().setIsLoading(false);
@@ -182,7 +182,7 @@ const Squad: React.FC = () => {
             ? err
             : err?.response?.data?.message ||
               JSON.stringify(err?.response?.data ?? err, null, 2);
-        useSnackbarStore.getState().setSnackbar(msg);
+        useSnackbarStore.getState().setSnackbar(msg, false);
       })
       .finally(() => {
         useLoadingSpinnerStore.getState().setIsLoading(false);
@@ -242,7 +242,7 @@ const Squad: React.FC = () => {
     } catch (err: any) {
       useSnackbarStore
         .getState()
-        .setSnackbar(err.response?.data || "Error loading squad");
+        .setSnackbar(err.response?.data || "Error loading squad", false);
     } finally {
           useLoadingSpinnerStore.getState().setIsLoading(false);      
     }

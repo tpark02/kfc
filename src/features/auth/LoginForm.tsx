@@ -6,8 +6,8 @@ import { AuthRequest, AuthResponse } from "../../types/auth";
 import { useLoadingSpinnerStore } from "../../store/useLoadingSpinnerStore";
 import { Link as RouterLink } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
-
 import axiosInstance from "../../app/axiosInstance";
+import { useSnackbarStore } from "../../store/userSnackBarStore";
 
 const LoginForm: React.FC = () => {
   const [form, setForm] = useState<AuthRequest>({ username: "", password: "" });
@@ -40,15 +40,24 @@ const LoginForm: React.FC = () => {
   const handleLogin = async () => {
     try {
       const response = await axiosInstance.post<AuthResponse>("/login", form);
+
       localStorage.setItem("token", response.data.token);
+
       localStorage.setItem("userId", String(response.data.userId));
+
       setError("");
 
       const userId = await fetchAndStoreUserInfo();
-      if (!userId) throw new Error("Failed to load user info");
+
+      if (!userId) {
+        throw new Error("Failed to load user info");
+      }
 
       navigate("/squad");
     } catch (err: any) {
+      useSnackbarStore
+        .getState()
+        .setSnackbar("Please check id and password", false);
       const msg =
         typeof err.response?.data === "string"
           ? err.response.data
@@ -99,6 +108,11 @@ const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+  }, []);
+
+  useEffect(() => {
     if (token) {
       const timer = setTimeout(() => {
         navigate("/squad");
@@ -146,7 +160,7 @@ const LoginForm: React.FC = () => {
             justifyContent: "center",
             alignContent: "center",
             width: {
-              xs: "90vw", 
+              xs: "90vw",
               md: "40vw",
             },
             height: "60vh",

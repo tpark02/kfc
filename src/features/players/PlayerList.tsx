@@ -130,7 +130,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
                     const res = await buyPlayer(myUserId, repo.id);
                     if (res.updatedMyPlayers.length > 0)
                       setMySelectedPlayers(res.updatedMyPlayers);
-                    useSnackbarStore.getState().setSnackbar(res.msg);
+                    useSnackbarStore.getState().setSnackbar(res.msg, true);
                   },
                   () => {}
                 );
